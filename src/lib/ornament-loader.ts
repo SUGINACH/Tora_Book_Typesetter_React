@@ -15,7 +15,7 @@ export async function loadHeaderOrnaments(): Promise<OrnamentDesign[]> {
   if (cache) return cache;
   try {
     const res = await fetch('./header_ornaments.json');
-    const data = await res.json();
+    const data: OrnamentDesign[] = await res.json();
     cache = data;
     return cache;
   } catch (err) {
