@@ -8,7 +8,9 @@ import { SimulatedMeasurer } from '../worker/measurement/text-metrics';
 import { auditGeometry } from '../audit/geometry-audit';
 import { fnv1a32 } from '../worker/inputs/fnv-hash';
 import { loadShaarDesigns, getShaarDesign } from '../lib/shaar-loader';
+import { loadHeaderOrnaments, getOrnament } from '../lib/ornament-loader';
 import type { ShaarDesignData } from '../worker/engine/renderer';
+import type { OrnamentData } from '../worker/engine/renderer';
 
 export function useTypesetter() {
   const settings = useSettingsStore((s) => s.settings);
@@ -27,9 +29,10 @@ export function useTypesetter() {
       await delay(10);
       const doc = parseDocument(rawText, settings);
 
-      // 2. טעינת עיצובי שערים מ-JSON
-      workerStore.updateProgress('font-loading', 10, 'טועם עיצובי שערים...');
+      // 2. טעינת עיצובי שערים ועיטורי כותרות מ-JSON
+      workerStore.updateProgress('font-loading', 10, 'טוען עיצובים...');
       let shaarDesigns: ShaarDesignData | undefined;
+      let ornaments: OrnamentData | undefined;
       try {
         const designs = await loadShaarDesigns();
         shaarDesigns = {
@@ -40,13 +43,24 @@ export function useTypesetter() {
       } catch (err) {
         console.warn('Failed to load shaar designs:', err);
       }
+      try {
+        const orn = await loadHeaderOrnaments();
+        ornaments = {
+          h2Top: getOrnament(orn, 0),
+          h2Bottom: getOrnament(orn, 0),
+          h3Right: getOrnament(orn, 0),
+          h3Left: getOrnament(orn, 0),
+        };
+      } catch (err) {
+        console.warn('Failed to load ornaments:', err);
+      }
 
       // 3. Typesetting
       workerStore.updateProgress('measuring', 20, 'מודד טקסט...');
       await delay(10);
       const measurer = new SimulatedMeasurer();
       const result = typesetDocument(doc, settings, measurer, (stage, percent, msg) =>
-        workerStore.updateProgress(stage as any, percent, msg), shaarDesigns
+        workerStore.updateProgress(stage as any, percent, msg), shaarDesigns, ornaments
       );
 
       // 4. Audit

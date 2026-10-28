@@ -1,7 +1,7 @@
 import type { Settings, ParsedDocument, FinalPage, ColumnContent, Block, RenderedPage, AuditFinding, TraceEvent } from '../../types';
 import type { TextMeasurer } from '../measurement/text-metrics';
 import { breakLines } from '../measurement/text-metrics';
-import { renderToHtml, type ShaarDesignData } from './renderer';
+import { renderToHtml, type ShaarDesignData, type OrnamentData } from './renderer';
 import { auditGeometry } from '../../audit/geometry-audit';
 import { fnv1a32 } from '../inputs/fnv-hash';
 
@@ -14,7 +14,8 @@ export function typesetDocument(
   settings: Settings,
   measurer: TextMeasurer,
   onProgress?: (stage: string, percent: number, msg?: string) => void,
-  shaarDesigns?: ShaarDesignData
+  shaarDesigns?: ShaarDesignData,
+  ornaments?: OrnamentData
 ): { pages: RenderedPage[]; findings: AuditFinding[]; durationMs: number; traceLog?: TraceEvent[] } {
   const start = performance.now();
 
@@ -80,7 +81,7 @@ export function typesetDocument(
   // 8. רינדור ל-HTML
   onProgress?.('finalizing', 90, 'מרנדר...');
   const renderedPages: RenderedPage[] = allPages.map((page, idx) =>
-    renderToHtml(page, idx + 1, settings, doc, shaarDesigns)
+    renderToHtml(page, idx + 1, settings, doc, shaarDesigns, ornaments)
   );
 
   // 8b. הכנסת עמוד TOC לאחר השער ולפני התוכן

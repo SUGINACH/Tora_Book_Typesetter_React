@@ -117,3 +117,10 @@
 - **עיטור סוף פרק** = סיום קטע של כותרת 2 (כבר ממומש)
 - H7 הערות צד = נושא נפרד, לא קשור לעיטורי כותרות
 - GLOSSARY תוקן בהתאם
+
+### Commit: heading ornaments (H2/H3) from JSON + ornament-loader
+- **ornament-loader.ts**: טעינת header_ornaments.json (5 עיטורים, כל אחד SVG)
+- **OrnamentData**: { h2Top, h2Bottom, h3Right, h3Left } — מועבר ל-renderer
+- **renderer.ts**: H2 פרק פותח מקבל עיטור עליון + תחתון מ-SVG
+- **useTypesetter**: טוען עיטורים יחד עם שערים
+- **GLOSSARY**: עיטורי כותרות = H2/H3 בלבד (NOT H7)

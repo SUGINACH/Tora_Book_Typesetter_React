@@ -1,6 +1,7 @@
 import type { FinalPage, RenderedPage, Settings, ParsedDocument, Block, PageType } from '../../types';
 import { toGematria } from '../../lib/gematria';
 import type { ShaarDesign } from '../../lib/shaar-loader';
+import type { OrnamentDesign } from '../../lib/ornament-loader';
 
 const NO_HEADER_PAGE_TYPES: PageType[] = ['main-shaar', 'sub-shaar', 'back-shaar'];
 const SHAAR_PAGE_TYPES: PageType[] = ['main-shaar', 'sub-shaar', 'back-shaar'];
@@ -11,14 +12,22 @@ export interface ShaarDesignData {
   sub?: ShaarDesign | null;
 }
 
+export interface OrnamentData {
+  h2Top?: OrnamentDesign | null;
+  h2Bottom?: OrnamentDesign | null;
+  h3Right?: OrnamentDesign | null;
+  h3Left?: OrnamentDesign | null;
+}
+
 export function renderToHtml(
   page: FinalPage,
   pageNumber: number,
   settings: Settings,
   doc: ParsedDocument,
-  shaarDesigns?: ShaarDesignData
+  shaarDesigns?: ShaarDesignData,
+  ornaments?: OrnamentData
 ): RenderedPage {
-  const html = renderPageHtml(page, pageNumber, settings, doc, shaarDesigns);
+  const html = renderPageHtml(page, pageNumber, settings, doc, shaarDesigns, ornaments);
   return {
     pageNumber,
     pageType: page.pageType,
@@ -44,7 +53,8 @@ function renderPageHtml(
   pageNumber: number,
   settings: Settings,
   doc: ParsedDocument,
-  shaarDesigns?: ShaarDesignData
+  shaarDesigns?: ShaarDesignData,
+  ornaments?: OrnamentData
 ): string {
   const isShaar = SHAAR_PAGE_TYPES.includes(page.pageType);
   const showHeader = !NO_HEADER_PAGE_TYPES.includes(page.pageType);
@@ -63,7 +73,10 @@ function renderPageHtml(
   const isChapterOpener = isH2Page || isH0Page;
   const headingHtml = page.heading ? renderHeading(page.heading, settings) : '';
 
-  // כותרות צד (H7) — אם יש בעמוד
+  // עיטורי כותרות — SVG מ-JSON (רק ל-H2/H0)
+  const h2TopOrn = isChapterOpener && ornaments?.h2Top?.svg ? ornaments.h2Top.svg : '';
+  const h2BottomOrn = isChapterOpener && ornaments?.h2Bottom?.svg ? ornaments.h2Bottom.svg : '';
+
   const rightSidenotes = renderSidenotes(page, doc, 'right');
   const leftSidenotes = renderSidenotes(page, doc, 'left');
 
@@ -76,9 +89,9 @@ function renderPageHtml(
         <div class="tora-text-area">
           <div class="tora-margin-right">${rightSidenotes}</div>
           <div class="tora-text-main ${isChapterOpener ? 'has-single-column' : ''}">
-            ${isChapterOpener ? `<div class="tora-heading-ornament-top"></div>` : ''}
+            ${h2TopOrn ? `<div class="tora-heading-ornament-top">${h2TopOrn}</div>` : ''}
             ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
-            ${isChapterOpener ? `<div class="tora-heading-ornament-bottom"></div>` : ''}
+            ${h2BottomOrn ? `<div class="tora-heading-ornament-bottom">${h2BottomOrn}</div>` : ''}
             <div class="tora-columns">
               ${columns}
             </div>
