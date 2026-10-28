@@ -35,7 +35,7 @@ export function typesetDocument(
 
   // 3. חלוקה לעמודים
   onProgress?.('page-breaking', 40, 'מחלק לעמודים...');
-  const contentPages = breakPages(blocks, settings, availableHeight);
+  const contentPages = breakPages(blocks, settings, availableHeight, measurer);
 
   // 4. איזון טורים
   onProgress?.('column-balancing', 60, 'מאזן טורים...');
