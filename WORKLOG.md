@@ -124,3 +124,10 @@
 - **renderer.ts**: H2 פרק פותח מקבל עיטור עליון + תחתון מ-SVG
 - **useTypesetter**: טוען עיטורים יחד עם שערים
 - **GLOSSARY**: עיטורי כותרות = H2/H3 בלבד (NOT H7)
+
+### Commit: H7 sidenotes rendering in margins
+- **renderSidenotes**: H7 הערות צד מתרנדרות בשוליים
+  עמודים אי-זוגיים → שוליים ימין, עמודים זוגיים → שוליים שמאל
+- משתמש ב-doc.sidenotes מה-parser
+- CSS: .tora-sidenote (6pt, #404040)
+- GLOSSARY: H7 = הערת צד בשוליים החיצוניים

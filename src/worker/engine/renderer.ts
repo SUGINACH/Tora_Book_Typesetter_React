@@ -112,10 +112,20 @@ function renderPageHtml(
 
 /**
  * רינדור הערות צד (H7) בשוליים.
- * כרגע ריק — ימולא כאשר הערות צד יצורפו לעמוד.
+ * מקבל את העמוד ואת המסמך, מחזיר HTML לשוליים הימניים או השמאליים.
  */
-function renderSidenotes(_page: FinalPage, _doc: ParsedDocument, _side: 'right' | 'left'): string {
-  // לעת עתה ריק — הערות צד יצורפו בשלב מאוחר יותר
+function renderSidenotes(page: FinalPage, doc: ParsedDocument, side: 'right' | 'left'): string {
+  if (!doc.sidenotes || doc.sidenotes.length === 0) return '';
+
+  const notes: string[] = [];
+  for (const sn of doc.sidenotes) {
+    notes.push(`<div class="tora-sidenote">${escapeHtml(sn.text)}</div>`);
+  }
+
+  // חלוקה: בעמודים אי-זוגיים → ימין, בזוגיים → שמאל
+  const isOddPage = page.pageNumber % 2 === 1;
+  if (side === 'right' && isOddPage) return notes.join('');
+  if (side === 'left' && !isOddPage) return notes.join('');
   return '';
 }
 
