@@ -1,16 +1,24 @@
 import type { FinalPage, RenderedPage, Settings, ParsedDocument, Block, PageType } from '../../types';
 import { toGematria } from '../../lib/gematria';
+import type { ShaarDesign } from '../../lib/shaar-loader';
 
 const NO_HEADER_PAGE_TYPES: PageType[] = ['main-shaar', 'sub-shaar', 'back-shaar'];
 const SHAAR_PAGE_TYPES: PageType[] = ['main-shaar', 'sub-shaar', 'back-shaar'];
+
+export interface ShaarDesignData {
+  main?: ShaarDesign | null;
+  back?: ShaarDesign | null;
+  sub?: ShaarDesign | null;
+}
 
 export function renderToHtml(
   page: FinalPage,
   pageNumber: number,
   settings: Settings,
-  doc: ParsedDocument
+  doc: ParsedDocument,
+  shaarDesigns?: ShaarDesignData
 ): RenderedPage {
-  const html = renderPageHtml(page, pageNumber, settings, doc);
+  const html = renderPageHtml(page, pageNumber, settings, doc, shaarDesigns);
   return {
     pageNumber,
     pageType: page.pageType,
@@ -35,7 +43,8 @@ function renderPageHtml(
   page: FinalPage,
   pageNumber: number,
   settings: Settings,
-  doc: ParsedDocument
+  doc: ParsedDocument,
+  shaarDesigns?: ShaarDesignData
 ): string {
   const isShaar = SHAAR_PAGE_TYPES.includes(page.pageType);
   const showHeader = !NO_HEADER_PAGE_TYPES.includes(page.pageType);
@@ -43,7 +52,7 @@ function renderPageHtml(
   const isH0Page = page.heading?.level === 0;
 
   if (isShaar) {
-    return renderShaarPage(page, pageNumber, settings, doc);
+    return renderShaarPage(page, pageNumber, settings, doc, shaarDesigns);
   }
 
   const runningHeader = showHeader ? renderRunningHeader(page, settings, doc) : '';
@@ -70,54 +79,67 @@ function renderPageHtml(
   `.trim();
 }
 
+/**
+ * רינדור עמוד שער — משתמש ב-SVG מקובץ JSON חיצוני כרקע.
+ * אין עיצובים מוטמעים בקוד — הכל מגיע מה-SVG.
+ */
 function renderShaarPage(
   page: FinalPage,
   _pageNumber: number,
   _settings: Settings,
-  doc: ParsedDocument
+  doc: ParsedDocument,
+  shaarDesigns?: ShaarDesignData
 ): string {
   const meta = doc.metadata;
 
   if (page.pageType === 'main-shaar') {
+    // טעינת SVG מעיצוב השער הראשי
+    const svg = shaarDesigns?.main?.svg ?? '';
     return `
-      <div class="tora-page tora-page-shaar tora-page-main-shaar" data-page-type="main-shaar">
-        <div class="tora-shaar-content">
-          <div class="bsd-header">בס"ד</div>
-          ${meta.bookName ? `<div class="tora-shaar-title">${escapeHtml(meta.bookName)}</div>` : ''}
-          ${meta.subject ? `<div class="tora-shaar-subtitle">${escapeHtml(meta.subject)}</div>` : ''}
-          ${meta.detailedSubject ? `<div class="tora-shaar-desc">${escapeHtml(meta.detailedSubject)}</div>` : ''}
-          ${meta.editionDetails ? `<div class="tora-shaar-sections">${escapeHtml(meta.editionDetails)}</div>` : ''}
-          ${meta.authorName ? `<div class="tora-shaar-author">${escapeHtml(meta.authorName)}</div>` : ''}
-          ${meta.placeAndYear ? `<div class="tora-shaar-year">${escapeHtml(meta.placeAndYear)}</div>` : ''}
+      <div class="tora-page tora-page-shaar" data-page-type="main-shaar">
+        ${svg ? `<div class="tora-shaar-svg-bg">${svg}</div>` : ''}
+        <div class="tora-shaar-overlay">
+          <div class="tora-shaar-field bsd">בס"ד</div>
+          ${meta.bookName ? `<div class="tora-shaar-field title">${escapeHtml(meta.bookName)}</div>` : ''}
+          ${meta.subject ? `<div class="tora-shaar-field subtitle">${escapeHtml(meta.subject)}</div>` : ''}
+          ${meta.detailedSubject ? `<div class="tora-shaar-field desc">${escapeHtml(meta.detailedSubject)}</div>` : ''}
+          ${meta.editionDetails ? `<div class="tora-shaar-field sections">${escapeHtml(meta.editionDetails)}</div>` : ''}
+          ${meta.authorName ? `<div class="tora-shaar-field author">${escapeHtml(meta.authorName)}</div>` : ''}
+          ${meta.placeAndYear ? `<div class="tora-shaar-field year">${escapeHtml(meta.placeAndYear)}</div>` : ''}
         </div>
       </div>
     `.trim();
   }
 
   if (page.pageType === 'back-shaar') {
+    // שער אחורי = גב השער הראשי (עמוד 2)
+    const svg = shaarDesigns?.back?.svg ?? '';
     return `
-      <div class="tora-page tora-page-shaar tora-page-back-shaar" data-page-type="back-shaar">
-        <div class="tora-shaar-content tora-shaar-back">
-          ${meta.copyright ? `<div class="tora-shaar-copyright">${escapeHtml(meta.copyright)}</div>` : ''}
-          ${meta.publisherDetails ? `<div class="tora-shaar-publisher">${escapeHtml(meta.publisherDetails)}</div>` : ''}
-          ${meta.contactDetails ? `<div class="tora-shaar-contact">${escapeHtml(meta.contactDetails)}</div>` : ''}
-          ${meta.additionalDetails ? `<div class="tora-shaar-extra">${escapeHtml(meta.additionalDetails)}</div>` : ''}
+      <div class="tora-page tora-page-shaar" data-page-type="back-shaar">
+        ${svg ? `<div class="tora-shaar-svg-bg">${svg}</div>` : ''}
+        <div class="tora-shaar-overlay back">
+          ${meta.copyright ? `<div class="tora-shaar-field copyright-title">כל הזכויות שמורות</div><div class="tora-shaar-field copyright">${escapeHtml(meta.copyright)}</div>` : ''}
+          ${meta.publisherDetails ? `<div class="tora-shaar-field publisher">${escapeHtml(meta.publisherDetails)}</div>` : ''}
+          ${meta.contactDetails ? `<div class="tora-shaar-field contact">${escapeHtml(meta.contactDetails)}</div>` : ''}
+          ${meta.additionalDetails ? `<div class="tora-shaar-field disclaimer">${escapeHtml(meta.additionalDetails)}</div>` : ''}
         </div>
       </div>
     `.trim();
   }
 
-  // sub-shaar: H1 — מפצל את הטקסט על המקף הראשון לכותרת ראשית + משנה
+  // sub-shaar: H1 — מפצל את הטקסט על המקף הראשון
   if (page.pageType === 'sub-shaar' && page.heading) {
     const parts = page.heading.text.split(' - ');
     const mainTitle = parts[0] || page.heading.text;
     const subTitle = parts.slice(1).join(' - ');
+    const svg = shaarDesigns?.sub?.svg ?? '';
 
     return `
-      <div class="tora-page tora-page-shaar tora-page-sub-shaar" data-page-type="sub-shaar">
-        <div class="tora-shaar-content tora-shaar-sub">
-          <div class="tora-shaar-title">${escapeHtml(mainTitle)}</div>
-          ${subTitle ? `<div class="tora-shaar-subtitle">${escapeHtml(subTitle)}</div>` : ''}
+      <div class="tora-page tora-page-shaar" data-page-type="sub-shaar">
+        ${svg ? `<div class="tora-shaar-svg-bg">${svg}</div>` : ''}
+        <div class="tora-shaar-overlay sub">
+          <div class="tora-shaar-field title">${escapeHtml(mainTitle)}</div>
+          ${subTitle ? `<div class="tora-shaar-field subtitle">${escapeHtml(subTitle)}</div>` : ''}
         </div>
       </div>
     `.trim();

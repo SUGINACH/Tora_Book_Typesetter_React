@@ -7,15 +7,9 @@ import { typesetDocument } from '../worker/engine/typeset-document';
 import { SimulatedMeasurer } from '../worker/measurement/text-metrics';
 import { auditGeometry } from '../audit/geometry-audit';
 import { fnv1a32 } from '../worker/inputs/fnv-hash';
-import { renderToHtml } from '../worker/engine/renderer';
-import { defaultSettings } from '../lib/default-settings';
+import { loadShaarDesigns, getShaarDesign } from '../lib/shaar-loader';
+import type { ShaarDesignData } from '../worker/engine/renderer';
 
-/**
- * Hook ראשי: מבצע עימוד מלא.
- *
- * כרגע מריץ סינכרונית ב-main thread (ללא Worker).
- * זהו מצב MVP — בעתיד יוחלף ב-Worker אמיתי.
- */
 export function useTypesetter() {
   const settings = useSettingsStore((s) => s.settings);
   const rawText = useDocumentStore((s) => s.rawText);
@@ -33,23 +27,37 @@ export function useTypesetter() {
       await delay(10);
       const doc = parseDocument(rawText, settings);
 
-      // 2. Typesetting
+      // 2. טעינת עיצובי שערים מ-JSON
+      workerStore.updateProgress('font-loading', 10, 'טועם עיצובי שערים...');
+      let shaarDesigns: ShaarDesignData | undefined;
+      try {
+        const designs = await loadShaarDesigns();
+        shaarDesigns = {
+          main: getShaarDesign(designs.main, 0),
+          back: getShaarDesign(designs.back, 0),
+          sub: getShaarDesign(designs.sub, 0),
+        };
+      } catch (err) {
+        console.warn('Failed to load shaar designs:', err);
+      }
+
+      // 3. Typesetting
       workerStore.updateProgress('measuring', 20, 'מודד טקסט...');
       await delay(10);
       const measurer = new SimulatedMeasurer();
       const result = typesetDocument(doc, settings, measurer, (stage, percent, msg) =>
-        workerStore.updateProgress(stage as any, percent, msg)
+        workerStore.updateProgress(stage as any, percent, msg), shaarDesigns
       );
 
-      // 3. Audit
+      // 4. Audit
       workerStore.updateProgress('finalizing', 95, 'בודק גיאוממטריה...');
       await delay(10);
       const findings = auditGeometry(result.pages, settings);
 
-      // 4. Hash
+      // 5. Hash
       const outputHash = fnv1a32(result.pages.map((p) => p.html).join(''));
 
-      // 5. Save
+      // 6. Save
       setRendered(result.pages, outputHash, findings);
       workerStore.finish(result.durationMs);
       clearPending();

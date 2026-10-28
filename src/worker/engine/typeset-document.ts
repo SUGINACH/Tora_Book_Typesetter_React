@@ -1,7 +1,7 @@
 import type { Settings, ParsedDocument, FinalPage, ColumnContent, Block, RenderedPage, AuditFinding, TraceEvent } from '../../types';
 import type { TextMeasurer } from '../measurement/text-metrics';
 import { breakLines } from '../measurement/text-metrics';
-import { renderToHtml } from './renderer';
+import { renderToHtml, type ShaarDesignData } from './renderer';
 import { auditGeometry } from '../../audit/geometry-audit';
 import { fnv1a32 } from '../inputs/fnv-hash';
 
@@ -13,7 +13,8 @@ export function typesetDocument(
   doc: ParsedDocument,
   settings: Settings,
   measurer: TextMeasurer,
-  onProgress?: (stage: string, percent: number, msg?: string) => void
+  onProgress?: (stage: string, percent: number, msg?: string) => void,
+  shaarDesigns?: ShaarDesignData
 ): { pages: RenderedPage[]; findings: AuditFinding[]; durationMs: number; traceLog?: TraceEvent[] } {
   const start = performance.now();
 
@@ -48,23 +49,28 @@ export function typesetDocument(
   onProgress?.('finalizing', 80, 'מתקן אלמנות...');
   const fixedPages = pagesWithFootnotes.map((p) => fixWidowsAndOrphans(p, settings));
 
-  // 7. הוספת עמודי שער (ראשי + אחורי) לפני ואחרי התוכן
+  // 7. הוספת עמודי שער
+  // מבנה: עמוד 1 = שער ראשי, עמוד 2 = שער אחורי (הגב של אותו דף), אחר כך תוכן
+  // שער משנה מופיע בתחילת כל חלק (H1) — כבר מטופל ב-breakPages
   const allPages: FinalPage[] = [];
   if (doc.metadata.bookName || doc.metadata.authorName) {
+    // עמוד 1: שער ראשי
     allPages.push({
       pageNumber: 1,
       pageType: 'main-shaar',
       columns: [],
     });
+    // עמוד 2: שער אחורי (גב השער הראשי)
+    if (doc.metadata.copyright || doc.metadata.publisherDetails) {
+      allPages.push({
+        pageNumber: 2,
+        pageType: 'back-shaar',
+        columns: [],
+      });
+    }
   }
+  // תוכן הספר
   allPages.push(...fixedPages);
-  if (doc.metadata.copyright || doc.metadata.publisherDetails) {
-    allPages.push({
-      pageNumber: allPages.length + 1,
-      pageType: 'back-shaar',
-      columns: [],
-    });
-  }
 
   // מספור עמודים מחדש (רציף)
   allPages.forEach((p, i) => { p.pageNumber = i + 1; });
@@ -72,7 +78,7 @@ export function typesetDocument(
   // 8. רינדור ל-HTML
   onProgress?.('finalizing', 90, 'מרנדר...');
   const renderedPages = allPages.map((page, idx) =>
-    renderToHtml(page, idx + 1, settings, doc)
+    renderToHtml(page, idx + 1, settings, doc, shaarDesigns)
   );
 
   // 8. בדיקת גיאומטריה
