@@ -63,3 +63,14 @@
   parser (3 מבנים/metadata/mקוננים), state, ייבוא/ייצוא, דטרמיניזם
 - כל מושג מתועד עם: שם, הגדרה, קוד (file/function/class), הגדרות
 - **כלל**: בכל פעם שנכתב/נשתנה קוד הקשור למושג — GLOSSARY מתעדכן
+
+### Commit: comprehensive parser tests (22 tests)
+- **בדיקות parser מקיפות** (22 בדיקות חדשות):
+  - header-parser: 10 בדיקות (3 מבנים, מקפים, שורות לא-כותרות, רמות 0-8)
+  - nested-bracket-matcher: 5 בדיקות (פשוט, מקונן, עמוק, אין סגירה, סוגרים שונים)
+  - footnote-parser: 4 בדיקות (פשוט, מקונן, מספר הערות, סוגר פתוח)
+  - endnote-parser: 2 בדיקות (זיהוי, קידומת מותאמת)
+  - sidenote-parser: 2 בדיקות (H7 כהערת צד, H6 לא)
+  - editorial-note-parser: 2 בדיקות (הסרה, מספר הערות)
+  - metadata-parser: 4 בדיקות (שם ספר, מחבר, מספר שדות, שדה לא מזוהה)
+- סהכ: 32 בדיקות עוברות (22 parser + 6 determinism + 4 gematria)
