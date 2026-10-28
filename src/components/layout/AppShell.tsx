@@ -1,21 +1,47 @@
 import { useDocumentStore } from '../../store/document-store';
 import { useTypesetter, useHasPendingChanges } from '../../hooks/useTypesetter';
 import { useWorkerStore } from '../../store/worker-store';
+import { useSettings } from '../../hooks/useTypesetter';
 import { ImportButtons } from '../editor/ImportButtons';
 import { TextEditor } from '../editor/TextEditor';
 import { PreviewArea } from './PreviewArea';
 import { SettingsSidebar } from '../settings/SettingsSidebar';
+import { downloadHtml } from '../../lib/html-exporter';
 
 export function AppShell() {
   const typeset = useTypesetter();
+  const settings = useSettings();
   const workerStatus = useWorkerStore((s) => s.status);
   const percent = useWorkerStore((s) => s.percent);
   const message = useWorkerStore((s) => s.message);
   const hasPending = useHasPendingChanges();
   const findings = useDocumentStore((s) => s.lastFindings);
   const outputHash = useDocumentStore((s) => s.lastOutputHash);
+  const pages = useDocumentStore((s) => s.lastRenderedPages);
+  const rawText = useDocumentStore((s) => s.rawText);
 
   const isRunning = workerStatus === 'running';
+
+  const handleExportHtml = () => {
+    if (!pages || pages.length === 0) {
+      alert('אין עמודים לייצוא. הדביקו טקסט ולחצו "עדכן ועמד מחדש" תחילה.');
+      return;
+    }
+    // יצירת doc פשוט לייצוא (ה-parseDocument כבר רץ ב-typeset, אבל אין לנו את ה-doc כאן)
+    // לכן ניצור doc פשוט מה-parsed document
+    const doc = {
+      version: 1 as const,
+      metadata: {},
+      root: [],
+      footnotes: [],
+      endnotes: [],
+      sidenotes: [],
+      noteRules: settings.notes,
+      customStyles: settings.customStyles,
+      sourceHash: outputHash ?? '',
+    };
+    downloadHtml(pages, settings, doc);
+  };
 
   return (
     <div className="h-screen flex flex-col bg-gray-100" dir="rtl">
@@ -44,7 +70,7 @@ export function AppShell() {
           <div className="flex-1 overflow-auto">
             <TextEditor />
           </div>
-          <div className="p-2 border-t border-gray-200">
+          <div className="p-2 border-t border-gray-200 space-y-2">
             <button
               onClick={typeset}
               disabled={isRunning}
@@ -56,6 +82,22 @@ export function AppShell() {
             >
               {isRunning ? `⚡ ${percent}% — ${message ?? ''}` : '⚡ עדכן ועמד מחדש'}
             </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => window.print()}
+                disabled={isRunning}
+                className="flex-1 px-3 py-2 bg-gray-200 rounded text-xs"
+              >
+                📄 PDF
+              </button>
+              <button
+                onClick={handleExportHtml}
+                disabled={isRunning || !pages}
+                className="flex-1 px-3 py-2 bg-gray-200 rounded text-xs disabled:opacity-50"
+              >
+                💾 HTML
+              </button>
+            </div>
           </div>
         </div>
 
