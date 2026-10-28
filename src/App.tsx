@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { AppShell } from './components/layout/AppShell';
+import { useAutoSave } from './hooks/useAutoSave';
 
 function App() {
-  // שחזור state בעת טעינה — ה-stores כבר מטפלים ב-persist
+  useAutoSave();
+
   useEffect(() => {
     console.log('Tora Book Typesetter loaded');
   }, []);

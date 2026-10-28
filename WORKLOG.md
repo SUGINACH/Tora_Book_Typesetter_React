@@ -111,3 +111,9 @@
 - **הערות שוליים**: כחלק מ-tora-page-body, מתחת ל-tora-text-area
 - **CSS מלא נכתב מחדש** עם flexbox + grid
 - **GLOSSARY**: עדככני עם מבנה עמוד, tora-page-header/body/footer, tora-text-area
+
+### Fix: corrected heading ornaments understanding
+- **עיטורי כותרות** = עיטורים לכותרות 2/3 בלבד (NOT H7)
+- **עיטור סוף פרק** = סיום קטע של כותרת 2 (כבר ממומש)
+- H7 הערות צד = נושא נפרד, לא קשור לעיטורי כותרות
+- GLOSSARY תוקן בהתאם
