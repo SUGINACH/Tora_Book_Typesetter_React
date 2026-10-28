@@ -2,9 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: './', // relative base for GitHub Pages
+  base: './',
   plugins: [react()],
 
   resolve: {
@@ -21,17 +20,15 @@ export default defineConfig({
     },
   },
 
-  // Worker configuration
-  worker: {
-    format: 'es',
-  },
+  worker: { format: 'es' },
 
   build: {
     target: 'es2022',
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     minify: 'esbuild',
     rollupOptions: {
+      external: ['mammoth'],
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
@@ -43,8 +40,6 @@ export default defineConfig({
 
   server: {
     port: 5173,
-    strictPort: false,
-    host: 'localhost',
     open: true,
   },
 

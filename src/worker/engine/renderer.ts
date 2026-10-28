@@ -131,10 +131,11 @@ function renderColumn(col: import('../../types').ColumnContent, idx: number, set
   const divider = settings.grid.columnDivider !== 'none' && idx === 0
     ? `<div class="tora-column-divider tora-divider-${settings.grid.columnDivider}"></div>`
     : '';
+  const totalBlocks = col.blocks.length;
 
   return `
     <div class="tora-column ${cls}">
-      ${col.blocks.map((b) => renderBlock(b, settings)).join('')}
+      ${col.blocks.map((b, i) => renderBlock(b, settings, i, totalBlocks)).join('')}
     </div>
     ${divider}
   `.trim();
@@ -142,13 +143,19 @@ function renderColumn(col: import('../../types').ColumnContent, idx: number, set
 
 /**
  * רינדור בלוק — פסקה או כותרת.
- * כולל טיפול במילה ראשונה מוגדלת (first-word-window).
+ * כולל: מילה ראשונה מוגדלת, דיבור המתחיל (ד"ה), p-end/p-cut.
  */
-function renderBlock(block: Block, settings: Settings): string {
+function renderBlock(block: Block, settings: Settings, blockIndex: number, totalBlocks: number): string {
   switch (block.type) {
     case 'paragraph': {
       const text = block.content;
       const dropWordMode = settings.typography.dropWordMode;
+      const isLastInColumn = blockIndex === totalBlocks - 1;
+
+      // p-end = פסקה אחרונה בטור → שורה אחרונה ממורכזת
+      // p-cut = פסקה חתוכה → יישור מלא
+      const paraClass = isLastInColumn ? 'tora-body-text p-end' : 'tora-body-text p-cut';
+      const paraStyle = isLastInColumn ? 'text-align-last: center;' : '';
 
       // החלת מילה ראשונה מוגדלת אם פעיל
       if (dropWordMode !== 'none' && text.length > 20) {
@@ -160,11 +167,21 @@ function renderBlock(block: Block, settings: Settings): string {
           const dropWordHtml = dropWordMode === 'bold'
             ? `<span class="first-word-bold">${escapeHtml(dropWords)}</span>`
             : `<span class="first-word-window">${escapeHtml(dropWords)}</span>`;
-          return `<p class="tora-body-text">${dropWordHtml} ${escapeHtml(restWords)}</p>`;
+          return `<p class="${paraClass}" style="${paraStyle}">${dropWordHtml} ${escapeHtml(restWords)}</p>`;
         }
       }
 
-      return `<p class="tora-body-text">${escapeHtml(text)}</p>`;
+      // דיבור המתחיל (ד"ה) — זיהוי אוטומטי
+      const dhConfig = settings.typography.dibburHamatchil;
+      if (dhConfig?.enabled) {
+        const dhResult = detectDibburHamatchil(text, dhConfig.terminators);
+        if (dhResult) {
+          const dhFontCss = fontConfigToCss(dhConfig.font);
+          return `<p class="${paraClass}" style="${paraStyle}"><span class="dibbur-hamatchil" style="${dhFontCss}">${escapeHtml(dhResult.opening)}</span> ${escapeHtml(dhResult.rest)}</p>`;
+        }
+      }
+
+      return `<p class="${paraClass}" style="${paraStyle}">${escapeHtml(text)}</p>`;
     }
 
     case 'heading': {
@@ -185,6 +202,38 @@ function renderBlock(block: Block, settings: Settings): string {
     default:
       return `<p>${escapeHtml(block.content)}</p>`;
   }
+}
+
+/**
+ * זיהוי דיבור המתחיל (ד"ה).
+ * לוקח את הטקסט מתחילת הפסקה ועד הנקודה/מקף הראשונה (עד 80 תווים).
+ *
+ * ביטוי רגולרי: ^([^.\-–—]{1,80}[.\-–—])\s*(.*)$
+ */
+function detectDibburHamatchil(
+  text: string,
+  terminators: readonly string[]
+): { opening: string; rest: string } | null {
+  if (text.length < 5) return null;
+
+  // בניית תבנית regex מתווי הסיום
+  const termPattern = terminators.map((t) => escapeRegex(t)).join('');
+  const regex = new RegExp(`^([^${termPattern}]{1,80}[${termPattern}])\\s*(.+)$`, 's');
+
+  const match = text.match(regex);
+  if (!match) return null;
+
+  const opening = match[1]!.trim();
+  const rest = match[2]!.trim();
+
+  // רק אם יש מספיק טקסט אחרי הפתיח
+  if (rest.length < 10) return null;
+
+  return { opening, rest };
+}
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**

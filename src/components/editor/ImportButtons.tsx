@@ -1,4 +1,5 @@
 import { useDocumentStore } from '../../store/document-store';
+import { importTextFile, importWordFile } from '../../lib/text-importers';
 
 const SAMPLE_FILES = [
   { name: 'טקסט קצר — אלמנה/יתום', path: './widow-orphan.txt' },
@@ -21,10 +22,27 @@ export function ImportButtons() {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
       try {
-        const text = await file.text();
+        const text = await importTextFile(file);
         setText(text);
       } catch (err) {
         console.warn('File not loaded:', err);
+      }
+    };
+    input.click();
+  };
+
+  const handleWordFile = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      try {
+        const text = await importWordFile(file);
+        setText(text);
+      } catch (err) {
+        console.warn('Word file not loaded:', err);
       }
     };
     input.click();
@@ -46,7 +64,13 @@ export function ImportButtons() {
         onClick={handleTextFile}
         className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
       >
-        📄 ייבוא קובץ טקסט
+        📄 ייבוא טקסט
+      </button>
+      <button
+        onClick={handleWordFile}
+        className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+      >
+        📝 ייבוא Word
       </button>
       <select
         onChange={(e) => {

@@ -350,3 +350,20 @@
 .tora-page-h0 .tora-columns {
   margin-top: 4mm;
 }
+
+/* === דיבור המתחיל (ד"ה) === */
+.dibbur-hamatchil {
+  font-weight: 700;
+  display: inline;
+}
+
+/* === p-end vs p-cut === */
+.tora-body-text.p-end {
+  text-align: justify;
+  text-align-last: center;
+}
+
+.tora-body-text.p-cut {
+  text-align: justify;
+  text-align-last: justify;
+}
