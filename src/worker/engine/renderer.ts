@@ -60,23 +60,50 @@ function renderPageHtml(
   const footnotes = page.footnotes ? renderFootnotes(page.footnotes, settings) : '';
   const pageNumberHtml = showHeader ? renderPageNumber(pageNumber, settings) : '';
 
-  // H0 פותחת עמוד עם כותרת בשליש העליון (כמו H2)
   const isChapterOpener = isH2Page || isH0Page;
   const headingHtml = page.heading ? renderHeading(page.heading, settings) : '';
 
+  // כותרות צד (H7) — אם יש בעמוד
+  const rightSidenotes = renderSidenotes(page, doc, 'right');
+  const leftSidenotes = renderSidenotes(page, doc, 'left');
+
   return `
     <div class="tora-page ${isChapterOpener ? 'tora-page-h2' : ''} ${isH0Page ? 'tora-page-h0' : ''}" data-page="${pageNumber}" data-page-type="${page.pageType}">
-      ${runningHeader}
-      ${isChapterOpener ? `<div class="h2-top-ornament"></div>` : ''}
-      ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
-      ${isChapterOpener ? `<div class="h2-bottom-ornament"></div>` : ''}
-      <div class="tora-columns">
-        ${columns}
+      <div class="tora-page-header">
+        ${runningHeader}
       </div>
-      ${footnotes}
-      ${pageNumberHtml}
+      <div class="tora-page-body">
+        <div class="tora-text-area">
+          <div class="tora-margin-right">${rightSidenotes}</div>
+          <div class="tora-text-main ${isChapterOpener ? 'has-single-column' : ''}">
+            ${isChapterOpener ? `<div class="tora-heading-ornament-top"></div>` : ''}
+            ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
+            ${isChapterOpener ? `<div class="tora-heading-ornament-bottom"></div>` : ''}
+            <div class="tora-columns">
+              ${columns}
+            </div>
+            <div class="tora-single-column">
+              ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
+            </div>
+          </div>
+          <div class="tora-margin-left">${leftSidenotes}</div>
+        </div>
+        ${footnotes}
+      </div>
+      <div class="tora-page-footer">
+        ${pageNumberHtml}
+      </div>
     </div>
   `.trim();
+}
+
+/**
+ * רינדור הערות צד (H7) בשוליים.
+ * כרגע ריק — ימולא כאשר הערות צד יצורפו לעמוד.
+ */
+function renderSidenotes(_page: FinalPage, _doc: ParsedDocument, _side: 'right' | 'left'): string {
+  // לעת עתה ריק — הערות צד יצורפו בשלב מאוחר יותר
+  return '';
 }
 
 /**

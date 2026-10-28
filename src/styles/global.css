@@ -9,6 +9,7 @@
     --tora-accent: #7c5c3a;
     --tora-paper: #ffffff;
     --tora-ink: #000000;
+    --margin-width: 18mm;
   }
 
   body {
@@ -21,7 +22,13 @@
   }
 }
 
-/* === A4 עמוד === */
+/* ============================================================
+   מבנה עמוד: 3 חלקים אנכיים
+   1. כותרת עליונה (tora-page-header)
+   2. אזור טקסט (tora-page-body)
+   3. כותרת תחתונה / מספר עמוד (tora-page-footer)
+   ============================================================ */
+
 .tora-page {
   width: 210mm;
   min-height: 297mm;
@@ -29,7 +36,6 @@
   margin: 0 auto 8mm;
   background: var(--tora-paper);
   box-shadow: 0 1px 8px rgba(0,0,0,0.15);
-  padding: 25mm 20mm 20mm 20mm;
   direction: rtl;
   position: relative;
   display: flex;
@@ -39,14 +45,16 @@
 }
 
 @media print {
-  .tora-page {
-    box-shadow: none;
-    margin: 0;
-    page-break-after: always;
-  }
+  .tora-page { box-shadow: none; margin: 0; page-break-after: always; }
 }
 
-/* === כותרת עליונה === */
+/* 1. כותרת עליונה */
+.tora-page-header {
+  flex-shrink: 0;
+  padding: 0 var(--tora-pad, 20mm);
+  padding-top: var(--tora-pad-top, 25mm);
+}
+
 .tora-running-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -55,117 +63,62 @@
   margin-bottom: 6mm;
   border-bottom: 1px solid #c8c0b0;
   font-size: 10pt;
-  line-height: 1.3;
 }
 
-.tora-rh-right { text-align: right; padding-left: 4mm; }
+.tora-rh-right { text-align: right; }
 .tora-rh-center { text-align: center; }
-.tora-rh-left { text-align: left; padding-right: 4mm; }
+.tora-rh-left { text-align: left; }
 
-/* הסתרת כותרות בשערים */
-.tora-page-shaar .tora-running-header { display: none; }
-
-/* === שני טורים === */
-.tora-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5%;
+/* 2. אזור טקסט — מחולק ל-2 חלקים אנכיים דינמיים */
+.tora-page-body {
   flex: 1;
-  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--tora-pad, 20mm);
+  overflow: hidden;
 }
 
-.tora-column {
-  font-size: 12pt;
-  line-height: 1.45;
-  text-align: justify;
-  text-justify: inter-word;
-  direction: rtl;
+/* 2a. אזור טקסט עיקרי + כותרות צד — 3 חלקים אופקיים */
+.tora-text-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: var(--margin-width) 1fr var(--margin-width);
+  gap: 3mm;
+  overflow: hidden;
 }
 
-.tora-column-right { order: 1; }
-.tora-column-left { order: 2; }
-
-/* === קו מפריד בין טורים === */
-.tora-column-divider {
-  position: absolute;
-  top: 35mm;
-  bottom: 25mm;
-  left: 50%;
-  width: 0;
-  border-left: 1px solid #c8c0b0;
-}
-
-.tora-divider-dashed { border-left-style: dashed; }
-.tora-divider-double { border-left: 3px double #c8c0b0; }
-
-/* === כותרות === */
-.tora-heading-wrapper {
+/* כותרות צד ימין */
+.tora-margin-right {
+  overflow: hidden;
+  font-size: 6pt;
+  color: #404040;
+  line-height: 1.2;
   text-align: center;
-  margin: 15mm 0 10mm 0;
 }
 
-.tora-heading { margin: 0; }
-
-.tora-heading-level-0 { font-size: 17pt; font-weight: 700; }
-.tora-heading-level-1 { font-size: 50pt; font-weight: 700; }
-.tora-heading-level-2 { font-size: 17pt; font-weight: 700; }
-.tora-heading-level-3 { font-size: 13.5pt; font-weight: 400; margin: 6mm 0; text-align: right; }
-.tora-heading-level-4 { font-size: 12.5pt; font-weight: 400; margin: 4mm 0; text-align: right; }
-.tora-heading-level-5 { font-size: 11.5pt; font-weight: 400; margin: 3mm 0; text-align: right; }
-.tora-heading-level-6 { font-size: 10.5pt; font-weight: 400; margin: 2mm 0; text-align: right; }
-
-.tora-siman-badge {
-  font-size: 10pt;
-  color: #666;
+/* כותרות צד שמאל */
+.tora-margin-left {
+  overflow: hidden;
+  font-size: 6pt;
+  color: #404040;
+  line-height: 1.2;
   text-align: center;
-  margin-top: 3mm;
 }
 
-/* === עיטורים === */
-.h2-top-ornament,
-.h2-bottom-ornament {
-  text-align: center;
-  margin: 4mm 0;
-  font-size: 14pt;
-  color: var(--tora-accent);
+/* טקסט עיקרי */
+.tora-text-main {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* === פסקאות === */
-.tora-body-text {
-  margin: 0 0 3mm 0;
-  text-align: justify;
-  text-justify: inter-word;
-  text-indent: 0;
-}
-
-/* פסקה אחרונה — שורה אחרונה ממורכזת */
-.tora-body-text:last-child {
-  text-align: justify;
-}
-
-.tora-body-text.tora-p-end {
-  text-align: justify;
-}
-
-/* מילה ראשונה מודגשת */
-.first-word-window {
-  font-weight: 900;
-  font-size: 1.5em;
-  line-height: 0.85;
-  float: right;
-  margin-left: 2mm;
-  margin-top: 1mm;
-}
-
-/* === הערות שוליים === */
+/* 2b. אזור הערות שוליים */
 .tora-footnotes-area {
-  margin-top: auto;
+  flex-shrink: 0;
   padding-top: 3mm;
-  border-top: 0;
 }
 
 .tora-fn-divider {
-  height: 0;
   border-top: 1px solid #999;
   margin-bottom: 2mm;
 }
@@ -184,70 +137,185 @@
   font-size: 8pt;
   margin: 1mm 0;
   line-height: 1.3;
-  text-align: justify;
 }
 
-.tora-fn-marker {
-  font-weight: 700;
-  margin-left: 1mm;
+.tora-fn-marker { font-weight: 700; margin-left: 1mm; }
+
+/* 3. כותרת תחתונה / מספר עמוד */
+.tora-page-footer {
+  flex-shrink: 0;
+  padding: 0 var(--tora-pad, 20mm);
+  padding-bottom: var(--tora-pad-bottom, 20mm);
 }
 
-/* === מספר עמוד === */
 .tora-page-number {
   text-align: center;
   margin-top: 4mm;
   font-size: 11pt;
-  font-family: 'Lia Sgula', 'Frank Ruhl Libre', serif;
 }
 
 .tora-pn-bottom-center { text-align: center; }
 .tora-pn-bottom-outer { text-align: right; }
 .tora-pn-in-header { text-align: center; }
 
-.tora-frame-circle {
-  border: 1px solid #000;
-  border-radius: 50%;
-  padding: 0.5mm 2mm;
-  display: inline-block;
+.tora-frame-circle { border: 1px solid #000; border-radius: 50%; padding: 0.5mm 2mm; display: inline-block; }
+.tora-frame-square { border: 1px solid #000; padding: 0.5mm 2mm; display: inline-block; }
+
+/* ============================================================
+   טקסט: שני טורים או טור אחד (H2/H3)
+   ============================================================ */
+
+/* שני טורים */
+.tora-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5%;
+  flex: 1;
+  direction: rtl;
 }
 
-.tora-frame-square {
-  border: 1px solid #000;
-  padding: 0.5mm 2mm;
-  display: inline-block;
+.tora-column {
+  font-size: 12pt;
+  line-height: 1.45;
+  text-align: justify;
+  direction: rtl;
 }
 
-/* הסתרת מספר עמוד בשערים */
-.tora-page-shaar .tora-page-number { display: none; }
+.tora-column-right { order: 1; }
+.tora-column-left { order: 2; }
 
-/* === עמודי שער — SVG מקובץ JSON חיצוני === */
+.tora-column-divider {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  width: 0;
+  border-right: 1px solid #c8c0b0;
+  position: relative;
+  left: 50%;
+}
+
+.tora-divider-dashed { border-right-style: dashed; }
+.tora-divider-double { border-right: 3px double #c8c0b0; }
+
+/* טור אחד (H2/H3 — כותרת רוחבית) */
+.tora-single-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   כותרות
+   ============================================================ */
+
+.tora-heading-wrapper {
+  text-align: center;
+  margin: 10mm 0 6mm 0;
+}
+
+.tora-heading { margin: 0; }
+
+.tora-heading-level-0 { font-size: 17pt; font-weight: 700; }
+.tora-heading-level-1 { font-size: 50pt; font-weight: 700; }
+.tora-heading-level-2 { font-size: 17pt; font-weight: 700; }
+.tora-heading-level-3 { font-size: 13.5pt; font-weight: 400; }
+.tora-heading-level-4 { font-size: 12.5pt; font-weight: 400; margin: 4mm 0; text-align: right; }
+.tora-heading-level-5 { font-size: 11.5pt; font-weight: 400; margin: 3mm 0; text-align: right; }
+.tora-heading-level-6 { font-size: 10.5pt; font-weight: 400; margin: 2mm 0; text-align: right; }
+
+.tora-heading-inline-wide { margin: 4mm 0 2mm 0; text-align: center; grid-column: 1 / -1; }
+.tora-heading-inline { margin: 2mm 0 1mm 0; text-align: right; }
+
+.tora-siman-badge { font-size: 10pt; color: #666; text-align: center; margin-top: 3mm; }
+
+/* עיטורי כותרות */
+.tora-heading-ornament-top,
+.tora-heading-ornament-bottom {
+  text-align: center;
+  margin: 3mm 0;
+  font-size: 12pt;
+  color: var(--tora-accent);
+}
+
+/* ============================================================
+   פסקאות
+   ============================================================ */
+
+.tora-body-text { margin: 0 0 3mm 0; text-align: justify; }
+
+.tora-body-text.p-end { text-align: justify; text-align-last: center; }
+.tora-body-text.p-cut { text-align: justify; text-align-last: justify; }
+
+.first-word-window {
+  font-weight: 900;
+  font-size: 1.5em;
+  line-height: 0.85;
+  float: right;
+  margin-left: 2mm;
+  margin-top: 1mm;
+}
+
+.first-word-bold { font-weight: 900; }
+
+.dibbur-hamatchil { font-weight: 700; display: inline; }
+
+/* ============================================================
+   סמני הערות שוליים בגוף
+   ============================================================ */
+
+.tora-fn-inline {
+  font-size: 0.75em;
+  font-weight: 700;
+  vertical-align: super;
+  color: #000;
+  line-height: 0;
+  margin: 0 1px;
+}
+
+.tora-fn-sub { vertical-align: sub; }
+.tora-fn-bracket { font-size: 0.7em; vertical-align: super; }
+.tora-fn-normal { font-size: inherit; vertical-align: baseline; font-weight: inherit; }
+
+/* ============================================================
+   סיום פרק
+   ============================================================ */
+
+.tora-chapter-end {
+  text-align: center;
+  margin: 8mm 0 4mm 0;
+  font-size: 14pt;
+  color: #999;
+  letter-spacing: 4mm;
+}
+
+/* ============================================================
+   הערות צד (H7) בשוליים
+   ============================================================ */
+
+.tora-sidenote {
+  font-size: 6pt;
+  color: #404040;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.2;
+  margin-bottom: 2mm;
+}
+
+/* ============================================================
+   עמודי שער — SVG מ-JSON
+   ============================================================ */
+
 .tora-page-shaar {
   position: relative;
   padding: 0;
   overflow: hidden;
 }
 
-.tora-shaar-svg-bg {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.tora-shaar-svg-bg svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+.tora-shaar-svg-bg { position: absolute; top: 0; right: 0; width: 100%; height: 100%; z-index: 1; }
+.tora-shaar-svg-bg svg { width: 100%; height: 100%; display: block; }
 
 .tora-shaar-overlay {
   position: absolute;
-  top: 20mm;
-  bottom: 16mm;
-  right: 15mm;
-  left: 15mm;
+  top: 20mm; bottom: 16mm; right: 15mm; left: 15mm;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -256,21 +324,10 @@
   text-align: center;
 }
 
-.tora-shaar-overlay.back {
-  /* שער אחורי — גב הספר */
-  justify-content: space-evenly;
-}
+.tora-shaar-overlay.back { justify-content: space-evenly; }
+.tora-shaar-overlay.sub { justify-content: center; }
 
-.tora-shaar-overlay.sub {
-  /* שער משנה */
-  justify-content: center;
-}
-
-.tora-shaar-field {
-  margin: 2mm 0;
-  white-space: pre-wrap;
-}
-
+.tora-shaar-field { margin: 2mm 0; white-space: pre-wrap; }
 .tora-shaar-field.bsd { font-size: 10pt; color: #666; }
 .tora-shaar-field.title { font-size: 28pt; font-weight: 700; color: #111; }
 .tora-shaar-field.subtitle { font-size: 18pt; font-weight: 400; color: #333; }
@@ -285,167 +342,38 @@
 .tora-shaar-field.disclaimer { font-size: 9.5pt; color: #64748b; }
 
 .tora-page-shaar .tora-running-header,
-.tora-page-shaar .tora-page-number {
-  display: none;
-}
+.tora-page-shaar .tora-page-number { display: none; }
 
-/* === תצוגה === */
-.tora-page-wrapper {
-  margin-bottom: 8mm;
-}
+/* ============================================================
+   תוכן עניינים
+   ============================================================ */
 
-@media print {
-  .tora-page-wrapper {
-    margin-bottom: 0;
-    page-break-after: always;
-  }
-}
-
-/* === מילה ראשונה מוגדלת (first-word-window) === */
-.first-word-window {
-  font-weight: 900;
-  font-size: 1.5em;
-  line-height: 0.85;
-  float: right;
-  margin-left: 2mm;
-  margin-top: 1mm;
-  color: inherit;
-}
-
-.first-word-bold {
-  font-weight: 900;
-}
-
-/* === כותרות inline בתוך טור === */
-.tora-heading-inline {
-  margin: 2mm 0 1mm 0;
-  text-align: right;
-}
-
-.tora-heading-inline-wide {
-  margin: 4mm 0 2mm 0;
-  text-align: center;
-  grid-column: 1 / -1;
-}
-
-/* === bsd header בשער === */
-.bsd-header {
-  font-size: 10pt;
-  color: #666;
-  margin-bottom: 10mm;
-}
-
-/* === H0 page (כמו H2 אבל עם מרווח שונה) === */
-.tora-page-h0 .tora-heading-wrapper {
-  margin: 20mm 0 8mm 0;
-}
-
-/* === הגדרות נוספות === */
-.tora-page-h2 .tora-columns,
-.tora-page-h0 .tora-columns {
-  margin-top: 4mm;
-}
-
-/* === דיבור המתחיל (ד"ה) === */
-.dibbur-hamatchil {
-  font-weight: 700;
-  display: inline;
-}
-
-/* === p-end vs p-cut === */
-.tora-body-text.p-end {
-  text-align: justify;
-  text-align-last: center;
-}
-
-.tora-body-text.p-cut {
-  text-align: justify;
-  text-align-last: justify;
-}
-
-/* === סמני הערות שוליים בגוף === */
-.tora-fn-inline {
-  font-size: 0.75em;
-  font-weight: 700;
-  vertical-align: super;
-  color: #000;
-  line-height: 0;
-  margin: 0 1px;
-}
-
-.tora-fn-sub { vertical-align: sub; }
-.tora-fn-bracket { font-size: 0.7em; vertical-align: super; }
-.tora-fn-normal { font-size: inherit; vertical-align: baseline; font-weight: inherit; }
-
-/* === עיטור סיום פרק === */
-.tora-chapter-end {
-  text-align: center;
-  margin: 8mm 0 4mm 0;
-  font-size: 14pt;
-  color: #999;
-  letter-spacing: 4mm;
-}
-
-/* === עמוד תוכן עניינים === */
-.tora-page-toc {
-  padding: 30mm 20mm;
-  direction: rtl;
-}
-
-.tora-toc-title {
-  text-align: center;
-  font-size: 24pt;
-  font-weight: 700;
-  margin-bottom: 10mm;
-}
-
-.tora-toc-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2mm;
-}
-
-.tora-toc-entry {
-  display: flex;
-  align-items: baseline;
-  font-size: 11pt;
-  line-height: 1.5;
-}
-
-.tora-toc-title {
-  font-weight: 700;
-}
-
+.tora-page-toc { padding: 30mm 20mm; }
+.tora-toc-title { text-align: center; font-size: 24pt; font-weight: 700; margin-bottom: 10mm; }
+.tora-toc-list { display: flex; flex-direction: column; gap: 2mm; }
+.tora-toc-entry { display: flex; align-items: baseline; font-size: 11pt; line-height: 1.5; }
 .tora-toc-level-1 { font-size: 13pt; font-weight: 700; }
 .tora-toc-level-2 { font-size: 11pt; font-weight: 400; }
 .tora-toc-level-3 { font-size: 10pt; font-weight: 400; color: #555; }
-
-.tora-toc-dots {
-  flex: 1;
-  border-bottom: 1px dotted #999;
-  margin: 0 2mm;
-  position: relative;
-  top: -3px;
-}
-
-.tora-toc-page {
-  font-weight: 700;
-  min-width: 8mm;
-  text-align: left;
-}
-
-/* עמוד TOC ללא כותרת עליונה ומספר */
+.tora-toc-dots { flex: 1; border-bottom: 1px dotted #999; margin: 0 2mm; position: relative; top: -3px; }
+.tora-toc-page { font-weight: 700; min-width: 8mm; text-align: left; }
 .tora-page-toc .tora-running-header,
 .tora-page-toc .tora-page-number { display: none; }
 
-/* === הערת צד (H7) בשוליים === */
-.tora-sidenote {
-  font-size: 6pt;
-  color: #404040;
-  font-weight: 400;
-  text-align: center;
-  position: absolute;
-  left: -25mm;
-  width: 20mm;
-  line-height: 1.2;
+/* ============================================================
+   תצוגה
+   ============================================================ */
+
+.tora-page-wrapper { margin-bottom: 8mm; }
+
+@media print {
+  .tora-page-wrapper { margin: 0; page-break-after: always; }
+}
+
+/* H2/H3 single-column mode */
+.tora-text-main.has-single-column .tora-columns {
+  display: none;
+}
+.tora-text-main:not(.has-single-column) .tora-single-column {
+  display: none;
 }

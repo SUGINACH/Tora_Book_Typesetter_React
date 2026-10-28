@@ -97,3 +97,17 @@
 - **סיום פרק**: ❖ ❖ ❖
 - **CSS**: TOC, sidenote, footnote inline, chapter end
 - **GLOSSARY**: עדככני עם סמני הערות, TOC, sidenote
+
+### Commit: 3-part page layout + 3-part text area + H2/H3 single column
+- **מבנה עמוד חדש**: 3 חלקים אנכיים
+  1. tora-page-header (כותרת עליונה)
+  2. tora-page-body (אזור טקסט)
+  3. tora-page-footer (מספר עמוד)
+- **אזור טקסט חדש**: 3 חלקים אופקיים
+  1. tora-margin-right (כותרות צד ימין — לעת עתה ריק)
+  2. tora-text-main (טקסט עיקרי)
+  3. tora-margin-left (כותרות צד שמאל — לעת עתה ריק)
+- **H2/H3 טור אחד**: CSS toggle — has-single-column class מסתיר .tora-columns ומציג .tora-single-column
+- **הערות שוליים**: כחלק מ-tora-page-body, מתחת ל-tora-text-area
+- **CSS מלא נכתב מחדש** עם flexbox + grid
+- **GLOSSARY**: עדככני עם מבנה עמוד, tora-page-header/body/footer, tora-text-area
