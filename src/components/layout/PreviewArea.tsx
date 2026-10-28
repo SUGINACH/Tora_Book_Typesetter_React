@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { useDocumentStore } from '../../store/document-store';
 
 export function PreviewArea() {
   const pages = useDocumentStore((s) => s.lastRenderedPages);
   const findings = useDocumentStore((s) => s.lastFindings);
-  const [currentPage, setCurrentPage] = useState(1);
 
   if (!pages || pages.length === 0) {
     return (
@@ -17,51 +15,41 @@ export function PreviewArea() {
     );
   }
 
-  const page = pages[Math.min(currentPage - 1, pages.length - 1)];
-
   return (
     <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden">
       {/* Toolbar */}
-      <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
+      <div className="bg-white border-b border-gray-200 px-3 py-2 flex items-center justify-between text-sm">
+        <span className="font-medium">{pages.length} עמודים</span>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage <= 1}
-            className="px-2 py-1 bg-gray-100 rounded disabled:opacity-50"
-          >
-            ▶
-          </button>
-          <span className="text-sm">
-            עמוד {currentPage} מתוך {pages.length}
-          </span>
-          <button
-            onClick={() => setCurrentPage(Math.min(pages.length, currentPage + 1))}
-            disabled={currentPage >= pages.length}
-            className="px-2 py-1 bg-gray-100 rounded disabled:opacity-50"
-          >
-            ◀
-          </button>
-        </div>
-        <div className="flex items-center gap-2 text-xs">
           {findings.length > 0 ? (
-            <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded">
+            <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
               {findings.length} ממצאים
             </span>
           ) : (
-            <span className="px-2 py-1 bg-green-100 text-green-800 rounded">
+            <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
               ✓ אין ממצאים
             </span>
           )}
+          <button
+            onClick={() => window.print()}
+            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs"
+          >
+            📄 הדפסה/PDF
+          </button>
         </div>
       </div>
 
-      {/* Page preview */}
-      <div className="flex-1 overflow-auto p-4">
-        <div
-          className="bg-white shadow-lg mx-auto"
-          style={{ width: 'fit-content', maxWidth: '100%' }}
-          dangerouslySetInnerHTML={{ __html: page.html }}
-        />
+      {/* ALL pages — scrollable */}
+      <div className="flex-1 overflow-auto p-4 space-y-6 print:p-0 print:space-y-0">
+        {pages.map((page) => (
+          <div
+            key={page.pageNumber}
+            className="tora-page-wrapper bg-white shadow-lg mx-auto"
+            style={{ width: 'fit-content' }}
+          >
+            <div dangerouslySetInnerHTML={{ __html: page.html }} />
+          </div>
+        ))}
       </div>
 
       {/* Findings list */}
@@ -69,10 +57,10 @@ export function PreviewArea() {
         <div className="bg-white border-t border-gray-200 p-3 max-h-40 overflow-auto">
           <h3 className="text-sm font-bold mb-2">ממצאי בדיקה:</h3>
           <ul className="space-y-1">
-            {findings.slice(0, 5).map((f, i) => (
+            {findings.map((f, i) => (
               <li key={i} className="text-xs flex items-start gap-2">
                 <span
-                  className={`px-2 py-0.5 rounded text-white ${
+                  className={`px-2 py-0.5 rounded text-white shrink-0 ${
                     f.severity === 'HIGH'
                       ? 'bg-red-500'
                       : f.severity === 'MEDIUM'
@@ -87,9 +75,6 @@ export function PreviewArea() {
                 </span>
               </li>
             ))}
-            {findings.length > 5 && (
-              <li className="text-xs text-gray-500">...ו{findings.length - 5} נוספים</li>
-            )}
           </ul>
         </div>
       )}

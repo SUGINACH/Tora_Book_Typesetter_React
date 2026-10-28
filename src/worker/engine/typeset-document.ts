@@ -48,9 +48,30 @@ export function typesetDocument(
   onProgress?.('finalizing', 80, 'מתקן אלמנות...');
   const fixedPages = pagesWithFootnotes.map((p) => fixWidowsAndOrphans(p, settings));
 
-  // 7. רינדור ל-HTML
+  // 7. הוספת עמודי שער (ראשי + אחורי) לפני ואחרי התוכן
+  const allPages: FinalPage[] = [];
+  if (doc.metadata.bookName || doc.metadata.authorName) {
+    allPages.push({
+      pageNumber: 1,
+      pageType: 'main-shaar',
+      columns: [],
+    });
+  }
+  allPages.push(...fixedPages);
+  if (doc.metadata.copyright || doc.metadata.publisherDetails) {
+    allPages.push({
+      pageNumber: allPages.length + 1,
+      pageType: 'back-shaar',
+      columns: [],
+    });
+  }
+
+  // מספור עמודים מחדש (רציף)
+  allPages.forEach((p, i) => { p.pageNumber = i + 1; });
+
+  // 8. רינדור ל-HTML
   onProgress?.('finalizing', 90, 'מרנדר...');
-  const renderedPages = fixedPages.map((page, idx) =>
+  const renderedPages = allPages.map((page, idx) =>
     renderToHtml(page, idx + 1, settings, doc)
   );
 
