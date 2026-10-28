@@ -137,3 +137,13 @@
 - **ZoomControls**: −/+/100% buttons
 - **PreviewArea**: zoom applied to pages, findings panel, print button
 - **GLOSSARY**: view store, zoom
+
+### Commit: editor↔preview sync + worker bridge + engine tests
+- **useEditorPreviewSync**: סנכרון דו-כיווני
+  1. קליק על עמוד בתצוגה → גלילת עורך לטקסט
+  2. מיקום סמן בעורך → גלילת תצוגה לעמוד
+- **worker-bridge.ts**: הפשטת המנוע — runTypeset() אסינכרוני
+  כרגע רץ ב-main thread, מוכן להחלפה ב-Worker
+- **useTypesetter**: פונה ל-worker-bridge במקום ישירות למנוע
+- **9 בדיקות engine חדשות**: עמודים, שערים, H2, hash, metadata, HTML
+- סהכ: 48 בדיקות עוברות

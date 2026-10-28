@@ -1,6 +1,7 @@
 import { useDocumentStore } from '../../store/document-store';
 import { useSettingsStore } from '../../store/settings-store';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { useEditorPreviewSync } from '../../hooks/useEditorPreviewSync';
 
 export function TextEditor() {
   const rawText = useDocumentStore((s) => s.rawText);
@@ -8,10 +9,14 @@ export function TextEditor() {
   const pages = useDocumentStore((s) => s.lastRenderedPages);
   const markPending = useSettingsStore((s) => s.markPending);
 
-  // חישוב מיקומי מעברי עמוד בטקסט — על בסיס מספר העמודים
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  // סנכרון עורך↔תצוגה
+  useEditorPreviewSync(textareaRef, previewRef);
+
   const pageBreakLines = useMemo(() => {
     if (!pages || pages.length <= 1 || !rawText) return [];
-    // הערכה גסה: חלוקת הטקסט למספר חלקים שווה פחות או עוד פחות
     const lines = rawText.split('\n');
     const linesPerPage = Math.ceil(lines.length / pages.length);
     const breaks: number[] = [];
@@ -21,13 +26,11 @@ export function TextEditor() {
     return breaks;
   }, [pages, rawText]);
 
-  // רינדור הטקסט עם חוצצים
-  const renderWithBreaks = (text: string) => {
-    if (pageBreakLines.length === 0) return text;
-    const lines = text.split('\n');
+  const displayText = useMemo(() => {
+    if (pageBreakLines.length === 0) return rawText;
+    const lines = rawText.split('\n');
     const result: string[] = [];
     let breakIdx = 0;
-
     for (let i = 0; i < lines.length; i++) {
       result.push(lines[i]!);
       if (breakIdx < pageBreakLines.length && i === pageBreakLines[breakIdx]) {
@@ -36,24 +39,18 @@ export function TextEditor() {
       }
     }
     return result.join('\n');
-  };
+  }, [rawText, pageBreakLines]);
 
-  const displayText = pageBreakLines.length > 0 ? renderWithBreaks(rawText) : rawText;
-
-  // טיפול בשינוי — מסיר חוצצים לפני שמירה
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    // הסרת חוצצים (שורות שמתחילות ב- ---)
     const cleaned = value.replace(/\n--- עמוד \d+ ---\n/g, '\n');
     setText(cleaned);
     markPending();
   };
 
-  // גלילה לעמוד ספציפי (כאשר לוחצים על עמוד בתצוגה)
-  // TODO: ימומש כאשר נקבל אירוע גלילה מ-PreviewArea
-
   return (
     <textarea
+      ref={textareaRef}
       value={displayText}
       onChange={handleChange}
       dir="rtl"
