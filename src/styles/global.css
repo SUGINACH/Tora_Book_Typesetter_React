@@ -362,3 +362,26 @@
   text-align: justify;
   text-align-last: justify;
 }
+
+/* === סמני הערות שוליים בגוף === */
+.tora-fn-inline {
+  font-size: 0.75em;
+  font-weight: 700;
+  vertical-align: super;
+  color: #000;
+  line-height: 0;
+  margin: 0 1px;
+}
+
+.tora-fn-sub { vertical-align: sub; }
+.tora-fn-bracket { font-size: 0.7em; vertical-align: super; }
+.tora-fn-normal { font-size: inherit; vertical-align: baseline; font-weight: inherit; }
+
+/* === עיטור סיום פרק === */
+.tora-chapter-end {
+  text-align: center;
+  margin: 8mm 0 4mm 0;
+  font-size: 14pt;
+  color: #999;
+  letter-spacing: 4mm;
+}

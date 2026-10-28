@@ -165,19 +165,22 @@ function renderColumn(col: import('../../types').ColumnContent, idx: number, set
 
 /**
  * רינדור בלוק — פסקה או כותרת.
- * כולל: מילה ראשונה מוגדלת, דיבור המתחיל (ד"ה), p-end/p-cut.
+ * כולל: מילה ראשונה מוגדלת, דיבור המתחיל (ד"ה), p-end/p-cut,
+ * סמני הערות שוליים בגוף הטקסט.
  */
 function renderBlock(block: Block, settings: Settings, blockIndex: number, totalBlocks: number): string {
   switch (block.type) {
     case 'paragraph': {
-      const text = block.content;
+      let text = block.content;
       const dropWordMode = settings.typography.dropWordMode;
       const isLastInColumn = blockIndex === totalBlocks - 1;
 
       // p-end = פסקה אחרונה בטור → שורה אחרונה ממורכזת
-      // p-cut = פסקה חתוכה → יישור מלא
       const paraClass = isLastInColumn ? 'tora-body-text p-end' : 'tora-body-text p-cut';
       const paraStyle = isLastInColumn ? 'text-align-last: center;' : '';
+
+      // החלפת סמני הערות שוליים (\u0001FN:id\u0002) בסמן עילי ויזואלי
+      text = renderFootnoteMarkers(text, settings);
 
       // החלת מילה ראשונה מוגדלת אם פעיל
       if (dropWordMode !== 'none' && text.length > 20) {
@@ -228,30 +231,54 @@ function renderBlock(block: Block, settings: Settings, blockIndex: number, total
 
 /**
  * זיהוי דיבור המתחיל (ד"ה).
- * לוקח את הטקסט מתחילת הפסקה ועד הנקודה/מקף הראשונה (עד 80 תווים).
- *
- * ביטוי רגולרי: ^([^.\-–—]{1,80}[.\-–—])\s*(.*)$
  */
 function detectDibburHamatchil(
   text: string,
   terminators: readonly string[]
 ): { opening: string; rest: string } | null {
   if (text.length < 5) return null;
-
-  // בניית תבנית regex מתווי הסיום
   const termPattern = terminators.map((t) => escapeRegex(t)).join('');
   const regex = new RegExp(`^([^${termPattern}]{1,80}[${termPattern}])\\s*(.+)$`, 's');
-
   const match = text.match(regex);
   if (!match) return null;
-
   const opening = match[1]!.trim();
   const rest = match[2]!.trim();
-
-  // רק אם יש מספיק טקסט אחרי הפתיח
   if (rest.length < 10) return null;
-
   return { opening, rest };
+}
+
+/**
+ * החלפת סמני הערות שוליים בטקסט בסמן עילי ויזואלי.
+ *
+ * סמן פנימי: \u0001FN:id\u0002
+ * החלפה: <sup class="tora-fn-inline" data-fn-id="id">marker</sup>
+ *
+ * הסמן ממוספר לפי סדר הופעה בעמוד.
+ */
+function renderFootnoteMarkers(text: string, settings: Settings): string {
+  const markerStyle = settings.notes.bodyMarkerStyle;
+  const markerClass = markerStyle === 'superscript' ? 'tora-fn-inline'
+    : markerStyle === 'subscript' ? 'tora-fn-inline tora-fn-sub'
+    : markerStyle === 'brackets' ? 'tora-fn-inline tora-fn-bracket'
+    : 'tora-fn-inline tora-fn-normal';
+
+  let counter = 0;
+  return text.replace(/\u0001FN:([^\u0002]+)\u0002/g, (_match, fnId) => {
+    counter++;
+    const marker = toGematria(counter);
+    if (markerStyle === 'brackets') {
+      return `<sup class="${markerClass}" data-fn-id="${fnId}">[${marker}]</sup>`;
+    }
+    return `<sup class="${markerClass}" data-fn-id="${fnId}">${marker}</sup>`;
+  });
+}
+
+/**
+ * עיטור סיום פרק — מתווסף לעמוד האחרון של כל פרק (H2).
+ * מבנה: ❖ ❖ ❖ (פירמידת מעויינים)
+ */
+function renderChapterEndDivider(): string {
+  return '<div class="tora-chapter-end">❖ &nbsp; ❖ &nbsp; ❖</div>';
 }
 
 function escapeRegex(s: string): string {

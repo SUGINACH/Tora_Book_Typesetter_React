@@ -81,3 +81,10 @@
   2. editorial-note-parser: trim מסיר רווחים → ציפיון 'טקסט' (לא '  טקסט ')
   3. metadata-parser: remaining כולל שורה ריקה → בדיקת last element
 - סהכ: 39 בדיקות עוברות (22 parser + 6 determinism + 4 gematria + 7 נוספות)
+
+### Commit: footnote markers in body + chapter end divider
+- **סמני הערות שוליים בגוף הטקסט**: החלפת \u0001FN:id\u0002 ב-<sup> עם מספור גיממ
+  סגנונות: superscript, subscript, brackets, normal
+- **עיטור סיום פרק**: ❖ ❖ ❖ (פירמידת מעויינים)
+- CSS: .tora-fn-inline, .tora-chapter-end
+- GLOSSARY: נשמר עדכני (סמני הערות, סיום פרק)
