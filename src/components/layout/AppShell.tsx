@@ -4,6 +4,7 @@ import { useWorkerStore } from '../../store/worker-store';
 import { ImportButtons } from '../editor/ImportButtons';
 import { TextEditor } from '../editor/TextEditor';
 import { PreviewArea } from './PreviewArea';
+import { SettingsSidebar } from '../settings/SettingsSidebar';
 
 export function AppShell() {
   const typeset = useTypesetter();
@@ -17,9 +18,9 @@ export function AppShell() {
   const isRunning = workerStatus === 'running';
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50" dir="rtl">
+    <div className="h-screen flex flex-col bg-gray-100" dir="rtl">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between">
+      <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between shrink-0">
         <h1 className="text-xl font-bold">📖 מערכת עימוד ספרים תורניים</h1>
         <div className="flex items-center gap-3 text-sm">
           {outputHash && (
@@ -36,18 +37,18 @@ export function AppShell() {
       {/* Main */}
       <div className="flex-1 flex overflow-hidden">
         {/* Editor Panel */}
-        <div className="w-1/4 bg-white border-l border-gray-200 flex flex-col">
-          <div className="p-2 border-b border-gray-200 flex items-center gap-2">
+        <div className="w-64 bg-white border-l border-gray-200 flex flex-col shrink-0">
+          <div className="p-2 border-b border-gray-200">
             <ImportButtons />
           </div>
           <div className="flex-1 overflow-auto">
             <TextEditor />
           </div>
-          <div className="p-2 border-t border-gray-200 flex items-center gap-2">
+          <div className="p-2 border-t border-gray-200">
             <button
               onClick={typeset}
               disabled={isRunning}
-              className={`px-4 py-2 rounded text-sm font-medium ${
+              className={`w-full px-4 py-2 rounded text-sm font-medium ${
                 hasPending
                   ? 'bg-orange-500 text-white animate-pulse'
                   : 'bg-blue-500 text-white'
@@ -55,15 +56,11 @@ export function AppShell() {
             >
               {isRunning ? `⚡ ${percent}% — ${message ?? ''}` : '⚡ עדכן ועמד מחדש'}
             </button>
-            <button
-              onClick={() => window.print()}
-              disabled={isRunning}
-              className="px-3 py-2 bg-gray-200 rounded text-sm"
-            >
-              📄 PDF
-            </button>
           </div>
         </div>
+
+        {/* Settings Sidebar */}
+        <SettingsSidebar />
 
         {/* Preview Area */}
         <PreviewArea />
