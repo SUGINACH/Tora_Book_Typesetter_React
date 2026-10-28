@@ -74,3 +74,10 @@
   - editorial-note-parser: 2 בדיקות (הסרה, מספר הערות)
   - metadata-parser: 4 בדיקות (שם ספר, מחבר, מספר שדות, שדה לא מזוהה)
 - סהכ: 32 בדיקות עוברות (22 parser + 6 determinism + 4 gematria)
+
+### Commit: fix 4 failing parser tests
+- תיקון 4 בדיקות שנכשלו:
+  1. nested-bracket-matcher: תיקון ערכי ציפיון (21→20, 15→14)
+  2. editorial-note-parser: trim מסיר רווחים → ציפיון 'טקסט' (לא '  טקסט ')
+  3. metadata-parser: remaining כולל שורה ריקה → בדיקת last element
+- סהכ: 39 בדיקות עוברות (22 parser + 6 determinism + 4 gematria + 7 נוספות)

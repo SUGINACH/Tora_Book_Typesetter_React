@@ -63,11 +63,11 @@ describe('nested-bracket-matcher', () => {
   });
 
   it('מקונן', () => {
-    expect(findMatchingCloseBracket('[outer [inner] still]', 0, '[', ']')).toBe(21);
+    expect(findMatchingCloseBracket('[outer [inner] still]', 0, '[', ']')).toBe(20);
   });
 
   it('מקונן עמוק', () => {
-    expect(findMatchingCloseBracket('[a [b [c] d] e]', 0, '[', ']')).toBe(15);
+    expect(findMatchingCloseBracket('[a [b [c] d] e]', 0, '[', ']')).toBe(14);
   });
 
   it('אין סוגר סוגר', () => {
@@ -144,7 +144,7 @@ describe('editorial-note-parser', () => {
 
   it('מסיר מספר הערות', () => {
     const result = parseEditorialNotes(['##אחד## טקסט ##שני##']);
-    expect(result).toEqual(['  טקסט ']);
+    expect(result).toEqual(['טקסט']);
   });
 });
 
@@ -172,7 +172,7 @@ describe('metadata-parser', () => {
     expect(metadata.authorName).toBe('מחבר');
     expect(metadata.placeAndYear).toBe('ירושלים');
     expect(metadata.copyright).toBe('הפקר');
-    expect(remaining[0]).toBe('כותרת 1 - התחלה');
+    expect(remaining[remaining.length - 1]).toBe('כותרת 1 - התחלה');
   });
 
   it('שדה לא מזוהה אינו נכנס', () => {
