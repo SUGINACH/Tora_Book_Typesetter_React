@@ -147,3 +147,10 @@
 - **useTypesetter**: פונה ל-worker-bridge במקום ישירות למנוע
 - **9 בדיקות engine חדשות**: עמודים, שערים, H2, hash, metadata, HTML
 - סהכ: 48 בדיקות עוברות
+
+### Commit: column balancing + widow/orphan detection + section dividers loader
+- **balanceColumns**: אלגוריתם איזון אמיתי — מעביר בלוקים בין טורים להקטנת פער
+- **fixWidowsAndOrphans**: זיהוי אלמנה/יתום (סף 1.1 × גובה שורה)
+  הערה: העברה בין טורים דורשת מידע על הטור הבא — ימומש בשלב הבא
+- **divider-loader.ts**: טעינת section_dividers.json (323 עיצובים)
+- **GLOSSARY**: balanceColumns, fixWidowsAndOrphans, divider-loader
