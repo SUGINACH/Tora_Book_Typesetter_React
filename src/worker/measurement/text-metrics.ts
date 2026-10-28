@@ -1,27 +1,46 @@
 import type { FontConfig } from '../../types';
 
 /**
- * ממשק למודד טקסט — מאפשר הזרקת implementation.
- * ב-worker יהיה OffscreenCanvas; בבדיקות יהיה mock.
+ * ממשק למודד טקסט.
  */
 export interface TextMeasurer {
-  /** מדידת רוחב טקסט בפיקסלים */
   measureText(text: string, font: FontConfig): number;
-  /** מדידת גובה שורה */
   measureLineHeight(font: FontConfig): number;
-  /** מדידת גובה בלוק */
   measureBlockHeight(lines: string[], font: FontConfig): number;
 }
 
 /**
- * ברירת מחדל סימולטיבית — משתמשת בהערכות פשוטות.
- * ב-Worker האמיתי יוחלף ב-OffscreenCanvas.
+ * מודד סימולטיבי משופר — נותן הערכות ריאליסטיות יותר.
+ *
+ * משתמש בהערכות מבוססות על:
+ * - רוחב ממוצע לתו עברי: ~0.5 × גודל גופן
+ * - רוחב רווח: ~0.25 × גודל גופן
+ * - גובה שורה: גודל × line-height
+ *
+ * אינו מדויק כמו OffscreenCanvas אבל מספיק טוב ל-MVP.
  */
 export class SimulatedMeasurer implements TextMeasurer {
   measureText(text: string, font: FontConfig): number {
     const size = typeof font.size === 'number' ? font.size : 12;
-    // הערכה גסה: כל תו = חצי מגודל הגופן (ממוצע לעברית)
-    return text.length * size * 0.55;
+    // הערכה: תו עברי ממוצע = 0.55 × גודל, רווח = 0.3 × גודל
+    let width = 0;
+    for (const ch of text) {
+      if (ch === ' ') {
+        width += size * 0.3;
+      } else if (ch >= '\u0590' && ch <= '\u05FF') {
+        // עברי
+        width += size * 0.55;
+      } else if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {
+        // לטיני
+        width += size * 0.45;
+      } else if (ch >= '0' && ch <= '9') {
+        width += size * 0.5;
+      } else {
+        // ברירת מחדל
+        width += size * 0.5;
+      }
+    }
+    return width;
   }
 
   measureLineHeight(font: FontConfig): number {
@@ -38,7 +57,6 @@ export class SimulatedMeasurer implements TextMeasurer {
 
 /**
  * שבירת שורות — פונקציה טהורה.
- * מקבלת טקסט פסקה, רוחב טור, ומודד, מחזירה שורות.
  */
 export function breakLines(
   text: string,
