@@ -26,7 +26,7 @@ export const defaultSettings: Settings = {
 
   typography: {
     bodyFont: {
-      family: ['Guttman Rashi', 'Frank Ruhl Libre', 'serif'],
+      family: ['Frank Ruhl Libre', 'FrankRuehl', 'Guttman Rashi', 'Noto Serif Hebrew', 'serif'],
       size: 12,
       weight: 400,
       color: '#000000',

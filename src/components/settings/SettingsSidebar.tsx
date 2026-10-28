@@ -4,10 +4,15 @@ import type { FontConfig } from '../../types';
 
 const HEBREW_FONTS = [
   'Frank Ruhl Libre',
+  'FrankRuehl',
   'Guttman Rashi',
   'Noto Serif Hebrew',
   'David Libre',
-  'Times New Roman',
+  'David',
+  'FrankReal',
+  'Frank Re',
+  'Livorna',
+  'Hadassah Friedlaender',
   'serif',
 ];
 
