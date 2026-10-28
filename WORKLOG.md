@@ -30,3 +30,16 @@
   בעמוד שמאלי: התחלפות
 - **מתחלפות (Recto/Verso)**: החלפת תוכן ימין/שמאל בעמודים זוגיים
 - **תוכן לכל אזור**: שם ספר / שם פרק / מספר עמוד — נבחר מהגדרות
+
+### Commit: determinism tests + audit
+- **בדיקת דטרמיניזם אוטומטית** (6 בדיקות):
+  1. parseDocument: אותו קלט → אותו sourceHash
+  2. parseDocument: אותו AST (deep equal)
+  3. typesetDocument: אותו hash פלט בשתי ריצות
+  4. typesetDocument: אותו מספר עמודים
+  5. typesetDocument: אותו ממצאים
+  6. parser: מזהי צמתים דטרמיניסטיים (ללא random)
+- **ביקור קוד**: אין side effects ב-engine/parser (אין DOM/fetch/console)
+- **ביקור קוד**: אין crypto.randomUUID (הוחלף ב-IDs דטרמיניסטיים)
+- **ביקור קוד**: performance.now רק למדידת זמן — אינו משפיע על הפלט
+- סהכ: 10 בדיקות עוברות (6 דטרמיניזם + 4 גיממומ)
