@@ -1,6 +1,6 @@
-import type { Settings, ParsedDocument, RenderedPage, AuditFinding, TraceEvent } from '../types';
-import type { TextMeasurer } from '../measurement/text-metrics';
-import { SimulatedMeasurer } from '../measurement/text-metrics';
+import type { Settings, RenderedPage, AuditFinding, TraceEvent } from '../types';
+import { SimulatedMeasurer } from '../worker/measurement/text-metrics';
+import type { TextMeasurer } from '../worker/measurement/text-metrics';
 import { parseDocument } from '../parser';
 import { typesetDocument } from '../worker/engine/typeset-document';
 import { auditGeometry } from '../audit/geometry-audit';
