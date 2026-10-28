@@ -131,3 +131,9 @@
 - משתמש ב-doc.sidenotes מה-parser
 - CSS: .tora-sidenote (6pt, #404040)
 - GLOSSARY: H7 = הערת צד בשוליים החיצוניים
+
+### Commit: view store + zoom controls + preview refactor
+- **view-store.ts**: Zustand store for zoom (persisted)
+- **ZoomControls**: −/+/100% buttons
+- **PreviewArea**: zoom applied to pages, findings panel, print button
+- **GLOSSARY**: view store, zoom
