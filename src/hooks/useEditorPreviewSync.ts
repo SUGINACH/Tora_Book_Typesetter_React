@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useDocumentStore } from '../../store/document-store';
+import { useDocumentStore } from '../store/document-store';
 
 /**
  * סנכרון דו-כיווני: עורך ↔ תצוגה.

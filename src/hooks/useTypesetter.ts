@@ -72,15 +72,3 @@ export function useSettings() {
 export function useHasPendingChanges() {
   return useSettingsStore((s) => s.hasPendingChanges);
 }
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export function useSettings() {
-  return useSettingsStore((s) => s.settings);
-}
-
-export function useHasPendingChanges() {
-  return useSettingsStore((s) => s.hasPendingChanges);
-}
