@@ -220,27 +220,30 @@ function breakPages(
       startNewPage('regular');
     }
 
-    // חלוקה בין טורים — איזון פשוט
-    const targetHeight = pageHeight * 0.85; // מותיר מקום ל-footnotes
-    if (leftHeight <= rightHeight && leftHeight + block.height <= targetHeight) {
-      leftBlocks.push(block);
-      leftHeight += block.height;
-    } else if (rightHeight + block.height <= targetHeight) {
+    // חלוקה בין טורים — RTL: טור ימני (index 0) קודם, אז שמאלי (index 1)
+    const targetHeight = pageHeight * 0.80; // מותיר מקום ל-footnotes ומספר עמוד
+
+    // מילוי טור ימני קודם (first column in RTL)
+    if (rightHeight + block.height <= targetHeight) {
       rightBlocks.push(block);
       rightHeight += block.height;
+    } else if (leftHeight + block.height <= targetHeight) {
+      // טור ימני מלא — עבור לשמאלי
+      leftBlocks.push(block);
+      leftHeight += block.height;
     } else {
       // שני הטורים מלאים — פותחים עמוד חדש
       startNewPage('regular');
-      leftBlocks.push(block);
-      leftHeight = block.height;
+      rightBlocks.push(block);
+      rightHeight = block.height;
     }
   }
 
   if (currentPage) {
     const finalPage: FinalPage = currentPage;
     finalPage.columns = [
-      { index: 0, blocks: leftBlocks, height: leftHeight, width: 0 },
-      { index: 1, blocks: rightBlocks, height: rightHeight, width: 0 },
+      { index: 0, blocks: rightBlocks, height: rightHeight, width: 0 },  // ימני = index 0
+      { index: 1, blocks: leftBlocks, height: leftHeight, width: 0 },    // שמאלי = index 1
     ];
     pages.push(finalPage);
   }

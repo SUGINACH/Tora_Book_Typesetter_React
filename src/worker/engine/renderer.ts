@@ -1,15 +1,9 @@
 import type { FinalPage, RenderedPage, Settings, ParsedDocument, Block, PageType } from '../../types';
 import { toGematria } from '../../lib/gematria';
 
-// סוגי עמודים שאין בהם כותרת עליונה ומספר עמוד
 const NO_HEADER_PAGE_TYPES: PageType[] = ['main-shaar', 'sub-shaar', 'back-shaar'];
-
-// סוגי עמודים שהם "שער" — מבנה מיוחד
 const SHAAR_PAGE_TYPES: PageType[] = ['main-shaar', 'sub-shaar', 'back-shaar'];
 
-/**
- * רינדור FinalPage ל-HTML string.
- */
 export function renderToHtml(
   page: FinalPage,
   pageNumber: number,
@@ -46,25 +40,27 @@ function renderPageHtml(
   const isShaar = SHAAR_PAGE_TYPES.includes(page.pageType);
   const showHeader = !NO_HEADER_PAGE_TYPES.includes(page.pageType);
   const isH2Page = page.pageType === 'chapter-opener';
+  const isH0Page = page.heading?.level === 0;
 
-  // עמוד שער — מבנה מיוחד
   if (isShaar) {
     return renderShaarPage(page, pageNumber, settings, doc);
   }
 
-  // עמוד רגיל או פתיחת פרק
   const runningHeader = showHeader ? renderRunningHeader(page, settings, doc) : '';
   const columns = page.columns.map((col, i) => renderColumn(col, i, settings)).join('');
   const footnotes = page.footnotes ? renderFootnotes(page.footnotes, settings) : '';
   const pageNumberHtml = showHeader ? renderPageNumber(pageNumber, settings) : '';
+
+  // H0 פותחת עמוד עם כותרת בשליש העליון (כמו H2)
+  const isChapterOpener = isH2Page || isH0Page;
   const headingHtml = page.heading ? renderHeading(page.heading, settings) : '';
 
   return `
-    <div class="tora-page ${isH2Page ? 'tora-page-h2' : ''}" data-page="${pageNumber}" data-page-type="${page.pageType}">
+    <div class="tora-page ${isChapterOpener ? 'tora-page-h2' : ''} ${isH0Page ? 'tora-page-h0' : ''}" data-page="${pageNumber}" data-page-type="${page.pageType}">
       ${runningHeader}
-      ${isH2Page ? `<div class="h2-top-ornament"></div>` : ''}
+      ${isChapterOpener ? `<div class="h2-top-ornament"></div>` : ''}
       ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
-      ${isH2Page ? `<div class="h2-bottom-ornament"></div>` : ''}
+      ${isChapterOpener ? `<div class="h2-bottom-ornament"></div>` : ''}
       <div class="tora-columns">
         ${columns}
       </div>
@@ -74,25 +70,19 @@ function renderPageHtml(
   `.trim();
 }
 
-/**
- * רינדור עמוד שער — מבנה מיוחד, ממורכז, ללא כותרות עליונות.
- */
 function renderShaarPage(
   page: FinalPage,
   _pageNumber: number,
-  settings: Settings,
+  _settings: Settings,
   doc: ParsedDocument
 ): string {
   const meta = doc.metadata;
-  const isMainShaar = page.pageType === 'main-shaar';
-  const isBackShaar = page.pageType === 'back-shaar';
-  const isSubShaar = page.pageType === 'sub-shaar';
 
-  // שער ראשי — מציג את כל שדות ה-metadata
-  if (isMainShaar) {
+  if (page.pageType === 'main-shaar') {
     return `
       <div class="tora-page tora-page-shaar tora-page-main-shaar" data-page-type="main-shaar">
         <div class="tora-shaar-content">
+          <div class="bsd-header">בס"ד</div>
           ${meta.bookName ? `<div class="tora-shaar-title">${escapeHtml(meta.bookName)}</div>` : ''}
           ${meta.subject ? `<div class="tora-shaar-subtitle">${escapeHtml(meta.subject)}</div>` : ''}
           ${meta.detailedSubject ? `<div class="tora-shaar-desc">${escapeHtml(meta.detailedSubject)}</div>` : ''}
@@ -104,8 +94,7 @@ function renderShaarPage(
     `.trim();
   }
 
-  // שער אחורי — מציג פרטי זכויות והוצאה לאור
-  if (isBackShaar) {
+  if (page.pageType === 'back-shaar') {
     return `
       <div class="tora-page tora-page-shaar tora-page-back-shaar" data-page-type="back-shaar">
         <div class="tora-shaar-content tora-shaar-back">
@@ -118,24 +107,28 @@ function renderShaarPage(
     `.trim();
   }
 
-  // שער משנה — מציג את כותרת החלק
-  if (isSubShaar && page.heading) {
+  // sub-shaar: H1 — מפצל את הטקסט על המקף הראשון לכותרת ראשית + משנה
+  if (page.pageType === 'sub-shaar' && page.heading) {
+    const parts = page.heading.text.split(' - ');
+    const mainTitle = parts[0] || page.heading.text;
+    const subTitle = parts.slice(1).join(' - ');
+
     return `
       <div class="tora-page tora-page-shaar tora-page-sub-shaar" data-page-type="sub-shaar">
         <div class="tora-shaar-content tora-shaar-sub">
-          <div class="tora-shaar-title">${escapeHtml(page.heading.text)}</div>
+          <div class="tora-shaar-title">${escapeHtml(mainTitle)}</div>
+          ${subTitle ? `<div class="tora-shaar-subtitle">${escapeHtml(subTitle)}</div>` : ''}
         </div>
       </div>
     `.trim();
   }
 
-  // fallback
   return `<div class="tora-page tora-page-shaar" data-page-type="${page.pageType}"></div>`;
 }
 
 function renderColumn(col: import('../../types').ColumnContent, idx: number, settings: Settings): string {
   const cls = idx === 0 ? 'tora-column-right' : 'tora-column-left';
-  const divider = settings.grid.columnDivider !== 'none'
+  const divider = settings.grid.columnDivider !== 'none' && idx === 0
     ? `<div class="tora-column-divider tora-divider-${settings.grid.columnDivider}"></div>`
     : '';
 
@@ -143,19 +136,46 @@ function renderColumn(col: import('../../types').ColumnContent, idx: number, set
     <div class="tora-column ${cls}">
       ${col.blocks.map((b) => renderBlock(b, settings)).join('')}
     </div>
-    ${idx === 0 ? divider : ''}
+    ${divider}
   `.trim();
 }
 
+/**
+ * רינדור בלוק — פסקה או כותרת.
+ * כולל טיפול במילה ראשונה מוגדלת (first-word-window).
+ */
 function renderBlock(block: Block, settings: Settings): string {
   switch (block.type) {
-    case 'paragraph':
-      return `<p class="tora-body-text">${escapeHtml(block.content)}</p>`;
-    case 'heading':
+    case 'paragraph': {
+      const text = block.content;
+      const dropWordMode = settings.typography.dropWordMode;
+
+      // החלת מילה ראשונה מוגדלת אם פעיל
+      if (dropWordMode !== 'none' && text.length > 20) {
+        const dropWordCount = settings.typography.dropWordCount;
+        const words = text.split(/\s+/);
+        if (words.length >= 4) {
+          const dropWords = words.slice(0, dropWordCount).join(' ');
+          const restWords = words.slice(dropWordCount).join(' ');
+          const dropWordHtml = dropWordMode === 'bold'
+            ? `<span class="first-word-bold">${escapeHtml(dropWords)}</span>`
+            : `<span class="first-word-window">${escapeHtml(dropWords)}</span>`;
+          return `<p class="tora-body-text">${dropWordHtml} ${escapeHtml(restWords)}</p>`;
+        }
+      }
+
+      return `<p class="tora-body-text">${escapeHtml(text)}</p>`;
+    }
+
+    case 'heading': {
       if (block.headingLevel === undefined) return '';
-      const h = settings.typography.headings[block.headingLevel as 0|1|2|3|4|5|6|7];
+      const level = block.headingLevel as 0|1|2|3|4|5|6|7;
+      const h = settings.typography.headings[level];
       const fontCss = h ? fontConfigToCss(h.font) : '';
-      return `<div class="tora-heading tora-heading-${block.headingLevel}" style="${fontCss}">${escapeHtml(block.content)}</div>`;
+      const cls = level <= 3 ? 'tora-heading-inline-wide' : 'tora-heading-inline';
+      return `<div class="tora-heading tora-heading-level-${level} ${cls}" style="${fontCss}">${escapeHtml(block.content)}</div>`;
+    }
+
     case 'footnote':
       return `<div class="tora-footnote">${escapeHtml(block.content)}</div>`;
     case 'ornament':
@@ -167,11 +187,16 @@ function renderBlock(block: Block, settings: Settings): string {
   }
 }
 
+/**
+ * רינדור כותרת ראשית של עמוד פתיחה (H0/H2).
+ */
 function renderHeading(heading: { level: number; text: string; simanNumber?: number }, settings: Settings): string {
   const level = heading.level as 0|1|2|3|4|5|6|7;
   const cfg = settings.typography.headings[level];
   const fontCss = cfg ? fontConfigToCss(cfg.font) : '';
-  const simanBadge = heading.simanNumber ? `<div class="tora-siman-badge">סימן ${toGematria(heading.simanNumber)}</div>` : '';
+  const simanBadge = heading.simanNumber
+    ? `<div class="tora-siman-badge">סימן ${toGematria(heading.simanNumber)}</div>`
+    : '';
   return `
     <div class="tora-heading tora-heading-level-${level}" style="${fontCss}">
       ${escapeHtml(heading.text)}
@@ -206,10 +231,6 @@ function getHeaderContent(
       return escapeHtml(page.heading?.text ?? '');
     case 'page-number':
       return toGematria(page.pageNumber);
-    case 'h4':
-      return '';
-    case 'first-word-last-word':
-      return '';
     default:
       return '';
   }
@@ -223,10 +244,10 @@ function renderFootnotes(footnotes: import('../../types').FootnoteBlock, setting
     <div class="tora-footnotes-area">
       <div class="tora-fn-divider ${dividerClass}"></div>
       ${footnotes.notes.map((fn, i) => {
-        const marker = i + 1;
+        const marker = toGematria(i + 1);
         return `
           <div class="tora-footnote" style="font-size: ${noteSize}pt;">
-            <span class="tora-fn-marker">${toGematria(marker)}</span>
+            <span class="tora-fn-marker">${marker}</span>
             <span class="tora-fn-text">${escapeHtml(fn.text)}</span>
           </div>
         `.trim();
@@ -245,7 +266,6 @@ function renderPageNumber(num: number, settings: Settings): string {
   } else {
     display = String(num);
   }
-
   const frame = settings.grid.pageNumberFrame;
   const framed = applyFrame(display, frame);
   return `<div class="tora-page-number tora-pn-${settings.grid.pageNumberPosition}">${framed}</div>`;
@@ -253,18 +273,12 @@ function renderPageNumber(num: number, settings: Settings): string {
 
 function applyFrame(text: string, frame: import('../../types').PageNumberFrame): string {
   switch (frame) {
-    case 'none':
-      return text;
-    case 'circle':
-      return `<span class="tora-frame-circle">${text}</span>`;
-    case 'square':
-      return `<span class="tora-frame-square">${text}</span>`;
-    case 'round-parens':
-      return `(${text})`;
-    case 'square-brackets':
-      return `[${text}]`;
-    case 'diamond':
-      return `◆${text}◆`;
+    case 'none': return text;
+    case 'circle': return `<span class="tora-frame-circle">${text}</span>`;
+    case 'square': return `<span class="tora-frame-square">${text}</span>`;
+    case 'round-parens': return `(${text})`;
+    case 'square-brackets': return `[${text}]`;
+    case 'diamond': return `◆${text}◆`;
   }
 }
 

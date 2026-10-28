@@ -305,3 +305,48 @@
     page-break-after: always;
   }
 }
+
+/* === מילה ראשונה מוגדלת (first-word-window) === */
+.first-word-window {
+  font-weight: 900;
+  font-size: 1.5em;
+  line-height: 0.85;
+  float: right;
+  margin-left: 2mm;
+  margin-top: 1mm;
+  color: inherit;
+}
+
+.first-word-bold {
+  font-weight: 900;
+}
+
+/* === כותרות inline בתוך טור === */
+.tora-heading-inline {
+  margin: 2mm 0 1mm 0;
+  text-align: right;
+}
+
+.tora-heading-inline-wide {
+  margin: 4mm 0 2mm 0;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+/* === bsd header בשער === */
+.bsd-header {
+  font-size: 10pt;
+  color: #666;
+  margin-bottom: 10mm;
+}
+
+/* === H0 page (כמו H2 אבל עם מרווח שונה) === */
+.tora-page-h0 .tora-heading-wrapper {
+  margin: 20mm 0 8mm 0;
+}
+
+/* === הגדרות נוספות === */
+.tora-page-h2 .tora-columns,
+.tora-page-h0 .tora-columns {
+  margin-top: 4mm;
+}
