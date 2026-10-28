@@ -278,6 +278,50 @@ function renderHeading(heading: { level: number; text: string; simanNumber?: num
 
 function renderRunningHeader(page: FinalPage, settings: Settings, doc: ParsedDocument): string {
   const cfg = settings.runningHeader;
+  const bookName = doc.metadata.bookName ?? '';
+  const isOddPage = page.pageNumber % 2 === 1; // אי-זוגי = ימני (recto)
+
+  // חצי-חצי: פיצול שם הספר בין שני הצדדים החיצוניים
+  if (cfg.halfHalfBookName && bookName) {
+    const words = bookName.split(/\s+/);
+    if (words.length >= 2 && words.length % 2 === 0) {
+      const mid = words.length / 2;
+      const rightHalf = words.slice(0, mid).join(' ');
+      const leftHalf = words.slice(mid).join(' ');
+      // בעמוד ימני: החצי הראשון בימין, השני בשמאל
+      // בעמוד שמאלי: החצי השני בימין, הראשון בשמאל (התחלפות)
+      const right = isOddPage ? rightHalf : leftHalf;
+      const left = isOddPage ? leftHalf : rightHalf;
+      const center = getHeaderContent(cfg.centerContent, page, doc);
+      return `
+        <div class="tora-running-header">
+          <div class="tora-rh-right" style="text-align: ${cfg.rightAlign};">${escapeHtml(right)}</div>
+          <div class="tora-rh-center" style="text-align: ${cfg.centerAlign};">${center}</div>
+          <div class="tora-rh-left" style="text-align: ${cfg.leftAlign};">${escapeHtml(left)}</div>
+        </div>
+      `.trim();
+    }
+  }
+
+  // מתחלפות (Recto/Verso): החלפת ימין/שמאל בעמודים זוגיים
+  if (cfg.alternating) {
+    const right = isOddPage
+      ? getHeaderContent(cfg.rightContent, page, doc)
+      : getHeaderContent(cfg.leftContent, page, doc);
+    const left = isOddPage
+      ? getHeaderContent(cfg.leftContent, page, doc)
+      : getHeaderContent(cfg.rightContent, page, doc);
+    const center = getHeaderContent(cfg.centerContent, page, doc);
+    return `
+      <div class="tora-running-header">
+        <div class="tora-rh-right" style="text-align: ${cfg.rightAlign};">${right}</div>
+        <div class="tora-rh-center" style="text-align: ${cfg.centerAlign};">${center}</div>
+        <div class="tora-rh-left" style="text-align: ${cfg.leftAlign};">${left}</div>
+      </div>
+    `.trim();
+  }
+
+  // רגיל (לא מתחלפות)
   const right = getHeaderContent(cfg.rightContent, page, doc);
   const center = getHeaderContent(cfg.centerContent, page, doc);
   const left = getHeaderContent(cfg.leftContent, page, doc);
