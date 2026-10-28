@@ -385,3 +385,67 @@
   color: #999;
   letter-spacing: 4mm;
 }
+
+/* === עמוד תוכן עניינים === */
+.tora-page-toc {
+  padding: 30mm 20mm;
+  direction: rtl;
+}
+
+.tora-toc-title {
+  text-align: center;
+  font-size: 24pt;
+  font-weight: 700;
+  margin-bottom: 10mm;
+}
+
+.tora-toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2mm;
+}
+
+.tora-toc-entry {
+  display: flex;
+  align-items: baseline;
+  font-size: 11pt;
+  line-height: 1.5;
+}
+
+.tora-toc-title {
+  font-weight: 700;
+}
+
+.tora-toc-level-1 { font-size: 13pt; font-weight: 700; }
+.tora-toc-level-2 { font-size: 11pt; font-weight: 400; }
+.tora-toc-level-3 { font-size: 10pt; font-weight: 400; color: #555; }
+
+.tora-toc-dots {
+  flex: 1;
+  border-bottom: 1px dotted #999;
+  margin: 0 2mm;
+  position: relative;
+  top: -3px;
+}
+
+.tora-toc-page {
+  font-weight: 700;
+  min-width: 8mm;
+  text-align: left;
+}
+
+/* עמוד TOC ללא כותרת עליונה ומספר */
+.tora-page-toc .tora-running-header,
+.tora-page-toc .tora-page-number { display: none; }
+
+/* === הערת צד (H7) בשוליים === */
+.tora-sidenote {
+  font-size: 6pt;
+  color: #404040;
+  font-weight: 400;
+  text-align: center;
+  position: absolute;
+  left: -25mm;
+  width: 20mm;
+  line-height: 1.2;
+}

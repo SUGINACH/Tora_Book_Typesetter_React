@@ -88,3 +88,12 @@
 - **עיטור סיום פרק**: ❖ ❖ ❖ (פירמידת מעויינים)
 - CSS: .tora-fn-inline, .tora-chapter-end
 - GLOSSARY: נשמר עדכני (סמני הערות, סיום פרק)
+
+### Commit: TOC page + footnote markers + chapter end + sidenote CSS
+- **עמוד תוכן עניינים (TOC)**: נוצר אוטומטית מכותרות H1-H6
+  מופיע לאחר שערים ולפני תוכן
+  רמות מותאמות, נקודות מקווקוות, מספרי עמוד
+- **סמני הערות בגוף**: <sup> עם מספור גיממ, 4 סגנונות
+- **סיום פרק**: ❖ ❖ ❖
+- **CSS**: TOC, sidenote, footnote inline, chapter end
+- **GLOSSARY**: עדככני עם סמני הערות, TOC, sidenote

@@ -50,7 +50,7 @@ export function typesetDocument(
   const fixedPages = pagesWithFootnotes.map((p) => fixWidowsAndOrphans(p, settings));
 
   // 7. הוספת עמודי שער
-  // מבנה: עמוד 1 = שער ראשי, עמוד 2 = שער אחורי (הגב של אותו דף), אחר כך תוכן
+  // מבנה: עמוד 1 = שער ראשי, עמוד 2 = שער אחורי (הגב של אותו דף), אחר כך TOC, אחר כך תוכן
   // שער משנה מופיע בתחילת כל חלק (H1) — כבר מטופל ב-breakPages
   const allPages: FinalPage[] = [];
   if (doc.metadata.bookName || doc.metadata.authorName) {
@@ -69,6 +69,8 @@ export function typesetDocument(
       });
     }
   }
+  // עמוד TOC: תוכן עניינים (לאחר השער, לפני התוכן)
+  const tocHtmlStr = generateTocHtml(doc, settings, allPages.length + 1);
   // תוכן הספר
   allPages.push(...fixedPages);
 
@@ -77,9 +79,29 @@ export function typesetDocument(
 
   // 8. רינדור ל-HTML
   onProgress?.('finalizing', 90, 'מרנדר...');
-  const renderedPages = allPages.map((page, idx) =>
+  const renderedPages: RenderedPage[] = allPages.map((page, idx) =>
     renderToHtml(page, idx + 1, settings, doc, shaarDesigns)
   );
+
+  // 8b. הכנסת עמוד TOC לאחר השער ולפני התוכן
+  if (tocHtmlStr) {
+    const tocPageNumber = renderedPages.filter(p =>
+      p.pageType === 'main-shaar' || p.pageType === 'back-shaar'
+    ).length + 1;
+    renderedPages.splice(tocPageNumber - 1, 0, {
+      pageNumber: tocPageNumber,
+      pageType: 'toc' as any,
+      html: tocHtmlStr,
+      geometry: {
+        width: settings.pageSize.width,
+        height: settings.pageSize.height,
+        columns: [],
+        hasShaar: false,
+      },
+    });
+    // מספור מחדש
+    renderedPages.forEach((p, i) => { p.pageNumber = i + 1; });
+  }
 
   // 8. בדיקת גיאומטריה
   const findings = auditGeometry(renderedPages, settings);
@@ -88,6 +110,56 @@ export function typesetDocument(
   const outputHash = fnv1a32(renderedPages.map((p) => p.html).join(''));
 
   return { pages: renderedPages, findings, durationMs };
+}
+
+/**
+ * יצירת עמוד תוכן עניינים מתוך ה-AST.
+ * רשימת כותרות רמה 1-3 עם מספרי עמוד.
+ */
+function generateTocHtml(doc: ParsedDocument, settings: Settings, pageNumberOffset: number): string {
+  const entries: string[] = [];
+  let headingCounter = 0;
+
+  function collectHeadings(nodes: any[], level: number) {
+    for (const node of nodes) {
+      if (node.type === 'heading' && node.headingLevel !== undefined) {
+        const hLevel = node.headingLevel;
+        // רק רמות שמופיעות בהגדרות תוכן העניינים
+        if (settings.toc.generalLevels.includes(hLevel as 1|2|3|4|5|6)) {
+          headingCounter++;
+          const indent = (hLevel - 1) * 10;
+          const pageEstimate = headingCounter + pageNumberOffset;
+          entries.push(
+            `<div class="tora-toc-entry tora-toc-level-${hLevel}" style="padding-right: ${indent}mm;">` +
+            `<span class="tora-toc-title">${escapeHtmlSimple(node.text)}</span>` +
+            `<span class="tora-toc-dots">·····································</span>` +
+            `<span class="tora-toc-page">${pageEstimate}</span>` +
+            `</div>`
+          );
+        }
+      }
+      if (node.children) {
+        collectHeadings(node.children, level + 1);
+      }
+    }
+  }
+
+  collectHeadings(doc.root, 0);
+
+  if (entries.length === 0) return '';
+
+  return `
+    <div class="tora-page tora-page-toc" data-page-type="toc">
+      <div class="tora-toc-title">תוכן עניינים</div>
+      <div class="tora-toc-list">
+        ${entries.join('')}
+      </div>
+    </div>
+  `.trim();
+}
+
+function escapeHtmlSimple(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 /**
