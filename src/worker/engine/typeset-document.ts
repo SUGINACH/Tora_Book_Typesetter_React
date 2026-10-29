@@ -262,11 +262,15 @@ function breakPages(
 
   const startNewPage = (pageType: import('../../types').PageType = 'regular', heading?: { level: number; text: string; simanNumber?: number }) => {
     if (currentPage) {
-      currentPage.columns = [
-        { index: 0, blocks: leftBlocks, height: leftHeight, width: 0 },
-        { index: 1, blocks: rightBlocks, height: rightHeight, width: 0 },
-      ];
-      pages.push(currentPage);
+      // דחיפת עמוד רק אם אינו ריק
+      const hasContent = rightBlocks.length > 0 || leftBlocks.length > 0;
+      if (hasContent) {
+        currentPage.columns = [
+          { index: 0, blocks: rightBlocks, height: rightHeight, width: 0 },  // ימני = index 0 (RTL)
+          { index: 1, blocks: leftBlocks, height: leftHeight, width: 0 },   // שמאלי = index 1
+        ];
+        pages.push(currentPage);
+      }
     }
     pageNumber++;
     currentPage = {
