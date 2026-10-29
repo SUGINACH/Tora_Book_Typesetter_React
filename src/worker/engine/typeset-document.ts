@@ -21,14 +21,24 @@ export function typesetDocument(
 
   // 1. חישוב גדלים
   onProgress?.('measuring', 10, 'מחשב גדלים...');
-  const pageSize = settings.pageSize;
   const pxPerMm = 3.7795; // 96 DPI
+  const pageSize = settings.pageSize;
   const pageWidthPx = pageSize.width * pxPerMm;
   const pageHeightPx = pageSize.height * pxPerMm;
   const marginPx = settings.pageMargins.top * pxPerMm;
   const availableHeight = pageHeightPx - 2 * marginPx;
-  const totalColumnsWidthPercent = settings.grid.columnWidth * 2 + settings.grid.marginWidth * 2 + settings.grid.gutterWidth;
-  const columnWidthPx = (settings.grid.columnWidth / totalColumnsWidthPercent) * (pageWidthPx - 2 * marginPx);
+
+  // חישוב רוחב טור שתואם ל-CSS:
+  // textAreaWidth = pageWidth - 2*padding (padding = pageMargins.inner/outer)
+  // textMainWidth = textAreaWidth - 2*marginWidth (marginWidth = settings.grid.marginWidth%)
+  // gap = 5% of textMainWidth
+  // columnWidth = (textMainWidth - gap) / 2
+  const paddingPx = settings.pageMargins.inner * pxPerMm;
+  const textAreaWidth = pageWidthPx - 2 * paddingPx;
+  const marginWidthPx = (settings.grid.marginWidth / 100) * textAreaWidth;
+  const textMainWidth = textAreaWidth - 2 * marginWidthPx;
+  const gapPx = textMainWidth * 0.05; // 5% gap
+  const columnWidthPx = (textMainWidth - gapPx) / 2;
 
   // 2. בניית בלוקים מה-AST
   onProgress?.('measuring', 20, 'בונה בלוקים...');
@@ -305,8 +315,8 @@ function breakPages(
       startNewPage('regular');
     }
 
-    // 0.92 = ניצול מירבי של העמוד (88% מהגובה הפנוי)
-    const targetHeight = pageHeight * 0.92;
+    // 0.80 — מותיר מקום ל-footnotes ומונע רווחים אדירים מ-justify
+    const targetHeight = pageHeight * 0.80;
     const blockTooBig = block.height > targetHeight;
 
     // 1) נסה להכניס לטור הימני (RTL — טור ראשון)

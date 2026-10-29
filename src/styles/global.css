@@ -176,7 +176,7 @@
    טקסט: שני טורים או טור אחד (H2/H3)
    ============================================================ */
 
-/* שני טורים */
+/* שני טורים — רוחב קבוע שתואם לחישוב בקוד */
 .tora-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -190,22 +190,28 @@
 .tora-column {
   font-size: 12pt;
   line-height: 1.45;
-  /* לא text-align:justify — השורות כבר שבורות בקוד */
-  text-align: right;
+  /* justify — מותח שורות לרוחב הטור, text-align-last: auto לשורה אחרונה */
+  text-align: justify;
+  text-align-last: auto;
   direction: rtl;
   overflow: hidden;
 }
 
-/* שורות ידניות — הדפדפן לא שובר אותן */
+/* שורות ידניות — הדפדפן לא שובר, אבל כן מותח (justify) */
 .tora-line {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
+  /* justify מותח את השורה לרוחב מלא — מבטל רווחים אדירים */
+  text-align: justify;
+  text-align-last: auto;
 }
 
+/* שורה אחרונה של פסקה — ממורכזת (p-end) */
 .tora-line-centered {
   text-align: center !important;
+  text-align-last: center !important;
 }
 
 .tora-column-right { order: 1; }

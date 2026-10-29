@@ -48,7 +48,8 @@ function renderPageHtml(
 ): string {
   const isShaar = SHAAR_PAGE_TYPES.includes(page.pageType);
   const showHeader = !NO_HEADER_PAGE_TYPES.includes(page.pageType);
-  const isChapterOpener = page.pageType === 'chapter-opener';
+  // H0 = טור יחיד. H2 = שני טורים (כמו עמוד רגיל, רק עם כותרת בראש)
+  const isSingleColumnPage = page.heading?.level === 0;
 
   if (isShaar) {
     return renderShaarPage(page, pageNumber, settings, doc, shaarDesigns);
@@ -61,32 +62,35 @@ function renderPageHtml(
 
   const headingHtml = page.heading ? renderHeading(page.heading, settings) : '';
 
-  // כותרות צד (H7) — חלוקה לפי מספר עמוד (לא כולן בעמוד אחד)
+  // כותרות צד (H7) — חלוקה לפי מספר עמוד
   const rightSidenotes = renderSidenotes(page, doc, 'right');
   const leftSidenotes = renderSidenotes(page, doc, 'left');
 
-  // בעמוד chapter-opener: הכותרת בראש, ואז כל הפסקאות בטור יחיד (מאחדים שני טורים)
+  // טור יחיד רק ל-H0. H2 ושאר העמודים = שני טורים
   let singleColumnContent = '';
-  if (isChapterOpener) {
+  if (isSingleColumnPage) {
     const allBlocks = page.columns.flatMap(c => c.blocks);
     singleColumnContent = allBlocks
       .map((b, i) => renderBlock(b, settings, i, allBlocks.length))
       .join('');
   }
 
+  // H2 מקבל class tora-page-h2 אבל עדיין שני טורים
+  const pageClass = page.pageType === 'chapter-opener' ? 'tora-page-h2' : '';
+
   return `
-    <div class="tora-page ${isChapterOpener ? 'tora-page-h2' : ''}" data-page="${pageNumber}" data-page-type="${page.pageType}">
+    <div class="tora-page ${pageClass}" data-page="${pageNumber}" data-page-type="${page.pageType}">
       <div class="tora-page-header">
         ${runningHeader}
       </div>
       <div class="tora-page-body">
         <div class="tora-text-area">
           <div class="tora-margin-right">${rightSidenotes}</div>
-          <div class="tora-text-main ${isChapterOpener ? 'has-single-column' : ''}">
-            ${isChapterOpener ? `<div class="tora-heading-ornament-top"></div>` : ''}
+          <div class="tora-text-main ${isSingleColumnPage ? 'has-single-column' : ''}">
+            ${isSingleColumnPage ? `<div class="tora-heading-ornament-top"></div>` : ''}
             ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
-            ${isChapterOpener ? `<div class="tora-heading-ornament-bottom"></div>` : ''}
-            ${isChapterOpener
+            ${isSingleColumnPage ? `<div class="tora-heading-ornament-bottom"></div>` : ''}
+            ${isSingleColumnPage
               ? `<div class="tora-single-column">${singleColumnContent}</div>`
               : `<div class="tora-columns">${columns}</div>`}
           </div>
