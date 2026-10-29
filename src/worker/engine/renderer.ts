@@ -66,7 +66,7 @@ function renderPageHtml(
   }
 
   const runningHeader = showHeader ? renderRunningHeader(page, settings, doc) : '';
-  const columns = page.columns.map((col, i) => renderColumn(col, i, settings)).join('');
+  const columns = page.columns.map((col, i) => renderColumn(col, i, settings, ornaments)).join('');
   const footnotes = page.footnotes ? renderFootnotes(page.footnotes, settings) : '';
   const pageNumberHtml = showHeader ? renderPageNumber(pageNumber, settings) : '';
 
@@ -198,7 +198,7 @@ function renderShaarPage(
   return `<div class="tora-page tora-page-shaar" data-page-type="${page.pageType}"></div>`;
 }
 
-function renderColumn(col: import('../../types').ColumnContent, idx: number, settings: Settings): string {
+function renderColumn(col: import('../../types').ColumnContent, idx: number, settings: Settings, ornaments?: OrnamentData): string {
   const cls = idx === 0 ? 'tora-column-right' : 'tora-column-left';
   const divider = settings.grid.columnDivider !== 'none' && idx === 0
     ? `<div class="tora-column-divider tora-divider-${settings.grid.columnDivider}"></div>`
@@ -207,7 +207,7 @@ function renderColumn(col: import('../../types').ColumnContent, idx: number, set
 
   return `
     <div class="tora-column ${cls}">
-      ${col.blocks.map((b, i) => renderBlock(b, settings, i, totalBlocks)).join('')}
+      ${col.blocks.map((b, i) => renderBlock(b, settings, i, totalBlocks, ornaments)).join('')}
     </div>
     ${divider}
   `.trim();
@@ -218,7 +218,7 @@ function renderColumn(col: import('../../types').ColumnContent, idx: number, set
  * כולל: מילה ראשונה מוגדלת, דיבור המתחיל (ד"ה), p-end/p-cut,
  * סמני הערות שוליים בגוף הטקסט.
  */
-function renderBlock(block: Block, settings: Settings, blockIndex: number, totalBlocks: number): string {
+function renderBlock(block: Block, settings: Settings, blockIndex: number, totalBlocks: number, ornaments?: OrnamentData): string {
   switch (block.type) {
     case 'paragraph': {
       let text = block.content;

@@ -3,7 +3,7 @@ import { useSettingsStore } from '../../store/settings-store';
 import { useSettings } from '../../hooks/useTypesetter';
 import { loadShaarDesigns, type ShaarDesigns } from '../../lib/shaar-loader';
 import { exportCustomStyles } from '../../lib/custom-styles-io';
-import { CustomStylePanel } from '../panels/CustomStylePanel';
+import { CustomStylePanel } from './panels/CustomStylePanel';
 
 const HEBREW_FONTS = [
   'Frank Ruhl Libre', 'FrankRuehl', 'Guttman Rashi', 'Noto Serif Hebrew',
