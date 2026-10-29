@@ -1,0 +1,829 @@
+{
+  "exportedAt": "2026-10-29T12:33:06.355Z",
+  "summary": {
+    "total": 99,
+    "marked": 71,
+    "ours": 15,
+    "theirs": 56
+  },
+  "choices": {
+    "1. מזהי טקסט — כותרות": [
+      {
+        "name": "H0 (כותרת ראשית)",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "Frank Ruhl Libre 17pt",
+        "theirs": "AlphaBlack 26pt",
+        "desc": "גופן וגודל שונים"
+      },
+      {
+        "name": "H1 (כותרת חלק)",
+        "tag": "",
+        "choice": "theirs",
+        "ours": "Lia Sgula 50pt, sub_shaar",
+        "theirs": "Lia Sgula 50pt, sub_shaar",
+        "desc": "זהה"
+      },
+      {
+        "name": "H2 (כותרת פרק)",
+        "tag": "diff",
+        "choice": "(לא נבחר)",
+        "ours": "AAd_AlphaBlack 17pt",
+        "theirs": "AlphaBlack 17pt",
+        "desc": "שם גופן מלא vs מקוצר"
+      },
+      {
+        "name": "H3 (כותרת סעיף)",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "AlphaLight 13.5pt",
+        "theirs": "Alpha 13.5pt",
+        "desc": "משקל שונה (Light vs Regular)"
+      },
+      {
+        "name": "H4 (תת-סעיף)",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "FrankRuehl 12.5pt",
+        "theirs": "Alpha 12.5pt",
+        "desc": "גופן שונה"
+      },
+      {
+        "name": "H5 (תת-תת-סעיף)",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "David 11.5pt",
+        "theirs": "AlphaLight 11.5pt",
+        "desc": "גופן שונה"
+      },
+      {
+        "name": "H6 (כותרת זוטרית)",
+        "tag": "",
+        "choice": "theirs",
+        "ours": "Noto Serif 10.5pt",
+        "theirs": "Noto Serif 10.5pt",
+        "desc": "זהה"
+      },
+      {
+        "name": "H7 (הערת צד)",
+        "tag": "",
+        "choice": "theirs",
+        "ours": "Hadassah 6pt, side_note",
+        "theirs": "Hadassah 6pt, side_note",
+        "desc": "זהה"
+      }
+    ],
+    "2. מזהי טקסט — גוף וטיפוגרפיה": [
+      {
+        "name": "גופן גוף",
+        "tag": "",
+        "choice": "theirs",
+        "ours": "Frank Ruhl Libre 12pt, line-height 1.34",
+        "theirs": "Guttman Rashi / Frank Ruhl 12pt, line-height 1.34",
+        "desc": "כמעט זהה"
+      },
+      {
+        "name": "drop word mode",
+        "tag": "diff",
+        "choice": "(לא נבחר)",
+        "ours": "sunken",
+        "theirs": "window",
+        "desc": "מצב שונה — IMUD משתמש ב-window"
+      },
+      {
+        "name": "drop word count",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "1",
+        "theirs": "1",
+        "desc": "זהה"
+      },
+      {
+        "name": "drop word min-lines",
+        "tag": "diff",
+        "choice": "(לא נבחר)",
+        "ours": "3",
+        "theirs": "2",
+        "desc": "אצלנו 3, אצלם 2"
+      },
+      {
+        "name": "דיבור המתחיל (auto-dh)",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "enabled: true (מופעל)",
+        "theirs": "false (כבוי)",
+        "desc": "הפוך — אצלנו מופעל, אצלם כבוי"
+      },
+      {
+        "name": "paren font",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "f-paren (גופן מותאם)",
+        "desc": "חסר — אין גופן מותאם לסוגריים"
+      }
+    ],
+    "3. מזהי טקסט — הערות": [
+      {
+        "name": "delimiters",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "[ ]",
+        "theirs": "[ ]",
+        "desc": "זהה"
+      },
+      {
+        "name": "numbering",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "hebrew-letters",
+        "theirs": "gematria",
+        "desc": "זהה (שניהם גימטריה)"
+      },
+      {
+        "name": "marker type",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "superscript",
+        "theirs": "super",
+        "desc": "זהה"
+      },
+      {
+        "name": "marker size",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "8",
+        "theirs": "8",
+        "desc": "זהה"
+      },
+      {
+        "name": "note body size",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(לא מוגדר)",
+        "theirs": "9pt",
+        "desc": "חסר — אין גודל גופן לגוף ההערה"
+      },
+      {
+        "name": "fn-columns",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "1",
+        "theirs": "1",
+        "desc": "זהה"
+      },
+      {
+        "name": "fn-layout-mode",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "block",
+        "desc": "חסר — אין מצב פריסת הערות"
+      },
+      {
+        "name": "fn-reset-mode",
+        "tag": "diff",
+        "choice": "ours",
+        "ours": "counterReset: siman",
+        "theirs": "page",
+        "desc": "שונה — אצלנו siman, אצלם page"
+      },
+      {
+        "name": "note-rule-style",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "short-right-30",
+        "theirs": "star",
+        "desc": "שונה — סגנון קו הערה"
+      },
+      {
+        "name": "note-num-separator",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "'.'",
+        "desc": "חסר — מפריד בין מספר לטקסט"
+      },
+      {
+        "name": "endnote prefix",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "הערת סיום -",
+        "theirs": "הערת סיום -",
+        "desc": "זהה"
+      }
+    ],
+    "4. חלוקת עמוד (grid)": [
+      {
+        "name": "columnWidth",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "40",
+        "theirs": "40",
+        "desc": "זהה"
+      },
+      {
+        "name": "marginWidth",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "10",
+        "theirs": "7.5",
+        "desc": "אצלנו רחב יותר"
+      },
+      {
+        "name": "gutterWidth",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "2",
+        "theirs": "2",
+        "desc": "זהה"
+      },
+      {
+        "name": "interColumnGap",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "0",
+        "theirs": "2",
+        "desc": "אצלנו 0, אצלם 2"
+      },
+      {
+        "name": "topMargin",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "10",
+        "theirs": "20",
+        "desc": "אצלנו קטן יותר"
+      },
+      {
+        "name": "bottomMargin",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "10",
+        "theirs": "20",
+        "desc": "אצלנו קטן יותר"
+      },
+      {
+        "name": "h2TopMargin",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "30",
+        "theirs": "20",
+        "desc": "אצלנו גדול יותר"
+      },
+      {
+        "name": "h2-top-distance",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "22%",
+        "desc": "חסר — מרחק H2 מראש העמוד"
+      },
+      {
+        "name": "col-divider-style",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "none",
+        "theirs": "none",
+        "desc": "זהה"
+      }
+    ],
+    "5. מספור עמודים": [
+      {
+        "name": "position",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "bottom-center",
+        "theirs": "bottom_center",
+        "desc": "זהה"
+      },
+      {
+        "name": "format",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "hebrew-letter",
+        "theirs": "gematria",
+        "desc": "זהה"
+      },
+      {
+        "name": "frame",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "none",
+        "theirs": "none",
+        "desc": "זהה"
+      },
+      {
+        "name": "start-idx",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "1",
+        "theirs": "1",
+        "desc": "זהה"
+      },
+      {
+        "name": "page-num-initial-value",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין — תמיד מתחיל מ-1)",
+        "theirs": "1 (ניתן לשנות)",
+        "desc": "חסר — אי אפשר להתחיל מעמוד שאינו 1"
+      },
+      {
+        "name": "shaar-count-numbering",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "false/true לכל shaar",
+        "desc": "חסר — מספור עמודי שער"
+      }
+    ],
+    "6. שערים (Shaar)": [
+      {
+        "name": "show-main-shaar",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "אוטומטי אם יש metadata",
+        "theirs": "true (מפורש)",
+        "desc": "אצלם מפורש, אצלנו אוטומטי"
+      },
+      {
+        "name": "show-back-shaar",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "אם יש copyright",
+        "theirs": "true",
+        "desc": "אצלם מפורש"
+      },
+      {
+        "name": "show-sub-shaar",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "theme.showSubShaar: true",
+        "theirs": "true",
+        "desc": "זהה"
+      },
+      {
+        "name": "shaar builder",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין — SVG מלא בלבד)",
+        "theirs": "SVG מותאם + top/bottom/right/left",
+        "desc": "חסר — אין מיקום מדויק של שדות"
+      },
+      {
+        "name": "shaar-count-numbering",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "false/true לכל shaar",
+        "desc": "חסר — מספור ייעודי"
+      },
+      {
+        "name": "shaar-main-divider",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none (אפשרי)",
+        "desc": "חסר — מפריד שער ראשי"
+      },
+      {
+        "name": "shaar-sub-divider",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none (אפשרי)",
+        "desc": "חסר — מפריד שער משנה"
+      }
+    ],
+    "7. עיטורים (Ornaments)": [
+      {
+        "name": "h2-ornament-set",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "matchH2WidthToText: false (flag אחד)",
+        "theirs": "none + style/dim מלאים (סטים, סגנונות)",
+        "desc": "חסר — מערכת מלאה במקום flag"
+      },
+      {
+        "name": "h2-top-style",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none + dim 65%/1.25em",
+        "desc": "חסר — עיטור עליון של H2"
+      },
+      {
+        "name": "h2-bottom-style",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none + dim 65%/1.25em",
+        "desc": "חסר — עיטור תחתון של H2"
+      },
+      {
+        "name": "h2-title-orn-mode",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none + R/L styles",
+        "desc": "חסר — עיטור צידי לכותרת H2"
+      },
+      {
+        "name": "h2-title-side",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none + dim 20px/1.1em",
+        "desc": "חסר — עיטור צדדי לכותרת"
+      },
+      {
+        "name": "h3-ornament-set",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין לגמרי)",
+        "theirs": "none + R/L + dim 50px/1em",
+        "desc": "חסר — מערכת עיטורי H3"
+      },
+      {
+        "name": "note-header-orn-r/l",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none + dim 40px/0.9em",
+        "desc": "חסר — עיטורי כותרת הערה"
+      },
+      {
+        "name": "h2-orn-fit-text",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "matchH2WidthToText: false",
+        "theirs": "h2-orn-fit-text: false",
+        "desc": "זהה"
+      }
+    ],
+    "8. רקעים (Backgrounds)": [
+      {
+        "name": "cbg-regular-mode",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין לגמרי)",
+        "theirs": "none + color #f4f1e8 + opacity 15",
+        "desc": "חסר — רקע עמוד רגיל"
+      },
+      {
+        "name": "cbg-h0Open-mode",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none + color + opacity",
+        "desc": "חסר — רקע עמוד פתיחת H0"
+      },
+      {
+        "name": "cbg-h2Open-mode",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none + color + opacity",
+        "desc": "חסר — רקע עמוד פתיחת H2"
+      },
+      {
+        "name": "data-cbg-*-img (תמונות רקע)",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין תמיכה)",
+        "theirs": "\"\" (תמיכה בתמונות)",
+        "desc": "חסר — תמיכה בתמונות רקע"
+      }
+    ],
+    "9. מפרידים (Dividers)": [
+      {
+        "name": "section-divider-style",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "spear + dim 50%/28px",
+        "desc": "חסר — מפריד חלקים מתקדם"
+      },
+      {
+        "name": "data-sec-div-img",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "\"\" (תמיכה בתמונה)",
+        "desc": "חסר — תמונה למפריד"
+      },
+      {
+        "name": "col-divider-style",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "none",
+        "theirs": "none",
+        "desc": "זהה"
+      },
+      {
+        "name": "heading-divider-h3",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none (אפשרי)",
+        "desc": "חסר — מפריד כותרת H3"
+      },
+      {
+        "name": "heading-divider-h4–h6",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "none (אפשרי)",
+        "desc": "חסר — מפרידי כותרות H4-H6"
+      }
+    ],
+    "10. כותרות עליונות (Running Headers)": [
+      {
+        "name": "distinct even/odd",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "alternating: true",
+        "theirs": "hdr-distinct-even-odd: true",
+        "desc": "זהה"
+      },
+      {
+        "name": "hdr-alternating",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "true (מתחלפות)",
+        "theirs": "false (לא מתחלפות)",
+        "desc": "הפוך! אצלנו מתחלפות"
+      },
+      {
+        "name": "hdr-title-split",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "halfHalfBookName: false",
+        "theirs": "false",
+        "desc": "זהה"
+      },
+      {
+        "name": "verso-r-type",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "book-name (פשוט)",
+        "theirs": "book_title_split_r (חצוי)",
+        "desc": "שונה — חצוי vs פשוט"
+      },
+      {
+        "name": "verso-r-align",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "right",
+        "theirs": "center",
+        "desc": "שונה — יישור שונה"
+      },
+      {
+        "name": "verso-c-type",
+        "tag": "diff",
+        "choice": "ours",
+        "ours": "chapter-name",
+        "theirs": "h1 (כותרת חלק)",
+        "desc": "שונה — chapter-name vs h1"
+      },
+      {
+        "name": "hdr-widths",
+        "tag": "diff",
+        "choice": "theirs",
+        "ours": "40/20/40",
+        "theirs": "33/33/33",
+        "desc": "שונה — חלוקת רוחב"
+      },
+      {
+        "name": "hdr-divider-style",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "gray",
+        "desc": "חסר — סגנון קו מפריד"
+      },
+      {
+        "name": "hdr-* גופנים",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין גופנים מפורשים)",
+        "theirs": "Livorna (מפורש)",
+        "desc": "חסר — אין גופנים ייעודיים"
+      }
+    ],
+    "11. תוכן עניינים (TOC)": [
+      {
+        "name": "general-toc",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "generalLevels: [1,2,3,4,5,6]",
+        "theirs": "enable-general-toc: true",
+        "desc": "זהה"
+      },
+      {
+        "name": "detailed-toc",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "detailedLevels: [2,3,4,5,6]",
+        "theirs": "enable-detailed-toc: true",
+        "desc": "זהה"
+      },
+      {
+        "name": "TOC fonts by level",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "fontsByLevel: {} (ריק)",
+        "theirs": "7 רמות עם גופנים וגדלים מפורשים",
+        "desc": "חסר — אין הגדרת גופן לכל רמה"
+      },
+      {
+        "name": "detailed TOC fonts",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "7 רמות (f-dtoc-1..7)",
+        "desc": "חסר — גופנים ל-TOC מפורט"
+      },
+      {
+        "name": "toc-count-numbering",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "countNumbering: true",
+        "theirs": "true",
+        "desc": "זהה"
+      }
+    ],
+    "12. איכות אוטומטית (Quality)": [
+      {
+        "name": "aq-enabled",
+        "tag": "diff",
+        "choice": "(לא נבחר)",
+        "ours": "quality.prevent* (מערכת אחרת)",
+        "theirs": "aq-enabled: true",
+        "desc": "שונה — מערכות שונות"
+      },
+      {
+        "name": "aq-word-spacing",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "true, min 0.95, max 1.05",
+        "desc": "חסר — בדיקת ריווח מילים"
+      },
+      {
+        "name": "aq-para-spacing",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "true, max 9",
+        "desc": "חסר — בדיקת ריווח פסקאות"
+      },
+      {
+        "name": "aq-line-height",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "true, max 3",
+        "desc": "חסר — בדיקת גובה שורה"
+      },
+      {
+        "name": "aq-shared-load",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "true",
+        "desc": "חסר — טעינה שיתופית"
+      },
+      {
+        "name": "avoid-orphans",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "preventOrphan: true",
+        "theirs": "true",
+        "desc": "זהה"
+      },
+      {
+        "name": "avoid-widows",
+        "tag": "",
+        "choice": "(לא נבחר)",
+        "ours": "preventWidow: true",
+        "theirs": "true",
+        "desc": "זהה"
+      },
+      {
+        "name": "avoid-runt-word",
+        "tag": "critical",
+        "choice": "theirs",
+        "ours": "(אין)",
+        "theirs": "true",
+        "desc": "חסר — מניעת runt (שורה אחרונה דלילה)"
+      }
+    ],
+    "13. תכונות שיש רק אצלנו (STRONG)": [
+      {
+        "name": "strictness mode",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "normal / strict",
+        "theirs": "(אין)",
+        "desc": "שליטה בסף widow/orphan"
+      },
+      {
+        "name": "balanceChapterEnd",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "true",
+        "theirs": "(אין)",
+        "desc": "איזון מותאם לסוף פרק"
+      },
+      {
+        "name": "preventOverflow",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "true (מפורש)",
+        "theirs": "(אין מפורש)",
+        "desc": "מניעת overflow מפורשת"
+      },
+      {
+        "name": "preventHangingHeadings",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "true (מפורש)",
+        "theirs": "(אין מפורש)",
+        "desc": "מניעת כותרת תלויה מפורשת"
+      },
+      {
+        "name": "trace-logger",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "TraceLogger class",
+        "theirs": "(אין)",
+        "desc": "יומן החלטות עימוד לדיבאג"
+      },
+      {
+        "name": "trace-store",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "Zustand store",
+        "theirs": "(אין)",
+        "desc": "Store ל-trace events"
+      },
+      {
+        "name": "input-declaration",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "combined hash (text+settings+fonts+cssVars)",
+        "theirs": "(אין)",
+        "desc": "מנגנון הגנה נגד אי-דטרמיניזם"
+      },
+      {
+        "name": "paren-protector",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "protectParens()",
+        "theirs": "(אין)",
+        "desc": "מונע חיתוך באמצע [סוגריים]"
+      },
+      {
+        "name": "text-completeness audit",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "checkTextCompleteness()",
+        "theirs": "(אין)",
+        "desc": "וידוא שמילים מהמקור לא אבדו (CRITICAL)"
+      },
+      {
+        "name": "heading-escort audit",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "checkHeadingEscort()",
+        "theirs": "(אין)",
+        "desc": "בדיקת כותרת עם <2 שורות אחריה"
+      },
+      {
+        "name": "page-underfill audit",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "checkPageUnderfill()",
+        "theirs": "(אין)",
+        "desc": "בדיקת עמוד לא מלא"
+      },
+      {
+        "name": "block-gap audit",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "checkBlockGap()",
+        "theirs": "(אין)",
+        "desc": "בדיקת ריווח גדול בין בלוקים"
+      },
+      {
+        "name": "multiple-blocks audit",
+        "tag": "strong",
+        "choice": "ours",
+        "ours": "checkMultipleBlocks()",
+        "theirs": "(אין)",
+        "desc": "בדיקת שני טורים עמוסים"
+      }
+    ]
+  }
+}

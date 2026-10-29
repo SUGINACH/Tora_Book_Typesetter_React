@@ -1,13 +1,20 @@
 import { useEffect } from 'react';
 import { AppShell } from './components/layout/AppShell';
+import { useAutoSave } from './hooks/useAutoSave';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 function App() {
-  // שחזור state בעת טעינה — ה-stores כבר מטפלים ב-persist
+  useAutoSave();
+
   useEffect(() => {
     console.log('Tora Book Typesetter loaded');
   }, []);
 
-  return <AppShell />;
+  return (
+    <ErrorBoundary>
+      <AppShell />
+    </ErrorBoundary>
+  );
 }
 
 export default App;

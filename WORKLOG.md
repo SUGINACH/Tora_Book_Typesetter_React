@@ -111,3 +111,64 @@
 - **הערות שוליים**: כחלק מ-tora-page-body, מתחת ל-tora-text-area
 - **CSS מלא נכתב מחדש** עם flexbox + grid
 - **GLOSSARY**: עדככני עם מבנה עמוד, tora-page-header/body/footer, tora-text-area
+
+### Fix: corrected heading ornaments understanding
+- **עיטורי כותרות** = עיטורים לכותרות 2/3 בלבד (NOT H7)
+- **עיטור סוף פרק** = סיום קטע של כותרת 2 (כבר ממומש)
+- H7 הערות צד = נושא נפרד, לא קשור לעיטורי כותרות
+- GLOSSARY תוקן בהתאם
+
+### Commit: heading ornaments (H2/H3) from JSON + ornament-loader
+- **ornament-loader.ts**: טעינת header_ornaments.json (5 עיטורים, כל אחד SVG)
+- **OrnamentData**: { h2Top, h2Bottom, h3Right, h3Left } — מועבר ל-renderer
+- **renderer.ts**: H2 פרק פותח מקבל עיטור עליון + תחתון מ-SVG
+- **useTypesetter**: טוען עיטורים יחד עם שערים
+- **GLOSSARY**: עיטורי כותרות = H2/H3 בלבד (NOT H7)
+
+### Commit: H7 sidenotes rendering in margins
+- **renderSidenotes**: H7 הערות צד מתרנדרות בשוליים
+  עמודים אי-זוגיים → שוליים ימין, עמודים זוגיים → שוליים שמאל
+- משתמש ב-doc.sidenotes מה-parser
+- CSS: .tora-sidenote (6pt, #404040)
+- GLOSSARY: H7 = הערת צד בשוליים החיצוניים
+
+### Commit: view store + zoom controls + preview refactor
+- **view-store.ts**: Zustand store for zoom (persisted)
+- **ZoomControls**: −/+/100% buttons
+- **PreviewArea**: zoom applied to pages, findings panel, print button
+- **GLOSSARY**: view store, zoom
+
+### Commit: editor↔preview sync + worker bridge + engine tests
+- **useEditorPreviewSync**: סנכרון דו-כיווני
+  1. קליק על עמוד בתצוגה → גלילת עורך לטקסט
+  2. מיקום סמן בעורך → גלילת תצוגה לעמוד
+- **worker-bridge.ts**: הפשטת המנוע — runTypeset() אסינכרוני
+  כרגע רץ ב-main thread, מוכן להחלפה ב-Worker
+- **useTypesetter**: פונה ל-worker-bridge במקום ישירות למנוע
+- **9 בדיקות engine חדשות**: עמודים, שערים, H2, hash, metadata, HTML
+- סהכ: 48 בדיקות עוברות
+
+### Commit: column balancing + widow/orphan detection + section dividers loader
+- **balanceColumns**: אלגוריתם איזון אמיתי — מעביר בלוקים בין טורים להקטנת פער
+- **fixWidowsAndOrphans**: זיהוי אלמנה/יתום (סף 1.1 × גובה שורה)
+  הערה: העברה בין טורים דורשת מידע על הטור הבא — ימומש בשלב הבא
+- **divider-loader.ts**: טעינת section_dividers.json (323 עיצובים)
+- **GLOSSARY**: balanceColumns, fixWidowsAndOrphans, divider-loader
+
+### Commit: custom style UI + H3 side ornaments + section dividers
+- **CustomStylePanel**: ממשק מלא להגדרת סגנונות מותאמים
+  linePrefix: קידומת שורה, inlineMarker: תוחמים
+  גופן, גודל, משקל, צבע, הפעלה/ביטול
+- **H3 side ornaments**: עיטורי SVG מ-ornaments.h3Right/h3Left בצדדי H3
+- **CSS**: .tora-h3-ornament-right/left
+- **GLOSSARY**: CustomStylePanel, H3 side ornaments
+
+### Commit: Error boundary + Web Worker file + Tauri Cargo.toml + main.rs
+- **ErrorBoundary**: לוכיאת שגיאות React, מציג הודעה + רענון
+- **typesetter.worker.ts**: Web Worker אמיתי — מבצע עימוד מחוץ ל-main thread
+  מקבל: { type: 'typeset', jobId, text, settings, shaarDesigns, ornaments }
+  שולח: { type: 'progress' | 'done' | 'error' }
+- **Cargo.toml**: Tauri 2 dependencies (tauri, serde, serde_json)
+- **main.rs**: Tauri entry point (fs + dialog plugins)
+- **App.tsx**: ErrorBoundary wraps AppShell
+- **GLOSSARY**: ErrorBoundary, typesetter.worker

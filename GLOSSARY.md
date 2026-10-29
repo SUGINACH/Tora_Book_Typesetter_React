@@ -72,6 +72,20 @@
 
 **קוד:** `headingLevel: 7`, `pageType` נשאר 'regular' אך ההערה מוצמדת.
 
+### עיטורי כותרות (Heading Ornaments)
+עיטורים מעל, מתחת ולצד **כותרות 2 ו-3 בלבד** (לא H7). נטענים מ-JSON חיצוני.
+- H2: עיטור עליון + עיטור תחתון (מעל ומתחת הכותרת)
+- H3: עיטורי צד (ימין ושמאל)
+- **לא קשור ל-H7 / הערות צד**
+
+**קוד:** `tora-heading-ornament-top`, `tora-heading-ornament-bottom` (H2)
+**JSON:** `header_ornaments.json` (28KB)
+
+### עיטור סוף פרק (Chapter End Ornament)
+סימן ויזואלי ב**סוף קטע של כותרת 2** (לא סוף כל פסקה). סוגים: פירמידת מעויינים (❖ ❖ ❖), רומח, שושנתא, סלסול.
+
+**קוד:** `tora-chapter-end`, `renderChapterEndDivider()`
+
 ---
 
 ## פסקאות
