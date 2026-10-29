@@ -133,6 +133,10 @@
 - H2: עיטור עליון + תחתון (מעל ומתחת לכותרת)
 - H3: עיטורי צד (ימין ושמאל)
 - **לא קשור ל-H7 / הערות צד**
+- נוסף `ornament-loader.ts` לטעינת header_ornaments.json (5 עיטורים, כל אחד SVG)
+- `OrnamentData`: { h2Top, h2Bottom, h3Right, h3Left } — מועבר ל-renderer
+- `useTypesetter`: טוען עיטורים יחד עם שערים
+- **GLOSSARY**: עיטורי כותרות = H2/H3 בלבד (לא H7)
 
 **קוד:** `tora-heading-ornament-top`, `tora-heading-ornament-bottom` (H2)
 **JSON:** `header_ornaments.json` (28KB)
