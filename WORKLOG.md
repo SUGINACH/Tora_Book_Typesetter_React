@@ -154,3 +154,11 @@
   הערה: העברה בין טורים דורשת מידע על הטור הבא — ימומש בשלב הבא
 - **divider-loader.ts**: טעינת section_dividers.json (323 עיצובים)
 - **GLOSSARY**: balanceColumns, fixWidowsAndOrphans, divider-loader
+
+### Commit: custom style UI + H3 side ornaments + section dividers
+- **CustomStylePanel**: ממשק מלא להגדרת סגנונות מותאמים
+  linePrefix: קידומת שורה, inlineMarker: תוחמים
+  גופן, גודל, משקל, צבע, הפעלה/ביטול
+- **H3 side ornaments**: עיטורי SVG מ-ornaments.h3Right/h3Left בצדדי H3
+- **CSS**: .tora-h3-ornament-right/left
+- **GLOSSARY**: CustomStylePanel, H3 side ornaments

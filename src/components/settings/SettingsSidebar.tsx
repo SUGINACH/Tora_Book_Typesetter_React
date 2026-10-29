@@ -3,6 +3,7 @@ import { useSettingsStore } from '../../store/settings-store';
 import { useSettings } from '../../hooks/useTypesetter';
 import { loadShaarDesigns, type ShaarDesigns } from '../../lib/shaar-loader';
 import { exportCustomStyles } from '../../lib/custom-styles-io';
+import { CustomStylePanel } from '../panels/CustomStylePanel';
 
 const HEBREW_FONTS = [
   'Frank Ruhl Libre', 'FrankRuehl', 'Guttman Rashi', 'Noto Serif Hebrew',
@@ -285,6 +286,11 @@ export function SettingsSidebar() {
           <option value="round-parens">(א)</option>
           <option value="square-brackets">[א]</option>
         </select>
+      </section>
+
+      {/* === סגנונות מותאמים אישית === */}
+      <section className="mb-6">
+        <CustomStylePanel />
       </section>
     </div>
   );

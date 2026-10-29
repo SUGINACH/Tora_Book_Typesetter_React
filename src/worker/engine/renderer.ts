@@ -265,7 +265,14 @@ function renderBlock(block: Block, settings: Settings, blockIndex: number, total
       const h = settings.typography.headings[level];
       const fontCss = h ? fontConfigToCss(h.font) : '';
       const cls = level <= 3 ? 'tora-heading-inline-wide' : 'tora-heading-inline';
-      return `<div class="tora-heading tora-heading-level-${level} ${cls}" style="${fontCss}">${escapeHtml(block.content)}</div>`;
+
+      // H3 — עיטורי צד
+      let sideOrnHtml = '';
+      if (level === 3 && ornaments?.h3Right?.svg && ornaments?.h3Left?.svg) {
+        sideOrnHtml = `<span class="tora-h3-ornament-right">${ornaments.h3Right.svg}</span><span class="tora-h3-ornament-left">${ornaments.h3Left.svg}</span>`;
+      }
+
+      return `<div class="tora-heading tora-heading-level-${level} ${cls}" style="${fontCss}">${sideOrnHtml}${escapeHtml(block.content)}</div>`;
     }
 
     case 'footnote':
