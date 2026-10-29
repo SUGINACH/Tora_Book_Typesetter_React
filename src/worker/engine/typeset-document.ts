@@ -298,19 +298,22 @@ function breakPages(
       startNewPage('regular');
     }
 
-    // חלוקה בין טורים — RTL: טור ימני (index 0) קודם, אז שמאלי (index 1)
-    const targetHeight = pageHeight * 0.80; // מותיר מקום ל-footnotes ומספר עמוד
+    // 0.92 = ניצול מירבי של העמוד (88% מהגובה הפנוי)
+    const targetHeight = pageHeight * 0.92;
+    const blockTooBig = block.height > targetHeight;
 
-    // מילוי טור ימני קודם (first column in RTL)
-    if (rightHeight + block.height <= targetHeight) {
+    // 1) נסה להכניס לטור הימני (RTL — טור ראשון)
+    if (rightHeight + block.height <= targetHeight || (blockTooBig && rightHeight === 0)) {
       rightBlocks.push(block);
       rightHeight += block.height;
-    } else if (leftHeight + block.height <= targetHeight) {
-      // טור ימני מלא — עבור לשמאלי
+    }
+    // 2) טור ימני מלא — עבור לשמאלי (מילוי הטור השני לפני פתיחת עמוד חדש)
+    else if (leftHeight + block.height <= targetHeight || (blockTooBig && leftHeight === 0 && rightHeight > 0)) {
       leftBlocks.push(block);
       leftHeight += block.height;
-    } else {
-      // שני הטורים מלאים — פותחים עמוד חדש
+    }
+    // 3) שני הטורים מלאים — פותחים עמוד חדש
+    else {
       startNewPage('regular');
       rightBlocks.push(block);
       rightHeight = block.height;
@@ -330,9 +333,85 @@ function breakPages(
 }
 
 /**
- * איזון טורים בעמוד — פשוט לעת עתה (כבר מאוזן מהחלוקה).
+ * איזון טורים — אלגוריתם דו-שלבי.
+ *
+ * 1) מעביר בלוקים בזה אחר זה מהטור הגבוה לנמוך עד שהפער מתהפך
+ * 2) בוחר את המצב עם הפער המינימלי
  */
 function balanceColumnsInPage(page: FinalPage, _settings: Settings, _pageHeight: number): FinalPage {
+  if (page.columns.length !== 2) return page;
+
+  const right = page.columns[0]!;
+  const left = page.columns[1]!;
+  const diff = right.height - left.height;
+  if (Math.abs(diff) < 30) return page;
+
+  if (diff > 0 && right.blocks.length > 1) {
+    // ימני גבוה — העבר מסופו לתחילת השמאלי
+    let bestDiff = Math.abs(right.height - left.height);
+    let bestRightBlocks = right.blocks;
+    let bestLeftBlocks = left.blocks;
+    let bestRightH = right.height;
+    let bestLeftH = left.height;
+
+    const rightCopy = [...right.blocks];
+    const leftCopy = [...left.blocks];
+    let rightH = right.height;
+    let leftH = left.height;
+
+    while (rightCopy.length > 1) {
+      const block = rightCopy.pop()!;
+      rightH -= block.height;
+      leftCopy.unshift(block);
+      leftH += block.height;
+      const curDiff = Math.abs(rightH - leftH);
+      if (curDiff < bestDiff) {
+        bestDiff = curDiff;
+        bestRightBlocks = [...rightCopy];
+        bestLeftBlocks = [...leftCopy];
+        bestRightH = rightH;
+        bestLeftH = leftH;
+      }
+      if (leftH > rightH + 5) break;
+    }
+    right.blocks = bestRightBlocks;
+    right.height = bestRightH;
+    left.blocks = bestLeftBlocks;
+    left.height = bestLeftH;
+  } else if (diff < 0 && left.blocks.length > 1) {
+    // שמאלי גבוה — העבר מתחילתו לסוף הימני
+    let bestDiff = Math.abs(right.height - left.height);
+    let bestRightBlocks = right.blocks;
+    let bestLeftBlocks = left.blocks;
+    let bestRightH = right.height;
+    let bestLeftH = left.height;
+
+    const rightCopy = [...right.blocks];
+    const leftCopy = [...left.blocks];
+    let rightH = right.height;
+    let leftH = left.height;
+
+    while (leftCopy.length > 1) {
+      const block = leftCopy.shift()!;
+      leftH -= block.height;
+      rightCopy.push(block);
+      rightH += block.height;
+      const curDiff = Math.abs(rightH - leftH);
+      if (curDiff < bestDiff) {
+        bestDiff = curDiff;
+        bestRightBlocks = [...rightCopy];
+        bestLeftBlocks = [...leftCopy];
+        bestRightH = rightH;
+        bestLeftH = leftH;
+      }
+      if (rightH > leftH + 5) break;
+    }
+    right.blocks = bestRightBlocks;
+    right.height = bestRightH;
+    left.blocks = bestLeftBlocks;
+    left.height = bestLeftH;
+  }
+
   return page;
 }
 
@@ -374,9 +453,62 @@ function placeFootnotes(page: FinalPage, footnotes: import('../../types').Parsed
 }
 
 /**
- * תיקון אלמנות/יתומים — לעת עתה ללא שינוי (placeholder).
+ * תיקון אלמנות/יתומים וכותרות תלויות — מימוש אמיתי.
+ *
+ * 1. כותרת תלויה: אם הבלוק האחרון בטור הימני הוא כותרת — העבר לשמאלי
+ * 2. יתום: פסקה קצרה בסוף טור ימני → העבר לשמאלי
+ * 3. אלמנה: פסקה קצרה בתחילת טור שמאלי → משוך בלוק מהימני
  */
-function fixWidowsAndOrphans(page: FinalPage, _settings: Settings): FinalPage {
-  // TODO: יישום מלא — העברת שורות בין טורים
+function fixWidowsAndOrphans(page: FinalPage, settings: Settings): FinalPage {
+  if (page.columns.length !== 2) return page;
+  const {
+    preventWidow,
+    preventOrphan,
+    preventHangingHeadings,
+  } = settings.quality;
+  if (!preventWidow && !preventOrphan && !preventHangingHeadings) return page;
+
+  // סף ל"פסקה קצרה" — ~1.5 × גובה שורה (25px ברירת מחדל)
+  const shortParagraphThreshold = 25;
+
+  const right = page.columns[0]!;
+  const left = page.columns[1]!;
+
+  // 1. כותרת תלויה בסוף טור ימני → העבר לתחילת טור שמאלי
+  if (preventHangingHeadings && right.blocks.length > 1) {
+    const lastRight = right.blocks[right.blocks.length - 1]!;
+    if (lastRight.type === 'heading') {
+      right.blocks.pop();
+      right.height -= lastRight.height;
+      left.blocks.unshift(lastRight);
+      left.height += lastRight.height;
+    }
+  }
+
+  // 2. יתום — פסקה קצרה בסוף טור ימני → העבר לתחילת טור שמאלי
+  if (preventOrphan && right.blocks.length > 1) {
+    const lastRight = right.blocks[right.blocks.length - 1]!;
+    if (lastRight.type === 'paragraph' && lastRight.height < shortParagraphThreshold) {
+      right.blocks.pop();
+      right.height -= lastRight.height;
+      left.blocks.unshift(lastRight);
+      left.height += lastRight.height;
+    }
+  }
+
+  // 3. אלמנה — פסקה קצרה בתחילת טור שמאלי → משוך בלוק מסוף הטור הימני
+  if (preventWidow && left.blocks.length > 0 && right.blocks.length > 1) {
+    const firstLeft = left.blocks[0]!;
+    if (firstLeft.type === 'paragraph' && firstLeft.height < shortParagraphThreshold) {
+      const lastRight = right.blocks[right.blocks.length - 1]!;
+      if (lastRight.type === 'paragraph') {
+        right.blocks.pop();
+        right.height -= lastRight.height;
+        left.blocks.unshift(lastRight);
+        left.height += lastRight.height;
+      }
+    }
+  }
+
   return page;
 }
