@@ -1,5 +1,15 @@
 # Worklog — Tora Book Typesetter React
 
+## 2026-10-30
+
+### Plan: deterministic browser-independent layout engine
+- נוסף `אפיון_טכני_מערכת_עימוד_תורני.md` — אפיון ותכנית קוד מפורטים ל־React + TypeScript
+- התכנית מתבססת על snapshot נעול של IMUD, Yellow, Gold, Green, Orange, Typesetter_doc והריפו הנוכחי
+- הוגדרו: חבילות ליבה ללא DOM, Layout IR, measurement/shaping, candidate search, Decision Ledger, Audit עצמאי, Worker/CLI/Tauri, HTML/PDF, i18n/RTL ומבחני regression
+- נוספו שלבי הגירה M0–M12, שערי קבלה, קריטריוני release, סיכונים ו־ADRs נדרשים
+- אין שינוי קוד או אלגוריתם; לא הורצו בדיקות — documentation only
+- Commit התכנית: `c9b155502663d68b2a80fc20522c90be19048a3d`
+
 ## 2026-10-29
 
 ### Commit: shaar JSON loading + back-shaar position fix + WORKLOG
@@ -25,7 +35,7 @@
 - **מספר עמוד**: פורמט (3) + מסגרת (5)
 
 ### Commit: running header half-half + alternating recto/verso
-- **חצי-חצי**: פיצול שם הספר (מספר מילים זוגי) בין ימין ושמאל
+- **חצי-חצי**: פיצול שם הספר (מספר מילים זוגי) בין ימין לשמאל
   בעמוד ימני: חצי ראשון בימין, שני בשמאל
   בעמוד שמאלי: התחלפות
 - **מתחלפות (Recto/Verso)**: החלפת תוכן ימין/שמאל בעמודים זוגיים
@@ -80,7 +90,7 @@
   1. nested-bracket-matcher: תיקון ערכי ציפיון (21→20, 15→14)
   2. editorial-note-parser: trim מסיר רווחים → ציפיון 'טקסט' (לא '  טקסט ')
   3. metadata-parser: remaining כולל שורה ריקה → בדיקת last element
-- סהכ: 39 בדיקות עוברות (22 parser + 6 determinism + 4 gematria + 7 נוספות)
+- סהכ: 39 בדיקות עוברות (22 parser + 6 determinism + 4 gematria + 7 נוספים)
 
 ### Commit: footnote markers in body + chapter end divider
 - **סמני הערות שוליים בגוף הטקסט**: החלפת \u0001FN:id\u0002 ב-<sup> עם מספור גיממ
@@ -93,7 +103,7 @@
 - **עמוד תוכן עניינים (TOC)**: נוצר אוטומטית מכותרות H1-H6
   מופיע לאחר שערים ולפני תוכן
   רמות מותאמות, נקודות מקווקוות, מספרי עמוד
-- **סמני הערות בגוף**: <sup> עם מספור גיממ, 4 סגנונות
+- **סמני הערות שוליים**: <sup> עם מספור גיממ, 4 סגנונות
 - **סיום פרק**: ❖ ❖ ❖
 - **CSS**: TOC, sidenote, footnote inline, chapter end
 - **GLOSSARY**: עדככני עם סמני הערות, TOC, sidenote
@@ -110,20 +120,22 @@
 - **H2/H3 טור אחד**: CSS toggle — has-single-column class מסתיר .tora-columns ומציג .tora-single-column
 - **הערות שוליים**: כחלק מ-tora-page-body, מתחת ל-tora-text-area
 - **CSS מלא נכתב מחדש** עם flexbox + grid
-- **GLOSSARY**: עדככני עם מבנה עמוד, tora-page-header/body/footer, tora-text-area
+- **GLOSSARY** עודכן עם מבנה עמוד, tora-page-header/body/footer, tora-text-area
 
 ### Fix: corrected heading ornaments understanding
 - **עיטורי כותרות** = עיטורים לכותרות 2/3 בלבד (NOT H7)
-- **עיטור סוף פרק** = סיום קטע של כותרת 2 (כבר ממומש)
+- **עיטור סוף פרק** = סיום קטע של כותרת 2 (כבר ממומש בקוד)
 - H7 הערות צד = נושא נפרד, לא קשור לעיטורי כותרות
 - GLOSSARY תוקן בהתאם
 
 ### Commit: heading ornaments (H2/H3) from JSON + ornament-loader
-- **ornament-loader.ts**: טעינת header_ornaments.json (5 עיטורים, כל אחד SVG)
-- **OrnamentData**: { h2Top, h2Bottom, h3Right, h3Left } — מועבר ל-renderer
-- **renderer.ts**: H2 פרק פותח מקבל עיטור עליון + תחתון מ-SVG
-- **useTypesetter**: טוען עיטורים יחד עם שערים
-- **GLOSSARY**: עיטורי כותרות = H2/H3 בלבד (NOT H7)
+- **עיטורי כותרות** עיטורי SVG לכותרות 2/3 בלבד (לא H7), נטענים מ-JSON חיצוני
+- H2: עיטור עליון + תחתון (מעל ומתחת לכותרת)
+- H3: עיטורי צד (ימין ושמאל)
+- **לא קשור ל-H7 / הערות צד**
+
+**קוד:** `tora-heading-ornament-top`, `tora-heading-ornament-bottom` (H2)
+**JSON:** `header_ornaments.json` (28KB)
 
 ### Commit: H7 sidenotes rendering in margins
 - **renderSidenotes**: H7 הערות צד מתרנדרות בשוליים
