@@ -172,13 +172,29 @@
   gap: 5%;
   flex: 1;
   direction: rtl;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .tora-column {
   font-size: 12pt;
   line-height: 1.45;
-  text-align: justify;
+  /* לא text-align:justify — השורות כבר שבורות בקוד */
+  text-align: right;
   direction: rtl;
+  overflow: hidden;
+}
+
+/* שורות ידניות — הדפדפן לא שובר אותן */
+.tora-line {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.tora-line-centered {
+  text-align: center !important;
 }
 
 .tora-column-right { order: 1; }

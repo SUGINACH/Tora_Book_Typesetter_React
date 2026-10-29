@@ -225,35 +225,43 @@ function renderBlock(block: Block, settings: Settings, blockIndex: number, total
 
       // p-end = פסקה אחרונה בטור → שורה אחרונה ממורכזת
       const paraClass = isLastInColumn ? 'tora-body-text p-end' : 'tora-body-text p-cut';
-      const paraStyle = isLastInColumn ? 'text-align-last: center;' : '';
 
       // החלפת סמני הערות שוליים (\u0001FN:id\u0002) בסמן עילי ויזואלי
       text = renderFootnoteMarkers(text, settings);
 
-      // החלת מילה ראשונה מוגדלת אם פעיל
-      if (dropWordMode !== 'none' && text.length > 20) {
-        const dropWordCount = settings.typography.dropWordCount;
-        const words = text.split(/\s+/);
-        if (words.length >= 4) {
-          const dropWords = words.slice(0, dropWordCount).join(' ');
-          const restWords = words.slice(dropWordCount).join(' ');
-          const dropWordHtml = dropWordMode === 'bold'
-            ? `<span class="first-word-bold">${escapeHtml(dropWords)}</span>`
-            : `<span class="first-word-window">${escapeHtml(dropWords)}</span>`;
-          return `<p class="${paraClass}" style="${paraStyle}">${dropWordHtml} ${escapeHtml(restWords)}</p>`;
-        }
+      // אם יש שורות שבורות — רנדר כל שורה כ-span נפרד
+      // white-space:nowrap מונע מהדפדפן לשבור שורות מחדש
+      if (block.lines && block.lines.length > 0) {
+        const linesHtml = block.lines.map((line, i) => {
+          const isLastLine = i === block.lines!.length - 1;
+          const lineClass = isLastInColumn && isLastLine
+            ? 'tora-line tora-line-last tora-line-centered'
+            : 'tora-line';
+          // החלת מילה ראשונה מוגדלת רק בשורה הראשונה
+          let lineText = line;
+          if (i === 0 && dropWordMode !== 'none' && lineText.length > 20) {
+            const dropWordCount = settings.typography.dropWordCount;
+            const words = lineText.split(/\s+/);
+            if (words.length >= 4) {
+              const dropWords = words.slice(0, dropWordCount).join(' ');
+              const restWords = words.slice(dropWordCount).join(' ');
+              const dropWordHtml = dropWordMode === 'bold'
+                ? `<span class="first-word-bold">${escapeHtml(dropWords)}</span>`
+                : `<span class="first-word-window">${escapeHtml(dropWords)}</span>`;
+              lineText = `${dropWordHtml} ${escapeHtml(restWords)}`;
+            } else {
+              lineText = escapeHtml(lineText);
+            }
+          } else {
+            lineText = escapeHtml(lineText);
+          }
+          return `<span class="${lineClass}">${lineText}</span>`;
+        }).join('');
+        return `<div class="${paraClass}">${linesHtml}</div>`;
       }
 
-      // דיבור המתחיל (ד"ה) — זיהוי אוטומטי
-      const dhConfig = settings.typography.dibburHamatchil;
-      if (dhConfig?.enabled) {
-        const dhResult = detectDibburHamatchil(text, dhConfig.terminators);
-        if (dhResult) {
-          const dhFontCss = fontConfigToCss(dhConfig.font);
-          return `<p class="${paraClass}" style="${paraStyle}"><span class="dibbur-hamatchil" style="${dhFontCss}">${escapeHtml(dhResult.opening)}</span> ${escapeHtml(dhResult.rest)}</p>`;
-        }
-      }
-
+      // Fallback — אין שורות שבורות, רנדר טקסט מלא
+      const paraStyle = isLastInColumn ? 'text-align-last: center;' : '';
       return `<p class="${paraClass}" style="${paraStyle}">${escapeHtml(text)}</p>`;
     }
 

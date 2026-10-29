@@ -192,6 +192,7 @@ function buildBlocksFromAst(
         simanNumber: node.simanNumber,
         height,
         width: columnWidthPx,
+        lines,
       });
       // children
       if (node.children) {
@@ -205,6 +206,7 @@ function buildBlocksFromAst(
               textType: child.type === 'custom' ? 'custom' : 'body',
               height: childHeight,
               width: columnWidthPx,
+              lines: childLines,
             });
           }
         }
@@ -218,6 +220,7 @@ function buildBlocksFromAst(
         textType: node.type === 'custom' ? 'custom' : 'body',
         height,
         width: columnWidthPx,
+        lines,
       });
     }
   }

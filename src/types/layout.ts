@@ -23,6 +23,8 @@ export interface Block {
   height: number;
   width: number;
   sourceNode?: ParsedNode;
+  /** שורות שבורות — אם קיים, ה-renderer משתמש בהן במקום הטקסט המלא */
+  lines?: string[];
 }
 
 /**
