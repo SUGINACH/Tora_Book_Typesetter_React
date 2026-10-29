@@ -4,8 +4,8 @@ import { useDocumentStore } from '../store/document-store';
 import { useWorkerStore } from '../store/worker-store';
 import { parseDocument } from '../parser';
 import { typesetDocument } from '../worker/engine/typeset-document';
-import { SimulatedMeasurer } from '../worker/measurement/text-metrics';
-import { auditGeometry } from '../audit/geometry-audit';
+import { createMeasurer } from '../worker/measurement/canvas-measurer';
+import { auditGeometryWithDoc } from '../audit/geometry-audit';
 import { fnv1a32 } from '../worker/inputs/fnv-hash';
 import { loadShaarDesigns, getShaarDesign } from '../lib/shaar-loader';
 import type { ShaarDesignData } from '../worker/engine/renderer';
@@ -28,7 +28,7 @@ export function useTypesetter() {
       const doc = parseDocument(rawText, settings);
 
       // 2. טעינת עיצובי שערים מ-JSON
-      workerStore.updateProgress('font-loading', 10, 'טועם עיצובי שערים...');
+      workerStore.updateProgress('font-loading', 10, 'טוען עיצובי שערים וגופנים...');
       let shaarDesigns: ShaarDesignData | undefined;
       try {
         const designs = await loadShaarDesigns();
@@ -41,23 +41,23 @@ export function useTypesetter() {
         console.warn('Failed to load shaar designs:', err);
       }
 
-      // 3. Typesetting
-      workerStore.updateProgress('measuring', 20, 'מודד טקסט...');
-      await delay(10);
-      const measurer = new SimulatedMeasurer();
+      // 3. טעינת גופנים + יצירת מודד אמיתי (Canvas API)
+      workerStore.updateProgress('measuring', 20, 'מודד טקסט במדויק...');
+      const measurer = await createMeasurer();
+
+      // 4. Typesetting עם מדידה אמיתית
       const result = typesetDocument(doc, settings, measurer, (stage, percent, msg) =>
         workerStore.updateProgress(stage as any, percent, msg), shaarDesigns
       );
 
-      // 4. Audit
+      // 5. Audit
       workerStore.updateProgress('finalizing', 95, 'בודק גיאוממטריה...');
-      await delay(10);
-      const findings = auditGeometry(result.pages, settings);
+      const findings = auditGeometryWithDoc(result.pages, settings, doc);
 
-      // 5. Hash
+      // 6. Hash
       const outputHash = fnv1a32(result.pages.map((p) => p.html).join(''));
 
-      // 6. Save
+      // 7. Save
       setRendered(result.pages, outputHash, findings);
       workerStore.finish(result.durationMs);
       clearPending();
