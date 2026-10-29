@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useSettings } from '../../hooks/useTypesetter';
-import { useSettingsStore } from '../../store/settings-store';
-import type { CustomTextStyle } from '../../types';
+import { useSettings } from '../../../hooks/useTypesetter';
+import { useSettingsStore } from '../../../store/settings-store';
+import type { CustomTextStyle } from '../../../types';
 
 export function CustomStylePanel() {
   const settings = useSettings();
