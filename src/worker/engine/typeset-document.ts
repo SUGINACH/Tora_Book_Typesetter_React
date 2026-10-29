@@ -364,6 +364,57 @@ function balanceColumnsInPage(page: FinalPage, _settings: Settings, _pageHeight:
 
   const right = page.columns[0]!;
   const left = page.columns[1]!;
+
+  // אם שמאלי ריק לגמרי וימני מלא — העבר חצי מהבלוקים לשמאלי
+  if (left.blocks.length === 0 && right.blocks.length > 1) {
+    const halfIdx = Math.ceil(right.blocks.length / 2);
+    const movedBlocks = right.blocks.splice(halfIdx);
+    const movedHeight = movedBlocks.reduce((s, b) => s + b.height, 0);
+    right.height -= movedHeight;
+    left.blocks = movedBlocks;
+    left.height = movedHeight;
+    return page;
+  }
+
+  // אם שמאלי ריק ויש רק בלוק אחד בימני — פצל את הבלוק לפי שורות
+  if (left.blocks.length === 0 && right.blocks.length === 1) {
+    const block = right.blocks[0]!;
+    if (block.lines && block.lines.length > 4) {
+      const halfLines = Math.ceil(block.lines.length / 2);
+      const firstHalf = block.lines.slice(0, halfLines);
+      const secondHalf = block.lines.slice(halfLines);
+      const firstHeight = firstHalf.length * (block.height / block.lines.length);
+      const secondHeight = block.height - firstHeight;
+      
+      // עדכן הבלוק המקורי לחצי הראשון
+      block.lines = firstHalf;
+      block.height = firstHeight;
+      right.height = firstHeight;
+      
+      // צור בלוק חדש לחצי השני
+      const newBlock: Block = {
+        ...block,
+        content: secondHalf.join(' '),
+        lines: secondHalf,
+        height: secondHeight,
+      };
+      left.blocks = [newBlock];
+      left.height = secondHeight;
+      return page;
+    }
+  }
+
+  // אם ימני ריק לגמרי ושמאלי מלא — העבר חצי לימני
+  if (right.blocks.length === 0 && left.blocks.length > 1) {
+    const halfIdx = Math.floor(left.blocks.length / 2);
+    const movedBlocks = left.blocks.splice(0, halfIdx);
+    const movedHeight = movedBlocks.reduce((s, b) => s + b.height, 0);
+    left.height -= movedHeight;
+    right.blocks = movedBlocks;
+    right.height = movedHeight;
+    return page;
+  }
+
   const diff = right.height - left.height;
   if (Math.abs(diff) < 30) return page;
 
