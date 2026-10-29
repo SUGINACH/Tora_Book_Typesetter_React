@@ -198,7 +198,8 @@
 
 /* טור אחד (H2/H3 — כותרת רוחבית) */
 .tora-single-column {
-  flex: 1;
+  /* לא flex:1 — אחרת הפסקאות נדחקות לתחתית ויוצר רווח ענק מעל */
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
 }

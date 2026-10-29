@@ -48,8 +48,7 @@ function renderPageHtml(
 ): string {
   const isShaar = SHAAR_PAGE_TYPES.includes(page.pageType);
   const showHeader = !NO_HEADER_PAGE_TYPES.includes(page.pageType);
-  const isH2Page = page.pageType === 'chapter-opener';
-  const isH0Page = page.heading?.level === 0;
+  const isChapterOpener = page.pageType === 'chapter-opener';
 
   if (isShaar) {
     return renderShaarPage(page, pageNumber, settings, doc, shaarDesigns);
@@ -60,15 +59,23 @@ function renderPageHtml(
   const footnotes = page.footnotes ? renderFootnotes(page.footnotes, settings) : '';
   const pageNumberHtml = showHeader ? renderPageNumber(pageNumber, settings) : '';
 
-  const isChapterOpener = isH2Page || isH0Page;
   const headingHtml = page.heading ? renderHeading(page.heading, settings) : '';
 
-  // כותרות צד (H7) — אם יש בעמוד
+  // כותרות צד (H7) — חלוקה לפי מספר עמוד (לא כולן בעמוד אחד)
   const rightSidenotes = renderSidenotes(page, doc, 'right');
   const leftSidenotes = renderSidenotes(page, doc, 'left');
 
+  // בעמוד chapter-opener: הכותרת בראש, ואז כל הפסקאות בטור יחיד (מאחדים שני טורים)
+  let singleColumnContent = '';
+  if (isChapterOpener) {
+    const allBlocks = page.columns.flatMap(c => c.blocks);
+    singleColumnContent = allBlocks
+      .map((b, i) => renderBlock(b, settings, i, allBlocks.length))
+      .join('');
+  }
+
   return `
-    <div class="tora-page ${isChapterOpener ? 'tora-page-h2' : ''} ${isH0Page ? 'tora-page-h0' : ''}" data-page="${pageNumber}" data-page-type="${page.pageType}">
+    <div class="tora-page ${isChapterOpener ? 'tora-page-h2' : ''}" data-page="${pageNumber}" data-page-type="${page.pageType}">
       <div class="tora-page-header">
         ${runningHeader}
       </div>
@@ -79,12 +86,9 @@ function renderPageHtml(
             ${isChapterOpener ? `<div class="tora-heading-ornament-top"></div>` : ''}
             ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
             ${isChapterOpener ? `<div class="tora-heading-ornament-bottom"></div>` : ''}
-            <div class="tora-columns">
-              ${columns}
-            </div>
-            <div class="tora-single-column">
-              ${headingHtml ? `<div class="tora-heading-wrapper">${headingHtml}</div>` : ''}
-            </div>
+            ${isChapterOpener
+              ? `<div class="tora-single-column">${singleColumnContent}</div>`
+              : `<div class="tora-columns">${columns}</div>`}
           </div>
           <div class="tora-margin-left">${leftSidenotes}</div>
         </div>
@@ -99,11 +103,25 @@ function renderPageHtml(
 
 /**
  * רינדור הערות צד (H7) בשוליים.
- * כרגע ריק — ימולא כאשר הערות צד יצורפו לעמוד.
+ *
+ * חלוקה: עמודים אי-זוגיים → שוליים ימניים, זוגיים → שמאליים.
+ * כל עמוד מקבל רק הערה אחת (לפי אינדקס העמוד), לא את כולן.
  */
-function renderSidenotes(_page: FinalPage, _doc: ParsedDocument, _side: 'right' | 'left'): string {
-  // לעת עתה ריק — הערות צד יצורפו בשלב מאוחר יותר
-  return '';
+function renderSidenotes(page: FinalPage, doc: ParsedDocument, side: 'right' | 'left'): string {
+  if (!doc.sidenotes || doc.sidenotes.length === 0) return '';
+
+  const isOddPage = page.pageNumber % 2 === 1;
+  if (side === 'right' && !isOddPage) return '';
+  if (side === 'left' && isOddPage) return '';
+
+  // חלוקה לפי מספר עמוד — כל עמוד מקבל הערה אחת
+  // עמוד 1 → הערה 1, עמוד 2 → הערה 2, וכו'
+  // אם יש יותר עמודים מהערות — מחזירים ריק
+  const idx = page.pageNumber - 1;
+  if (idx < 0 || idx >= doc.sidenotes.length) return '';
+
+  const sn = doc.sidenotes[idx]!;
+  return `<div class="tora-sidenote">${escapeHtml(sn.text)}</div>`;
 }
 
 /**
@@ -120,8 +138,9 @@ function renderShaarPage(
   const meta = doc.metadata;
 
   if (page.pageType === 'main-shaar') {
-    // טעינת SVG מעיצוב השער הראשי
-    const svg = shaarDesigns?.main?.svg ?? '';
+    // טעינת SVG מעיצוב השער הראשי — strip XML declaration
+    const svgRaw = shaarDesigns?.main?.svg ?? '';
+    const svg = stripSvgXmlDeclaration(svgRaw);
     return `
       <div class="tora-page tora-page-shaar" data-page-type="main-shaar">
         ${svg ? `<div class="tora-shaar-svg-bg">${svg}</div>` : ''}
@@ -140,7 +159,8 @@ function renderShaarPage(
 
   if (page.pageType === 'back-shaar') {
     // שער אחורי = גב השער הראשי (עמוד 2)
-    const svg = shaarDesigns?.back?.svg ?? '';
+    const svgRaw = shaarDesigns?.back?.svg ?? '';
+    const svg = stripSvgXmlDeclaration(svgRaw);
     return `
       <div class="tora-page tora-page-shaar" data-page-type="back-shaar">
         ${svg ? `<div class="tora-shaar-svg-bg">${svg}</div>` : ''}
@@ -159,7 +179,8 @@ function renderShaarPage(
     const parts = page.heading.text.split(' - ');
     const mainTitle = parts[0] || page.heading.text;
     const subTitle = parts.slice(1).join(' - ');
-    const svg = shaarDesigns?.sub?.svg ?? '';
+    const svgRaw = shaarDesigns?.sub?.svg ?? '';
+    const svg = stripSvgXmlDeclaration(svgRaw);
 
     return `
       <div class="tora-page tora-page-shaar" data-page-type="sub-shaar">
@@ -449,6 +470,19 @@ function applyFrame(text: string, frame: import('../../types').PageNumberFrame):
     case 'square-brackets': return `[${text}]`;
     case 'diamond': return `◆${text}◆`;
   }
+}
+
+/**
+ * Strip XML declaration and DOCTYPE from SVG string.
+ * מונע הכנסת <?xml?> ו-<!DOCTYPE svg> כטקסט בתוך HTML,
+ * שגורמת לדפדפן לא לצייר את ה-SVG.
+ */
+function stripSvgXmlDeclaration(svg: string): string {
+  if (!svg) return '';
+  return svg
+    .replace(/<\?xml[^>]*\?>/g, '')
+    .replace(/<!DOCTYPE[^>]*>/g, '')
+    .trim();
 }
 
 function escapeHtml(text: string): string {
