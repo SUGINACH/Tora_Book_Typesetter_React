@@ -162,3 +162,13 @@
 - **H3 side ornaments**: עיטורי SVG מ-ornaments.h3Right/h3Left בצדדי H3
 - **CSS**: .tora-h3-ornament-right/left
 - **GLOSSARY**: CustomStylePanel, H3 side ornaments
+
+### Commit: Error boundary + Web Worker file + Tauri Cargo.toml + main.rs
+- **ErrorBoundary**: לוכיאת שגיאות React, מציג הודעה + רענון
+- **typesetter.worker.ts**: Web Worker אמיתי — מבצע עימוד מחוץ ל-main thread
+  מקבל: { type: 'typeset', jobId, text, settings, shaarDesigns, ornaments }
+  שולח: { type: 'progress' | 'done' | 'error' }
+- **Cargo.toml**: Tauri 2 dependencies (tauri, serde, serde_json)
+- **main.rs**: Tauri entry point (fs + dialog plugins)
+- **App.tsx**: ErrorBoundary wraps AppShell
+- **GLOSSARY**: ErrorBoundary, typesetter.worker

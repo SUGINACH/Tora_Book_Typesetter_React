@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { useAutoSave } from './hooks/useAutoSave';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 function App() {
   useAutoSave();
@@ -9,7 +10,11 @@ function App() {
     console.log('Tora Book Typesetter loaded');
   }, []);
 
-  return <AppShell />;
+  return (
+    <ErrorBoundary>
+      <AppShell />
+    </ErrorBoundary>
+  );
 }
 
 export default App;
