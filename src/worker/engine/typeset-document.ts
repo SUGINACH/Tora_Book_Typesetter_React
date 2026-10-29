@@ -2,8 +2,9 @@ import type { Settings, ParsedDocument, FinalPage, ColumnContent, Block, Rendere
 import type { TextMeasurer } from '../measurement/text-metrics';
 import { breakLines } from '../measurement/text-metrics';
 import { renderToHtml, type ShaarDesignData } from './renderer';
-import { auditGeometry } from '../../audit/geometry-audit';
+import { auditGeometryWithDoc } from '../../audit/geometry-audit';
 import { fnv1a32 } from '../inputs/fnv-hash';
+import { protectParens } from './paren-protector';
 
 /**
  * פונקציה ראשית — טהורה.
@@ -47,7 +48,10 @@ export function typesetDocument(
 
   // 6. תיקון אלמנות/יתומים
   onProgress?.('finalizing', 80, 'מתקן אלמנות...');
-  const fixedPages = pagesWithFootnotes.map((p) => fixWidowsAndOrphans(p, settings));
+  let fixedPages = pagesWithFootnotes.map((p) => fixWidowsAndOrphans(p, settings));
+
+  // 6b. הגנת סוגריים — שמירת זוגות [...] באותו עמוד/טור
+  fixedPages = protectParens(fixedPages, settings);
 
   // 7. הוספת עמודי שער
   // מבנה: עמוד 1 = שער ראשי, עמוד 2 = שער אחורי (הגב של אותו דף), אחר כך TOC, אחר כך תוכן
@@ -104,7 +108,7 @@ export function typesetDocument(
   }
 
   // 8. בדיקת גיאומטריה
-  const findings = auditGeometry(renderedPages, settings);
+  const findings = auditGeometryWithDoc(renderedPages, settings, doc);
 
   const durationMs = performance.now() - start;
   const outputHash = fnv1a32(renderedPages.map((p) => p.html).join(''));

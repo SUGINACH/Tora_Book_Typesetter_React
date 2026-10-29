@@ -1,4 +1,5 @@
-import type { RenderedPage, Settings, AuditFinding, AuditFindingKind } from '../types';
+import type { RenderedPage, Settings, AuditFinding, AuditFindingKind, ParsedDocument } from '../types';
+import { checkTextCompleteness } from './text-completeness';
 
 /**
  * בדיקת גיאוממטריה מקיפה.
@@ -8,32 +9,47 @@ export function auditGeometry(
   pages: RenderedPage[],
   settings: Settings
 ): AuditFinding[] {
+  return auditGeometryWithDoc(pages, settings, undefined);
+}
+
+/**
+ * גרסה עם מסמך — מאפשרת בדיקת text-completeness (קריטית).
+ */
+export function auditGeometryWithDoc(
+  pages: RenderedPage[],
+  settings: Settings,
+  doc?: ParsedDocument
+): AuditFinding[] {
   const findings: AuditFinding[] = [];
 
+  // בדיקת text-completeness — קריטית (אבדן טקסט תורני!)
+  if (doc) {
+    findings.push(...checkTextCompleteness(doc, pages, settings));
+  }
+
   for (const page of pages) {
-    // דילוג על עמודי שער
     if (page.pageType === 'main-shaar' || page.pageType === 'back-shaar' || page.pageType === 'sub-shaar') {
       continue;
     }
 
-    // 1. בדיקת איזון טורים
     checkColumnBalance(page, settings, findings);
-
-    // 2. בדיקת overflow
     checkOverflow(page, findings);
 
-    // 3. בדיקת אלמנות/יתומים
     if (settings.quality.preventWidow || settings.quality.preventOrphan) {
       checkWidowsOrphans(page, settings, findings);
     }
 
-    // 4. בדיקת שורות דלילות
     checkSparseLines(page, findings);
 
-    // 5. בדיקת כותרת תלויה
     if (settings.quality.preventHangingHeadings) {
       checkHangingHeadings(page, findings);
     }
+
+    // V21 — Issues_table
+    checkHeadingEscort(page, findings);
+    checkPageUnderfill(page, findings);
+    checkBlockGap(page, findings);
+    checkMultipleBlocks(page, findings);
   }
 
   return findings;
@@ -145,15 +161,101 @@ function checkSparseLines(page: RenderedPage, findings: AuditFinding[]): void {
  * בדיקת כותרת תלויה — כותרת בתחתית טור עם פחות מ-2 שורות טקסט אחריה.
  */
 function checkHangingHeadings(page: RenderedPage, findings: AuditFinding[]): void {
-  // חיפוש כותרות ב-HTML
   const html = page.html;
-  const headingMatches = html.match(/tora-heading/g) || [];
+  const inlineHeadings = (html.match(/tora-heading-inline\b/g) || []).length;
+  const wideHeadings = (html.match(/tora-heading-inline-wide\b/g) || []).length;
 
-  // אם הכותרת היא הבלוק האחרון בטור, זה חשד לכותרת תלויה
-  for (const col of page.geometry.columns) {
-    if (col.blockCount > 0) {
-      // בדיקה גסה: אם יש פחות מ-2 בלוקים אחרי הכותרת האחרונה
-      // (לא ניתן לדעת בדיוק בלי parsing של ה-HTML, אבל זה מסמן חשד)
+  if (inlineHeadings > 2 && wideHeadings === 0) {
+    const pCutCount = (html.match(/p-cut|p-end/g) || []).length;
+    if (pCutCount < inlineHeadings) {
+      findings.push({
+        page: page.pageNumber,
+        kind: 'hanging-heading',
+        severity: 'MEDIUM',
+        description: `חשד כותרת תלויה: ${inlineHeadings} כותרות inline, ${pCutCount} פסקאות`,
+        suggestedFix: 'העברת הכותרת האחרונה לטור הבא',
+      });
     }
+  }
+}
+
+// ===== V21 — Issues_table =====
+
+/**
+ * heading-escort — כותרת H4+ בתחתית טור עם פחות מ-2 שורות טקסט אחריה.
+ */
+function checkHeadingEscort(page: RenderedPage, findings: AuditFinding[]): void {
+  for (const col of page.geometry.columns) {
+    if (col.blockCount < 2) continue;
+    if (col.blockCount >= 2 && col.lineCount <= col.blockCount + 1) {
+      findings.push({
+        page: page.pageNumber,
+        kind: 'hanging-heading',
+        severity: 'MEDIUM',
+        description: `חשד heading-escort בטור ${col.index + 1}: ${col.blockCount} בלוקים, ${col.lineCount} שורות`,
+        suggestedFix: 'העברת הכותרת לטור הבא',
+      });
+    }
+  }
+}
+
+/**
+ * page-underfill — עמוד שאינו מלא (תוכן הגוף תופס פחות מ-80% מהשטח הפנוי).
+ */
+function checkPageUnderfill(page: RenderedPage, findings: AuditFinding[]): void {
+  if (page.pageType === 'chapter-opener') return;
+
+  const pageHeightPx = page.geometry.height * 3.7795;
+  const colsTotalHeight = page.geometry.columns.reduce((s, c) => s + c.height, 0);
+  const contentHeight = page.geometry.columns.length === 2
+    ? Math.max(...page.geometry.columns.map(c => c.height))
+    : colsTotalHeight;
+
+  const fillRatio = contentHeight / pageHeightPx;
+  if (fillRatio < 0.8) {
+    findings.push({
+      page: page.pageNumber,
+      kind: 'sparse-line',
+      severity: 'LOW',
+      description: `עמוד לא מלא: ${(fillRatio * 100).toFixed(0)}% ניצול`,
+      suggestedFix: 'בדיקה — עשוי להיות טבעי אם הפסקה הבאה ארוכה מדי',
+    });
+  }
+}
+
+/**
+ * block-gap — מרחק גדול בין שני בלוקים עוקבים ב-body-flow.
+ */
+function checkBlockGap(page: RenderedPage, findings: AuditFinding[]): void {
+  for (const col of page.geometry.columns) {
+    if (col.blockCount < 2) continue;
+    const expectedMinHeight = col.blockCount * 30;
+    if (col.height > expectedMinHeight * 2 && col.lineCount < col.blockCount * 2) {
+      findings.push({
+        page: page.pageNumber,
+        kind: 'sparse-line',
+        severity: 'LOW',
+        description: `חשד block-gap בטור ${col.index + 1}: ${col.blockCount} בלוקים על ${col.height.toFixed(0)}px`,
+        suggestedFix: 'בדיקה ויזואלית של ריווח בין בלוקים',
+      });
+    }
+  }
+}
+
+/**
+ * multiple-blocks — שני בלוקים דו-טוריים באותו עמוד.
+ */
+function checkMultipleBlocks(page: RenderedPage, findings: AuditFinding[]): void {
+  if (page.geometry.columns.length !== 2) return;
+  const [right, left] = page.geometry.columns;
+  if (right.blockCount > 3 && left.blockCount > 3
+      && right.lineCount > 20 && left.lineCount > 20) {
+    findings.push({
+      page: page.pageNumber,
+      kind: 'imbalanced-columns',
+      severity: 'MEDIUM',
+      description: `חשד multiple-blocks: שני טורים עמוסים (${right.blockCount}+${left.blockCount} בלוקים)`,
+      suggestedFix: 'בדיקה — האם הקורא צריך להמשיך שתי פסקאות במקביל',
+    });
   }
 }
