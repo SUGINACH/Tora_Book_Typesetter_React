@@ -14,7 +14,8 @@ export function exportHtml(
   settings: Settings,
   doc: ParsedDocument
 ): string {
-  const css = generateInlinedCss(settings);
+  // קריאת CSS האמיתי מה-DOM — כולל את כל התיקונים (tora-line, nowrap, וכו')
+  const css = readLiveCss();
   const cssVars = generateCssVars(settings);
   const bodyHtml = pages.map((p) => p.html).join('\n');
   const title = doc.metadata.bookName || 'מסמך מרונדר';
@@ -56,6 +57,30 @@ ${bodyHtml}
   </div>
 </body>
 </html>`;
+}
+
+/**
+ * קריאת CSS חי מה-DOM — כולל את כל הסגנונות הפעילים.
+ * מבטיח שהייצוא תואם לחלוטין לתצוגה החיה.
+ */
+function readLiveCss(): string {
+  if (typeof document === 'undefined') {
+    // Fallback ל-CSS בסיסי אם לא בדפדפן
+    return generateInlinedCss({} as Settings);
+  }
+
+  const cssTexts: string[] = [];
+  for (const sheet of document.styleSheets) {
+    try {
+      const rules = sheet.cssRules;
+      for (const rule of rules) {
+        cssTexts.push(rule.cssText);
+      }
+    } catch {
+      // Cross-origin stylesheet — לא נגיש, דלג
+    }
+  }
+  return cssTexts.join('\n');
 }
 
 /**
