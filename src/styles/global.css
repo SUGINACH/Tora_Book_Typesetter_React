@@ -45,7 +45,16 @@
 }
 
 @media print {
-  .tora-page { box-shadow: none; margin: 0; page-break-after: always; }
+  .tora-page { box-shadow: none; margin: 0; page-break-after: always; max-height: none; }
+  /* הסתרת כל אלמנטי ה-UI בהדפסה */
+  header, .tora-editor-panel, .tora-settings-sidebar, .tora-preview-toolbar,
+  .tora-findings-panel, button, .tora-zoom-controls, nav, aside,
+  .tora-page-header:not(.tora-running-header), .tora-page-footer {
+    display: none !important;
+  }
+  body { background: white; padding: 0; margin: 0; }
+  .tora-page-body { padding: 0; }
+  .tora-text-area { gap: 0; }
 }
 
 /* 1. כותרת עליונה */
