@@ -4,6 +4,16 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 9 — [ADR-001] יחידות מדידה וחשבון שלם בטוח (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `docs/adr/ADR-001-units.md` — 1 LU = 1/65536pt; חלופות שנשקלו, השלכות, תנאי ביטול.
+  - `packages/measurement-api/src/units.ts` — LayoutUnit/FontUnit/Cost ממותגים; `roundDiv` (חצי־כלפי־∞ מוגדר לשליליים); `mmToLu` רציונל מדויק (65536·360/127, קוונטיזציה ל־µm); `fontUnitsToLu`; `safeAdd`/`safeMul` עם `UnitsError`; `makeCost` בסקייל 1/1024; `Rect`; A4 נעול.
+  - 33 בדיקות יחידה עם אורקל BigInt עצמאי (`packages/measurement-api/test/units.test.ts`); `vitest.packages.config.ts`.
+  - `scripts/migration/verify-units.mjs` — 39 בדיקות: API בזמן ריצה, ערכי חובה, סריקות אכיפה (0 `Math.round` מחוץ ל־units; 0 bitwise; 0 pxPerMm).
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 33/33 OK; `node scripts/migration/verify-units.mjs` — 39/39 OK; רגרסיה מלאה build/typecheck/lint/deps + `verify-work-conventions` 44/44.
+- **ממצאים:** סדר הפעלה נלמד: ה־exports של החבילות מצביעים על `dist/` — יש לבנות (`build:packages`) לפני מאמתים המייבאים חבילה בזמן ריצה. אין שינוי מנוע.
+
 ### שלב 8 — חוקי תלות ואכיפתם (M1) — הושלם 2026-10-30
 - **תוצרים:**
   - `eslint.config.js` — `no-restricted-globals` (34 גלובלים דפדפן + 11 Node אסורים בליבה), `no-restricted-imports` (node:*/React/Zustand בליבה; render-html בלי measurement).

@@ -354,3 +354,21 @@ hash דטרמיניסטי 32-bit. משמש לאימות דטרמיניזם: או
 
 ### מראה מקומית (Legacy Mirror)
 עותק מקומי של ריפו מקור ב־SHA הנעול (תחת `TORA_LEGACY_MIRRORS`), לאימות hash של פריטים דחויים מול המקור בפועל.
+
+## יחידות וחשבון (ADR-001; שלב 9)
+
+### LU (Layout Unit)
+יחידת הגאומטריה של ליבת המנוע: **1 LU = 1/65536 נקודה טיפוגרפית**. כל הגאומטריה — integers בטוחים בלבד; אין CSS pixels ואין pxPerMm. המרת מ"מ/A4 פעם אחת ברציונל מדויק (1mm = 360/127 pt).
+
+**קוד:** `LayoutUnit`, `mmToLu`, `ptToLu`, `fontUnitsToLu` ב־`packages/measurement-api/src/units.ts`
+
+### roundDiv — עיגול מרוכז
+העיגול היחיד בליבה: מנה-רצפה ואז חצי-כלפי-∞ (זהה ל־Math.round גם לשליליים), בחישוב שארית שלם. כל Math.round אחר בקוד החבילות אסור (נאכף בסריקה).
+
+### Cost — עלויות בסקייל קבוע
+עלויות וקנסות של שבירת שורות: integers בסקייל 1/1024. אין השוואות float עם epsilon.
+
+**קוד:** `Cost`, `makeCost` (COST_SCALE = 1024)
+
+### safeAdd / safeMul
+כל חיבור/כפל גאומטרי בליבה עובר שומרי סף הזורקים `UnitsError` בעת חריגה מ־Number.isSafeInteger. איסור bitwise על קואורדינטות (מוגבל ל־32 סיביות ב־JS).

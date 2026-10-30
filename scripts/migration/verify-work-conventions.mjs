@@ -126,7 +126,7 @@ for (const [k, v] of Object.entries(oldPkg.scripts ?? {})) {
 const NEW_ALLOWED = [
   /^docs\//, /^assets\//, /^packages\//, /^scripts\/migration\//, /^tests\/[a-z-]+\//,
   /^src\/(stores|worker-host|renderers)\//, /^\.github\/(PULL_REQUEST_TEMPLATE\.md|workflows\/ci\.yml)$/,
-  /^\.nvmrc$/, /^tsconfig\.base\.json$/, /^eslint\.config\.js$/, /^\.dependency-cruiser\.cjs$/,
+  /^\.nvmrc$/, /^tsconfig\.base\.json$/, /^eslint\.config\.js$/, /^\.dependency-cruiser\.cjs$/, /^vitest\.packages\.config\.ts$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;
