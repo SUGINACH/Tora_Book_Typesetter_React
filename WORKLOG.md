@@ -4,6 +4,16 @@
 
 > מכאן ואילך מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב, כאילו שום שלב לא בוצע קודם לכן (כלל 8: הקוד הקודם בריפו אינו נקודת ייחוס). מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים.
 
+### שלב 4 — קורפוס fixtures ראשוני מכל באג והתנהגות מתועדת (M0) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/test-fixtures/` — סקלטה (הסכמה המלאה בשלב 13): `registry.json` עם **26 fixtures**, כל אחד עם `sourceSha256`, provenance מלא (repo, SHA נעול, נתיב, סיבה) ו-invariants צפויים; `corpus/` — קובצי המקור הנעולים (16MB) במבנה canonical/long/mid/chapters/cases.
+  - **5 קישורי בייסליין** משלב 3 אומתו בצליבה כפולה: canonical (639 עמ'), mid (125), ch63 (מקרה הכשל המתועד), twocol, smoke — hash הקלט תואם בשני הצדדים.
+  - `documentedBehaviors` — 8 באגים והתנהגויות מתועדים מ־worklog/docs של Orange, ממופים לקורפוס ול־invariants: 3 באגי איזון טורים (עמ' 18,29,30,35,41), layoutInvalidator שדרס תיקונים, word-spacing reset, מדיניות בליטת סמני הערות 0–3px, שאריות rollback של justify גלובלי, היקף עיטורי H2, כותרות recto/verso ו־settings wiring.
+  - `plannedFixtures` — 8 דרישות הקורפוס המחייבות מאפיון §17.3 (H0–H7, H3 בקצה, סוגריים מקוננים, first-word, TOC, שערים, כתבים מעורבים) — ייכתבו בשלבים 13, 17, 21, 74.
+  - `scripts/migration/verify-test-fixtures.mjs` — 9 בדיקות מצטברות (26 פריטים + 5 קישורים + 3 הגדרות-משתנה + 8 התנהגויות).
+- **פקודות בדיקה שרצו (ירוק):** `node scripts/migration/verify-test-fixtures.mjs` — יציאה 0; אין fixture בלי מקור ו־hash.
+- **ממצאים:** ההחלטה D-003 (קובצי בדיקה שמחוץ לבייסליין בריפו ה-React) נשמרת — הקורפוס נבנה מ־Orange בלבד. העתק קנוני כפול (fixtures/canonical == very_long) תועד ככינוי ולא הועתק פעמיים.
+
 ### שלב 3 — בייסליין ריצה של המנוע הישן (M0) — הושלם 2026-10-30
 - **תוצרים:**
   - `docs/migration/baseline/` — 6 ריצות של המנוע הישן (Orange @ `93ad1e57`, הענף הנעול) בסביבה נעולה: Node v22.23.4, Playwright 1.55.0 (מה־lockfile של Orange), Chromium build v1187 headless, offline guard פעיל (קוד יציאה 7 בבקשה חיצונית; אף ריצה לא הפעילה אותו).
