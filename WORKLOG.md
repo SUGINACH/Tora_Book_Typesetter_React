@@ -4,6 +4,17 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 13 — חבילת test-fixtures: סכמה, אימות וכלי golden; שער M1 מלא עבר (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/test-fixtures` הפכה לחבילת קוד+נתונים: `src/schema.ts` (סכמת §17.3 מלאה + `validateFixture`/`validateRegistry`), `src/golden.ts` (`buildGolden`/`compareGolden`/`parseGolden` + דוח diff קריא; עדכון golden אסור אוטומטית), הזרקת פונקציית גיבוב — גרף התלות נשמר.
+  - `registry.json` v2 — לכל 26 הפריטים `fontManifestSha256` (נצלב מול המניפסט בפועל) + `goldenLayoutSha256` (null עד המנוע).
+  - `tests/golden/demo.golden.json` — golden מחויב ראשון עם layoutHash אמיתי; `scripts/migration/gen-demo-golden.mjs`.
+  - 6 בדיקות חדשות (כולל שלילית של דוח ה־diff); `verify-fixtures-schema.mjs` — 21 בדיקות כולל שער M1.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 86/86 OK; `node scripts/migration/gen-demo-golden.mjs` — ה־golden הופק מחדש **זהה ביט-ביט** למחויב (layoutHash `2a2c8550…`); `node scripts/migration/verify-fixtures-schema.mjs` — 21/21 OK (שער M1).
+  - רגרסיה מלאה: כל 13 המאמתים PASS (source-manifest, transfer-inventory, baseline-run, test-fixtures, parity-matrix, work-conventions, workspaces, dependency-rules, units, canonical-hash, property-tests, error-catalog, fixtures-schema).
+- **ממצאים:** **שער M1 מלא עבר** — כל 12 החבילות מיובאות ב־Node טהור (בלי window/document); יחידות וגיבוב יציבים; הקוד הישן (src/) אינו מייבא @tora/*‎ — החבילות מנותקות ממסלול הייצור הישן. אין שינוי מנוע.
+
 ### שלב 12 — קטלוג שגיאות מנוע ותשתית i18n לשגיאות (M1) — הושלם 2026-10-30
 - **תוצרים:**
   - `packages/measurement-api/src/errors.ts` — `ERROR_CATALOG` סטטי (15 קודים) כולל קודי היסוד MISSING_FONT, FONT_HASH_MISMATCH, MEASUREMENT_UNAVAILABLE; `EngineError` דוחה מפתח לא רשום **בזמן יצירה**; `ValidationIssue` משותף.

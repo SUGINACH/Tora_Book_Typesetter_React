@@ -33,7 +33,7 @@ const graphRules = Object.entries(GRAPH).map(([name, deps]) => {
     name: `graph-${name}`,
     comment: `לחבילה ${name} מותרות רק התלויות: ${deps.length ? deps.join(', ') : '(אין)'}`,
     severity: 'error',
-    from: { path: `^packages/${name}/` },
+    from: { path: `^packages/${name}/`, pathNot: '/test/' }, // קוד ריצה בלבד; בדיקות מתזמרות חבילות
     to: {
       path: `^packages/`,
       pathNot: `^packages/(${allowed.join('|')})/`,

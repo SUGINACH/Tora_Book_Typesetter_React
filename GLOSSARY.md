@@ -401,3 +401,11 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 
 ### טבלת מפתחות תרגום
 `docs/i18n/error-keys.md` — המקור לקובצי ה־locale (שלב 93). מפתחות אינם משתנים לאחר פרסום; שינוי משמעות מחייב קוד חדש.
+
+## כלי golden (שלב 13)
+
+### buildGolden / compareGolden
+כלי כתיבה והשוואת golden ב־`packages/test-fixtures`: ה־IR מגובב ב־layoutHash המוזרק, וההשוואה מפיקה דו"ח diff קריא (hash + מקטע ההבדל הראשון). **עדכון golden אסור אוטומטית ב־CI** — רק ידנית עם diff והסבר ב־WORKLOG. `tests/golden/` — מיקום קובצי ה־golden.
+
+### סכמת fixture מלאה
+`validateFixture`/`validateRegistry` (§17.3): id, schemaVersion, sourceSha256, settingsSha256, **fontManifestSha256** (נצלב מול המניפסט בפועל), enginePolicy, expected.invariants, **goldenLayoutSha256** (null עד היווצרות המנוע) ו־provenance.
