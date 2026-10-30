@@ -1,6 +1,21 @@
 # Worklog — Tora Book Typesetter React
 
-## 2026-10-30
+## תכנית 100 השלבים — יומן ביצוע (מ־2026-10-30)
+
+> מכאן ואילך מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב, כאילו שום שלב לא בוצע קודם לכן (כלל 8: הקוד הקודם בריפו אינו נקודת ייחוס). מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים.
+
+### שלב 1 — מפת מקורות נעולה ונעילת סביבת ריצה (M0) — הושלם 2026-10-30
+- **תוצרים:**
+  - `docs/migration/source-manifest.json` — שבעת המקורות הנעולים מאפיון §2 עם SHA מלא, תאריך, תפקיד ושימוש: IMUD_TORANI @ `706ba955…`, Yellow @ `878535e1…`, Gold @ `a444d34c…`, Green @ `e5cde5f1…`, Orange @ `93ad1e57…`, Typesetter_doc @ `534b8f4e…`, React @ `0c7b9927…` (נקודת מוצא היסטורית בלבד).
+  - `.nvmrc` (Node 22) + `engines.node` מאומת; `package-lock.json` קיים ומחייב; Playwright נעולה ל־1.64.1 לבדיקות visual בלבד.
+  - `docs/migration/environment.md` — תיעוד נעילת הסביבה, כולל האזהרה ש־Orange רץ בסביבה שונה מקודמיו ואין לערבב baselines בין ענפים.
+  - `scripts/migration/verify-source-manifest.mjs` — אימות מבנה המניפסט, קיום ונגישות כל SHA (מראה מקומית או GitHub API), התאמת nvmrc/engines, קיום lockfile ונעילת Playwright.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `node scripts/migration/verify-source-manifest.mjs` — 20/20 בדיקות OK, יציאה 0 (Node v22.23.4).
+  - `npm ci` תחת Node v22.23.4 / npm 10.9.9 — 456 חבילות, יציאה 0.
+- **ממצאים:** כל ששת ריפואי המקור שובטו ואומתו ב־SHA המדויק (מראות מקומיות לשלבים הבאים). קומיט המוצא `0c7b9927` קיים בהיסטוריית הריפו. אין שינוי מנוע; שלב תיעודי־תשתיתי בלבד.
+
+## 2026-10-30 (לפני הפעלת התכנית)
 
 ### Plan: deterministic browser-independent layout engine
 - נוסף `אפיון_טכני_מערכת_עימוד_תורני.md` — אפיון ותכנית קוד מפורטים ל־React + TypeScript
