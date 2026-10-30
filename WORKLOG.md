@@ -4,6 +4,17 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 14 — SourceSpan וזרמי תוכן (M2) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/content-model/src/spans.ts` — `SourceSpan` מלא: `documentId`, `stream` (‎body | footnote | endnote | sidenote | metadata‎), טווח UTF-16 חצי־פתוח ‎[startUtf16, endUtf16)‎, `importerPath` אופציונלי; בנייה מאומתת בזמן יצירה (`makeSourceSpan`); עזרים דטרמיניסטיים: `spanLength`, `isEmptySpan`, `sameStream`, `spanCovers`, `spansOverlap`, `compareSpans` (סדר קנוני), `sliceSpan` (תת־פרוסה לפרסר עם ירושת importerPath).
+  - `NodeId`/`AtomId`/`AnchorId` כטיפוסי מחרוזת ממותגים + בנאים מאומתים (`makeNodeId` וכו'); הגזירה הדטרמיניסטית של AtomId — בשלב 15.
+  - `packages/content-model/src/errors.ts` — קטלוג שגיאות מקומי (`CONTENT_MODEL_ERROR_CATALOG`, 8 קודי `errors.span.*`) באותו דפוס שלב 12; ל־content-model אין תלויות לפי גרף §5.
+  - 24 בדיקות גבולות חדשות (`test/spans.test.ts`): ריק, תו בודד, חצי־פתוח, הכלה/חפיפה, דחיות; `scripts/migration/verify-spans.mjs` — 45 בדיקות.
+  - `docs/i18n/error-keys.md` — פרק content-model; CI מחובר ל־verify-spans; GLOSSARY — פרק M2.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 110/110 OK (86 קודמות + 24 חדשות); `node scripts/migration/verify-spans.mjs` — 45/45 OK; רגרסיה מלאה של כל 14 המאמתים — כולם PASS.
+- **ממצאים:** שלב ראשון בפרק ג — מימוש חדש (ללא התייחסות לקוד ישן). נלמד: ייבוא בדיקות מ־`../src/index.js` נופל על השלד המהודר הישן משלב 7 שקיים ממש ב־src/ — הבדיקות מייבאות ישירות ממודולי המקור (`../src/spans.js`). אין שינוי מנוע; אין שינוי בקוד הישן.
+
 ### שלב 13 — חבילת test-fixtures: סכמה, אימות וכלי golden; שער M1 מלא עבר (M1) — הושלם 2026-10-30
 - **תוצרים:**
   - `packages/test-fixtures` הפכה לחבילת קוד+נתונים: `src/schema.ts` (סכמת §17.3 מלאה + `validateFixture`/`validateRegistry`), `src/golden.ts` (`buildGolden`/`compareGolden`/`parseGolden` + דוח diff קריא; עדכון golden אסור אוטומטית), הזרקת פונקציית גיבוב — גרף התלות נשמר.

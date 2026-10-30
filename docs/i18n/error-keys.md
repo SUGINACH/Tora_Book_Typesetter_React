@@ -20,4 +20,19 @@
 | `errors.hash.NON_FINITE_NUMBER` | value | error | מספר לא סופי אינו ניתן לסריאליזציה קנונית: {value} |
 | `errors.hash.INVALID_LENGTH` | len | error | אורך קלט שגוי לגיבוב: {len} |
 
+## content-model — קטלוג מקומי (שלב 14+)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`. ל־content-model אין תלויות (גרף §5) ולכן הקטלוג מקומי — באותם כללי שלב 12 (אכיפת רישום בזמן יצירה; מפתח = מפתח i18n).
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.span.INVALID_DOCUMENT_ID` | documentId | error | מזהה מסמך לא חוקי: {documentId} |
+| `errors.span.INVALID_STREAM` | stream | error | זרם תוכן לא חוקי: {stream} |
+| `errors.span.INVALID_RANGE` | startUtf16, endUtf16 | error | טווח פרוסה שגוי (נדרש 0 ≤ start ≤ end): {startUtf16}–{endUtf16} |
+| `errors.span.NON_INTEGER_OFFSET` | value, field | error | היסט פרוסה אינו שלם בטוח ({field}): {value} |
+| `errors.span.INVALID_IMPORTER_PATH` | importerPath | error | נתיב מקור לא חוקי: {importerPath} |
+| `errors.span.SLICE_OUT_OF_RANGE` | from, to, length | error | תת־פרוסה מחוץ לטווח: [{from}, {to}) מתוך {length} |
+| `errors.span.INVALID_ID` | kind, value | error | ערך מזהה לא חוקי ל־{kind}: {value} |
+| `errors.span.NOT_A_SPAN` | reason | error | הערך אינו SourceSpan תקין: {reason} |
+
 **כללי הוספה:** קוד חדש נרשם ב־`ERROR_CATALOG` בלבד (סטטי, קפוא); הוספה מלווה בשורה כאן ובבדיקה שהמפתח רשום. מפתחות אינם משתנים לאחר פרסום — שינוי משמעות מחייב קוד חדש.

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "description": "AST, SourceSpan, atoms, notes, anchors — שלד שלב 7; המימוש בפרק ג (שלבים 14–21)",
+  "description": "AST, SourceSpan, atoms, notes, anchors — פרק ג (שלבים 14–21)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -15,6 +15,6 @@
   },
   "scripts": {
     "build": "tsc -b tsconfig.json",
-    "typecheck": "tsc -b tsconfig.json --force"
+    "typecheck": "tsc -b tsconfig.json --force && tsc --noEmit -p tsconfig.test.json"
   }
 }

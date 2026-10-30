@@ -409,3 +409,12 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 
 ### סכמת fixture מלאה
 `validateFixture`/`validateRegistry` (§17.3): id, schemaVersion, sourceSha256, settingsSha256, **fontManifestSha256** (נצלב מול המניפסט בפועל), enginePolicy, expected.invariants, **goldenLayoutSha256** (null עד היווצרות המנוע) ו־provenance.
+
+## מודל תוכן ו־provenance (M2; שלב 14)
+
+- **SourceSpan** — פרוסת מקור שכל פריט תוכן נושא: `documentId`, `stream`, טווח UTF-16 חצי־פתוח `[startUtf16, endUtf16)` ו־`importerPath` אופציונלי. הבסיס לכל ביקורת תוכן: אפשר לדעת מאין הגיע כל תו.
+- **טווח חצי־פתוח** — ‎[start, end)‎: ‎end‎ אינו כלול. תו בודד במיקום ‎i‎ הוא ‎[i, i+1)‎; פרוסה ריקה ‎[i, i)‎ חוקית (עוגן נקודתי) ואינה חופפת כלום.
+- **זרם תוכן (ContentStream)** — `body | footnote | endnote | sidenote | metadata`; יחסי פרוסות (הכלה/חפיפה) תקפים רק באותו מסמך ובאותו זרם.
+- **מזהים ממותגים (NodeId/AtomId/AnchorId)** — טיפוסי מחרוזת עם מיתוג קומפילציה; לא ניתן להחליף סוג אחד בשני. הגזירה הדטרמיניסטית של AtomId — בשלב 15.
+- **sliceSpan** — תת־פרוסה בהיסטים יחסיים מתוך פרוסת אב; כלי הפרסר לפצל טקסט בלי לאבד מקור. ה־importerPath עובר בירושה.
+- **קטלוג שגיאות מקומי (content-model)** — ל־content-model אין תלויות (גרף §5), ולכן קטלוג השגיאות שלה מקומי (`CONTENT_MODEL_ERROR_CATALOG`, מפתחות `errors.span.*`) באותם כללי שלב 12: אכיפת רישום בזמן יצירה, מפתח = מפתח i18n.
