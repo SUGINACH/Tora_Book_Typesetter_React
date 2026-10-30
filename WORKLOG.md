@@ -69,6 +69,17 @@
   - כלל ה־depcruise core-no-node-builtins עודק לפטור קבצי בדיקה (האורקל node:crypto חוקי בבדיקות; קוד הריצה אסור).
   - רזולוציית vite לייבוא extensionless של index הפתיעה — הבדיקות מייבאות מודולים ספציפיים עם סיומת ‎.js (מוסכמת NodeNext), מה שעובד זהה ב־tsc וב־vitest.
 
+### שלב 11 — מבחני property ליחידות ולגיבוב (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `fast-check 4.10.2` נעול ב־devDependencies + lockfile.
+  - `packages/measurement-api/test/units.property.test.ts` — 12 מבחני property ליחידות: יציבות עיגול תחת כפילויות (roundDiv(n·k,d·k)=roundDiv(n,d), 2000 ריצות), חסימת מנה ±1, זהות ל־Math.round על 2000 זוגות, מונוטוניות mmToLu, דיוק ±1 LU, round-trip של pt, דיוק fontUnitsToLu ±0.5, גבולות safe integer (כולל מעבר גבול MAX_SAFE_INTEGER), ועגילות Cost.
+  - `packages/layout-api/test/canonical-hash.property.test.ts` — 6 מבחני property לגיבוב: אי-תלות בסדר הכנסת מפתחות, אידמפוטנטיות canonicalJson, אי-תלות layoutHash בסדר keys, זהות cold/warm, רגישות inputHash לכל רכיב, ורגישות layoutHash לשינוי תוכן.
+  - `scripts/migration/verify-property-tests.mjs` — 22 בדיקות.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — **71/71 PASS** (54 unit + 17 property) ב־Node v22.23.4.
+  - `node scripts/migration/verify-property-tests.mjs` — 22/22 OK + רגרסיה מלאה.
+- **ממצאים:** מבחני ה-property תפסו שתי הנחות שגויות בטיוטת הבדיקות עצמן — (א) טווח ±1e9×±1e9 בטעות סומן כבטוח בעוד המכפלה חורגת מ־2^53 (9918589×908112964); (ב) עריכת מפתחות הוחלה בטעות גם על פרימיטיבים. שתיהן תוקנו בתנאי pre הולם — המימוש עצמו נמצא תקין. זו בדיוק מטרת שכבת ה־property: כיסוי רחב שמאתר הנחות סמויות.
+
 ## קפיצת אבן דרך — M0 הושלם ואומת (2026-10-30)
 
 כל ששת שלבי פרק א הושלמו ואומתו: מקורות נעולים, מלאי העברה מלא עם 1,806 גופנים ו־1,053 עיצובים, בייסליין ריצה עקבי (639/659 עמודים, דטרמיניזם מוכח), 26 fixtures נעולים, מטריצת parity עם 16 יעדי differential, ומוסכנות עבודה מחייבות. **שער M0 ירוק** (`node scripts/migration/verify-work-conventions.mjs`).
