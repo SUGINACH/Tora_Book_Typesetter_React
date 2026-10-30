@@ -4,6 +4,17 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 6 — תשתית תיעוד עבודה וחוקי commit; שער M0 מלא עבר (M0) — הושלם 2026-10-30
+- **תוצרים:**
+  - `docs/conventions/work-conventions.md` — מוסכנות WORKLOG/CHECKLIST/GLOSSARY + עשרת כללי אפיון §23 כטבלת אכיפה.
+  - `.github/PULL_REQUEST_TEMPLATE.md` — תיבות חובה לכללי §23 + דטרמיניזם.
+  - `docs/conventions/commit-template.md` — תבנית הודעת commit + דוגמה מהשלבים בפועל.
+  - `GLOSSARY.md` — פרק "הקפאת בסיס (M0)" עם 8 מושגי גירה חדשים.
+  - `scripts/migration/verify-work-conventions.mjs` — 42 בדיקות.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `node scripts/migration/verify-work-conventions.mjs` — 42/42 OK, יציאה 0 (Node v22.23.4): כיסוי §23, תבניות PR/commit, טוהר החזרה של פרק א (1,880 קבצים שהשתנו מאז טרום-התכנית, 0 פגיעות בקוד ישן), והרצת חמשת מאמתי M0 — כולם PASS.
+- **ממצאים:** **שער M0 מלא עבר.** לצורך האימות הושלמו מראות מקומיות של כל ששת ריפואי המקור ב־SHA הנעול (`repos/legacy/`: IMUD_TORANI, Yellow, Gold, Green, Orange, Typesetter_doc) — כמו בסבב הראשון. rollback של פרק א = מחיקת artifacts בלבד; אין שינוי מנוע.
+
 ### שלב 5 — מטריצת parity בפועל (M0) — הושלם 2026-10-30
 - **תוצרים:**
   - `docs/migration/parity-matrix.{json,md}` — 22 טענות מ־Orange: 17 מאומתות, 4 היסטוריות (SHA-locked, אינן יעד), 1 עקרון מתועד; 16 יעדי differential הוקפאו לשלב 48+.
