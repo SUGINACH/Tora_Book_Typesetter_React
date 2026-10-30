@@ -379,6 +379,85 @@
         "maxRssKb": null,
         "note": "מדדי ייחוס בלבד — אינם יעד"
       }
+    },
+    {
+      "id": "ornaments",
+      "input": "very_long_test_text.txt",
+      "inputSha256": "5e73b913f9843fce695d0e4073c176961b8dbc2fa87e8e4c3d99051a826ce0e4",
+      "inputBytes": 3424454,
+      "settingsSource": "tests/fixtures/ornament-geometry-settings.json (עיטורים פעילים)",
+      "settingsSha256": "1a4e63bf5f3799cdd093aa96ea236ce4be58fdc5a738e103aff2917a8abdda89",
+      "fontsCssSha256": "eec01e2b2a65ab67ad959625dd7b3640dceeb09a5cee8b7677787a1e89acd229",
+      "cli": "node tools/geometry-audit-cli.js --input ./very_long_test_text.txt --settings ./tests/fixtures/ornament-geometry-settings.json --timeout-ms 840000 --step-audit-disabled --repeat-check --fail-on none",
+      "auditMode": "עיטורים פעילים; נוסף בשלב 5 לאימות טענת ה־659 עמודים מה־README של Orange",
+      "artifacts": {
+        "report": "ornaments.json.gz",
+        "reportRawSha256": "1ee6b7fc26229cdf1acbc98eda8270180613723f851c78de3c8e8f775b829012",
+        "reportGzSha256": "5d57858db49807d1a75d213e4563200533d5680932cb7ee7a64a1d096186bd3c",
+        "reportRawBytes": 22387901,
+        "summary": "ornaments-summary.md",
+        "summarySha256": "281f64bbbc6f82c10a133265ad21afd059d8685aaf25c243c3db15bf263a4cfd"
+      },
+      "result": {
+        "pageCount": 659,
+        "auditSummary": {
+          "total": 59,
+          "high": 0,
+          "medium": 23,
+          "low": 36,
+          "byKind": {
+            "structural-fallback": 9,
+            "container-gap": 18,
+            "imbalance": 11,
+            "sparse-page": 9,
+            "containment-rounding": 9,
+            "square-bracket-scope": 3
+          },
+          "byBalanceOutcome": {
+            "capacity-limited-residual": 7,
+            "global-justify-rollback-residual": 2,
+            "policy-accepted-light-justify-residual": 2
+          }
+        },
+        "issueKinds": {
+          "structural-fallback": 9,
+          "container-gap": 18,
+          "imbalance": 11,
+          "sparse-page": 9,
+          "containment-rounding": 9,
+          "square-bracket-scope": 3
+        },
+        "decisionLedger": {
+          "records": 888,
+          "domBlocks": 888,
+          "parity": true
+        },
+        "repeatDeterminism": {
+          "identical": true,
+          "firstPageCount": 659,
+          "secondPageCount": 659,
+          "firstHash": "7fdfc456cb2f0c5cd07ea5d0f5e4800adc38362aeba19082c17e3efd20283426",
+          "secondHash": "7fdfc456cb2f0c5cd07ea5d0f5e4800adc38362aeba19082c17e3efd20283426",
+          "firstDifferingPage": null,
+          "secondRenderResult": {
+            "pageCountAtDone": 659
+          }
+        },
+        "externalRequests": [],
+        "ornamentDomCoverage": {
+          "h2Top": 90,
+          "h2Bottom": 90,
+          "h3Right": 335,
+          "h3Left": 335,
+          "noteHeaderRight": 73,
+          "noteHeaderLeft": 73
+        }
+      },
+      "metrics": {
+        "renderMs": 329975,
+        "maxRssKb": 600660,
+        "note": "מדדי ייחוס בלבד — אינם יעד"
+      }
     }
   ],
   "consistencyCheck": {
