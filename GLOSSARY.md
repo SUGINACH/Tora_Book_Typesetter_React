@@ -372,3 +372,19 @@ hash דטרמיניסטי 32-bit. משמש לאימות דטרמיניזם: או
 
 ### safeAdd / safeMul
 כל חיבור/כפל גאומטרי בליבה עובר שומרי סף הזורקים `UnitsError` בעת חריגה מ־Number.isSafeInteger. איסור bitwise על קואורדינטות (מוגבל ל־32 סיביות ב־JS).
+
+## גיבוב קנוני (ADR-002; שלב 10)
+
+### layoutHash
+SHA-256 של ה־Layout IR הקנוני **בלבד** — בלי timestamps, משך ריצה, host או progress. אותם קלט, הגדרות, גופנים, provider וגרסת מנוע מניבים אותו ערך על כל host. כל שינוי מנוע מדווח עם diff שלו (אפיון §23.3).
+
+**קוד:** `layoutHash` ב־`packages/layout-api/src/canonical-hash.ts`
+
+### inputHash / configHash
+inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHash של ההגדרות האפקטיביות, מניפסטי גופנים ונכסים, גרסות פרסר ומנוע). configHash = ההגדרות האפקטיביות בלבד.
+
+### canonicalJson
+סריאליזציה קנונית: מפתחות ממוינים רקורסיבית, escaping קבוע, אפס שלילי מנורמל, וערכים לא-סדירים (undefined/NaN/function) נדחים בשגיאה. אידמפוטנטית — סריאליזציה←פרסור משמר hash.
+
+### SHA-256 נייד
+מימוש JS טהור ב־`packages/layout-api/src/hash.ts` — ליבת המנוע אסורה בייבוא node:crypto (חייבת לרוץ ב־Worker). מאומת מול וקטורי FIPS-180-4 ומול node:crypto כאורקל בבדיקות. FNV-1a נשמר להשוואה היסטורית בלבד.

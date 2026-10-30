@@ -48,9 +48,9 @@ module.exports = {
     ...graphRules,
     {
       name: 'core-no-node-builtins',
-      comment: 'חבילות הליבה אינן מייבאות מודולי ליבה של Node (fs, path, crypto…) — הליבה רצה זהה ב־Node, Worker ו־Tauri.',
+      comment: 'קוד הריצה של חבילות הליבה אינו מייבא מודולי ליבה של Node (fs, path, crypto…) — הליבה רצה זהה ב־Node, Worker ו־Tauri. קבצי בדיקה (test/) פטורים: הם רצים ב־Node ומשתמשים בו כאורקל.',
       severity: 'error',
-      from: { path: `^packages/(${CORE_PACKAGES.join('|')})/` },
+      from: { path: `^packages/(${CORE_PACKAGES.join('|')})/`, pathNot: '/test/' },
       to: { dependencyTypes: ['core'] },
     },
     {

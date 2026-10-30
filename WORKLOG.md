@@ -4,6 +4,17 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 10 — [ADR-002] גיבוב קנוני ושלושת ה־hashes (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `docs/adr/ADR-002-canonical-hash.md` — הגדרות מדויקות של configHash/inputHash/layoutHash/runFingerprint/environmentHash.
+  - `packages/layout-api/src/hash.ts` — SHA-256 נייב ב־JS טהור (הליבה אסורה ב־node:crypto); קבועי K חושבו בחישוב שורש־שלישי שלם מדויק; FNV-1a היסטורי בלבד (תוקנה גלישת float ב־`Math.imul`).
+  - `canonical-hash.ts` + `canonical-hash-error.ts` — `canonicalJson` (מיון רקורסיבי, נרמול ‎-0‎, דחיית לא־סדירים) + חמשת פונקציות ה־hash.
+  - 21 בדיקות: וקטורים FIPS-180-4 (כולל מיליון ‎a‎) + אורקל node:crypto על 56+ קלטים + שער השימור (סריאליזציה←פרסור משמר layoutHash).
+  - depcruise: פטור `test/` מכלל core-no-node-builtins (אורקל חוקי בבדיקות בלבד).
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 54/54 OK; `node scripts/migration/verify-canonical-hash.mjs` — 32/32 OK; רגרסיה מלאה build/typecheck/lint/deps + `verify-units` + `verify-work-conventions` (44/44).
+- **ממצאים:** גיבוב יציב — שינוי סדר keys אינו משנה hash; סריאליזציה←פרסור משמרת layoutHash. לאחר שחזור קבצים מההיסטוריה יש להריץ `typecheck:packages` (‎--force‎) לפני מאמתים — ה־tsbuildinfo המשוחזר מסמן "בנוי" גם כש־dist/ ישן. אין שינוי מנוע.
+
 ### שלב 9 — [ADR-001] יחידות מדידה וחשבון שלם בטוח (M1) — הושלם 2026-10-30
 - **תוצרים:**
   - `docs/adr/ADR-001-units.md` — 1 LU = 1/65536pt; חלופות שנשקלו, השלכות, תנאי ביטול.
