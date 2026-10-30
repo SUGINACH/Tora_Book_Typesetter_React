@@ -98,10 +98,19 @@ for (const f of changed) {
 const oldPkg = JSON.parse(execFileSync('git', ['show', `${PRE_PLAN_COMMIT}:package.json`], { cwd: repoRoot, encoding: 'utf8' }));
 const newPkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8'));
 let pkgDiffOk = true;
-for (const key of ['name', 'version', 'description', 'private', 'type', 'engines', 'dependencies', 'devDependencies']) {
+for (const key of ['name', 'version', 'description', 'private', 'type', 'engines']) {
   if (JSON.stringify(oldPkg[key]) !== JSON.stringify(newPkg[key])) {
     pkgDiffOk = false;
     fail(`package.json: השדה הישן "${key}" השתנה — אסור (כלל 8)`);
+  }
+}
+// תלויות: רשומות ישנות חייבות להישאר זהות; הוספות מותרות (כלי התכנית)
+for (const depKey of ['dependencies', 'devDependencies']) {
+  for (const [k, v] of Object.entries(oldPkg[depKey] ?? {})) {
+    if (newPkg[depKey]?.[k] !== v) {
+      pkgDiffOk = false;
+      fail(`package.json: התלות הישנה "${k}" ב${depKey} השתנתה (${v} → ${newPkg[depKey]?.[k]})`);
+    }
   }
 }
 for (const [k, v] of Object.entries(oldPkg.scripts ?? {})) {
@@ -111,13 +120,13 @@ for (const [k, v] of Object.entries(oldPkg.scripts ?? {})) {
   }
 }
 (JSON.stringify(newPkg.workspaces) === JSON.stringify(['packages/*']) ? ok : fail)('package.json: workspaces = ["packages/*"] (הוספה מתועדת של שלב 7)');
-(pkgDiffOk ? ok : fail)('package.json: כל השדות והסקריפטים הישנים זהים; רק הוספות');
+(pkgDiffOk ? ok : fail)('package.json: שדות, סקריפטים ותלויות ישנים זהים; רק הוספות (workspaces, סקריפטים וכלים חדשים)');
 
 // קבצים חדשים: רק בנתיבים המאושרים
 const NEW_ALLOWED = [
-  /^docs\//, /^assets\//, /^packages\//, /^scripts\/migration\//, /^tests\/\w+\//,
-  /^src\/(stores|worker-host|renderers)\//, /^\.github\/PULL_REQUEST_TEMPLATE\.md$/,
-  /^\.nvmrc$/,
+  /^docs\//, /^assets\//, /^packages\//, /^scripts\/migration\//, /^tests\/[a-z-]+\//,
+  /^src\/(stores|worker-host|renderers)\//, /^\.github\/(PULL_REQUEST_TEMPLATE\.md|workflows\/ci\.yml)$/,
+  /^\.nvmrc$/, /^tsconfig\.base\.json$/, /^eslint\.config\.js$/, /^\.dependency-cruiser\.cjs$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;

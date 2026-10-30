@@ -1,0 +1,55 @@
+# CI — תכנית 100 השלבים: שערי איכות מתמשכים (שלב 8; יורחב בשלבים הבאים לפי נספח ו)
+# כלל: אין עדכון golden אוטומטי; שתי ריצות של אותו job מניבות אותן תוצאות.
+name: CI — תכנית 100 השלבים
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  plan-gates:
+    name: שערי התכנית (build, typecheck, lint, תלות, מאמתי הגירה)
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # נדרש לבדיקת 'הקוד הישן לא נערך' (היסטוריה מלאה)
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: npm ci (מה־lockfile בלבד)
+        run: npm ci
+
+      - name: בניית החבילות
+        run: npm run build:packages
+
+      - name: בדיקת טיפוסים
+        run: npm run typecheck:packages
+
+      - name: lint חבילות (איסור DOM/Node בליבה)
+        run: npm run lint:packages
+
+      - name: גבולות תלות (dependency-cruiser)
+        run: npm run deps:check
+
+      - name: בדיקה שלילית — הפרת גבול נתפסת אוטומטית
+        run: node scripts/migration/verify-dependency-rules.mjs
+
+      - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
+        run: |
+          node scripts/migration/verify-source-manifest.mjs
+          node scripts/migration/verify-transfer-inventory.mjs
+          node scripts/migration/verify-baseline-run.mjs
+          node scripts/migration/verify-test-fixtures.mjs
+          node scripts/migration/verify-parity-matrix.mjs
+
+      - name: שלד workspaces + מוסכנות עבודה (כולל הקוד הישן לא נערך)
+        run: |
+          node scripts/migration/verify-workspaces.mjs
+          node scripts/migration/verify-work-conventions.mjs

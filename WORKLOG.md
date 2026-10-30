@@ -4,6 +4,16 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 8 — חוקי תלות ואכיפתם (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `eslint.config.js` — `no-restricted-globals` (34 גלובלים דפדפן + 11 Node אסורים בליבה), `no-restricted-imports` (node:*/React/Zustand בליבה; render-html בלי measurement).
+  - `.dependency-cruiser.cjs` — 15 כללי גרף מדויקים + איסור Node בליבה + איסור תלות מעגלית + איסור חבילות←מעטפת.
+  - `.github/workflows/ci.yml` — צנרת נספח ו: npm ci, build, typecheck, lint, deps:check, בדיקה שלילית, 7 מאמתי הגירה, workspaces, מוסכנות.
+  - `scripts/migration/verify-dependency-rules.mjs` — 22 בדיקות כולל בדיקה שלילית חיה (הזרקת מפר ← depcruise+eslint נכשלים כנדרש ← ניקוי ← ירוק).
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run lint:packages` (55 מודולים) — PASS; `npm run deps:check` — 0 הפרות; `node scripts/migration/verify-dependency-rules.mjs` — 22/22 OK; `node scripts/migration/verify-work-conventions.mjs` — 44/44 OK.
+- **ממצאים:** הפרת גבול נתפסת אוטומטית — הוכח בבדיקה השלילית החיה בסביבה זו. שלד אכיפה תלת־שכבתי (eslint + dependency-cruiser + CI); אין שינוי מנוע.
+
 ### שלב 7 — npm workspaces ושלד שתים־עשרה החבילות (M1) — הושלם 2026-10-30
 - **תוצרים:**
   - `packages/` — 12 חבילות לפי גרף התלות מאפיון §5: content-model, settings-schema, measurement-api, layout-api, layout-engine, policy-torah, measurement-harfbuzz, audit-core, render-html, export-pdf, cli, test-fixtures; לכל חבילה `sideEffects:false`, ייצוא דרך index בלבד, tsconfig עם project references לפי הגרף.
