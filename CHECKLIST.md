@@ -50,7 +50,7 @@
 - [ ] 29. זהות מדידה בין hosts ואכיפת offline
 - [ ] 30. חוזה settings-schema, מרשם כל הגדרות legacy והמיגרציות (שער M3)
 
-## פרק ה — שלד מהלך: IR, מנוע, CLI, Worker, HTML ו־Audit (M4)
+## פרק ה — שלד מהלך: IR, מנוע, CLI, Worker, HTML, Audit (M4)
 
 - [ ] 31. Layout IR מלא (layout-api)
 - [ ] 32. חוזה typeset(), RunManifest ו־Decision Ledger
@@ -145,4 +145,4 @@
 - [ ] 97. הקשחת מסמך ארוך, fuzz וגבולות זיכרון
 - [ ] 98. ערכת cross-host מלאה לקראת release
 - [ ] 99. release manifest ותיעוד מאומת בלבד
-- [ ] 100. מעבר קריטריוני release ואריזת הפצה (שער M12)
+- [ ] 100. מעבר קריטריוני release ואריזת הפצה (שער M12 + התכנית כולה)
