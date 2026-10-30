@@ -320,3 +320,37 @@ hash דטרמיניסטי 32-bit. משמש לאימות דטרמיניזם: או
 יומן החלטות אופציונלי. כבוי כברירת מחדל. אינו משפיע על הפריסה.
 
 **קוד:** `TraceLogger` ב-`src/worker/engine/trace-logger.ts` (טרם נוצר — מוגדר באפיון)
+
+## הקפאת בסיס (M0) — מושגי הגירה
+
+### בייסליין נעול (Locked Baseline)
+פלט רפרנס מהתוכנה הישנה ב־SHA נעול (Orange @ `93ad1e57`) ובסביבה נעולה (Node v22.23.4, Playwright 1.55.0, Chromium v1187), שממנו נמדדים תאימות והבדלים. אין לערבב בין סביבות.
+
+**נתיב:** `docs/migration/baseline/` · **רשומה ראשית:** `baseline-run.json`
+
+### המסמך הקנוני (Canonical Long Document)
+`very_long_test_text.txt` (3.4MB, sha256 `5e73b913…ce0e4`) — קלט הייחוס לכל בדיקת מסמך מלא. 639 עמודים בברירת מחדל, 659 בעיטורים פעילים.
+
+### מלאי ההעברה (Transfer Inventory)
+הרישום המלא של כל מה שיש להעביר מהתוכנה הישנה: מזהים, הגדרות, גופנים, חלקי עמוד, שערים ועיטורים, חוקי הערות וקורפוס בדיקה — כל פריט עם SHA-256, סטטוס (מועבר/דחוי) ויעד.
+
+**נתיב:** `docs/migration/transfer-inventory.{json,md}` · **נכסים נעולים:** `assets/{fonts,ornaments,shaar}/`
+
+### fixture
+קלט בדיקה נעול עם `sourceSha256`, provenance (מקור, SHA, סיבה), invariants צפויים ולעיתים קישור לבייסליין. **אין fixture בלי מקור ו־hash.** Golden לא מתעדכן אוטומטית.
+
+**נתיב:** `packages/test-fixtures/` · **רישום:** `registry.json`
+
+### מטריצת parity (Parity Matrix)
+סיווג טענות התוכנה הישנה: **מאומתת** (מאומתה מחדש מול artifacts), **היסטורית** (SHA-locked — נכונה לנקודתה בלבד, לא יעד), **עקרון מתועד**. רק טענות מאומתות הן יעדי differential.
+
+**נתיב:** `docs/migration/parity-matrix.{json,md}`
+
+### יעד differential (Differential Target)
+טענה מאומתת שהוקפאה כיעד השוואה למנוע החדש (שלב 48 ואילך) — למשל: 639/659 עמודים, שימור תוכן 0/0, תאימות ספר החלטות.
+
+### שדות זמן-ריצה (Volatile Fields)
+שלושת שדות הדוח של המנוע הישן שתלויים בזמן הריצה ומנורמלים לפני כל השוואת artifacts: `run.generatedAt`, `run.renderMs`, `geometry.stats.extractMs`. אף שדה מבני לא התגלה כתלוי-ריצה.
+
+### מראה מקומית (Legacy Mirror)
+עותק מקומי של ריפו מקור ב־SHA הנעול (תחת `TORA_LEGACY_MIRRORS`), לאימות hash של פריטים דחויים מול המקור בפועל.
