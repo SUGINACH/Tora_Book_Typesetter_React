@@ -1,0 +1,431 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-30",
+  "authority": "תכנית 100 השלבים, סעיף ד (מפת מלאי ההעברה) · אפיון §2, §3.3, §5, §21",
+  "source": {
+    "repo": "SUGINACH/Tora_Book_Typesetter_Orange",
+    "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378"
+  },
+  "categories": [
+    {
+      "id": "text-identifiers",
+      "title": "מזהי טקסט ותחביר קלט",
+      "scope": "כותרות H0–H7, שערים (main/back/sub), הערות שוליים/צד/סיום, first-word-window, dibbur hamatchil, drop-word, סוגריים, מפרידי מוסף, עיטורים, כותרות רצות, הערות עורך וחלקי עמוד מיוחדים",
+      "status": "deferred",
+      "destination": "docs/migration/identifiers.md + חבילת content-model (שלב 17); provenance (שלבים 14–16); סוגריים (שלב 19)",
+      "items": [
+        {
+          "path": "typesetter.js",
+          "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+          "bytes": 368647,
+          "role": "הפרסר והמנוע — מקור כל מזהי הטקסט"
+        },
+        {
+          "path": "app.js",
+          "sha256": "1e10f71cb7c517c33e69504c4cb178a670299de957baaae11de0a6dcb9679dbf",
+          "bytes": 137656,
+          "role": "קלט משתמש וזיהוי מזהים בזמן ייבוא"
+        },
+        {
+          "path": "decorations.js",
+          "sha256": "e87bb1792e0682c9b00788134df9bb33ded3abbc658a6293080d60202aaca693",
+          "bytes": 36801,
+          "role": "עיטורים פעילים וחישוב השפעתם"
+        },
+        {
+          "path": "settings-manager.js",
+          "sha256": "09475f6a52a764d4d0065ba074c49d14f9f368b91be7bea24c5700e3335ff5f6",
+          "bytes": 12510,
+          "role": "ניהול הגדרות ומפתחות"
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "סגנונות עימוד והגדרות",
+      "scope": "כל מפתחות ההגדרות, ובהם: page-num-initial-value, avoid-runt-word, body-last-line-align, same_as_even, hdr-h1-title-mode, h2-orn-scope, מספור הערות, מצבי first-word, טווחי כותרות, גאומטריית עמוד וטורים, ריווח, letter-spacing, כותרות רצות ופוליו",
+      "status": "deferred",
+      "destination": "docs/migration/settings-matrix.md + Setting Registry (שלבים 26, 78–79, 84)",
+      "items": [
+        {
+          "path": "default_settings.json",
+          "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+          "bytes": 8078,
+          "role": "ברירות המחדל המלאות — חוזה ההגדרות"
+        },
+        {
+          "path": "setting_sets/פרשנות.json",
+          "sha256": "f7705745c20b449871b7d4ac73ff32707d8ae1366454fb0e7aa85a84ac42f9ce",
+          "bytes": 7959,
+          "role": "פריסט ספר פרשנות"
+        },
+        {
+          "path": "setting_sets/קונטרס.json",
+          "sha256": "567461b08a9b184967525301183c2db928907d126056f26f0a7d13258a536d07",
+          "bytes": 7951,
+          "role": "פריסט קונטרס"
+        },
+        {
+          "path": "setting_sets/תלמוד.json",
+          "sha256": "d27ae1d52e85dadf42109103b75ab856ac8f2966d7c716509c7302ece0a5b8d1",
+          "bytes": 7950,
+          "role": "פריסט ספר תלמוד"
+        },
+        {
+          "path": "LAYOUT_DEPENDENCY_MAP.md",
+          "sha256": "006da8e9b7807e1a5c27a5614143fac850c6d4957b118662736dfab28644453e",
+          "bytes": 102228,
+          "role": "מפת תלות הגדרות־עימוד (מלאי דרישות)"
+        }
+      ]
+    },
+    {
+      "id": "fonts",
+      "title": "גופנים",
+      "scope": "סט הגופנים המלא ששימש את התוכנה הישנה, כולל משקלים וסגנונות",
+      "status": "transferred",
+      "lockedCopy": "assets/fonts/",
+      "manifest": "assets/fonts/manifest.json",
+      "destination": "measurement-harfbuzz + manifest גופנים (שלבים 23–24)",
+      "counts": {
+        "bundled": 1757,
+        "guttmanRashi": 1,
+        "selfhostFonts": 38,
+        "selfhostOther": 7,
+        "metadata": 5,
+        "unmappedFamily": 4
+      },
+      "items": "רשימה מלאה ב־assets/fonts/manifest.json — 1,757 גופנים מצורפים (woff2+woff) + Guttman-Rashi + 38 גופני selfhost תחת רישיון OFL + 7 רישיונות/CSS + 5 מטא-דאטה"
+    },
+    {
+      "id": "page-parts",
+      "title": "חלקי עמוד",
+      "scope": "כותרות עליונות/רצות (recto/verso), פוטר, פוליו וגימטריה, טורי גוף, אזורי הערות, תיבות מותאמות",
+      "status": "deferred",
+      "destination": "Page Templates לפי סוג עמוד ו־parity + מבחני מבנה עמוד (שלבים 50, 67)",
+      "items": [
+        {
+          "path": "typesetter.js",
+          "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+          "bytes": 368647,
+          "role": "בניית חלקי העמוד והתבניות בפועל"
+        },
+        {
+          "path": "renderer-bridge.js",
+          "sha256": "957ad8dd83b25f72d29048cdf14c5b9ca29cad3e3012e18b43363270045e97e0",
+          "bytes": 19194,
+          "role": "גשר רינדור ותבניות עמוד"
+        },
+        {
+          "path": "style.css",
+          "sha256": "9fdf0c178bab5db3f78aa29d9dbf491e96a4747b3b288a1c3ab0d20e0f84c8b4",
+          "bytes": 58503,
+          "role": "עיצוב חלקי העמוד בפועל"
+        }
+      ]
+    },
+    {
+      "id": "shaar-ornaments",
+      "title": "שערים ועיטורים",
+      "scope": "עיצובי שער main/back/sub (תיבות טקסט, anchors, safe areas), עיטורי H2 לפי scope, עיטורי H3, עיטורי סוף פרק, מחיצות מוסף, עיטורי כותרת",
+      "status": "transferred",
+      "lockedCopy": "assets/shaar/ + assets/ornaments/",
+      "manifests": [
+        "assets/shaar/manifest.json",
+        "assets/ornaments/manifest.json"
+      ],
+      "destination": "manifests נכסים והשפעת עיטורים על המקום הזמין (שלבים 68–69)",
+      "items": [
+        {
+          "file": "shaar_main.json",
+          "sha256": "4ac3285bbd68337f25a9cdcc157a36efaac1448e0d6ce9ede963f2b0c3acda5b",
+          "bytes": 213809,
+          "count": 32,
+          "manifest": "assets/shaar/manifest.json"
+        },
+        {
+          "file": "shaar_back.json",
+          "sha256": "2f696511669c4cf81b379389aaf86c6765e0b234ca3ad241e03f596fff89ab59",
+          "bytes": 294813,
+          "count": 27,
+          "manifest": "assets/shaar/manifest.json"
+        },
+        {
+          "file": "shaar_sub.json",
+          "sha256": "bea90a08f08064b65b8df4bab8db136fa7d286654015a86efb9ff0d5515963da",
+          "bytes": 178020,
+          "count": 27,
+          "manifest": "assets/shaar/manifest.json"
+        },
+        {
+          "file": "ornaments_up_down.json",
+          "sha256": "a271e4d8fb16b5868203e59ba50111f32b35458e0d0a4d907c1ae17d19fa1ef7",
+          "bytes": 2349513,
+          "count": 302,
+          "manifest": "assets/ornaments/manifest.json"
+        },
+        {
+          "file": "ornaments_left_right.json",
+          "sha256": "547a847503c08e47be1b261046a2985e2970d40323a7b1a214b288a857b4ffb5",
+          "bytes": 1926960,
+          "count": 302,
+          "manifest": "assets/ornaments/manifest.json"
+        },
+        {
+          "file": "header_ornaments.json",
+          "sha256": "bfd0e08a47af0af6f027114c57c45db83e590e31d6d2bc433c916fd9ca8923a7",
+          "bytes": 28830,
+          "count": 5,
+          "manifest": "assets/ornaments/manifest.json"
+        },
+        {
+          "file": "section_dividers.json",
+          "sha256": "bdf527f5639ae3ad3d176e74253bb682e46b46b87e0735cf02b9b1855d637751",
+          "bytes": 2782231,
+          "count": 323,
+          "manifest": "assets/ornaments/manifest.json"
+        }
+      ]
+    },
+    {
+      "id": "note-rules",
+      "title": "חוקי הערות",
+      "scope": "כללי הצבה, מספור ואיזון של הערות שוליים/צד/סיום + מפרידי אזור הערות",
+      "status": "transferred-visual-deferred-logic",
+      "lockedCopy": "assets/ornaments/note_rules.json (35 מפרידים)",
+      "destination": "policy-torah + fixtures ייעודיים (שלבים 20, 53–55)",
+      "items": [
+        {
+          "path": "note_rules.json",
+          "sha256": "c4c116583208a1d1c6a3f2bd398e17888b8a24bf4d8135fcd023f7c1517c6aa5",
+          "bytes": 162900,
+          "role": "35 מפרידי אזור הערות (SVG)"
+        },
+        {
+          "path": "default_settings.json",
+          "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+          "bytes": 8078,
+          "role": "מפתחות מספור ופריסת הערות (page/siman/part/continuous, fn-layout-mode ועוד)"
+        },
+        {
+          "path": "typesetter.js",
+          "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+          "bytes": 368647,
+          "role": "לוגיקת הצבה ואיזון הערות בפועל"
+        }
+      ]
+    },
+    {
+      "id": "test-corpus",
+      "title": "קורפוס בדיקה",
+      "scope": "קובצי הטקסט של הבדיקות והמסמך הארוך הקנוני",
+      "status": "deferred",
+      "destination": "packages/test-fixtures עם sourceSha256 לכל fixture (שלבים 4, 74)",
+      "items": [
+        {
+          "path": "very_long_test_text.txt",
+          "sha256": "5e73b913f9843fce695d0e4073c176961b8dbc2fa87e8e4c3d99051a826ce0e4",
+          "bytes": 3424454,
+          "role": "המסמך הארוך הקנוני — זהה ל־fixtures/canonical_very_long_test_text.txt"
+        },
+        {
+          "path": "long_test_text.txt",
+          "sha256": "d039b599cfc1971acc236c9bec6e4588c651a8a3429074df72214b0e6c397f7c",
+          "bytes": 2718900,
+          "role": "מסמך ארוך 1"
+        },
+        {
+          "path": "long_test_text_2.txt",
+          "sha256": "3b11f4e30e703b6c717949ca41f73179253af2fd41fd54f2a2a9822e400ded66",
+          "bytes": 2646152,
+          "role": "מסמך ארוך 2"
+        },
+        {
+          "path": "long_test_text_no_parentheses.txt",
+          "sha256": "d48786f63aa6f08966dbbff772c64a3696c9cd018306cca8451a31b8335a7653",
+          "bytes": 2715579,
+          "role": "מסמך ארוך ללא סוגריים"
+        },
+        {
+          "path": "mid_long_test_text.txt",
+          "sha256": "d1ffea910215be3ecbd6f4d46f3bc81cddc446f1f68b1c9717a338de406c6bfb",
+          "bytes": 667221,
+          "role": "מסמך בינוני"
+        },
+        {
+          "path": "fixtures/base_very_long_test_text.txt",
+          "sha256": "e9681f1ee9909dfa0dab4ee38bee2ad4c2013be1549c851ddd8b31d12234fd5b",
+          "bytes": 3387848,
+          "role": "בסיס להשוואת מסמך ארוך"
+        },
+        {
+          "path": "fixtures/canonical_very_long_test_text.txt",
+          "sha256": "5e73b913f9843fce695d0e4073c176961b8dbc2fa87e8e4c3d99051a826ce0e4",
+          "bytes": 3424454,
+          "role": "העתק קנוני של very_long_test_text.txt (hash זהה)"
+        },
+        {
+          "path": "fixtures/ch63_final_paragraph_failure_case.txt",
+          "sha256": "4699a3070479f247586237f18c5f608bb7f4901278cadbac6539512541135dfa",
+          "bytes": 28668,
+          "role": "מקרה כשל פסקה אחרונה — פרק 63"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch05.txt",
+          "sha256": "3ae75db1ca7ba501b90f9f5af60394a05c6f52e09fe77561cd523843a67fcbb4",
+          "bytes": 44257,
+          "role": "פרק ממוקד לבדיקות — ch05.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch09.txt",
+          "sha256": "a87bd1cb29611d7accc83fe4b4ac44532e697474212b860b8749ccdb28a3d798",
+          "bytes": 89783,
+          "role": "פרק ממוקד לבדיקות — ch09.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch13.txt",
+          "sha256": "3aef5ddb0364ffcaa59f4ee323cac0b91f60bdaaf0047e54e7112466fafff880",
+          "bytes": 87615,
+          "role": "פרק ממוקד לבדיקות — ch13.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch35.txt",
+          "sha256": "5b1719560f57a84bc799c8fb7f6f48540783fcefea2856d3394d7448da61b20d",
+          "bytes": 12023,
+          "role": "פרק ממוקד לבדיקות — ch35.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch42.txt",
+          "sha256": "b45f757196692c083a1863ff3f9f6d2288e25428a92aafccdac1008cc8e64cbd",
+          "bytes": 27034,
+          "role": "פרק ממוקד לבדיקות — ch42.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch55.txt",
+          "sha256": "191ec6d3275399ae2419e4d4fb8f068a00a92a14c47dcb6dd8dee742f10c8c5d",
+          "bytes": 126628,
+          "role": "פרק ממוקד לבדיקות — ch55.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch62.txt",
+          "sha256": "821c3394a7f3c5f48cdfbec1a5abd4f56c4b687dcbd3ffe644490d3482e432f8",
+          "bytes": 32750,
+          "role": "פרק ממוקד לבדיקות — ch62.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch63.txt",
+          "sha256": "0e8d77ebbe1ad2ddf8fb6c7837cbcacb97b9853aa8961680c8cac8212a8abe0d",
+          "bytes": 112619,
+          "role": "פרק ממוקד לבדיקות — ch63.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch67.txt",
+          "sha256": "f377d8e37e9b0657954fd6c4485bb81c0ddb6b4fcfb787aaec9da1a07af78d6f",
+          "bytes": 54972,
+          "role": "פרק ממוקד לבדיקות — ch67.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch71.txt",
+          "sha256": "91be1c944af611f1e5861bf0dd77d90db00860cfe3edc2a4128b9d1944211aa2",
+          "bytes": 41645,
+          "role": "פרק ממוקד לבדיקות — ch71.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch72.txt",
+          "sha256": "5c3046351d0a1ce0012362146ec50a4d3dcaa579396561dddfe1824a08e457ff",
+          "bytes": 59689,
+          "role": "פרק ממוקד לבדיקות — ch72.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch73.txt",
+          "sha256": "ddf1b1b2b770ef39121b14499a52629998d83a86bafa78509392b83782858c0e",
+          "bytes": 37707,
+          "role": "פרק ממוקד לבדיקות — ch73.txt"
+        },
+        {
+          "path": "fixtures/chapters_focus/ch75.txt",
+          "sha256": "3672d6c5f99d0342a8cc21441f0d84114538aef9c0280b59bfb83837dff97d2d",
+          "bytes": 58497,
+          "role": "פרק ממוקד לבדיקות — ch75.txt"
+        },
+        {
+          "path": "tests/fixtures/geometry-audit-diagnostics-smoke.txt",
+          "sha256": "25b5f1fc10f89acd586e6f66e69f14b2670d7a3cc0efbd02fc2028f9ec1120f8",
+          "bytes": 622,
+          "role": "קלט smoke לביקורת גאומטריה"
+        },
+        {
+          "path": "tests/fixtures/geometry-audit-smoke.txt",
+          "sha256": "1aec6688976243118051068752d72acc85b8830fdc0a0be96bd133c2b018276c",
+          "bytes": 1020,
+          "role": "קלט smoke לביקורת גאומטריה"
+        },
+        {
+          "path": "tests/fixtures/no-legal-two-column-split.txt",
+          "sha256": "6e6c1729a8eb1156d1b9853a9d7ac3d27a031c89eb494c06548620b5e956be04",
+          "bytes": 268,
+          "role": "קלט smoke לביקורת גאומטריה"
+        },
+        {
+          "path": "tests/fixtures/ornament-geometry-parity-settings.json",
+          "sha256": "5e0f35c0fb9fddc08b7701234fbefa6a31a54b486e4097c00ce8107a5f4a8216",
+          "bytes": 8062,
+          "role": "הגדרות בדיקת עיטורים"
+        },
+        {
+          "path": "tests/fixtures/ornament-geometry-parity-smoke.txt",
+          "sha256": "d5fbfe050856b146bbe216cca85d19309ef303d9fe07ff43c4fda9fe596479be",
+          "bytes": 41568,
+          "role": "קלט smoke לביקורת גאומטריה"
+        },
+        {
+          "path": "tests/fixtures/ornament-geometry-settings.json",
+          "sha256": "1a4e63bf5f3799cdd093aa96ea236ce4be58fdc5a738e103aff2917a8abdda89",
+          "bytes": 8075,
+          "role": "הגדרות בדיקת עיטורים"
+        },
+        {
+          "path": "tests/fixtures/ornament-geometry-smoke.txt",
+          "sha256": "452a1a158659309cd11bb2b106ccb5557cd7a0f6ad73c47a1846c8353bd04772",
+          "bytes": 1244,
+          "role": "קלט smoke לביקורת גאומטריה"
+        },
+        {
+          "path": "tests/fixtures/ornament-geometry-title-tb-settings.json",
+          "sha256": "f6bb9435c23516374318dcbf5be37dc23d5c4384d06584c1a0e34f3a56d71fd4",
+          "bytes": 8085,
+          "role": "הגדרות בדיקת עיטורים"
+        }
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D-001",
+      "subject": "רישוי אוסף 1,760 הגופנים המצורפים (fonts/*.woff2)",
+      "decision": "מועבר בשלמות, כמו שהוא",
+      "reason": "תנאי התאימות של התכנית דורש את מלוא הסט; בתוכנה הישנה לא תועד רישיון לפי משפחה, והאוסף שימש בפועל את המערכת (רשימות priority/extended + בורר הגופנים).",
+      "mitigation": "מניפסט עם SHA-256 לכל קובץ מאפשר subset עתידי לפי שימוש בפועל; סיכון מתועד באפיון §21 (גופנים רבים ורישיונות)."
+    },
+    {
+      "id": "D-002",
+      "subject": "Guttman-Rashi-Normal.woff2",
+      "decision": "מועבר כמו שהוא",
+      "reason": "נחוץ לתאימות מלאה (גופן רש\"י להערות); רישיון לא תועד במקור.",
+      "mitigation": "מסומן במניפסט עם hash; ייבדק מול הבעלים לפני הפצה ציבורית (שלב 99)."
+    },
+    {
+      "id": "D-003",
+      "subject": "קובצי בדיקה שנוספו בריפו ה-React מחוץ לבייסליין (no_long_test_text.txt, very_long_test_text_2.txt)",
+      "decision": "מוגדרים מחוץ למלאי הנעול; לא ייכנסו ל־packages/test-fixtures אלא בהחלטה מפורשת בשלב 4",
+      "reason": "כלל 8 בתכנית: הקוד והקבצים שנוספו לריפו ה-React אינם נקודת ייחוס; הבייסליין הנעול הוא Orange בלבד. הקבצים נותרים בריפו ללא שינוי."
+    }
+  ],
+  "crossChecks": [
+    {
+      "item": "very_long_test_text.txt",
+      "sha256": "5e73b913f9843fce695d0e4073c176961b8dbc2fa87e8e4c3d99051a826ce0e4",
+      "verifiedAgainst": "PROVENANCE.md של Orange (תיעוד hash מקורי: 5e73b913…ce0e4)"
+    }
+  ]
+}
