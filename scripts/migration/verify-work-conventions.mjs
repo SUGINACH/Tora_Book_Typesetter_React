@@ -8,8 +8,9 @@
  *   2. תבנית PR מכילה את הסעיפים המחייבים: fixture קודם לפורט, הפרדת refactor/mדיניות,
  *      layoutHash, GLOSSARY, אי-החלשת בדיקות, בדיקות שרצו.
  *   3. תבנית commit קיימת וכוללת את מבנה ההודעה.
- *   4. טוהר החזרה של פרק א (M0): מהקומיט שלפני התכנית ועד HEAD לא שונה אף קובץ
- *      מנוע/יישום ישן (src/, src-tauri/, index.html, package.json, root assets וכו').
+ *   4. הקוד הישן לא נערך (כלל 8): קבצים ישנים זהים להם, למעט חיווט workspaces
+ *      ב־package.json (הוספות בלבד, נבדק שדה-שדה) והמסמכים החיים; קבצים חדשים —
+ *      רק בנתיבים המאושרים של התכנית.
  *   5. שער M0 בפועל: חמשת מאמתי M0 רצים ועוברים (source-manifest, transfer-inventory,
  *      baseline-run, test-fixtures, parity-matrix).
  *
@@ -65,43 +66,70 @@ for (const frag of ['שלב <N>/100', 'בדיקות שרצו (ירוק)', 'layou
   (ct.includes(frag) ? ok : fail)(`תבנית commit כוללת: ${frag}`);
 }
 
-// ---------- 4. טוהר החזרה של פרק א ----------
-console.log('\n4) טוהר החזרה של פרק א (M0) — אף קובץ מנוע/יישום לא שונה');
+// ---------- 4. הקוד הישן לא נערך (כלל 8; אינווריאנט מתפתח משלב 7) ----------
+console.log('\n4) הקוד הישן לא נערך — שינויים מותרים: artifacts חדשים + חיווט workspaces בלבד');
 const PRE_PLAN_COMMIT = 'eba2c63'; // "הוספת תכנית עבודה מפורטת לסוכן AI" — הקומיט שלפני שלב 1
+const run = (args) => execFileSync('git', ['-c', 'core.quotepath=false', ...args], {
+  cwd: repoRoot, encoding: 'utf8',
+}).trim();
 let changed = [];
 try {
-  changed = execFileSync('git', ['-c', 'core.quotepath=false', 'diff', '--name-only', `${PRE_PLAN_COMMIT}..HEAD`], {
-    cwd: repoRoot, encoding: 'utf8',
-  }).split('\n').map((s) => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
+  changed = run(['diff', '--name-only', `${PRE_PLAN_COMMIT}..HEAD`])
+    .split('\n').map((s) => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
 } catch (e) {
   fail(`לא ניתן לקרוא את היסטוריית ה־git: ${e.message}`);
 }
-const PROTECTED_PREFIXES = [
-  'src/', 'src-tauri/', 'public/', 'tests/', 'fonts/', 'example/',
-  'text_files_for_typesetter_tests/',
-  'index.html', 'vite.config.ts', 'tailwind.config.js', 'postcss.config.js',
-  'tsconfig.json', 'tsconfig.node.json', 'package.json', 'package-lock.json',
-  'header_ornaments.json', 'note_rules.json', 'ornaments_left_right.json',
-  'ornaments_up_down.json', 'section_dividers.json', 'shaar_back.json',
-  'shaar_main.json', 'shaar_sub.json', 'favicon.ico',
-  '.github/workflows/deploy.yml',
-];
-const ALLOWED_ROOT_SCRIPTS = /^scripts\/(?!migration\/)/; // סקריפטים ישנים בשורש scripts/ — לא לגעת
-const violations = changed.filter((f) => {
-  if (PROTECTED_PREFIXES.some((p) => f === p || f.startsWith(p))) return true;
-  if (ALLOWED_ROOT_SCRIPTS.test(f)) return true;
-  return false;
-});
-(violations.length === 0
-  ? ok : fail)(`נבדקו ${changed.length} קבצים שהשתנו מאז טרום-התכנית — ${violations.length} פגיעות בקוד ישן`);
-if (violations.length > 0) {
-  for (const v of violations.slice(0, 10)) console.log(`        - ${v}`);
+// קבצים שהתקיימו לפני התכנית ורשאים להשתנות: חיווט workspaces + מסמכים חיים
+const LIVING_FILES = new Set(['package.json', 'package-lock.json', 'CHECKLIST.md', 'WORKLOG.md', 'GLOSSARY.md']);
+const modifiedOld = [];
+for (const f of changed) {
+  let existed = true;
+  try {
+    execFileSync('git', ['cat-file', '-e', `${PRE_PLAN_COMMIT}:${f}`], { cwd: repoRoot, stdio: 'ignore' });
+  } catch {
+    existed = false;
+  }
+  if (existed && !LIVING_FILES.has(f)) modifiedOld.push(f);
 }
-const allowedOnly = changed.every((f) =>
-  f.startsWith('docs/') || f.startsWith('assets/') || f.startsWith('packages/') ||
-  f.startsWith('scripts/migration/') || f === '.nvmrc' || f === 'CHECKLIST.md' ||
-  f === 'WORKLOG.md' || f === 'GLOSSARY.md' || f === '.github/PULL_REQUEST_TEMPLATE.md');
-(allowedOnly ? ok : fail)('כל השינויים מוגבלים ל: docs/, assets/, packages/, scripts/migration/, .nvmrc, CHECKLIST, WORKLOG, GLOSSARY, תבנית PR');
+(modifiedOld.length === 0
+  ? ok : fail)(`${changed.length} קבצים השתנו; אף קובץ ישן (קוד/נכסים/תצורה) לא נערך או נמחק${modifiedOld.length ? ' — חריגות: ' + modifiedOld.slice(0, 5).join(', ') : ''}`);
+
+// package.json: הוספות בלבד (workspaces + סקריפטים חדשים) — כל השדות הישנים זהים
+const oldPkg = JSON.parse(execFileSync('git', ['show', `${PRE_PLAN_COMMIT}:package.json`], { cwd: repoRoot, encoding: 'utf8' }));
+const newPkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8'));
+let pkgDiffOk = true;
+for (const key of ['name', 'version', 'description', 'private', 'type', 'engines', 'dependencies', 'devDependencies']) {
+  if (JSON.stringify(oldPkg[key]) !== JSON.stringify(newPkg[key])) {
+    pkgDiffOk = false;
+    fail(`package.json: השדה הישן "${key}" השתנה — אסור (כלל 8)`);
+  }
+}
+for (const [k, v] of Object.entries(oldPkg.scripts ?? {})) {
+  if (newPkg.scripts?.[k] !== v) {
+    pkgDiffOk = false;
+    fail(`package.json: הסקריפט הישן "${k}" השתנה`);
+  }
+}
+(JSON.stringify(newPkg.workspaces) === JSON.stringify(['packages/*']) ? ok : fail)('package.json: workspaces = ["packages/*"] (הוספה מתועדת של שלב 7)');
+(pkgDiffOk ? ok : fail)('package.json: כל השדות והסקריפטים הישנים זהים; רק הוספות');
+
+// קבצים חדשים: רק בנתיבים המאושרים
+const NEW_ALLOWED = [
+  /^docs\//, /^assets\//, /^packages\//, /^scripts\/migration\//, /^tests\/\w+\//,
+  /^src\/(stores|worker-host|renderers)\//, /^\.github\/PULL_REQUEST_TEMPLATE\.md$/,
+  /^\.nvmrc$/,
+];
+const badNew = changed.filter((f) => {
+  let existed = true;
+  try {
+    execFileSync('git', ['cat-file', '-e', `${PRE_PLAN_COMMIT}:${f}`], { cwd: repoRoot, stdio: 'ignore' });
+  } catch {
+    existed = false;
+  }
+  return !existed && !NEW_ALLOWED.some((re) => re.test(f));
+});
+(badNew.length === 0
+  ? ok : fail)(`כל הקבצים החדשים בנתיבים המאושרים (docs/, assets/, packages/, scripts/migration/, tests/, src shell, תבניות)${badNew.length ? ' — חריגות: ' + badNew.slice(0, 5).join(', ') : ''}`);
 
 // ---------- 5. שער M0 בפועל — חמשת המאמתים ----------
 console.log('\n5) שער M0 בפועל — הרצת חמשת המאמתים');

@@ -16,6 +16,19 @@
   - **שער M0 מלא עבר:** הבייסליין ניתן לשחזור offline (verify-baseline-run PASS); אין fixture בלי מקור ו־hash (verify-test-fixtures PASS); rollback של פרק א = מחיקת artifacts בלבד — נבדק מול היסטוריית ה־git: 1,880 קבצים השתנו מאז טרום-התכנית, **אפס פגיעות** בקוד מנוע/יישום ישן (src/, src-tauri/, package.json וכו').
   - תוקן ציטוט נתיבים לא-ASCII ב־git (core.quotepath) — שני גופנים בעלי שמות עבריים נספרו בטעות כחריגה.
 
+### שלב 7 — npm workspaces ושלד שתים־עשרה החבילות (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - **12 חבילות עבודה** תחת `packages/` לפי גרף התלות המחייב מאפיון §5: content-model, settings-schema, measurement-api, layout-api, layout-engine, policy-torah, measurement-harfbuzz, audit-core, render-html, export-pdf, cli, test-fixtures. לכל חבילה: `package.json` עם `sideEffects:false`, `exports` דרך index בלבד, ו־`src/index.ts` ציבורי (test-fixtures — חבילת נתונים שחושפת את registry.json).
+  - `tsconfig.base.json` (strict, NodeNext, composite) + `packages/tsconfig.json` (קובץ פתרון) + TS project references לפי הגרף.
+  - שורש `package.json`: הוספת `workspaces: ["packages/*"]` + `build:packages` / `typecheck:packages` / `verify:workspaces` — **הוספות בלבד, כל השדות והסקריפטים הישנים זהים** (נאכף שדה-שדה).
+  - מבנה §5: `tests/{golden,differential,metamorphic,long-document,visual}/`, `docs/adr/` (טבלת 8 ה־ADRs המתוכננים), `src/{stores,worker-host,renderers}/` (תצוגה מקדימה למעטפת הריאקט העתידית; הקוד הישן ב־src/ לא נגע).
+  - `scripts/migration/verify-workspaces.mjs` — 33 בדיקות.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run build:packages` — PASS (tsc -b, יציאה 0); `npm run typecheck:packages` — PASS; יבוא זמן-ריצה של `@tora/content-model` אומת ב־Node.
+  - `node scripts/migration/verify-workspaces.mjs` — 33/33 OK: 12/12 חבילות, גרף תלויות מדויק (dependencies + references), 0 יבואים חורגים, dist מחוץ ל־git.
+  - `node scripts/migration/verify-work-conventions.mjs` — ירוק (האינווריאנט התפתח: קוד ישן לא נערך; package.json הוספות בלבד).
+- **ממצאים:** `workspace:*` אינו נתמך ב־npm — נעשה שימוש בגרסה מדויקת `0.1.0` לקישור חבילות העבודה. חבילות נתונים (test-fixtures) הן תלות npm בלבד ללא הפניית בנייה; ייבוא צולב ייאכף אוטומטית בשלב 8 (ESLint + dependency-cruiser).
+
 ## קפיצת אבן דרך — M0 הושלם ואומת (2026-10-30)
 
 כל ששת שלבי פרק א הושלמו ואומתו: מקורות נעולים, מלאי העברה מלא עם 1,806 גופנים ו־1,053 עיצובים, בייסליין ריצה עקבי (639/659 עמודים, דטרמיניזם מוכח), 26 fixtures נעולים, מטריצת parity עם 16 יעדי differential, ומוסכנות עבודה מחייבות. **שער M0 ירוק** (`node scripts/migration/verify-work-conventions.mjs`).

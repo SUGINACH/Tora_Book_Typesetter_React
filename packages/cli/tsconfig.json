@@ -1,0 +1,42 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "src"
+  ],
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "references": [
+    {
+      "path": "../audit-core"
+    },
+    {
+      "path": "../content-model"
+    },
+    {
+      "path": "../export-pdf"
+    },
+    {
+      "path": "../layout-api"
+    },
+    {
+      "path": "../layout-engine"
+    },
+    {
+      "path": "../measurement-api"
+    },
+    {
+      "path": "../measurement-harfbuzz"
+    },
+    {
+      "path": "../policy-torah"
+    },
+    {
+      "path": "../render-html"
+    },
+    {
+      "path": "../settings-schema"
+    }
+  ]
+}
