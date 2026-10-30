@@ -4,6 +4,16 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 12 — קטלוג שגיאות מנוע ותשתית i18n לשגיאות (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/measurement-api/src/errors.ts` — `ERROR_CATALOG` סטטי (15 קודים) כולל קודי היסוד MISSING_FONT, FONT_HASH_MISMATCH, MEASUREMENT_UNAVAILABLE; `EngineError` דוחה מפתח לא רשום **בזמן יצירה**; `ValidationIssue` משותף.
+  - איחוד: `UnitsError`/`CanonicalHashError` יורשות `EngineError` — כל שגיאה שנזרקת עוברת דרך הקטלוג (errors.units.*‎ / errors.hash.*‎).
+  - `docs/i18n/error-keys.md` — טבלת מפתחות תרגום ראשונית (מקור לשלב 93).
+  - 8 בדיקות חדשות כולל סריקת קוד־מקור: אין קוד נזרק שאינו רשום.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 79/79 OK; `node scripts/migration/verify-error-catalog.mjs` — 18/18 OK; רגרסיה מלאה (typecheck --force לפני מאמתים, build/lint/deps).
+- **ממצאים:** אין שגיאה ללא קוד ומפתח i18n; אכיפה בזמן יצירה הוכחה בבדיקות. אין שינוי מנוע.
+
 ### שלב 11 — מבחני property ליחידות ולגיבוב (M1) — הושלם 2026-10-30
 - **תוצרים:**
   - `fast-check` 4.10.2 נעול ב־devDependencies + lockfile.
