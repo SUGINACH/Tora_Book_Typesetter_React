@@ -4,6 +4,16 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 4 — קורפוס fixtures ראשוני מכל באג והתנהגות מתועדת (M0) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/test-fixtures/` — סקלטת החבילה + `registry.json` עם 26 fixtures; קורפוס נעול 16MB מ־Orange @ `93ad1e57` (canonical / long / mid / 12 פרקים / מקרי בדיקה) + 3 הגדרות-משתנה.
+  - לכל fixture: `sourceSha256` + provenance מלא + invariants צפויים + קישור בייסליין כאשר קיים פלט רפרנס.
+  - `documentedBehaviors` — 8 באגים/התנהגויות מתועדים מהריפואים הישנים, ממופים לקורפוס ול־invariants; `plannedFixtures` — 8 דרישות §17.3 להשלמה בשלבים 13/17/21/74.
+  - `scripts/migration/verify-test-fixtures.mjs` — 9 בדיקות (מכסה 26 fixtures, קישורים, הגדרות, התנהגויות).
+- **פקודות בדיקה שרצו (ירוק):**
+  - `node scripts/migration/verify-test-fixtures.mjs` — 9/9 OK, יציאה 0 (Node v22.23.4): 26/26 fixtures עם מקור+hash+provenance+invariants; 5/5 קישורי בייסליין אומתו בצליבת hash כפולה מול שלב 3; 3 הגדרות-משתנה מול שלב 2; 8/8 התנהגויות.
+- **ממצאים:** אין fixture בלי מקור ו־hash. הקורפוס שוחזר מהיסטוריית הסבב הקודם (`ce4ae80`) ואומת מחדש במלואו מול הדיסק ומול הבייסליין; אין שינוי מנוע.
+
 ### שלב 3 — בייסליין ריצה של המנוע הישן (M0) — הושלם 2026-10-30
 - **תוצרים:**
   - `docs/migration/baseline/` — 6 ריצות של Orange @ `93ad1e57` בסביבה נעולה (Node v22.23.4, Playwright 1.55.0, Chromium headless shell v1187, offline guard מובנה ב־CLI): canonical ו־canonical-run2 (`very_long_test_text.txt`, 639 עמודים, 857 רשומות ledger, parity PASS, repeat-render PASS), mid (125 עמ', אודיט מלא), ch63 (מקרה הכשל, 8 עמ'), twocol (4 עמ'), smoke (6 עמ').
