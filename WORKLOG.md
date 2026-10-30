@@ -4,6 +4,16 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 11 — מבחני property ליחידות ולגיבוב (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `fast-check` 4.10.2 נעול ב־devDependencies + lockfile.
+  - `packages/measurement-api/test/units.property.test.ts` — 12 מבחני property: עיגול יציב תחת כפילויות (2,000 ריצות), חסימת מנה, מונוטוניות, דיוק ±1 LU, round-trip, גבולות safe integer, עגילות Cost.
+  - `packages/layout-api/test/canonical-hash.property.test.ts` — 6 מבחני property: אי־תלות בסדר keys, אידמפוטנטיות, cold/warm, רגישות לכל רכיב.
+  - `scripts/migration/verify-property-tests.mjs` — 22 בדיקות.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 71/71 OK (54 unit + 17 property); `node scripts/migration/verify-property-tests.mjs` — 22/22 OK; רגרסיה מלאה כולל deps:check.
+- **ממצאים:** בסבב הראשון תפסו מבחני ה־property שתי הנחות שגויות בטיוטת הבדיקות (מכפלה חורגת ‎2^53‎; עריכת מפתחות על פרימיטיב) — תוקנו אז; בריצה מחדש בסביבה זו המימוש והמבחנים ירוקים כמות שהם. אין שינוי מנוע.
+
 ### שלב 10 — [ADR-002] גיבוב קנוני ושלושת ה־hashes (M1) — הושלם 2026-10-30
 - **תוצרים:**
   - `docs/adr/ADR-002-canonical-hash.md` — הגדרות מדויקות של configHash/inputHash/layoutHash/runFingerprint/environmentHash.
