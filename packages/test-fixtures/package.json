@@ -4,12 +4,15 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "description": "קורפוס בדיקה נעול — מקורות, provenance וקישורי בייסליין (סקלטה; הסכמה המלאה בשלב 13)",
+  "description": "קורפוס בדיקה נעול — registry, corpus וכלי golden (הסכמה המלאה בשלב 13)",
   "exports": {
-    "./registry.json": "./registry.json"
+    ".": "./registry.json",
+    "./registry.json": "./registry.json",
+    "./corpus/*": "./corpus/*"
   },
   "files": [
     "registry.json",
     "corpus"
-  ]
+  ],
+  "main": "./registry.json"
 }

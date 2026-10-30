@@ -4,6 +4,17 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 7 — npm workspaces ושלד שתים־עשרה החבילות (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/` — 12 חבילות לפי גרף התלות מאפיון §5: content-model, settings-schema, measurement-api, layout-api, layout-engine, policy-torah, measurement-harfbuzz, audit-core, render-html, export-pdf, cli, test-fixtures; לכל חבילה `sideEffects:false`, ייצוא דרך index בלבד, tsconfig עם project references לפי הגרף.
+  - `tsconfig.base.json` (strict/NodeNext/composite) + `packages/tsconfig.json`; שורש: `workspaces` + `build:packages`/`typecheck:packages` (הוספות בלבד ל־package.json — נאכף שדה־שדה שאף שדה ישן לא השתנה).
+  - מבנה §5: `tests/{golden,differential,metamorphic,long-document,visual}`, `docs/adr` (8 ADRs מתוכננים), `src/{stores,worker-host,renderers}`.
+  - `scripts/migration/verify-workspaces.mjs` — 33 בדיקות; `verify-work-conventions.mjs` התפתח ל־44 בדיקות (האינווריאנט: "קוד ישן לא נערך").
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm ci` (469 חבילות, יציאה 0) ← `npm run build:packages` — PASS ← `npm run typecheck:packages` — PASS (Node v22.23.4).
+  - `node scripts/migration/verify-workspaces.mjs` — 33/33 OK; `node scripts/migration/verify-work-conventions.mjs` — 44/44 OK.
+- **ממצאים:** השלד שוחזר מהיסטוריית הסבב הקודם (`2edac41`) ונבנה מחדש במלואו — ה־build דטרמיניסטי (פלט זהה למשוחזר, אפס הבדלים); 12 החבילות נבנות ונבדקות טיפוסית; אין ייבוא צולב שלא לפי הגרף.
+
 ### שלב 6 — תשתית תיעוד עבודה וחוקי commit; שער M0 מלא עבר (M0) — הושלם 2026-10-30
 - **תוצרים:**
   - `docs/conventions/work-conventions.md` — מוסכנות WORKLOG/CHECKLIST/GLOSSARY + עשרת כללי אפיון §23 כטבלת אכיפה.

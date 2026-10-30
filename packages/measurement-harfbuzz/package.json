@@ -1,0 +1,23 @@
+{
+  "name": "@tora/measurement-harfbuzz",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "description": "WASM shaping נעול + BiDi adapter — שלד שלב 7; המימוש בפרק ד (שלב 24)",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.json",
+    "typecheck": "tsc -b tsconfig.json --force"
+  },
+  "dependencies": {
+    "@tora/measurement-api": "0.1.0"
+  }
+}

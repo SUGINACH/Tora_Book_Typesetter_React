@@ -1,0 +1,24 @@
+{
+  "name": "@tora/audit-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "description": "ביקורת מבנית/טקסטואלית עצמאית — שלד שלב 7; המימוש בפרק ה (שלב 38)",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.json",
+    "typecheck": "tsc -b tsconfig.json --force"
+  },
+  "dependencies": {
+    "@tora/content-model": "0.1.0",
+    "@tora/layout-api": "0.1.0"
+  }
+}

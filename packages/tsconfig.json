@@ -1,0 +1,38 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./audit-core"
+    },
+    {
+      "path": "./cli"
+    },
+    {
+      "path": "./content-model"
+    },
+    {
+      "path": "./export-pdf"
+    },
+    {
+      "path": "./layout-api"
+    },
+    {
+      "path": "./layout-engine"
+    },
+    {
+      "path": "./measurement-api"
+    },
+    {
+      "path": "./measurement-harfbuzz"
+    },
+    {
+      "path": "./policy-torah"
+    },
+    {
+      "path": "./render-html"
+    },
+    {
+      "path": "./settings-schema"
+    }
+  ]
+}
