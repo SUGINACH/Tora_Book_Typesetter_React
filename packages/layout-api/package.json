@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "tsc -b tsconfig.json",
-    "typecheck": "tsc -b tsconfig.json --force"
+    "typecheck": "tsc -b tsconfig.json --force && tsc --noEmit -p tsconfig.test.json"
   },
   "dependencies": {
     "@tora/content-model": "0.1.0",

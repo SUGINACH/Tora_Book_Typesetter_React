@@ -1,9 +1,9 @@
 /**
- * @tora/layout-api — Layout IR, policy APIs, costs, diagnostics
+ * @tora/layout-api — Layout IR, policy APIs, costs, diagnostics.
  *
- * שלד שלב 7 בתכנית 100 השלבים (אפיון §5).
- * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד.
- * המימוש ייבנה בפרק ה (שלבים 31–32).
+ * שלב 10: גיבוב קנוני ושלושת ה־hashes (ADR-002).
+ * ה־Layout IR המלא ייבנה בשלבים 31–32 (פרק ה).
  */
-export const PACKAGE_NAME = '@tora/layout-api' as const;
-export const SKELETON_NOTE = 'שלד שלב 7 — עדיין ללא מימוש; החוזה הציבורי ייבנה בפרק ה (שלבים 31–32)' as const;
+export * from './canonical-hash.js';
+export * from './canonical-hash-error.js';
+export * from './hash.js';

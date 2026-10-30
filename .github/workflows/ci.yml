@@ -41,10 +41,11 @@ jobs:
       - name: בדיקה שלילית — הפרת גבול נתפסת אוטומטית
         run: node scripts/migration/verify-dependency-rules.mjs
 
-      - name: בדיקות יחידה של החבילות (ADR-001 יחידות)
+      - name: בדיקות יחידה של החבילות (ADR-001 יחידות, ADR-002 גיבוב)
         run: |
           npm run test:packages
           node scripts/migration/verify-units.mjs
+          node scripts/migration/verify-canonical-hash.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |

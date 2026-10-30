@@ -85,7 +85,9 @@ const pxPerMm = [];
 for (const f of srcFiles) {
   const rel = f.slice(repoRoot.length + 1);
   // קוד-מקור בלבד: src/ (לא dist, לא test); units.ts עצמו פטור — בו מרוכז העיגול ומתועדים האיסורים
-  if (!rel.includes('/src/') || rel === 'packages/measurement-api/src/units.ts') continue;
+  // units.ts — מרכז העיגול; hash.ts — פרימיטיבים של SHA-256/FNV (מילים של 32 סיביות, ADR-002 §4)
+  const EXEMPT = rel === 'packages/measurement-api/src/units.ts' || rel === 'packages/layout-api/src/hash.ts';
+  if (!rel.includes('/src/') || EXEMPT) continue;
   const text = readFileSync(f, 'utf8');
   if (/\bMath\.round\b/.test(text)) roundOutside.push(rel);
   if (/(<<|>>>|>>)/.test(text)) bitwiseOutside.push(rel);

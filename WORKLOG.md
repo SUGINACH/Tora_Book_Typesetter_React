@@ -54,6 +54,21 @@
   - `node scripts/migration/verify-units.mjs` — 39/39 OK: ADR מלא, 19 ייצואי API בזמן ריצה מה־dist, ערכי חובה (roundDiv(-5,2)=-2; A4≈595.28pt), סריקות אכיפה (0 Math.round מחוץ ל־units; 0 bitwise; 0 pxPerMm/3.7795), ורגרסיה מלאה (build/typecheck/lint/deps).
 - **ממצאים:** נמצא ותועד הבדל אפס-שלילי: Math.round(-0.5)=-0 בעוד המימוש השלם מחזיר +0 (זהים מספרית; הונרמל בבדיקת ההצלבה). יחידת LU ממוקמת ב־measurement-api — חבילת השורש המשותפת הנמוכה — כך שכל צרכן מגיע אליה ללא תלות מעגלית (מתועד ב־ADR).
 
+### שלב 10 — [ADR-002] גיבוב קנוני ושלושת ה־hashes (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `docs/adr/ADR-002-canonical-hash.md` — החלטה נעולה: הגדרות מדויקות של configHash/inputHash/layoutHash/runFingerprint/environmentHash; חלופות (node:crypto, WebCrypto, FNV כחוזה); השלכות ותנאי ביטול.
+  - `packages/layout-api/src/hash.ts` — **SHA-256 נייב ב־JS טהור** (הליבה אסורה בייבוא node:crypto): 64 קבועי K חושבו בחישוב שורש-שלישי שלם מדויק; פטור bitwise מתועד (ADR-002 §4). FNV-1a נשמר להשוואה היסטורית בלבד.
+  - `packages/layout-api/src/canonical-hash.ts` — canonicalJson (מיון מפתחות רקורסיבי, נרמול אפס שלילי, דחיית ערכים לא-סדירים בשגיאה) + חמשת ה-hash functions.
+  - `packages/layout-api/test/canonical-hash.test.ts` — 21 בדיקות: וקטורי FIPS-180-4 (כולל מיליון 'a'), **אורקל node:crypto על 56+ קלטים** (עברית, אימוג'י, ZWJ), אידמפוטנטיות, שימור layoutHash בסריאליזציה←פרסור, הרכב ה־hashes ויציבות.
+  - `scripts/migration/verify-canonical-hash.mjs` — 32 בדיקות.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 54/54 PASS (33 יחידות + 21 גיבוב).
+  - `node scripts/migration/verify-canonical-hash.mjs` — 32/32 OK: ADR מלא, API בזמן ריצה מה־dist, וקטור FIPS חי, שער השימור, רגרסיה מלאה.
+- **ממצאים:**
+  - גלישת דיוק float ב־FNV-1a (מכפלה מעל 2^53) — תוקנה ב־Math.imul (כפל 32-סיביות מדויק); הווקטורים הידועים אומתו.
+  - כלל ה־depcruise core-no-node-builtins עודק לפטור קבצי בדיקה (האורקל node:crypto חוקי בבדיקות; קוד הריצה אסור).
+  - רזולוציית vite לייבוא extensionless של index הפתיעה — הבדיקות מייבאות מודולים ספציפיים עם סיומת ‎.js (מוסכמת NodeNext), מה שעובד זהה ב־tsc וב־vitest.
+
 ## קפיצת אבן דרך — M0 הושלם ואומת (2026-10-30)
 
 כל ששת שלבי פרק א הושלמו ואומתו: מקורות נעולים, מלאי העברה מלא עם 1,806 גופנים ו־1,053 עיצובים, בייסליין ריצה עקבי (639/659 עמודים, דטרמיניזם מוכח), 26 fixtures נעולים, מטריצת parity עם 16 יעדי differential, ומוסכנות עבודה מחייבות. **שער M0 ירוק** (`node scripts/migration/verify-work-conventions.mjs`).
