@@ -80,6 +80,18 @@
   - `node scripts/migration/verify-property-tests.mjs` — 22/22 OK + רגרסיה מלאה.
 - **ממצאים:** מבחני ה-property תפסו שתי הנחות שגויות בטיוטת הבדיקות עצמן — (א) טווח ±1e9×±1e9 בטעות סומן כבטוח בעוד המכפלה חורגת מ־2^53 (9918589×908112964); (ב) עריכת מפתחות הוחלה בטעות גם על פרימיטיבים. שתיהן תוקנו בתנאי pre הולם — המימוש עצמו נמצא תקין. זו בדיוק מטרת שכבת ה־property: כיסוי רחב שמאתר הנחות סמויות.
 
+### שלב 12 — קטלוג שגיאות מנוע ותשתית i18n לשגיאות (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/measurement-api/src/errors.ts` — `ERROR_CATALOG` סטטי וקפוא (15 קודים): שלושת קודי היסוד `errors.font.MISSING_FONT`, `errors.font.FONT_HASH_MISMATCH`, `errors.measurement.MEASUREMENT_UNAVAILABLE` + 12 קודי יחידות/גיבוב; `EngineError` (מפתח קטלוגי + params; דוחה מפתח לא רשום **בזמן יצירה**); `ValidationIssue` משותף.
+  - איחוד: `UnitsError` ו־`CanonicalHashError` יורשות מ־`EngineError` ועוברות דרך הקטלוג (`errors.units.*` / `errors.hash.*`) — ללא שינוי גרף התלות (שתיהן נגישות בשכבות שלהן).
+  - `docs/i18n/error-keys.md` — טבלת מפתחות התרגום הראשונית (15 שורות עם תבניות עברית) — המקור לקובצי ה־locale בשלב 93.
+  - `packages/measurement-api/test/errors.test.ts` — 8 בדיקות כולל **סריקת קוד-מקור**: כל קוד שנזרק ב־src של החבילות חייב להיות רשום.
+  - `scripts/migration/verify-error-catalog.mjs` — 18 בדיקות.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 79/79 PASS.
+  - `node scripts/migration/verify-error-catalog.mjs` — 18/18 OK + רגרסיה מלאה.
+- **ממצאים:** הקטלוג ממוקם ב־measurement-api — השכבה המשותפת הנמוכה (המשך התקדים של ADR-001 §9), כך שאיחוד השגיאות לא דרש שינוי גרף. מפתחות i18n יציבים בתבנית `errors.<domain>.<CODE>`; קובצי ה־locale עצמם ייבנו בשלב 93 (§16).
+
 ## קפיצת אבן דרך — M0 הושלם ואומת (2026-10-30)
 
 כל ששת שלבי פרק א הושלמו ואומתו: מקורות נעולים, מלאי העברה מלא עם 1,806 גופנים ו־1,053 עיצובים, בייסליין ריצה עקבי (639/659 עמודים, דטרמיניזם מוכח), 26 fixtures נעולים, מטריצת parity עם 16 יעדי differential, ומוסכנות עבודה מחייבות. **שער M0 ירוק** (`node scripts/migration/verify-work-conventions.mjs`).

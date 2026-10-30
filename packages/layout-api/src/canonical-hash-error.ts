@@ -1,10 +1,12 @@
-/** שגיאת גיבוב קנוני — קוד + הקשר (משולבת בקטלוג השגיאות בשלב 12). */
-export class CanonicalHashError extends Error {
+/** שגיאת גיבוב קנוני — עוברת דרך הקטלוג: המפתח הקטלוגי הוא errors.hash.<code> (שלב 12). */
+import { EngineError, type ErrorParams } from '@tora/measurement-api';
+
+export class CanonicalHashError extends EngineError {
   constructor(
     readonly code: string,
-    readonly details: Record<string, unknown>,
+    readonly details: ErrorParams,
   ) {
-    super(`[canonical-hash:${code}] ${JSON.stringify(details)}`);
+    super(`errors.hash.${code}`, details);
     this.name = 'CanonicalHashError';
   }
 }

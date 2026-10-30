@@ -24,13 +24,15 @@ export const COST_SCALE = 1024;
 /** הגבול העליון המותר לכל ערך גאומטרי. */
 export const MAX_SAFE_LU = Number.MAX_SAFE_INTEGER;
 
-/** שגיאת יחידות — קוד + הקשר (משולבת בקטלוג השגיאות בשלב 12). */
-export class UnitsError extends Error {
+import { EngineError, type ErrorParams } from './errors.js';
+
+/** שגיאת יחידות — עוברת דרך הקטלוג: המפתח הקטלוגי הוא errors.units.<code> (שלב 12). */
+export class UnitsError extends EngineError {
   constructor(
     readonly code: string,
-    readonly details: Record<string, unknown>,
+    readonly details: ErrorParams,
   ) {
-    super(`[units:${code}] ${JSON.stringify(details)}`);
+    super(`errors.units.${code}`, details);
     this.name = 'UnitsError';
   }
 }
