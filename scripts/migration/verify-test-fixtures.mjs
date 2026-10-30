@@ -39,7 +39,7 @@ const ORANGE_SHA = '93ad1e5704405fb2806a126ea1b519a35a87f378';
 // ---------- 1. מבנה ----------
 console.log('1) מבנה הרישום');
 const reg = json(join(PKG, 'registry.json'));
-(reg.schemaVersion === 1 ? ok : fail)('schemaVersion = 1');
+(reg.schemaVersion === 2 ? ok : fail)('schemaVersion = 2 (הושלמה בשלב 13)');
 (Array.isArray(reg.fixtures) && reg.fixtures.length >= 20 ? ok : fail)(`fixtures: ${reg.fixtures?.length ?? 0} (צפוי ≥ 20)`);
 (Array.isArray(reg.documentedBehaviors) && reg.documentedBehaviors.length >= 5
   ? ok : fail)(`documentedBehaviors: ${reg.documentedBehaviors?.length ?? 0}`);

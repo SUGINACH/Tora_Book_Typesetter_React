@@ -90,7 +90,9 @@ for (const f of srcFiles) {
   if (!rel.includes('/src/') || EXEMPT) continue;
   const text = readFileSync(f, 'utf8');
   if (/\bMath\.round\b/.test(text)) roundOutside.push(rel);
-  if (/(<<|>>>|>>)/.test(text)) bitwiseOutside.push(rel);
+  // הזזה אמיתית בלבד: אופרנד מספרי או סוגריים (למשל x << 3, a >>> 0, h << (32 - n));
+  // סוגרי גנריקה כמו Record<string, T>> אינם הזזה ואינם מסומנים
+  if (/(<<|>>>|>>)\s*[0-9(]/.test(text)) bitwiseOutside.push(rel);
   if (/pxPerMm|3\.7795/.test(text)) pxPerMm.push(rel);
 }
 (roundOutside.length === 0

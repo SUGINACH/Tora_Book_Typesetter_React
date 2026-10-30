@@ -70,11 +70,12 @@ for (const name of actual) {
   const valid = pkg.name === `@tora/${name}` && pkg.private === true && pkg.sideEffects === false
     && pkg.exports?.['.'] && pkg.type === 'module';
   if (!valid) { fail(`${name}: package.json אינו עומד בכללים (@tora/*, private, sideEffects:false, exports)`); continue; }
-  if (DATA_PACKAGES.has(name)) {
-    // חבילת נתונים: ה־API הציבורי הוא ה־registry
-    if (pkg.exports['.'] !== './registry.json') fail(`${name}: חבילת הנתונים חייבת לחשוף את registry.json כ־API הציבורי`);
-  } else if (!existsSync(join(PKGS, name, 'src', 'index.ts'))) {
+  if (!existsSync(join(PKGS, name, 'src', 'index.ts'))) {
     fail(`${name}: חסר src/index.ts (ה־API הציבורי)`);
+  }
+  // test-fixtures: חבילת קוד+נתונים (משלב 13) — חייבת לחשוף גם את ה־registry
+  if (name === 'test-fixtures' && !pkg.exports?.['./registry.json']) {
+    fail('test-fixtures: חייבת לחשוף את registry.json');
   }
 }
 ok('כל החבילות עומדות בכללי package.json + index.ts ציבורי');

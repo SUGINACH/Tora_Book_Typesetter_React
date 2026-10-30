@@ -92,6 +92,24 @@
   - `node scripts/migration/verify-error-catalog.mjs` — 18/18 OK + רגרסיה מלאה.
 - **ממצאים:** הקטלוג ממוקם ב־measurement-api — השכבה המשותפת הנמוכה (המשך התקדים של ADR-001 §9), כך שאיחוד השגיאות לא דרש שינוי גרף. מפתחות i18n יציבים בתבנית `errors.<domain>.<CODE>`; קובצי ה־locale עצמם ייבנו בשלב 93 (§16).
 
+### שלב 13 — חבילת test-fixtures: סכמה, אימות וכלי golden (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `packages/test-fixtures` הפכה לחבילת קוד+נתונים: `src/schema.ts` (סכמת §17.3 מלאה + `validateFixture`/`validateRegistry` המחזירות את כל הבעיות), `src/golden.ts` (`buildGolden`/`compareGolden`/`parseGolden` עם דו"ח diff קריא; **עדכון golden אסור אוטומטית**), ו־`src/index.ts` ציבורי. פונקציית הגיבוב מוזרקת — החבילה נשארת ללא תלויות (גרף נשמר).
+  - `registry.json` שודרג לסכמה מלאה (v2): לכל 26 הפריטים נוספו `fontManifestSha256` (נצלב מול `assets/fonts/manifest.json` בפועל) ו־`goldenLayoutSha256: null` (עד היווצרות פלט המנוע בשלבים 33+).
+  - `tests/golden/demo.golden.json` — golden מחויב ראשון (נוצר עם `layoutHash` האמיתי; מחולל ידני מתועד `gen-demo-golden.mjs`).
+  - 6 בדיקות חדשות: הרישום כולו דרך הסכמה, דחיית רשומה פגומה, מחזור golden מלא (כולל השוואה מול הקובץ המחויב), ובדיקה שלילית של דו"ח ה־diff.
+  - `scripts/migration/verify-fixtures-schema.mjs` — 21 בדיקות כולל **שער M1 המלא**.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 86/86 PASS.
+  - `node scripts/migration/verify-fixtures-schema.mjs` — 21/21 OK.
+- **ממצאים:**
+  - חיובי-שווא בסריקת ה־bitwise: `Record<string, T>>` נתפס כהזזה — הביטוי חודד לזיהוי הזזות עם אופרנד מספרי/סוגריים בלבד.
+  - כללי הגרף ב־depcruise עודקו לקוד ריצה בלבד (`/test/` פטור) — בדיקות מתזמרות חבילות ומותר להן לייבא כל חבילה.
+
+## קפיצת אבן דרך — M1 הושלם ואומת (2026-10-30)
+
+שבעת שלבי פרק ב הושלמו ואומתו: שלד 12 חבילות עם workspaces והפניות TS, אכיפת גרף תלות תלת־שכבתית (ESLint + depcruise + CI עם בדיקה שלילית חיה), יחידות ADR-001, גיבוב קנוני ADR-002 (SHA-256 נייב + אורקל node:crypto), מבחני property, קטלוג שגיאות מאוחד, וסכמת fixtures + כלי golden. **שער M1 ירוק** (`node scripts/migration/verify-fixtures-schema.mjs`): כל 12 החבילות מיובאות ב־Node טהור בלי window/document; יחידות וגיבוב יציבים; build/typecheck/lint/deps ירוקים; החבילות מנותקות ממסלול הייצור הישן (src/ אינו מייבא @tora/*).
+
 ## קפיצת אבן דרך — M0 הושלם ואומת (2026-10-30)
 
 כל ששת שלבי פרק א הושלמו ואומתו: מקורות נעולים, מלאי העברה מלא עם 1,806 גופנים ו־1,053 עיצובים, בייסליין ריצה עקבי (639/659 עמודים, דטרמיניזם מוכח), 26 fixtures נעולים, מטריצת parity עם 16 יעדי differential, ומוסכנות עבודה מחייבות. **שער M0 ירוק** (`node scripts/migration/verify-work-conventions.mjs`).

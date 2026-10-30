@@ -33,6 +33,9 @@
     },
     {
       "path": "./settings-schema"
+    },
+    {
+      "path": "./test-fixtures"
     }
   ]
 }
