@@ -1,0 +1,366 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-30",
+  "authority": "תכנית 100 השלבים, שלב 5 · אפיון §2 (כללי פרשנות), §3.1",
+  "method": "כל טענה מה־README/מרשם העבודות/ה־worklog של Orange סווגה: verified — מאומתת מול artifacts הבייסליין שלנו (שלב 3 + ריצת העיטורים); historical — נכונה ל־SHA/run שלה בלבד ולא שוחזרה; documented-principle — כלל פרשנות. הספירות ההיסטוריות (639/659, HIGH/MEDIUM/LOW) אינן משתנות ואינן יעד.",
+  "claims": [
+    {
+      "id": "C-01",
+      "claim": "תצורת ברירת מחדל: 639 עמודים במסמך הקנוני",
+      "source": "README.md · MASTER_WORK_REGISTER §1",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "pageCount",
+            "expected": 639
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-02",
+      "claim": "עיטורים פעילים: 659 עמודים במסמך הקנוני",
+      "source": "README.md · MASTER_WORK_REGISTER §1",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/ornaments.json.gz",
+        "checks": [
+          {
+            "field": "pageCount",
+            "expected": 659
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-03",
+      "claim": "ברירת מחדל: 0 ממצאי HIGH",
+      "source": "README.md · MASTER_WORK_REGISTER §1",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "audit.summary.high",
+            "expected": 0
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-04",
+      "claim": "עיטורים פעילים: 0 ממצאי HIGH",
+      "source": "README.md · MASTER_WORK_REGISTER §1",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/ornaments.json.gz",
+        "checks": [
+          {
+            "field": "audit.summary.high",
+            "expected": 0
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-05",
+      "claim": "ברירת מחדל: 27 ממצאים (0 HIGH, 4 MEDIUM, 23 LOW)",
+      "source": "README.md — Green run 40386889244 (code 3a7c3b67)",
+      "status": "historical",
+      "note": "לא שוחזר: בבייסליין שלנו (Orange@93ad1e57) — 39 ממצאים (0/11/28). צנרת הממצאים התפתחה בין הריצות. ספירות היסטוריות הן baseline ל־SHA שלהן בלבד, לא יעד.",
+      "differentialTarget": false
+    },
+    {
+      "id": "C-06",
+      "claim": "עיטורים פעילים: 37 ממצאים (0 HIGH, 6 MEDIUM, 31 LOW)",
+      "source": "README.md — Green run 40386889244 (code 3a7c3b67)",
+      "status": "historical",
+      "note": "לא שוחזר: 59 ממצאים (0/23/36) בבייסליין שלנו. כנ\"ל — ספירות SHA-locked.",
+      "differentialTarget": false
+    },
+    {
+      "id": "C-07",
+      "claim": "ברירת מחדל: hash פריסה זהה בריצה חוזרת (repeat-check)",
+      "source": "README.md · MASTER_WORK_REGISTER §2.4",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "run.determinismCheck.identical",
+            "expected": true
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-08",
+      "claim": "עיטורים פעילים: hash פריסה זהה בריצה חוזרת",
+      "source": "MASTER_WORK_REGISTER §1 (טבלה: \"hash בריצה חוזרת — זהה\")",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/ornaments.json.gz",
+        "checks": [
+          {
+            "field": "run.determinismCheck.identical",
+            "expected": true
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-09",
+      "claim": "שימור תוכן בברירת מחדל: 0 פסקאות חסרות / 0 טקסט לא תואם",
+      "source": "MASTER_WORK_REGISTER §1 (טבלה: 0/0)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "geometry.textConservationAudit.missingSourceParagraphCount",
+            "expected": 0
+          },
+          {
+            "field": "geometry.textConservationAudit.textMismatchCount",
+            "expected": 0
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-10",
+      "claim": "שימור תוכן בעיטורים פעילים: 0 פסקאות חסרות / 0 טקסט לא תואם",
+      "source": "MASTER_WORK_REGISTER §1 (טבלה: 0/0)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/ornaments.json.gz",
+        "checks": [
+          {
+            "field": "geometry.textConservationAudit.missingSourceParagraphCount",
+            "expected": 0
+          },
+          {
+            "field": "geometry.textConservationAudit.textMismatchCount",
+            "expected": 0
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-11",
+      "claim": "יומן החלטות בברירת מחדל: מספר רשומות תואם לבלוקי DOM, 0 פגומות",
+      "source": "MASTER_WORK_REGISTER §1 (858/858, 0 פגומות)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "geometry.layoutDecisionRecordAudit.recordCountMatchesDom",
+            "expected": true
+          },
+          {
+            "field": "geometry.layoutDecisionRecordAudit.missingOrMalformedCount",
+            "expected": 0
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-12",
+      "claim": "יומן החלטות בעיטורים פעילים: תאימות רשומות↔DOM, 0 פגומות",
+      "source": "MASTER_WORK_REGISTER §1 (886/886, 0 פגומות)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/ornaments.json.gz",
+        "checks": [
+          {
+            "field": "geometry.layoutDecisionRecordAudit.recordCountMatchesDom",
+            "expected": true
+          },
+          {
+            "field": "geometry.layoutDecisionRecordAudit.missingOrMalformedCount",
+            "expected": 0
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-13",
+      "claim": "ספירות מדויקות: 858/858 ברירת מחדל, 886/886 עיטורים; 525 גופנים; 1,923 עטיפות עיטור",
+      "source": "MASTER_WORK_REGISTER §1 — Green runs (code 3a7c3b67)",
+      "status": "historical",
+      "note": "ספירות אלו SHA-locked: אצלנו 857/857, 888/888, 485 גופנים, 996 אלמנטי עיטור. התכונות (תאימות, 0 כשלים, כיסוי עיטורים) אומתו — הספירות המדויקות אינן יעד.",
+      "differentialTarget": false
+    },
+    {
+      "id": "C-14",
+      "claim": "עמודים דלילים: 3 בברירת מחדל",
+      "source": "MASTER_WORK_REGISTER §1 (הממצאים שנותרו)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "audit.summary.byKind.sparse-page",
+            "expected": 3
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-15",
+      "claim": "עמודים דלילים: 9 בעיטורים פעילים",
+      "source": "MASTER_WORK_REGISTER §1 (הממצאים שנותרו)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/ornaments.json.gz",
+        "checks": [
+          {
+            "field": "audit.summary.byKind.sparse-page",
+            "expected": 9
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-16",
+      "claim": "כל הגופנים נטענים ואין כשלי טעינה (בשתי התצורות)",
+      "source": "MASTER_WORK_REGISTER §1 (525/0)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "geometry.fontPreflight.failed",
+            "expected": 0
+          },
+          {
+            "field": "geometry.fontPreflight.loaded",
+            "expected": 485
+          },
+          {
+            "field": "geometry.fontPreflight.faceCount",
+            "expected": 485
+          }
+        ]
+      },
+      "note": "הספירה 525 במקור ההיסטורי; ב־SHA שלנו 485 — הספירה אינה יעד, \"0 כשלים\" הוא היעד.",
+      "differentialTarget": true
+    },
+    {
+      "id": "C-17",
+      "claim": "בתצורת עיטורים פעילים נוצר כיסוי עיטורים מלא (H2 עליון/תחתון, H3 ימין/שמאל, כותרות הערות); בברירת מחדל — אפס",
+      "source": "MASTER_WORK_REGISTER §1 (1,923 עטיפות; כיסוי חיובי)",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/ornaments.json.gz",
+        "checks": [
+          {
+            "field": "geometry.ornamentDomCoverage.h2Top",
+            "expected": 90
+          },
+          {
+            "field": "geometry.ornamentDomCoverage.h3Right",
+            "expected": 335
+          },
+          {
+            "field": "geometry.ornamentDomCoverage.noteHeaderRight",
+            "expected": 73
+          }
+        ]
+      },
+      "note": "הספירה 1,923 במקור ההיסטורי; ב־SHA שלנו 996 אלמנטים (90+90+335+335+73+73). היעד: כיסוי חיובי בכל הקטגוריות בתצורה הפעילה.",
+      "differentialTarget": true
+    },
+    {
+      "id": "C-18",
+      "claim": "המנוע רץ offline — אין בקשות רשת חיצוניות (guard: קוד יציאה 7)",
+      "source": "README.md · PROVENANCE.md",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/canonical.json.gz",
+        "checks": [
+          {
+            "field": "run.externalRequests.length",
+            "expected": 0
+          },
+          {
+            "field": "run.externalRequests",
+            "expected": []
+          }
+        ]
+      },
+      "differentialTarget": true
+    },
+    {
+      "id": "C-19",
+      "claim": "סביבת הריצה הנדרשת: Node 22",
+      "source": "README.md (\"נדרשים Node.js 22 ו־npm\")",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/baseline-run.json",
+        "checks": [
+          {
+            "field": "environment.node",
+            "expected": "v22.23.4"
+          }
+        ]
+      },
+      "differentialTarget": false
+    },
+    {
+      "id": "C-20",
+      "claim": "worklog (2026-10-11): \"0 עמודים עם חוסר איזון טורים >30px\" במסמך של 97 עמודים",
+      "source": "worklog.md — Task column-balance-fixes / github-fonts-and-bug-fixes",
+      "status": "historical",
+      "note": "מסמך אחר (97 עמודים) ו־SHA אחר; בקנוני שלנו יש 8 ממצאי imbalance פתוחים. הטענה נכונה לנקודת הזמן שלה בלבד.",
+      "differentialTarget": false
+    },
+    {
+      "id": "C-21",
+      "claim": "הצלחת CI אינה מבטיחה שכל עמוד מיטבי; ממצאי MEDIUM/LOW נשארים גלויים עד שהוכרעו",
+      "source": "README.md (\"מה הבדיקות מוכיחות — ומה לא\")",
+      "status": "documented-principle",
+      "note": "כלל פרשנות מחייב, לא טענת ריצה — אומץ גם באפיון §2 ובתכנית.",
+      "differentialTarget": false
+    },
+    {
+      "id": "C-22",
+      "claim": "קורפוס ה-smoke בודק מקרי קצה ממוקדים (טור ריק, אין פיצול חוקי, סוגריים, עיטורים, כותרות)",
+      "source": "README.md · tests/fixtures/",
+      "status": "verified",
+      "evidence": {
+        "artifact": "docs/migration/baseline/mid.json.gz",
+        "checks": [
+          {
+            "field": "pageCount",
+            "expected": 125
+          }
+        ]
+      },
+      "note": "קובצי ה-smoke נעולים בשלב 4 עם בייסליינים (twocol, smoke); הראיה כאן — ריצת mid תקינה נוספת.",
+      "differentialTarget": true
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "verified": 17,
+    "historical": 4,
+    "documentedPrinciple": 1,
+    "differentialTargets": 16
+  }
+}

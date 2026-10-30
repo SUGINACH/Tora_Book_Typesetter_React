@@ -37,7 +37,7 @@ const runRecord = JSON.parse(readFileSync(join(BASE, 'baseline-run.json'), 'utf8
 
 // ---------- 1. מבנה ----------
 console.log('1) מבנה baseline-run.json');
-const REQUIRED_RUNS = ['canonical', 'canonical-run2', 'mid', 'ch63', 'twocol', 'smoke'];
+const REQUIRED_RUNS = ['canonical', 'canonical-run2', 'ornaments', 'mid', 'ch63', 'twocol', 'smoke'];
 const runIds = runRecord.runs?.map((r) => r.id) ?? [];
 for (const id of REQUIRED_RUNS) (runIds.includes(id) ? ok : fail)(`ריצה: ${id}`);
 if (!runRecord.source?.commit?.startsWith('93ad1e57')) fail('commit המקור אינו Orange הנעול');
@@ -71,7 +71,7 @@ for (const r of runRecord.runs ?? []) {
 
 // ---------- 3. דטרמיניזם פנימי ----------
 console.log('\n3) דטרמיניזם פנימי (repeat-render)');
-for (const id of ['canonical', 'canonical-run2']) {
+for (const id of ['canonical', 'canonical-run2', 'ornaments']) {
   const dc = reports[id]?.run?.determinismCheck;
   (dc?.identical === true ? ok : fail)(`${id}: repeat-render identical=true (אין עמוד שונה)`);
 }
