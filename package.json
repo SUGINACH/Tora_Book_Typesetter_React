@@ -21,14 +21,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "deploy:pages": "gh-pages -d dist -b gh-pages -m \"Deploy to GitHub Pages\"",
-    "build:packages": "tsc -b packages/tsconfig.json",
-    "typecheck:packages": "tsc -b packages/tsconfig.json --force",
-    "verify:workspaces": "node scripts/migration/verify-workspaces.mjs",
-    "lint:packages": "eslint packages",
-    "deps:check": "depcruise packages --config .dependency-cruiser.cjs",
-    "verify:deps": "node scripts/migration/verify-dependency-rules.mjs",
-    "test:packages": "vitest run --config vitest.packages.config.ts"
+    "deploy:pages": "gh-pages -d dist -b gh-pages -m \"Deploy to GitHub Pages\""
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -50,11 +43,9 @@
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-v8": "^2.0.5",
     "autoprefixer": "^10.4.19",
-    "dependency-cruiser": "^18.7.0",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.9",
-    "fast-check": "^4.10.2",
     "gh-pages": "^6.1.0",
     "jsdom": "^24.1.1",
     "postcss": "^8.4.40",
@@ -64,8 +55,5 @@
     "typescript": "^5.4.5",
     "vite": "^5.4.0",
     "vitest": "^2.0.5"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }

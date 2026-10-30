@@ -1,6 +1,0 @@
-{
-  "schemaVersion": 1,
-  "kind": "golden-layout",
-  "goldenLayoutSha256": "2a2c85508b5462225d0593c853681618d651b19b8e4dad24583c92773bb79587",
-  "canonicalIr": "{\"schemaVersion\":1,\"demo\":true,\"note\":\"golden הדגמה משלב 13 — מוחלף בפלט מנוע אמיתי בשלבים 33+\",\"pages\":[{\"id\":\"p1\",\"columns\":[{\"x\":0,\"width\":1000},{\"x\":1100,\"width\":1000}]},{\"id\":\"p2\",\"columns\":[{\"x\":0,\"width\":1000},{\"x\":1100,\"width\":1000}]}]}"
-}
