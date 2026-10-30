@@ -27,7 +27,8 @@
     "verify:workspaces": "node scripts/migration/verify-workspaces.mjs",
     "lint:packages": "eslint packages",
     "deps:check": "depcruise packages --config .dependency-cruiser.cjs",
-    "verify:deps": "node scripts/migration/verify-dependency-rules.mjs"
+    "verify:deps": "node scripts/migration/verify-dependency-rules.mjs",
+    "test:packages": "vitest run --config vitest.packages.config.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -1,9 +1,7 @@
 /**
- * @tora/measurement-api — חוזי Font/Shaper/Measurer בלבד
+ * @tora/measurement-api — חוזי Font/Shaper/Measurer בלבד.
  *
- * שלד שלב 7 בתכנית 100 השלבים (אפיון §5).
- * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד.
- * המימוש ייבנה בפרק ד (שלבים 22, 25).
+ * שלב 9: מודול היחידות (ADR-001) — יחידות הליבה המשותפות לכל החבילות.
+ * חוזי המדידה המלאים ייבנו בשלבים 22, 25 (פרק ד).
  */
-export const PACKAGE_NAME = '@tora/measurement-api' as const;
-export const SKELETON_NOTE = 'שלד שלב 7 — עדיין ללא מימוש; החוזה הציבורי ייבנה בפרק ד (שלבים 22, 25)' as const;
+export * from './units.js';

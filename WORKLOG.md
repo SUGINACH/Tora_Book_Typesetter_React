@@ -42,6 +42,18 @@
   - רגרסיה: `verify-work-conventions` — 44/44 OK (רשימת הנתיבים המאושרים הורחבה לקבצי התצורה החדשים).
 - **ממצאים:** הפרת גבול נתפסת אוטומטית בשלוש שכבות (גרף ב־depcruise, גלובלים ויבואים ב־ESLint, וכל אלה ב־CI). אין עדכון golden אוטומטי ב־CI.
 
+### שלב 9 — [ADR-001] יחידות מדידה וחשבון שלם בטוח (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `docs/adr/ADR-001-units.md` — החלטה נעולה: 1 LU = 1/65536 pt; חלופות שנשקלו (CSS px, µm שלמים, 1/1000pt, bignum, away-from-zero); השלכות ותנאי ביטול.
+  - `packages/measurement-api/src/units.ts` — מודול היחידות: טיפוסים ממותגים `LayoutUnit`/`FontUnit`/`Cost`; `roundDiv` (עיגול חצי-כלפי-∞ מוגדר לשליליים, בחישוב שארית שלם); `mmToLu` (רציונל מדויק 65536·360/127, קוונטיזציה למיקרומטר); `ptToLu` (רזולוציית 1/16pt); `fontUnitsToLu`; `safeAdd/safeSub/safeMul` עם `UnitsError`; `makeCost` בסקייל 1/1024; `Rect` (x,y,width,height בלבד) + עזרי קצוות; `A4` נעול בטעינה.
+  - `packages/measurement-api/test/units.test.ts` — 33 בדיקות עם **אורקל BigInt עצמאי** להמרות (אי-תלות במימוש הנבדק), טבלת עיגול שלילי מחייבת, גבולות safe integer, עלויות, מלבנים ודטרמיניזם.
+  - `vitest.packages.config.ts` + `test:packages`; tsconfig.test.json לטיפוסי הבדיקות.
+  - `scripts/migration/verify-units.mjs` — 39 בדיקות.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 33/33 PASS (vitest).
+  - `node scripts/migration/verify-units.mjs` — 39/39 OK: ADR מלא, 19 ייצואי API בזמן ריצה מה־dist, ערכי חובה (roundDiv(-5,2)=-2; A4≈595.28pt), סריקות אכיפה (0 Math.round מחוץ ל־units; 0 bitwise; 0 pxPerMm/3.7795), ורגרסיה מלאה (build/typecheck/lint/deps).
+- **ממצאים:** נמצא ותועד הבדל אפס-שלילי: Math.round(-0.5)=-0 בעוד המימוש השלם מחזיר +0 (זהים מספרית; הונרמל בבדיקת ההצלבה). יחידת LU ממוקמת ב־measurement-api — חבילת השורש המשותפת הנמוכה — כך שכל צרכן מגיע אליה ללא תלות מעגלית (מתועד ב־ADR).
+
 ## קפיצת אבן דרך — M0 הושלם ואומת (2026-10-30)
 
 כל ששת שלבי פרק א הושלמו ואומתו: מקורות נעולים, מלאי העברה מלא עם 1,806 גופנים ו־1,053 עיצובים, בייסליין ריצה עקבי (639/659 עמודים, דטרמיניזם מוכח), 26 fixtures נעולים, מטריצת parity עם 16 יעדי differential, ומוסכנות עבודה מחייבות. **שער M0 ירוק** (`node scripts/migration/verify-work-conventions.mjs`).
