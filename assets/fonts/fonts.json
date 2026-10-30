@@ -1,0 +1,8772 @@
+[
+  {
+    "family": "אבוקדו רגיל",
+    "file": "Avukado-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבוקה רגיל",
+    "file": "Avuka-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אביגדור רגיל",
+    "file": "Avigdor-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אביגיל מודגש",
+    "file": "Avigul-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אביגיל צללית",
+    "file": "Avigul-Shadow.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אביגיל קל",
+    "file": "Avigul-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אביגיל רגיל",
+    "file": "Avigul-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אביר שחור",
+    "file": "Abir-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבן בזלת רגיל",
+    "file": "Evenbazelet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבני גד בינוני",
+    "file": "AvneyGad-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיק בינוני",
+    "file": "Absolutik-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיק מודגש מאוד",
+    "file": "Absolutik-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיק מודגש",
+    "file": "Absolutik-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיק קל מאוד",
+    "file": "Absolutik-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיק קל",
+    "file": "Absolutik-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיק רגיל",
+    "file": "Absolutik-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיק שחור",
+    "file": "Absolutik-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיקון בינוני",
+    "file": "AbsolutiCon-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיקון מודגש",
+    "file": "AbsolutiCon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיקון קל מאוד",
+    "file": "AbsolutiCon-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיקון קל",
+    "file": "AbsolutiCon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיקון רגיל",
+    "file": "AbsolutiCon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אבסולוטיקון שחור",
+    "file": "AbsolutiCon-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אגו טריפ",
+    "file": "Egotrip.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אגו סלאב סריף רגיל",
+    "file": "Egoslabserif-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אגו סנס צר רגיל",
+    "file": "Egosansnarrow-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אגודל רגיל",
+    "file": "Agudal-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אגוזים רגיל",
+    "file": "Egozim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אגן האיילות רגיל",
+    "file": "Agan-Haayalot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדמה מ\"פ מודגש",
+    "file": "AdamaMF-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדמה מודגש",
+    "file": "Adama-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדמה קל",
+    "file": "Adama-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדמה רגיל",
+    "file": "Adama-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדרנלין שחור",
+    "file": "Adrenalin-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדרת מלוכה שחור",
+    "file": "Aderet-Melucha-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדרת פיקסל רגיל",
+    "file": "Aderet-Pixel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אדרת רגיל",
+    "file": "Aderet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אהבה מודגש",
+    "file": "Ahava-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אהבה רגיל",
+    "file": "Ahava-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אהבה שמן",
+    "file": "AhavaBold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אהרוני חדש קל",
+    "file": "Aharoninew-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אהרוני מודגש",
+    "file": "Aharoni-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוביגי רגיל",
+    "file": "Obege-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אודליה רגיל",
+    "file": "Odelya-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוואנטה בינוני",
+    "file": "Awanta-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוואנטה חצי מודגש",
+    "file": "Awanta-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוואנטה מודגש",
+    "file": "Awanta-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוואנטה קל",
+    "file": "Awanta-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוואנטה רגיל",
+    "file": "Awanta-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוניברסלי עב-אנ קל מאוד",
+    "file": "Universalihebeng-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר מעוגל",
+    "file": "Oscar-Round.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר צר בינוני",
+    "file": "Oscar-Tzar-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר צר מודגש",
+    "file": "Oscar-Tzar-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר צר קל",
+    "file": "Oscar-Tzar-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר צר רגיל",
+    "file": "Oscar-Tzar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר קל",
+    "file": "Oscar-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר רגיל",
+    "file": "Oscar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר רגיל",
+    "file": "Oskar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוסקר שבלונה",
+    "file": "Oscar-Stencil.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אופטימום רגיל",
+    "file": "Optimum-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אופטימיסט מודגש",
+    "file": "Optimist-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אופיס רגיל",
+    "file": "Office-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אופסט רגיל",
+    "file": "Offset-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוקספורד רגיל",
+    "file": "Oxford-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון בינוני",
+    "file": "Oron-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון צר חצי מודגש",
+    "file": "Oron-Tzar-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון צר מודגש",
+    "file": "Oron-Tzar-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון צר קל",
+    "file": "Oron-Tzar-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון צר רגיל",
+    "file": "Oron-Tzar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קלאסי חצי מודגש",
+    "file": "Oron-Classic-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קלאסי מודגש",
+    "file": "Oron-Classic-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קלאסי קל",
+    "file": "Oron-Classic-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קלאסי רגיל",
+    "file": "Oron-Classic-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קשת בינוני",
+    "file": "Oron-Keshet-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קשת מודגש מאוד",
+    "file": "Oron-Keshet-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קשת מודגש",
+    "file": "Oron-Keshet-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון קשת רגיל",
+    "file": "Oron-Keshet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון רחב חצי מודגש",
+    "file": "Oron-Wide-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון רחב מודגש",
+    "file": "Oron-Wide-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון רחב קל",
+    "file": "Oron-Wide-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון רחב רגיל",
+    "file": "Oron-Wide-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון תבנית חצי מודגש",
+    "file": "Oron-Tavnit-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון תבנית מודגש",
+    "file": "Oron-Tavnit-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון תבנית קל",
+    "file": "Oron-Tavnit-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורון תבנית רגיל",
+    "file": "Oron-Tavnit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוריגמי רגיל",
+    "file": "Origami-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אוריה רגיל",
+    "file": "Oriya-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורקה דק",
+    "file": "Orca-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורקה מודגש",
+    "file": "Orca-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורקה קל",
+    "file": "Orca-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורקה רגיל",
+    "file": "Orca-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אורקה שחור",
+    "file": "Orca-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אות הדפוס רגיל",
+    "file": "OtHadfus-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אות מורשת מודגש",
+    "file": "OtMoresht-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אות מורשת קל מאוד",
+    "file": "OtMoresht-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אות מורשת קל",
+    "file": "OtMoresht-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אות מורשת רגיל",
+    "file": "OtMoresht-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אות מורשת שחור",
+    "file": "OtMoresht-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אותארכיה קל",
+    "file": "Otarkya-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אותיותיי בינוני",
+    "file": "Otiyoti-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אותיותיי מודגש",
+    "file": "Otiyoti-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אותיותיי מקווקו",
+    "file": "Otiyoti-Dashed.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אותיותיי קל",
+    "file": "Otiyoti-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אותיותיי רגיל",
+    "file": "Otiyoti-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אותנטיקה רגיל",
+    "file": "Authentica-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אזורה רגיל",
+    "file": "Azura-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אזימוט קל",
+    "file": "Azimut-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אזמל רגיל",
+    "file": "Ezmel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אטלס בינוני",
+    "file": "Atlas-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אטלס דק",
+    "file": "Atlas-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אטלס מודגש",
+    "file": "Atlas-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אטלס קל",
+    "file": "Atlas-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אטלס רגיל",
+    "file": "Atlas-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אטלס שחור",
+    "file": "Atlas-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אטרקציה רגיל",
+    "file": "Atraction-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איגואנה חדש מודגש",
+    "file": "Iguananew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אידיאליסט רגיל",
+    "file": "Idealist-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איט מנקלה רגיל",
+    "file": "It-Mankala-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איט נשנושים מודגש",
+    "file": "It-Nishnushim-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איט נשנושים נטוי",
+    "file": "It-Nishnushim-Italic-Undefined.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איט נשנושים רגיל",
+    "file": "It-Nishnushim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איט קשיות רגיל",
+    "file": "It-Kashiyot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איילה קל",
+    "file": "Ayala-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין עב-אנ בינוני",
+    "file": "EinsteinHebEng-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין עב-אנ דק",
+    "file": "EinsteinHebEng-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין עב-אנ מודגש",
+    "file": "EinsteinHebEng-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין עב-אנ רגיל",
+    "file": "EinsteinHebEng-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין צר בינוני",
+    "file": "EinsteinCon-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין צר דק",
+    "file": "EinsteinCon-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין צר מודגש",
+    "file": "EinsteinCon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין צר עב-אנ דק",
+    "file": "EinsteinHebEng-Con-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין צר קל",
+    "file": "EinsteinCon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "איינשטיין צר רגיל",
+    "file": "EinsteinCon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אייס קפה רגיל",
+    "file": "Icecoffie-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אייפל רגיל",
+    "file": "Eiffel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אייקונים רגיל",
+    "file": "Eicons-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אייקונימונים רגיל",
+    "file": "Iconimonim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס בינוני",
+    "file": "Index-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס חצי מודגש",
+    "file": "Index-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס מודגש",
+    "file": "Index-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס מונו בינוני",
+    "file": "Index-Mono-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס מונו חצי מודגש",
+    "file": "Index-Mono-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס מונו מודגש",
+    "file": "Index-Mono-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס מונו קל",
+    "file": "Index-Mono-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס מונו רגיל",
+    "file": "Index-Mono-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס קל",
+    "file": "Index-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינדקס רגיל",
+    "file": "Index-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אינה רגיל",
+    "file": "Ena-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלגברה רגיל",
+    "file": "Algebra-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלגנטי מודגש",
+    "file": "Eleganti-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אליאל רגיל",
+    "file": "Eliel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אליטיזם מודגש",
+    "file": "Elitism-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אליטיזם רגיל",
+    "file": "Elitism-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אליטיזם שחור",
+    "file": "Elitism-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אליס רגיל",
+    "file": "Elis-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלכסנדר רגיל",
+    "file": "Alexander-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלכסנדרה בינוני",
+    "file": "Alexandra-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני בינוני",
+    "file": "Almoni-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני דק",
+    "file": "Almoni-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני חצי מודגש",
+    "file": "Almoni-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני מודגש מאוד",
+    "file": "Almoni-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני מודגש",
+    "file": "Almoni-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני צר בינוני",
+    "file": "Almoni-Tzar-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני צר חצי מודגש",
+    "file": "Almoni-Tzar-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני צר מודגש מאוד",
+    "file": "Almoni-Tzar-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני צר מודגש",
+    "file": "Almoni-Tzar-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני צר קל מאוד",
+    "file": "Almoni-Tzar-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני צר קל",
+    "file": "Almoni-Tzar-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני צר רגיל",
+    "file": "Almoni-Tzar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני קל מאוד",
+    "file": "Almoni-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני קל",
+    "file": "Almoni-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני רגיל",
+    "file": "Almoni-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני שחור כבד",
+    "file": "Almoni-Ultra-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמוני שחור",
+    "file": "Almoni-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמירדו מחובר",
+    "file": "Elmirado-Mehubar.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמנט בינוני",
+    "file": "Element-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמנט רגיל",
+    "file": "Element-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלמנט שחור",
+    "file": "Element-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלסקה רגיל",
+    "file": "Alaska-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלף מודגש",
+    "file": "Alef-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלף קומיק רגיל",
+    "file": "Alef-Comic-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלף רגיל",
+    "file": "Alef-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפא מודגש",
+    "file": "Alpha-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפא קל",
+    "file": "Alpha-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפא רגיל",
+    "file": "Alpha-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפא שחור",
+    "file": "Alpha-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפי פרו 2 בינוני",
+    "file": "Alfi-Pro-2-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפי פרו 2 מודגש",
+    "file": "Alfi-Pro-2-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפי פרו 2 קל מאוד",
+    "file": "Alfi-Pro-2-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפי פרו 2 קל",
+    "file": "Alfi-Pro-2-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפי פרו 2 רגיל",
+    "file": "Alfi-Pro-2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפי פרו 2 שחור",
+    "file": "Alfi-Pro-2-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלפנט נטוי",
+    "file": "Elephnti-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרובוטיקה רגיל",
+    "file": "Electrobotica-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון סנס בינוני",
+    "file": "ElectronSans-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון סנס מודגש",
+    "file": "ElectronSans-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון סנס קל מאוד",
+    "file": "ElectronSans-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון סנס קל",
+    "file": "ElectronSans-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון סנס רגיל",
+    "file": "ElectronSans-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון סנס שחור",
+    "file": "ElectronSans-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון צר בינוני",
+    "file": "ElectronCon-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון צר מודגש מאוד",
+    "file": "ElectronCon-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון צר מודגש",
+    "file": "ElectronCon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון צר קל מאוד",
+    "file": "ElectronCon-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון צר קל",
+    "file": "ElectronCon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אלקטרון צר רגיל",
+    "file": "ElectronCon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמ אס ארי רגיל",
+    "file": "MmsAri-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס גותיק תת-גופן 1 רגיל",
+    "file": "Msgothic-Sub1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס גותיק תת-גופן 2 רגיל",
+    "file": "Msgothic-Sub2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס גותיק תת-גופן 3 רגיל",
+    "file": "Msgothic-Sub3-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס ג'יהנג מודגש תת-גופן 1 מודגש",
+    "file": "Msjhbd-Sub1-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס ג'יהנג מודגש תת-גופן 2 מודגש",
+    "file": "Msjhbd-Sub2-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס ג'יהנג קל תת-גופן 1 רגיל",
+    "file": "Msjhl-Sub1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס ג'יהנג קל תת-גופן 2 רגיל",
+    "file": "Msjhl-Sub2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס יאהיי קל תת-גופן 1 רגיל",
+    "file": "Msyhl-Sub1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם אס יאהיי קל תת-גופן 2 רגיל",
+    "file": "Msyhl-Sub2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אם טי אקסטרה רגיל",
+    "file": "Mt-Extra-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי בינוני",
+    "file": "Ambivalenti-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי דחוס בינוני",
+    "file": "Ambivalenti-Compressed-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי דחוס דק",
+    "file": "Ambivalenti-Compressed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי דחוס מודגש",
+    "file": "Ambivalenti-Compressed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי דחוס קל מאוד",
+    "file": "Ambivalenti-Compressed-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי דחוס קל",
+    "file": "Ambivalenti-Compressed-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי דחוס רגיל",
+    "file": "Ambivalenti-Compressed-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי מודגש מאוד",
+    "file": "Ambivalenti-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי מודגש",
+    "file": "Ambivalenti-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי צר בינוני",
+    "file": "Ambivalenti-Tzar-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי צר דק",
+    "file": "Ambivalenti-Tzar-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי צר מודגש מאוד",
+    "file": "Ambivalenti-Tzar-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי צר מודגש",
+    "file": "Ambivalenti-Tzar-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי צר קל מאוד",
+    "file": "Ambivalenti-Tzar-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי צר קל",
+    "file": "Ambivalenti-Tzar-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי צר רגיל",
+    "file": "Ambivalenti-Tzar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי קל מאוד",
+    "file": "Ambivalenti-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי קל",
+    "file": "Ambivalenti-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רגיל",
+    "file": "Ambivalenti-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב בינוני",
+    "file": "Ambivalenti-Wide-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב מודגש מאוד",
+    "file": "Ambivalenti-Wide-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב מודגש",
+    "file": "Ambivalenti-Wide-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב קל מאוד",
+    "file": "Ambivalenti-Wide-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב קל",
+    "file": "Ambivalenti-Wide-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב רגיל",
+    "file": "Ambivalenti-Wide-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב שחור כבד",
+    "file": "Ambivalenti-Wide-Ultra-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי רחב שחור",
+    "file": "Ambivalenti-Wide-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמביוולנטי שחור",
+    "file": "Ambivalenti-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמדאוס רגיל",
+    "file": "Amadeus-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמטיק מודגש",
+    "file": "Amatic-Sc-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמטיקה רגיל",
+    "file": "AmaticaSC-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אמפטיקה רגיל",
+    "file": "Empatica-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אן קיי פיירי רגיל",
+    "file": "Nk-Fairy-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנומליה בינוני",
+    "file": "Anomalia-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנומליה חלול רגיל",
+    "file": "Anomalia-Hollow-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנומליה חצי מודגש",
+    "file": "Anomalia-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנומליה מודגש מאוד",
+    "file": "Anomalia-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנומליה מודגש",
+    "file": "Anomalia-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנומליה קל",
+    "file": "Anomalia-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנומליה רגיל",
+    "file": "Anomalia-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנטקווה נטוי",
+    "file": "Antquai-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנטרקוט רגיל",
+    "file": "Entrecote-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אניגמה בינוני",
+    "file": "Enigma-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור מודגש",
+    "file": "Animator-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור צר מודגש",
+    "file": "AnimatorCon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור צר קל",
+    "file": "AnimatorCon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור צר קל",
+    "file": "Animator-Con-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור צר רגיל",
+    "file": "AnimatorCon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור קל",
+    "file": "Animator-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור רגיל",
+    "file": "Animator-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנימטור שחור",
+    "file": "Animator-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אנקונדה רגיל",
+    "file": "Anakonda-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אס וו בינוני",
+    "file": "Sw-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אס וו מודגש",
+    "file": "Sw-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אס וו רגיל",
+    "file": "Sw-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסטרובול בינוני",
+    "file": "Astrobol-Mediun.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסטרובול קל מאוד",
+    "file": "Astrobol-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסטרובול קל",
+    "file": "Astrobol-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסטרובול רגיל",
+    "file": "Astrobol-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון בינוני",
+    "file": "Asimon-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון חצי מודגש",
+    "file": "Asimon-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון מודגש מאוד",
+    "file": "Asimon-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון מודגש",
+    "file": "Asimon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון קל",
+    "file": "Asimon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון רגיל",
+    "file": "Asimon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון שבלונה רגיל",
+    "file": "Asimon-Stencil-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסימון שחור",
+    "file": "Asimon-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסיסטנט חצי מודגש",
+    "file": "Assistant-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסיסטנט מודגש מאוד",
+    "file": "Assistant-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסיסטנט מודגש",
+    "file": "Assistant-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסיסטנט קל מאוד",
+    "file": "Assistant-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסיסטנט קל",
+    "file": "Assistant-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסיסטנט רגיל",
+    "file": "Assistant-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסלי מודגש",
+    "file": "Asli-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסלי קל",
+    "file": "Asli-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסלי רגיל",
+    "file": "Asli-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסלי שחור",
+    "file": "Asli-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסמבלי מודגש",
+    "file": "Assembly-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסמבלי מונוספייס מודגש",
+    "file": "Assembly-MonoSpace-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסמבלי מונוספייס קל",
+    "file": "Assembly-MonoSpace-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסמבלי מונוספייס רגיל",
+    "file": "Assembly-MonoSpace-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסמבלי קל",
+    "file": "Assembly-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסמבלי רגיל",
+    "file": "Assembly-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אסף רגיל",
+    "file": "Asaf-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אספקט רגיל",
+    "file": "Aspect-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אספקלריה רגיל",
+    "file": "Aspaklarya-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אספרגוס קל",
+    "file": "Asparagos-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אספרסו דק 2",
+    "file": "Espresso-Thin-2.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אספרסו קל 3",
+    "file": "Espresso-Light-3.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפולו רגיל",
+    "file": "Apolo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפוסטרוף בינוני",
+    "file": "Apostroph-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק בינוני",
+    "file": "Afek-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק חצי מודגש",
+    "file": "Afek-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק מודגש מאוד",
+    "file": "Afek-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק מודגש",
+    "file": "Afek-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק קל מאוד",
+    "file": "Afek-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק קל",
+    "file": "Afek-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק רגיל",
+    "file": "Afek-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפק שחור",
+    "file": "Afek-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אפרסק רגיל",
+    "file": "Afarsek-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אצטרובל חלול",
+    "file": "Itstrubal-Halul.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אצטרובל חצי מודגש",
+    "file": "Itstrubal-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אצטרובל מודגש",
+    "file": "Itstrubal-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקו רגיל",
+    "file": "Eco-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקווה רגיל",
+    "file": "Aqua-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקליפטוס קל",
+    "file": "Ekaliptus-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקס ליבריס רגיל",
+    "file": "Exlibris-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקסטזה קל",
+    "file": "Extaza-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקסטרים שחור",
+    "file": "Extrim-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקסיומה מודגש",
+    "file": "Axioma-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקסיומה רגיל",
+    "file": "Axioma-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקספרסיבי רגיל",
+    "file": "Expresivi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אקפולקו שחור",
+    "file": "Akapulco-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארבעים בינוני",
+    "file": "Arbaim-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארגמן רגיל",
+    "file": "Argaman-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארטילריה רגיל",
+    "file": "Artilerya-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארטיק רגיל",
+    "file": "Artik-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל מודגש נטוי",
+    "file": "Arial-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל מודגש",
+    "file": "Arial-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל נטוי",
+    "file": "Arial Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל נטוי",
+    "file": "Arial-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל צר מודגש נטוי",
+    "file": "Arial-Narrow-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל צר מודגש",
+    "file": "Arial-Narrow-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל צר נטוי",
+    "file": "Arial Narrow Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל צר נטוי",
+    "file": "Arial-Narrow-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל צר רגיל",
+    "file": "Arial-Narrow-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל רגיל",
+    "file": "Arial-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אריאל שחור",
+    "file": "Arial-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארכימדס שחור",
+    "file": "Archimedes-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארמילדו רגיל",
+    "file": "Armilado-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארנב רגיל",
+    "file": "Arnav-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארץ הצבי רגיל",
+    "file": "Eretshazvi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארצי מודגש",
+    "file": "Artzi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארצי רגיל",
+    "file": "Artzi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארצישראלי סנס אות רגיל",
+    "file": "Artzisraelisns-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארצישראלי רגיל",
+    "file": "Artzisraeli-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ארצישראלי תג רגיל",
+    "file": "Artzisraelitag-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אשכולית רגיל",
+    "file": "Eshkolita-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "אשכנזי רגיל",
+    "file": "Ashkenazy-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "באבא מודגש",
+    "file": "Baba-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "באבא נקודות 2",
+    "file": "Baba-Dots2.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "באבא נקודות",
+    "file": "Baba-Dots.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "באבא צללית",
+    "file": "Baba-Shadow.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "באבא קו מתאר",
+    "file": "Baba-Outline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "באבא רגיל",
+    "file": "Baba-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגירה קל",
+    "file": "Bagira-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגסוקייק 2 בינוני",
+    "file": "Bagsucake-2-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגסוקייק 2 מודגש",
+    "file": "Bagsucake-2-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגסוקייק 2 קל",
+    "file": "Bagsucake-2-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגסוקייק 2 רגיל",
+    "file": "Bagsucake-2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגסוקייק 2 שחור כבד",
+    "file": "Bagsucake-2-Ultra-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגסוקייק 2 שחור",
+    "file": "Bagsucake-2-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בגסוקייק קל",
+    "file": "Bagsucake-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בד ניוז רגיל",
+    "file": "Badnews-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בודוני נטוי",
+    "file": "Bod_I-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוידעם עלי שחור",
+    "file": "Boeimanali-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בולדר שחור",
+    "file": "Bold-Er-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בומבסטה רגיל",
+    "file": "Bombasta-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בונה נובה מודגש",
+    "file": "Bona-Nova-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בונה נובה נטוי",
+    "file": "Bona Nova Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בונה נובה נטוי",
+    "file": "Bona-Nova-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בונה נובה רגיל",
+    "file": "Bona-Nova-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוסטר 1 בינוני",
+    "file": "Booster-1-medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוסטר 1 מודגש מאוד",
+    "file": "Booster-1-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוסטר 1 מודגש",
+    "file": "Booster-1-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוסטר 1 קל",
+    "file": "Booster-1-light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוסטר 1 רגיל",
+    "file": "Booster-1-regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוסטר 1 שחור",
+    "file": "Booster-1-black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוסטר קל 2",
+    "file": "Booster-Light-2.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוקמן ישן מודגש נטוי",
+    "file": "Bookosbi-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוקמן ישן נטוי",
+    "file": "Bookosi-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בוקשלף סימבול 7 רגיל",
+    "file": "Bookshelf-Symbol-7-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בזלת רגיל",
+    "file": "Bazelet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בזנ\"ת רגיל",
+    "file": "Baznat-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בזנ\"ת שחור",
+    "file": "Baznat-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בטעם מנגו חופשי רגיל",
+    "file": "Betaamango-Free-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בי סריף רגיל",
+    "file": "Beeserif-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ביאליק קו מתאר",
+    "file": "Byaliq-Outline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בייגלה רגיל",
+    "file": "Begale-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בייגלה רגיל",
+    "file": "Beigale-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלדי רגיל",
+    "file": "Baladi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלום רגיל",
+    "file": "Bloom-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפה רגיל",
+    "file": "Blompa-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו 5 בינוני",
+    "file": "BloomfildPro-5-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו 5 מודגש מאוד",
+    "file": "BloomfildPro-5-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו 5 מודגש",
+    "file": "BloomfildPro-5-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו 5 קל מאוד",
+    "file": "BloomfildPro-5-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו 5 קל",
+    "file": "BloomfildPro-5-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו 5 רגיל",
+    "file": "BloomfildPro-5-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו 5 שחור",
+    "file": "BloomfildPro-5-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלומפילד פרו קל מאוד 4",
+    "file": "BloomfildPro-Extra-Light-4.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלטה מודגש",
+    "file": "Balata-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלטה קל",
+    "file": "Balata-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלטה רגיל",
+    "file": "Balata-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלי נטוי",
+    "file": "Belli-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלנס רגיל",
+    "file": "Balance-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בלקני קל",
+    "file": "Balkani-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר גראנג' מודגש",
+    "file": "Bamberger-Grunge-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר גראנג' קל מאוד",
+    "file": "Bamberger-Grunge-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר גראנג' קל",
+    "file": "Bamberger-Grunge-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר גראנג' רגיל",
+    "file": "Bamberger-Grunge-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר גראנג' שחור",
+    "file": "Bamberger-Grunge-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר גראנג'",
+    "file": "Bamberger-Grunge.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר שארפ בינוני",
+    "file": "Bamberger-Sharp-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר שארפ מודגש מאוד",
+    "file": "Bamberger-Sharp-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר שארפ מודגש",
+    "file": "Bamberger-Sharp-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר שארפ קל",
+    "file": "Bamberger-Sharp-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר שארפ רגיל",
+    "file": "Bamberger-Sharp-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "במברגר שארפ שחור",
+    "file": "Bamberger-Sharp-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בנבנישתי רגיל",
+    "file": "Benveniste-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בנג'י חדש מודגש",
+    "file": "Bangynew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בנצ'מרק רגיל",
+    "file": "Benchmark-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בסיס עב-אנ שחור",
+    "file": "Basishebeng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בסיס צר עב-אנ דק",
+    "file": "Basishebeng-Condensed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בראש סקריפט נטוי",
+    "file": "Brushsci-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברונו מודגש",
+    "file": "Bruno-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברונו רגיל",
+    "file": "Bruno-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברטה רגיל",
+    "file": "Berta-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברייל רגיל",
+    "file": "Brailletr-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברלב בינוני",
+    "file": "Barlev-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברלב מודגש מאוד",
+    "file": "Barlev-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברלב מודגש",
+    "file": "Barlev-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברלב קל מאוד",
+    "file": "Barlev-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברלב קל",
+    "file": "Barlev-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברלב רגיל",
+    "file": "Barlev-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברנדה מודגש מאוד",
+    "file": "Brenda-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברנדה מודגש",
+    "file": "Brenda-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברנדה קל",
+    "file": "Brenda-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברנדה רגיל",
+    "file": "Brenda-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברצלונה רגיל",
+    "file": "Barcelona-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ברקים רגיל",
+    "file": "Brakim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בשמחות רגיל",
+    "file": "Besimches-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בת קול רגיל 5",
+    "file": "Batkol-Regular-5.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "בת קול רגיל 8",
+    "file": "Batkol-Regular-8.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'אגלינג מעוטר",
+    "file": "Juggling-Decor.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גאודי ישן נטוי",
+    "file": "Goudosi-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גאולה סנס רגיל",
+    "file": "Geulasans-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'אז רגיל",
+    "file": "Jaz-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גבריאל רגיל",
+    "file": "Gavriel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גובוס רגיל",
+    "file": "Gobus-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן אהרוני מודגש",
+    "file": "Guttman-Aharoni-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן אהרוני רגיל",
+    "file": "Guttman-Aharoni-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן ארם רגיל",
+    "file": "Guttman-Aram-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן דוד מודגש",
+    "file": "Guttman-David-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן דוד קל",
+    "file": "Guttman-David-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן דוד רגיל",
+    "file": "Guttman-David-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן דרוגולין מודגש",
+    "file": "Guttman-Drogolin-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן דרוגולין רגיל",
+    "file": "Guttman-Drogolin-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן הצבי מודגש",
+    "file": "Guttman-Hatzvi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן הצבי רגיל",
+    "file": "Guttman-Hatzvi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן וילנא מודגש",
+    "file": "Guttman-Vilna-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן וילנא רגיל",
+    "file": "Guttman-Vilna-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן חיים צר רגיל",
+    "file": "Guttman-Haim-Condensed-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן חיים רגיל",
+    "file": "Guttman-Haim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן יד מברשת רגיל",
+    "file": "Guttman-Yad-Brush-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן יד קל",
+    "file": "Guttman-Yad-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן יד רגיל",
+    "file": "Guttman-Yad-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן לוגו 1 רגיל",
+    "file": "Guttman-Logo1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן מנטובה מודגש",
+    "file": "Guttman-Mantova-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן מנטובה מעוטר רגיל",
+    "file": "Guttman-Mantova-Decor-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן מנטובה רגיל",
+    "file": "Guttman-Mantova-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן מרים מודגש",
+    "file": "Guttman-Miryam-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן מרים פיקס רגיל",
+    "file": "Guttman-Myamfix-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן מרים קל",
+    "file": "Guttman-Miryam-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן סת\"ם רגיל",
+    "file": "Guttman-Stam-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן פרנק חדש רגיל",
+    "file": "Guttman-Frnew-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן פרנק רגיל",
+    "file": "Guttman-Frank-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן קו מודגש",
+    "file": "Guttman-Kav-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן קו קל",
+    "file": "Guttman-Kav-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן קו רגיל",
+    "file": "Guttman-Kav-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן קורמיר רגיל",
+    "file": "Guttman-CourMir-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן רש\"י מודגש",
+    "file": "Guttman-Rashi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גוטמן רש\"י רגיל",
+    "file": "Guttman-Rashi-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גולדפינגר מודגש",
+    "file": "Goldfinger-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'ולייט דפוס רגיל",
+    "file": "Julliet-Dfus-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'ולייט ליה ג'ולייט מודגש",
+    "file": "Julliet-LiaJulliet-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גולשים חדש מודגש",
+    "file": "Golshimnew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גופן סנס עב-אנ שחור",
+    "file": "Gofansanshebeng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גופן סנס רגיל",
+    "file": "GofanSans-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'וקר רגיל",
+    "file": "Joker-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'ורג'יה נטוי",
+    "file": "Georgiai-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גושפנקה שחור",
+    "file": "Gushpanka-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גזוז עב-אנ נטוי מודגש",
+    "file": "GazozHebEng-Italic-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גזוזטרה בינוני",
+    "file": "Gzuztra-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גזר רגיל",
+    "file": "Gezer-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גיאומטרה רגיל",
+    "file": "Geometra-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גיימינג שובב רגיל",
+    "file": "Gaming-Shovav-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גיל סנס נטוי",
+    "file": "Gili-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'ינג'ר רגיל",
+    "file": "Ginger-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'יפסי מודגש",
+    "file": "Gipsy-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'יפסי עב-אנ קל מאוד",
+    "file": "Gipsyhebeng-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'יפסי קל מאוד",
+    "file": "Gipsy-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'יפסי קל",
+    "file": "Gipsy-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'יפסי רגיל",
+    "file": "Gipsy-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ג'יפסי שחור",
+    "file": "Gipsy-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גישה מודגש",
+    "file": "Gisha-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גישה רגיל",
+    "file": "Gisha-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גלביאן קל",
+    "file": "Galbyan-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גלדיה קלמ מודגש",
+    "file": "Gladia-Clm-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גלוריה חצי מודגש",
+    "file": "Gloria-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גלוריה מודגש",
+    "file": "Gloria-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גלוריה קל",
+    "file": "Gloria-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גלוריה רגיל",
+    "file": "Gloria-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גמלוני מודגש",
+    "file": "Gamloni-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גנדלף עב-אנ שחור",
+    "file": "Gandalfhebeng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גרוטסק מודגש",
+    "file": "Grotesk-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גרמונד נטוי",
+    "file": "Garait-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גרמושקה שחור",
+    "file": "Garmoshka-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "גרפולוגיה רגיל",
+    "file": "Graphologya-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דבש וחלב חלול 1 רגיל",
+    "file": "dvashvehalav-halul-1-regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דבש רגיל",
+    "file": "Devash-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דואר מודגש",
+    "file": "Doar-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דואר סריף מודגש",
+    "file": "Doarserif-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דוד ליברה בינוני",
+    "file": "DavidLibre-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דוד ליברה מודגש",
+    "file": "David-Libre-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דוד ליברה רגיל",
+    "file": "DavidLibre-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דוד מודגש",
+    "file": "David-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דוד ספר חדש רגיל",
+    "file": "Davidnewbook-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דוד רגיל",
+    "file": "David-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דודאים רגיל",
+    "file": "Dudayim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דורי מודגש",
+    "file": "Dori-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דוריאן קלמ ספר",
+    "file": "Dorian-Clm-Book.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיגיטל רגיל",
+    "file": "Digital-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דידה רגיל",
+    "file": "Dida-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דינגבאטס בינוני",
+    "file": "Zdingbats-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דינמיקה מודגש",
+    "file": "Dinamika-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומה רגיל",
+    "file": "Diploma-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומט בינוני",
+    "file": "Diplomat-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומט חצי מודגש",
+    "file": "Diplomat-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומט מודגש מאוד",
+    "file": "Diplomat-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומט מודגש",
+    "file": "Diplomat-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומט קל מאוד",
+    "file": "Diplomat-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומט קל",
+    "file": "Diplomat-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דיפלומט רגיל",
+    "file": "Diplomat-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דירקטור רגיל",
+    "file": "Director-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דם רגיל",
+    "file": "Dam-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דמקה רגיל",
+    "file": "Damka-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דנה קמה מרוסק",
+    "file": "Danakamamerusak.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דניאל רגיל",
+    "file": "Daniel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דף קשר אות רגיל",
+    "file": "Dafkesher-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דקר רגיל",
+    "file": "Dakar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דרייב אין קו מתאר",
+    "file": "Drivein-Outline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דש בינוני",
+    "file": "Dash-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "דשן רגיל",
+    "file": "Dashen-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "האוזר רגיל",
+    "file": "Hauser-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדס באוהאוס בינוני",
+    "file": "Hadasbau-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדס באוהאוס מודגש",
+    "file": "Hadasbau-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדס באוהאוס רגיל",
+    "file": "Hadasbau-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדס קל",
+    "file": "Hadasl Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדס קל",
+    "file": "Hadasl-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה 0 רגיל",
+    "file": "Hadasa_0-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה חדש מודגש",
+    "file": "HadasaNew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה חדש קל",
+    "file": "HadasaNew-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה חדש רגיל",
+    "file": "HadasaNew-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה חדש שחור",
+    "file": "HadasaNew-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה מודגש 0 מודגש",
+    "file": "Hadasab_0-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה פרידלנדר מודגש",
+    "file": "Hadassah-Friedlaender-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הדסה פרידלנדר רגיל",
+    "file": "Hadassah-Friedlaender-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "החוזים רגיל",
+    "file": "Hahozvim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "החלוצים שחור",
+    "file": "Hachaluzim-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "החלילן רגיל",
+    "file": "Hahalilan-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היבו בינוני",
+    "file": "Heebo-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היבו דק",
+    "file": "Heebo-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היבו מודגש מאוד",
+    "file": "Heebo-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היבו מודגש",
+    "file": "Heebo-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היבו קל",
+    "file": "Heebo-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היבו רגיל",
+    "file": "Heebo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היבו שחור",
+    "file": "Heebo-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היי טאוור נטוי",
+    "file": "Htowerti-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הינומה רגיל",
+    "file": "Hinuma-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "היסוד רגיל",
+    "file": "Hayesod-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הכורמים רגיל",
+    "file": "Hacormim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הלל רגיל",
+    "file": "Halel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "המהפכה שחור",
+    "file": "Hamaapecha-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "המקור אות רגיל",
+    "file": "Hamakor-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הנרייטה רגיל",
+    "file": "Henryeta-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הסנדק בינוני",
+    "file": "Hasandaq-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הסנדק מודגש",
+    "file": "Hasandaq-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הסנדק קל",
+    "file": "Hasandaq-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הסנדק רגיל",
+    "file": "Hasandaq-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הסנדק שחור",
+    "file": "Hasandaq-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הצופן מודגש",
+    "file": "Atzofen-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הצופן שבור מודגש",
+    "file": "Atzofenshavur-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הצורפים רגיל",
+    "file": "Hazorfim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הר סיני רגיל",
+    "file": "HarSinai-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "הרלו נטוי",
+    "file": "Harlowsi-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "השומר שחור",
+    "file": "Hashomer-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "התחלה ראשונה רגיל",
+    "file": "Start-First-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "וובדינגס רגיל",
+    "file": "Webdings-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ווינגדינגס 2 רגיל",
+    "file": "Wingdings-2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ווינגדינגס 3 רגיל",
+    "file": "Wingdings-3-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ווינגדינגס רגיל",
+    "file": "Wingdings-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "וילנא מודגש",
+    "file": "Vilna-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "וילנא מתוקן דפ מודגש",
+    "file": "Vilna-מתוקן-Dp-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "וילנא מתוקן דפ רגיל",
+    "file": "Vilna-מתוקן-Dp-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ויקד רגיל",
+    "file": "Wicked-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ויקרא תצוגה מעוטר",
+    "file": "Vayikradisplaydecor.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ונדליזם רגיל",
+    "file": "Vandalizem-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורלה אקסטרה בינוני",
+    "file": "Varela-Extra-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורלה אקסטרה רגיל",
+    "file": "Varela-Extra-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורלה מודגש מאוד",
+    "file": "Varela-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורלה מעוגל רגיל",
+    "file": "VarelaRound-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורסטילי בינוני",
+    "file": "Versatily-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורסטילי דק",
+    "file": "Versatily-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורסטילי מודגש",
+    "file": "Versatily-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורסטילי עב-אנ דק",
+    "file": "VersatilyHebEng-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורסטילי קל",
+    "file": "Versatily-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורסטילי רגיל",
+    "file": "Versatily-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ורסטילי שחור",
+    "file": "Versatily-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי צר מודגש",
+    "file": "JabutinskiCon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי צר עב-אנ קל",
+    "file": "JabutinskiHebEng-Con-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי צר קל",
+    "file": "JabutinskiCon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי צר רגיל",
+    "file": "JabutinskiCon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי צר שחור",
+    "file": "JabutinskiCon-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי רגיל בינוני",
+    "file": "JabutinskiReg-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי רגיל דק",
+    "file": "JabutinskiReg-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי רגיל מודגש",
+    "file": "JabutinskiReg-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי רגיל קל",
+    "file": "JabutinskiReg-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי רגיל שחור",
+    "file": "JabutinskiReg-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'בוטינסקי רגיל",
+    "file": "JabutinskiReg-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זבולון בינוני",
+    "file": "Zvulun-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זבולון מודגש מאוד",
+    "file": "Zvulun-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זבולון מודגש",
+    "file": "Zvulun-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זבולון רגיל",
+    "file": "Zvulun-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זבולון שחור",
+    "file": "Zvulun-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זיגוטה רגיל",
+    "file": "Zigota-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זכריה רגיל",
+    "file": "Zecharya-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ז'קלין רגיל",
+    "file": "Jacqueline-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זרבובית רגיל",
+    "file": "Zarbuvit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זרימה רגיל",
+    "file": "Zrima-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "זרקא רגיל",
+    "file": "Zarka-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חביבי רגיל",
+    "file": "Habibi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חדווה רגיל",
+    "file": "Chedva-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חומוס, צ'יפס, סלט רגיל",
+    "file": "Hummus,-Chips,-Salat-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חופש בינוני",
+    "file": "Hofesh-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חידקל רגיל",
+    "file": "Hidekel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חיים ארוכים בינוני",
+    "file": "HaimArukeem-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חיים גראנג' שחור",
+    "file": "Haim-Grunge-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חיים צר",
+    "file": "Haimzar.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חיים קלאסי מודגש",
+    "file": "Haim-Classic-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חיים קלאסי קל",
+    "file": "Haim-Classic-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חיים קלאסי רגיל",
+    "file": "Haim-Classic-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חיים קלאסי שחור",
+    "file": "Haim-Classic-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חלוקי נחל רגיל",
+    "file": "Halukeynahal-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חלמיש רגיל",
+    "file": "Halamish-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חניה עב-אנ שחור",
+    "file": "Parkinghebeng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חסמבה רגיל",
+    "file": "Chasamba-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חצילים בינוני",
+    "file": "Hazilim-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חקוק רגיל",
+    "file": "Hakuk-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חקיקה רגיל",
+    "file": "Chakika-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "חרצובות רגיל",
+    "file": "Charzuvot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טהומה מודגש",
+    "file": "Tahoma-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טהומה רגיל",
+    "file": "Tahoma-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סלאב בינוני",
+    "file": "Tubic-Slab-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סלאב מודגש",
+    "file": "Tubic-Slab-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סלאב עב-אנ קל מאוד",
+    "file": "Tubic-Slabhebeng-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סלאב קל מאוד",
+    "file": "Tubic-Slab-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סלאב קל",
+    "file": "Tubic-Slab-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סלאב רגיל",
+    "file": "Tubic-Slab-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סלאב שחור",
+    "file": "Tubic-Slab-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סנס בינוני",
+    "file": "Tubic-Sans-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סנס מודגש",
+    "file": "Tubic-Sans-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סנס צר עב-אנ שחור",
+    "file": "Tubic-Sansconhebeng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סנס קל מאוד",
+    "file": "Tubic-Sans-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סנס קל",
+    "file": "Tubic-Sans-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סנס רגיל",
+    "file": "Tubic-Sans-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוביק סנס שחור",
+    "file": "Tubic-Sans-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוגנים רגיל",
+    "file": "Tuganim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טווין סנט נטוי",
+    "file": "Tcmi-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טולבוקס אנ-עב שחור",
+    "file": "ToolboxEnHeb-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוליפ עב-אנ קל",
+    "file": "Tulipahebeng-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טוליתון רגיל",
+    "file": "Toliton-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טורבו אות רגיל",
+    "file": "Turbo-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טושלים רגיל",
+    "file": "Tooshalim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיימס ניו רומן מודגש נטוי",
+    "file": "Times-New-Roman-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיימס ניו רומן מודגש",
+    "file": "Times-New-Roman-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיימס ניו רומן נטוי",
+    "file": "Times New Roman Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיימס ניו רומן נטוי",
+    "file": "Times-New-Roman-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיימס ניו רומן רגיל",
+    "file": "Times-New-Roman-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טינוס מודגש נטוי",
+    "file": "Tinos-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טינוס מודגש",
+    "file": "Tinos-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טינוס נטוי",
+    "file": "Tinos Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טינוס נטוי",
+    "file": "Tinos-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טינוס רגיל",
+    "file": "Tinos-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפ רגיל",
+    "file": "Tip-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוגרף פרו 9 בינוני",
+    "file": "TypographPro-9-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוגרף פרו 9 מודגש מאוד",
+    "file": "TypographPro-9-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוגרף פרו 9 מודגש",
+    "file": "TypographPro-9-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוגרף פרו 9 קל מאוד",
+    "file": "TypographPro-9-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוגרף פרו 9 קל",
+    "file": "TypographPro-9-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוגרף פרו 9 רגיל",
+    "file": "TypographPro-9-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוגרף פרו 9 שחור",
+    "file": "TypographPro-9-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוטאג קל",
+    "file": "Typotag-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפוטקסט רגיל",
+    "file": "Typotext-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טיפופס רגיל",
+    "file": "Typopas-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טישו פייפר רגיל",
+    "file": "Tishu-Paper-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טכנולוגיה בלור רגיל",
+    "file": "Technologia-Blor-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טכנולוגיה כבד",
+    "file": "Technologyheavy.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טכנולוגיה רגיל",
+    "file": "Technologia-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טליסמן מודגש",
+    "file": "Talizman-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טליסמן קל",
+    "file": "Talizman-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טליסמן רגיל",
+    "file": "Talizman-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טלסקופ רגיל",
+    "file": "Telescope-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טלעד בינוני",
+    "file": "Telad-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טקו מודגש",
+    "file": "Tako-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טקסטורלי רגיל",
+    "file": "Textural-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טקסטינה רגיל",
+    "file": "Textina-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרבלסי קו מתאר",
+    "file": "Trabelsi-Outline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרבלסי רגיל",
+    "file": "Trabelsi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרו טייפרייטר רגיל",
+    "file": "Truetypewriter-PolyglOTT-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרומפלדור רגיל",
+    "file": "Trumpeldor-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טריק מודגש",
+    "file": "Trick-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרמפולינה קל",
+    "file": "Trampolina-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרנספורמטור מודגש",
+    "file": "Transformator-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרפון מודגש",
+    "file": "Tarfon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרפז קל",
+    "file": "Trapez-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "טרשים קלמ מודגש",
+    "file": "Trashim-Clm-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יגואר רגיל",
+    "file": "Yaguar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יהודה קלמ מודגש",
+    "file": "Yehuda-Clm-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יהודה קלמ קל",
+    "file": "Yehuda-Clm-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא בינוני",
+    "file": "Uba-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא דק",
+    "file": "Uba-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא חצי מודגש",
+    "file": "Uba-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא מודגש מאוד",
+    "file": "Uba-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא מודגש",
+    "file": "Uba-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא קל מאוד",
+    "file": "Uba-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא קל",
+    "file": "Uba-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא רגיל",
+    "file": "Uba-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יובא שחור",
+    "file": "Uba-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוגורט רגיל",
+    "file": "Yogurt-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יודאיקה אותיות רגיל",
+    "file": "Judaicaots-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יויו מודגש",
+    "file": "Yoyo-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יום הולדת שמח רגיל",
+    "file": "Happybirthday-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוניקה סנס בינוני",
+    "file": "UnicaSans-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוניקה סנס מודגש",
+    "file": "UnicaSans-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוניקה סנס קל מאוד",
+    "file": "UnicaSans-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוניקה סנס קל",
+    "file": "UnicaSans-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוניקה סנס רגיל",
+    "file": "UnicaSans-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוניקה סנס שחור",
+    "file": "UnicaSans-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יונתן עממי מעוצב רגיל",
+    "file": "Yonatan-Amami-Styled-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יונתן עממי רגיל",
+    "file": "Yonatan-Amami-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוסף באוהאוס מודגש",
+    "file": "Yosefbau-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוסף רגיל",
+    "file": "Josef-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יוסף רגיל",
+    "file": "Yosef-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יידישקייט מודגש",
+    "file": "Yiddishkeit-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יידישקייט רגיל",
+    "file": "Yiddishkeit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יידישקייט שחור",
+    "file": "Yiddishkeit-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ים המלח רגיל",
+    "file": "Yamhamelach-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יעקב רגיל",
+    "file": "Yaakov-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יערות בינוני",
+    "file": "Yearot-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יפני רגיל",
+    "file": "Yapani-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יפת מודגש",
+    "file": "Yeffet-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יצחק נבון אותיות פתיח רגיל",
+    "file": "YitzhakNavon-DropCaps-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יצחק נבון רגיל",
+    "file": "YitzhakNavon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "יצחק רגיל",
+    "file": "Izhak-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ישמעאל רגיל",
+    "file": "Ishmael-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ישראל מודגש",
+    "file": "Israel-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "כיפופים רגיל",
+    "file": "Kiyufim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "כיתה א' רגיל",
+    "file": "Kita-Alef-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ככה התעוררתי קל",
+    "file": "Kaha-Itorarti-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "כלי אמירפונט רגיל",
+    "file": "Toolsamirfont-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "כתב יד קלמ מודגש נטוי",
+    "file": "Ktav-Yad-Clm-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "כתבית רגיל",
+    "file": "Kitabet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לאבלי רגיל",
+    "file": "Lovely-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לבנדר רגיל",
+    "file": "Lavender-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לבנים אם טי מודגש",
+    "file": "Levenim-Mt-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לבנים אם טי רגיל",
+    "file": "Levenim-Mt-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לגיונר רגיל",
+    "file": "Legioner-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לואיזה בינוני",
+    "file": "Louisa-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לואיזה מודגש",
+    "file": "Louisa-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לואיזה קל",
+    "file": "Louisa-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לואיזה רגיל",
+    "file": "Louisa-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לואיזה שחור",
+    "file": "Louisa-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לואיזי מעוגל רגיל",
+    "file": "LuiziRound-Ffc-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לובלין רגיל",
+    "file": "Lublin-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוגו פונטביט חדש רגיל",
+    "file": "NewLogoFontbit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוגוטייפ",
+    "file": "Logotype.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוטוס ספר בינוני",
+    "file": "Lotusbook-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוי בינוני",
+    "file": "Levi-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוי חצי מודגש",
+    "file": "Levi-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוי מודגש מאוד",
+    "file": "Levi-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוי מודגש",
+    "file": "Levi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוי קל מאוד",
+    "file": "Levi-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוי קל",
+    "file": "Levi-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוי רגיל",
+    "file": "Levi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוינסקי מודגש",
+    "file": "Levinsky-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לומברג'ק נגטיב רגיל",
+    "file": "Lumberjacknegative-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה ברייט חצי מודגש נטוי",
+    "file": "Lbritedi-Demibold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה ברייט נטוי",
+    "file": "Lbritei-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה סנס חצי מודגש נטוי",
+    "file": "Lsansdi-Demibold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה סנס טייפרייטר מודגש נטוי",
+    "file": "Ltypebo-Bold-Oblique.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה סנס טייפרייטר נטוי",
+    "file": "Ltypeo-Oblique.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה סנס נטוי",
+    "file": "Lsansi-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה פקס חצי מודגש נטוי",
+    "file": "Lfaxdi-Demibold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לוסידה פקס נטוי",
+    "file": "Lfaxi-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליאור בינוני",
+    "file": "Leeor-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליבורנה מודגש",
+    "file": "Livorna-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליבורנה ספר רגיל",
+    "file": "Livornabook-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליבורנה רגיל",
+    "file": "Livorna-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לידר רגיל",
+    "file": "Liddar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליה אניטה רגיל",
+    "file": "Lia-Anita-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליה בלון רגיל",
+    "file": "Lia-Balloon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליה בננה רגיל",
+    "file": "Lia-Banana-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליטוגרפיה רגיל",
+    "file": "Litographia-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליטוף רגיל",
+    "file": "Lituf-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לילך רגיל",
+    "file": "Lilach-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לימונדה רגיל",
+    "file": "Lemonade-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ליקריץ עברית",
+    "file": "Likritz-Hebrew.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "לירה ישראלית רגיל",
+    "file": "Lira-Israelit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "למפנר אות רגיל",
+    "file": "Lampner-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מ' הדסה מודגש",
+    "file": "Mhadasa Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מ' הדסה מודגש",
+    "file": "Mhadasa-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מ' הדסה רגיל",
+    "file": "Mhadasa Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מ' הדסה רגיל",
+    "file": "Mhadasa-Normal-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מאוריציוס רגיל",
+    "file": "Mauritius-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מבוך רגיל",
+    "file": "Mavoch-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מגה כבד",
+    "file": "Megaheavy.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מגילה רגיל",
+    "file": "Megila-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מגילת העצמאות רגיל",
+    "file": "Megillat-Haatzmaut-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מגניטו קל",
+    "file": "Magnito-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מדבר רגיל",
+    "file": "Midbar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי טקסט בינוני",
+    "file": "Mugrabi-Text-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי טקסט חצי מודגש",
+    "file": "Mugrabi-Text-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי טקסט מודגש",
+    "file": "Mugrabi-Text-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי טקסט רגיל",
+    "file": "Mugrabi-Text-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי תצוגה בינוני",
+    "file": "Mugrabi-Display-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי תצוגה חצי מודגש",
+    "file": "Mugrabi-Display-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי תצוגה מודגש",
+    "file": "Mugrabi-Display-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי תצוגה קל",
+    "file": "Mugrabi-Display-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוגרבי תצוגה רגיל",
+    "file": "Mugrabi-Display-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוזיאון מודגש מאוד",
+    "file": "Museum-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוזיאון קל",
+    "file": "Museum-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוזיאון רגיל",
+    "file": "Museum-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוטלה מודגש",
+    "file": "Motaleh-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופול בינוני",
+    "file": "Monopoly-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופול מודגש",
+    "file": "Monopoly-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופול קל מאוד",
+    "file": "Monopoly-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופול קל",
+    "file": "Monopoly-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופול רגיל",
+    "file": "Monopoly-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופול שחור",
+    "file": "Monopoly-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופוליצר בינוני",
+    "file": "Monopolitser-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופוליצר מודגש",
+    "file": "Monopolitser-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופוליצר קל מאוד",
+    "file": "Monopolitser-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופוליצר קל",
+    "file": "Monopolitser-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופוליצר רגיל",
+    "file": "Monopolitser-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מונופוליצר שחור",
+    "file": "Monopolitser-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוצרט רגיל",
+    "file": "Mozart-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מוקאפ רגיל",
+    "file": "Mockup-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מורשת רגיל",
+    "file": "Moreshet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מזל\"ט עב-אנ קל",
+    "file": "Mazlathebeng-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מזרחי רגיל",
+    "file": "Mizrahy-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחאה המונית רגיל",
+    "file": "Mechaahamonit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר לא מומלץ אקסטרה קל",
+    "file": "MehirLoMumlatsExtra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר לא מומלץ קל מאוד",
+    "file": "MehirLoMumlatsExtraLight.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר לא מומלץ קל",
+    "file": "MehirLoMumlatsLight.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר לא מומלץ קל",
+    "file": "MehirLoMumlats-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר לא מומלץ רגיל",
+    "file": "MehirLoMumlatsReg.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר לא מומלץ רגיל",
+    "file": "MehirLoMumlatsReg-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר מומלץ רגיל",
+    "file": "MehirMumlatsReg.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מחיר מומלץ רגיל",
+    "file": "MehirMumlatsReg-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור אנ-עב בינוני",
+    "file": "MatadorEnHeb-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור אנ-עב מודגש",
+    "file": "MatadorEnHeb-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור אנ-עב קל",
+    "file": "MatadorEnHeb-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור אנ-עב רגיל",
+    "file": "MatadorEnHeb-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור אנ-עב שחור",
+    "file": "MatadorEnHeb-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור צר בינוני",
+    "file": "MatadorNarrow-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור צר מודגש",
+    "file": "MatadorNarrow-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור צר קל",
+    "file": "MatadorNarrow-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור צר רגיל",
+    "file": "MatadorNarrow-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטאדור צר שחור",
+    "file": "MatadorNarrow-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטבעות רגיל",
+    "file": "Matbeot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטקה מודגש",
+    "file": "TsMatka-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטקה רגיל",
+    "file": "TsMatka-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטרופולי סנס בינוני",
+    "file": "MetropoliSans-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטרופולי סנס מודגש",
+    "file": "MetropoliSans-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטרופולי סנס קל מאוד",
+    "file": "MetropoliSans-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטרופולי סנס קל",
+    "file": "MetropoliSans-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטרופולי סנס רגיל",
+    "file": "MetropoliSans-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטרופוליטנה מודגש",
+    "file": "Metropolitana-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה בינוני",
+    "file": "Matritsa-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה מודגש",
+    "file": "Matritsa-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה צר בינוני",
+    "file": "MatritsaNarrow-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה צר מודגש",
+    "file": "MatritsaNarrow-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה צר קל",
+    "file": "MatritsaNarrow-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה צר רגיל",
+    "file": "MatritsaNarrow-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה צר שחור",
+    "file": "MatritsaNarrow-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה קל מאוד",
+    "file": "Matritsa-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה קל",
+    "file": "Matritsa-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה רגיל",
+    "file": "Matritsa-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מטריצה שחור",
+    "file": "Matritsa-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיה רגיל 6",
+    "file": "Mia-Regular-6.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיה רגיל",
+    "file": "Maya-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיה רגיל",
+    "file": "Mia-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מייפל רגיל",
+    "file": "Maple-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיכל קסוב רגיל",
+    "file": "Michal-Kasov-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיסו רגיל",
+    "file": "Miso-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיקסטייפ אייקונים",
+    "file": "Mixtape-Icons.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיקסטייפ מודגש",
+    "file": "Mixtape-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיקסטייפ רגיל",
+    "file": "Mixtape-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיקרוסופט אאוטלוק רגיל",
+    "file": "Ms-Outlook-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיקרוסופט סנס סריף רגיל",
+    "file": "Microsoft-Sans-Serif-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיקרוסופט רפרנס מיוחד רגיל",
+    "file": "Ms-Reference-Specialty-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מיקרוסופט רפרנס סנס סריף רגיל",
+    "file": "Ms-Reference-Sans-Serif-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מירי בינוני",
+    "file": "Miri-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכונת דפוס רגיל",
+    "file": "Mechonatdfus-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכורזלת רגיל",
+    "file": "Mekurzelet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכושף רגיל 2",
+    "file": "Enchanted-Regular-2.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכמורת מודגש",
+    "file": "Mikhmoret-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכמורת מעוגל מודגש",
+    "file": "Mikhmoret-Rounded-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכמורת מעוגל קל",
+    "file": "Mikhmoret-Rounded-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכמורת מעוגל רגיל",
+    "file": "Mikhmoret-Rounded-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכמורת קל מאוד",
+    "file": "Mikhmoret-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכמורת קל",
+    "file": "Mikhmoret-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מכמורת רגיל",
+    "file": "Mikhmoret-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מלטף רגיל",
+    "file": "Melatef-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנדולינה רגיל",
+    "file": "Mandolina-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מניפה רגיל",
+    "file": "Menifa-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מניפסטו רגיל",
+    "file": "Manifesto-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס 5 בינוני",
+    "file": "Munchies-5-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס 5 מודגש מאוד",
+    "file": "Munchies-5-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס 5 מודגש",
+    "file": "Munchies-5-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס 5 קל מאוד",
+    "file": "Munchies-5-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס 5 קל",
+    "file": "Munchies-5-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס 5 רגיל",
+    "file": "Munchies-5-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס 5 שחור",
+    "file": "Munchies-5-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מנצ'יס קל מאוד 5",
+    "file": "Munchies-Extra-Light-5.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מסורה רגיל",
+    "file": "Mesora-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מסטיק מודגש",
+    "file": "Mastik-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מערב רגיל",
+    "file": "Maarav-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מערבון רגיל",
+    "file": "Maarvon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מצנפת בינוני",
+    "file": "Miznefet-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מצנפת מודגש",
+    "file": "Miznefet-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מצנפת קל",
+    "file": "Miznefet-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מצנפת רגיל",
+    "file": "Miznefet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקומי בינוני",
+    "file": "Mekomi-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקומי מודגש מאוד",
+    "file": "Mekomi-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקומי מודגש",
+    "file": "Mekomi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקומי קל",
+    "file": "Mekomi-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקומי רגיל",
+    "file": "Mekomi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקטרת בינוני",
+    "file": "Mikteret-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקטרת מודגש",
+    "file": "Mikteret-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקטרת קל מאוד",
+    "file": "Mikteret-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקטרת קל",
+    "file": "Mikteret-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקטרת רגיל",
+    "file": "Mikteret-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקיאטו תלת-ממד מלא",
+    "file": "Makiato3d-Fill.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מקלות רגיל",
+    "file": "Sticks-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מר קומיקס רגיל",
+    "file": "Mr-Comics-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרים אלג'יאן רגיל",
+    "file": "Miriam-Elagean-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרים חדש מודגש",
+    "file": "Miryamnew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרים ליברה מודגש",
+    "file": "Miriam-Libre-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרים ליברה רגיל",
+    "file": "MiriamLibre-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרים רגיל",
+    "file": "Miriam-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרים רווח קבוע רגיל",
+    "file": "Miriam-Fixed-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרציפן בינוני",
+    "file": "Marzipan-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרקו מודגש",
+    "file": "Marco-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרקו קל",
+    "file": "Marco-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרקו רגיל",
+    "file": "Marco-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרקש רגיל",
+    "file": "Marakesh-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרשמלו רגיל",
+    "file": "Marshmelo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מרשמלו שחור",
+    "file": "Marshmallow-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "משאלה מודגש",
+    "file": "Mishala-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "משט רגיל",
+    "file": "Mashat-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "משכנות רגיל",
+    "file": "Mishkenot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "משק רגיל",
+    "file": "Mesheq-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מתכון רגיל",
+    "file": "Matcon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "מתכתי מודגש",
+    "file": "Metali-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נובה רגיל",
+    "file": "Nuba-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית בינוני",
+    "file": "Noto-Sans-Hebrew-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית דק",
+    "file": "Noto-Sans-Hebrew-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי מודגש",
+    "file": "Noto-Sans-Hebrew-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר בינוני",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר דק",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר חצי מודגש",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר מודגש מאוד",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר מודגש",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר קל מאוד",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר קל",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר רגיל",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית חצי צר שחור",
+    "file": "Noto-Sans-Hebrew-SemiCondensed-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית מודגש מאוד",
+    "file": "Noto-Sans-Hebrew-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית מודגש",
+    "file": "Noto-Sans-Hebrew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר בינוני",
+    "file": "Noto-Sans-Hebrew-Condensed-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר דק",
+    "file": "Noto-Sans-Hebrew-Condensed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר חצי מודגש",
+    "file": "Noto-Sans-Hebrew-Condensed-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד בינוני",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד דק",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד חצי מודגש",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד מודגש מאוד",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד מודגש",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד קל מאוד",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד קל",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד רגיל",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מאוד שחור",
+    "file": "Noto-Sans-Hebrew-ExtraCondensed-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מודגש מאוד",
+    "file": "Noto-Sans-Hebrew-Condensed-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר מודגש",
+    "file": "Noto-Sans-Hebrew-Condensed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר קל מאוד",
+    "file": "Noto-Sans-Hebrew-Condensed-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר קל",
+    "file": "Noto-Sans-Hebrew-Condensed-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר רגיל",
+    "file": "Noto-Sans-Hebrew-Condensed-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית צר שחור",
+    "file": "Noto-Sans-Hebrew-Condensed-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית קל מאוד",
+    "file": "Noto-Sans-Hebrew-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית קל",
+    "file": "Noto-Sans-Hebrew-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית רגיל",
+    "file": "Noto-Sans-Hebrew-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סנס עברית שחור",
+    "file": "Noto-Sans-Hebrew-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית בינוני",
+    "file": "Noto-Serif-Hebrew-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית דק",
+    "file": "Noto-Serif-Hebrew-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי מודגש",
+    "file": "Noto-Serif-Hebrew-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר בינוני",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר דק",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר חצי מודגש",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר מודגש מאוד",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר מודגש",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר קל מאוד",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר קל",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר שחור",
+    "file": "Noto-Serif-Hebrew-SemiCondensed-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית חצי צר",
+    "file": "Noto-Serif-Hebrew-SemiCondensed.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית מודגש מאוד",
+    "file": "Noto-Serif-Hebrew-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית מודגש",
+    "file": "Noto-Serif-Hebrew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר בינוני",
+    "file": "Noto-Serif-Hebrew-Condensed-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר דק",
+    "file": "Noto-Serif-Hebrew-Condensed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר חצי מודגש",
+    "file": "Noto-Serif-Hebrew-Condensed-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד בינוני",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד דק",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד חצי מודגש",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד מודגש מאוד",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד מודגש",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד קל מאוד",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד קל",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד שחור",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מאוד",
+    "file": "Noto-Serif-Hebrew-ExtraCondensed.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מודגש מאוד",
+    "file": "Noto-Serif-Hebrew-Condensed-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר מודגש",
+    "file": "Noto-Serif-Hebrew-Condensed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר קל מאוד",
+    "file": "Noto-Serif-Hebrew-Condensed-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר קל",
+    "file": "Noto-Serif-Hebrew-Condensed-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר שחור",
+    "file": "Noto-Serif-Hebrew-Condensed-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית צר",
+    "file": "Noto-Serif-Hebrew-Condensed.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית קל מאוד",
+    "file": "Noto-Serif-Hebrew-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית קל",
+    "file": "Noto-Serif-Hebrew-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית רגיל",
+    "file": "Noto-Serif-Hebrew-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו סריף עברית שחור",
+    "file": "Noto-Serif-Hebrew-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית בינוני",
+    "file": "Noto-Rashi-Hebrew-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית דק",
+    "file": "Noto-Rashi-Hebrew-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית חצי מודגש",
+    "file": "Noto-Rashi-Hebrew-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית מודגש מאוד",
+    "file": "Noto-Rashi-Hebrew-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית מודגש",
+    "file": "Noto-Rashi-Hebrew-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית קל מאוד",
+    "file": "Noto-Rashi-Hebrew-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית קל",
+    "file": "Noto-Rashi-Hebrew-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית רגיל",
+    "file": "Noto-Rashi-Hebrew-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוטו רש\"י עברית שחור",
+    "file": "Noto-Rashi-Hebrew-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נויבירט פלאות רגיל",
+    "file": "Noyvirt-Peleot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוילנד בינוני",
+    "file": "Noyland-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוילנד מודגש מאוד",
+    "file": "Noyland-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוילנד מודגש",
+    "file": "Noyland-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוילנד רגיל",
+    "file": "Noyland-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוילנד שבלונה רגיל",
+    "file": "Noyland-Stencil-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוסטלגיה עב-אנ מודגש",
+    "file": "Nostalgiahebeng-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נועם רגיל",
+    "file": "Noam-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נוער רגיל",
+    "file": "Nuar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ניאו רגיל",
+    "file": "Neo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ניוזלטר אלגנטי רגיל",
+    "file": "Newletter-Elegant-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ניוזלטר רגיל",
+    "file": "Newletter-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נימפט רגיל",
+    "file": "Nymphette-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ניצחונות רגיל",
+    "file": "Nitshonot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נירמלה תת-גופן 1 רגיל",
+    "file": "Nirmala-Sub1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נירמלה תת-גופן 2 מודגש",
+    "file": "Nirmala-Sub2-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נירמלה תת-גופן 3 רגיל",
+    "file": "Nirmala-Sub3-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נירמלה תת-גופן 4 רגיל",
+    "file": "Nirmala-Sub4-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נירמלה תת-גופן 5 מודגש",
+    "file": "Nirmala-Sub5-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נירמלה תת-גופן 6 רגיל",
+    "file": "Nirmala-Sub6-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נמוג בינוני",
+    "file": "Namog-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נמל יפו רגיל",
+    "file": "Namalyafo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נעמה רגיל",
+    "file": "Naama-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נפש רגיל",
+    "file": "Nefesh-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נצח נריה רגיל",
+    "file": "Netsach-Neria-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נרקיס בלוק מותג בינוני",
+    "file": "NarkissBlockMutag-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נרקיסים רגיל",
+    "file": "Narkisim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "נשיקה קל",
+    "file": "Neshika-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סברס רגיל",
+    "file": "Sabres-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סברס רגיל",
+    "file": "Sabress-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי אימוג'י רגיל",
+    "file": "Segoe-Ui-Emoji-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי דפוס מודגש",
+    "file": "Segoe-Print-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי דפוס רגיל",
+    "file": "Segoe-Print-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי חצי מודגש נטוי",
+    "file": "Segoe Ui Semibold Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי חצי מודגש נטוי",
+    "file": "Segoe-Ui-Semi-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי חצי מודגש",
+    "file": "Segoe-Ui-Semi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי חצי קל נטוי",
+    "file": "Segoe Ui Semilight Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי חצי קל נטוי",
+    "file": "Segoe-Ui-Semi-Light-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי חצי קל",
+    "file": "Segoe Ui Semilight.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי חצי קל",
+    "file": "Segoe-Ui-Semi-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי מודגש נטוי",
+    "file": "Segoe-Ui-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי מודגש",
+    "file": "Segoe-Ui-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה חצי מודגש טקסט",
+    "file": "Segoe Ui Variable-Semibold-Text.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה חצי מודגש קטן",
+    "file": "Segoe Ui Variable-Semibold-Small.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה חצי מודגש תצוגה",
+    "file": "Segoe Ui Variable-Semibold-Display.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה חצי קל טקסט",
+    "file": "Segoe Ui Variable-Semilight-Text.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה חצי קל קטן",
+    "file": "Segoe Ui Variable-Semilight-Small.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה חצי קל תצוגה",
+    "file": "Segoe Ui Variable-Semilight-Display.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה מודגש טקסט",
+    "file": "Segoe Ui Variable-Bold-Text.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה מודגש קטן",
+    "file": "Segoe Ui Variable-Bold-Small.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה מודגש תצוגה",
+    "file": "Segoe Ui Variable-Bold-Display.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה קל טקסט",
+    "file": "Segoe Ui Variable-Light-Text.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה קל קטן",
+    "file": "Segoe Ui Variable-Light-Small.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה קל תצוגה",
+    "file": "Segoe Ui Variable-Light-Display.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה רגיל קטן",
+    "file": "Segoe Ui Variable-Regular-Small.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה רגיל תצוגה",
+    "file": "Segoe Ui Variable-Regular-Display.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי משתנה רגיל",
+    "file": "Segoe Ui Variable-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי נטוי",
+    "file": "Segoe Ui Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי נטוי",
+    "file": "Segoe-Ui-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי נכסים רגיל",
+    "file": "Segoe-Mdl2-Assets-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי סמלים רגיל",
+    "file": "Segoe-Ui-Symbol-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי סקריפט מודגש",
+    "file": "Segoe-Script-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי סקריפט רגיל",
+    "file": "Segoe-Script-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי פלואנט אייקונים רגיל",
+    "file": "Segoe-Fluent-Icons-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי קל נטוי",
+    "file": "Segoe Ui Light Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי קל נטוי",
+    "file": "Segoe-Ui-Light-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי קל",
+    "file": "Segoe-Ui-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי רגיל",
+    "file": "Segoe-Ui-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי שחור נטוי",
+    "file": "Segoe-Ui-Black-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגואי שחור",
+    "file": "Segoe-Ui-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סגולה רגיל",
+    "file": "Sgula-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סד הטעמים רגיל",
+    "file": "Sad-Hataim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סואץ 1 רגיל",
+    "file": "SuezOne-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סופי סריף שחור",
+    "file": "Sofi-Serif-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סופת אלים רגיל",
+    "file": "Sufatalim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סוציאליזם שחור",
+    "file": "Socializm-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטארגייט רגיל",
+    "file": "Stargate-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטארסקי בינוני",
+    "file": "Starsky-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטודנטית רגיל",
+    "file": "Studentit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטופ מושן רגיל",
+    "file": "Stopmotion-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטנגה חצי מודגש",
+    "file": "Stanga-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטנגה מודגש",
+    "file": "Stanga-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטנגה קל מאוד",
+    "file": "Stanga-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטנגה קל",
+    "file": "Stanga-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטנגה רגיל",
+    "file": "Stanga-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטנגה שחור",
+    "file": "Stanga-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סטרוקס רגיל",
+    "file": "Strokes-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סי איי בינוני",
+    "file": "Ci-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סי איי מודגש",
+    "file": "Ci-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סי איי רגיל",
+    "file": "Ci-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי באנר חצי מודגש",
+    "file": "SitkaVF-Italic-Banner-Semibold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי באנר מודגש",
+    "file": "SitkaVF-Italic-Banner-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי באנר",
+    "file": "SitkaVF-Italic-Banner.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי טקסט חצי מודגש",
+    "file": "SitkaVF-Italic-Text-Semibold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי טקסט מודגש",
+    "file": "SitkaVF-Italic-Text-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי טקסט",
+    "file": "SitkaVF-Italic-Text.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי כותרת חצי מודגש",
+    "file": "SitkaVF-Italic-Heading-Semibold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי כותרת מודגש",
+    "file": "SitkaVF-Italic-Heading-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי כותרת משנה חצי מודגש",
+    "file": "SitkaVF-Italic-Subheading-Semibold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי כותרת משנה מודגש",
+    "file": "SitkaVF-Italic-Subheading-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי כותרת משנה",
+    "file": "SitkaVF-Italic-Subheading.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי כותרת",
+    "file": "SitkaVF-Italic-Heading.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי קטן חצי מודגש",
+    "file": "SitkaVF-Italic-Small-Semibold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי קטן מודגש",
+    "file": "SitkaVF-Italic-Small-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי קטן",
+    "file": "SitkaVF-Italic-Small.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי תצוגה חצי מודגש",
+    "file": "SitkaVF-Italic-Display-Semibold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי תצוגה מודגש",
+    "file": "SitkaVF-Italic-Display-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיטקה משתנה נטוי תצוגה",
+    "file": "SitkaVF-Italic-Display.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סייפן רגיל",
+    "file": "Sayphan-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיכומים רגיל",
+    "file": "Sicumim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סימבול רגיל",
+    "file": "Symbol-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינגולרי 4 בינוני",
+    "file": "Singulari-4-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינגולרי 4 מודגש",
+    "file": "Singulari-4-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינגולרי 4 קל מאוד",
+    "file": "Singulari-4-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינגולרי 4 קל",
+    "file": "Singulari-4-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינגולרי 4 רגיל",
+    "file": "Singulari-4-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינגולרי 4 שחור",
+    "file": "Singulari-4-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינגולרי קל מאוד 4",
+    "file": "Singulari-Extra-Light-4.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינופסיס חצי מודגש",
+    "file": "Synopsis-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינופסיס מודגש",
+    "file": "Synopsis-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינופסיס קל מאוד",
+    "file": "Synopsis-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינופסיס קל",
+    "file": "Synopsis-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סינופסיס רגיל",
+    "file": "Synopsis-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיני מתוקי רגיל",
+    "file": "Sinaimitki-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סיפולוקס שחור",
+    "file": "Sipholux-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סלומון מודגש נטוי",
+    "file": "Solomon-Bold-Natui.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סלומון מודגש",
+    "file": "Solomon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סליחות רגיל",
+    "file": "Slichot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סמיטריילר שחור",
+    "file": "Semitrayler-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סנדלר מודגש",
+    "file": "Sandlar-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סנצ'ורי גותיק נטוי",
+    "file": "Gothici-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סנצ'ורי סקולבוק נטוי",
+    "file": "Schlbki-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סנצ'ורי סקולבוק שמן נטוי מודגש נטוי",
+    "file": "Schlbkbi-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סעידה ספר מודגש",
+    "file": "Sayeedabook-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספוילר פס בינוני",
+    "file": "SpoilerPas-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספוילר פס מודגש",
+    "file": "SpoilerPas-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספוילר פס קל מאוד",
+    "file": "SpoilerPas-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספוילר פס קל",
+    "file": "SpoilerPas-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספוילר פס רגיל",
+    "file": "SpoilerPas-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספוילר פס שחור",
+    "file": "SpoilerPas-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספוילר קל",
+    "file": "Spoiler-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספייסר שחור",
+    "file": "Spacer-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספינות רגיל",
+    "file": "Sfinot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספיר קלאסי חצי מודגש",
+    "file": "Sapir-Classic-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספיר קלאסי מודגש",
+    "file": "Sapir-Classic-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספיר קלאסי קל",
+    "file": "Sapir-Classic-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספיר קלאסי רגיל",
+    "file": "Sapir-Classic-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספקטרום אינרליין",
+    "file": "Spectrum-Innerline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספקטרום מובלט",
+    "file": "Spectrum-Emboss.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספקטרום צללית",
+    "file": "Spectrum-Shadow.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספקטרום קו מתאר",
+    "file": "Spectrum-Outline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספקטרום רגיל",
+    "file": "Spectrum-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספקטרום רשת 2",
+    "file": "Spectrum-Wireframe2.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספקטרום רשת",
+    "file": "Spectrum-Wireframe.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספרדי רגיל",
+    "file": "Sfaradi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספרות אות פלוס רגיל",
+    "file": "Sifrut-Otp-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ספרות פתוח אות פלוס רגיל",
+    "file": "Sifrut-Open-Otp-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סקולר 1 רגיל",
+    "file": "SecularOne-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סקופ רגיל",
+    "file": "Skup-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סקורפיון שחור",
+    "file": "Scorpion-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סקיצה רגיל",
+    "file": "Skets-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סקצ'רס רגיל",
+    "file": "Skechers-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סרט צהוב רגיל",
+    "file": "Seret-Tzaov-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סת\"ם אר\"י רגיל",
+    "file": "Stam-Ari-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סת\"ם בית יוסף רגיל",
+    "file": "Stam-Beityosef-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סת\"ם ספרדי ללא תגים רגיל",
+    "file": "Stamsf-Aradi-Notag-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "סת\"ם ספרדי רגיל",
+    "file": "Stam-Sfaradi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עבודה ערבית רגיל",
+    "file": "Avodaaravit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עברי רגיל",
+    "file": "Hebrew-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עברית עתיקה רגיל",
+    "file": "AncientHebrew-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עבריתקונס אאא רגיל",
+    "file": "Ivritacons-Alefalefalef-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עגול עב-אנ שחור",
+    "file": "Agolhebeng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עוגיות מודגש",
+    "file": "Ugiyot-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עוגן שחור",
+    "file": "Ogen-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עולה חדש רגיל",
+    "file": "Olehadash-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עומס בינוני",
+    "file": "Omes-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עומס חצי מודגש",
+    "file": "Omes-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עומס מודגש",
+    "file": "Omes-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עומס מעוגל",
+    "file": "Omes-Round.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עומס רגיל",
+    "file": "Omes-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עומס שבלונה",
+    "file": "Omes-Stencil.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עומר בינוני",
+    "file": "Omer-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עזראש רגיל",
+    "file": "Azrash-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עטרה רגיל",
+    "file": "Atara-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עלה זית רגיל",
+    "file": "Ale-Zait-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עלה רגיל",
+    "file": "Ale-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עמית רגיל",
+    "file": "Amit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ענפים רגיל",
+    "file": "Anafim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עץ הדעת עב-אנ רגיל",
+    "file": "Treeofknowledgehebeng-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "עצמאי רגיל",
+    "file": "Atzmai-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פאלס סקריפט רגיל",
+    "file": "Palscri-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פאץ' סריף רגיל",
+    "file": "PatchSerif-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פאץ' שבלונה רגיל",
+    "file": "PatchStencil-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פגישה רגיל",
+    "file": "Pgisha-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פגסוס מודגש",
+    "file": "Pegasus-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פגסוס רגיל",
+    "file": "Pegasus-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פונט אווסום סוליד 900",
+    "file": "Fa-Solid-900.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פונטביט אייקונים רגיל",
+    "file": "FontbitIcons-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פונטביט אליטיזם רגיל",
+    "file": "FbElitism-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פונטביט לוגו רגיל",
+    "file": "FontbitLogo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פונטביט פרנק ריל מודגש",
+    "file": "FbFrankReal-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פוסטר צר",
+    "file": "Posternarrow.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פורמה שחור",
+    "file": "Forma-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פורמליסט קל",
+    "file": "Formalist-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פטפטת רגיל",
+    "file": "Patpetet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פיל כחול רגיל",
+    "file": "FtPilKahol-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פילוסוף רגיל",
+    "file": "Philosof-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פילפילון רגיל",
+    "file": "Pilpilon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פירמה חדש שחור",
+    "file": "Firmanew-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלאשבק שחור",
+    "file": "Flashback-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני בינוני",
+    "file": "Ploni-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני חצי מודגש",
+    "file": "Ploni-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד בינוני",
+    "file": "Ploni-Yad-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד חצי מודגש",
+    "file": "Ploni-Yad-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד מודגש מאוד",
+    "file": "Ploni-Yad-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד מודגש",
+    "file": "Ploni-Yad-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד קל מאוד",
+    "file": "Ploni-Yad-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד קל",
+    "file": "Ploni-Yad-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד רגיל",
+    "file": "Ploni-Yad-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני יד שחור",
+    "file": "Ploni-Yad-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מודגש מאוד",
+    "file": "Ploni-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מודגש",
+    "file": "Ploni-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מעוגל בינוני",
+    "file": "Ploni-Round-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מעוגל חצי מודגש",
+    "file": "Ploni-Round-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מעוגל מודגש מאוד",
+    "file": "Ploni-Round-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מעוגל מודגש",
+    "file": "Ploni-Round-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מעוגל קל",
+    "file": "Ploni-Round-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני מעוגל רגיל",
+    "file": "Ploni-Round-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר בינוני",
+    "file": "Ploni-Tzar-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר דק",
+    "file": "Ploni-Tzar-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר חצי מודגש",
+    "file": "Ploni-Tzar-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר מודגש מאוד",
+    "file": "Ploni-Tzar-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר מודגש",
+    "file": "Ploni-Tzar-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר קל מאוד",
+    "file": "Ploni-Tzar-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר קל",
+    "file": "Ploni-Tzar-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני צר רגיל",
+    "file": "Ploni-Tzar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני קל מאוד",
+    "file": "Ploni-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני קל",
+    "file": "Ploni-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני רגיל",
+    "file": "Ploni-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלוני שחור",
+    "file": "Ploni-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלורנטינה קל",
+    "file": "Florentina-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלטינו לינוטייפ מודגש נטוי",
+    "file": "Palatino-Linotype-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלטינו לינוטייפ מודגש",
+    "file": "Palatino-Linotype-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלטינו לינוטייפ נטוי",
+    "file": "Palatino Linotype Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלטינו לינוטייפ נטוי",
+    "file": "Palatino-Linotype-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלטינו לינוטייפ רגיל",
+    "file": "Palatino-Linotype-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלטפורמה רגיל",
+    "file": "Ba-Platforma-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלמינגו בינוני",
+    "file": "Flamingo-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלמינגו מודגש",
+    "file": "Flamingo-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלמינגו רגיל",
+    "file": "Flamingo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלסבו בינוני",
+    "file": "Placebo-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלסבו חצי מודגש",
+    "file": "Placebo-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלסבו מודגש",
+    "file": "Placebo-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלסבו רגיל",
+    "file": "Placebo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלסטיקה רגיל",
+    "file": "Plastica-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פלפל חריף רגיל",
+    "file": "Pilpelharif-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פנינה ארט 1 רגיל",
+    "file": "Pnina-Art1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פנינה מגילה רגיל",
+    "file": "Pnina-Art-Scroll-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פנינה רגיל",
+    "file": "Pnina-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פנלופה מודגש",
+    "file": "Penelope-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פסיפס רגיל",
+    "file": "Pcifas-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פסקל רגיל",
+    "file": "Pascal-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פעלול רגיל",
+    "file": "Paalul-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פעמון בינוני",
+    "file": "Paamon-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פעמון מודגש",
+    "file": "Paamon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פעמון קל",
+    "file": "Paamon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פעמון רגיל",
+    "file": "Paamon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פעמון שחור",
+    "file": "Paamon-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פעמונים אותיות רגיל",
+    "file": "Paamonim-Ots-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פציינט רגיל",
+    "file": "Patient-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פקאן רגיל",
+    "file": "Pekan-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטי רחב עב-אנ דק",
+    "file": "PragmatiWideHebEng-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטי רחב עב-אנ מודגש",
+    "file": "PragmatiWideHebEng-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטי רחב עב-אנ קל",
+    "file": "PragmatiWideHebEng-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטי רחב עב-אנ רגיל",
+    "file": "PragmatiWideHebEng-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטי רחב עב-אנ שחור",
+    "file": "PragmatiWideHebEng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטיקון דק",
+    "file": "PragmatiCon-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטיקון מודגש",
+    "file": "PragmatiCon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטיקון קל",
+    "file": "PragmatiCon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטיקון רגיל",
+    "file": "PragmatiCon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרגמטיקון שחור",
+    "file": "PragmatiCon-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרהיסטורי רגיל",
+    "file": "Prehistoric-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרוגטקסט גולד רגיל",
+    "file": "Progtextgold-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז בינוני",
+    "file": "Primaries-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז חצי מודגש",
+    "file": "Primaries-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז מודגש מאוד",
+    "file": "Primaries-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז מודגש",
+    "file": "Primaries-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז קל מאוד",
+    "file": "Primaries-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז קל",
+    "file": "Primaries-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז רגיל",
+    "file": "Primaries-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פריימריז שחור",
+    "file": "Primaries-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרמזן עב-אנ רגיל",
+    "file": "ParmesanHebEn-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרמיירה מודגש",
+    "file": "Premyera-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנהייט שחור",
+    "file": "Fahrenheit-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק בייסיק 1 בינוני",
+    "file": "FrankBasic-1-medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק בייסיק 1 מודגש",
+    "file": "FrankBasic-1-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק בייסיק 1 קל",
+    "file": "FrankBasic-1-light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק בייסיק 1 רגיל",
+    "file": "FrankBasic-1-regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק בייסיק 1 שחור",
+    "file": "FrankBasic-1-black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק נתן מודגש",
+    "file": "Ba-Franknatan-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רה בינוני נטוי",
+    "file": "Frank-Re-Medium-Natui-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רה בינוני",
+    "file": "Frank-Re-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רה מודגש נטוי",
+    "file": "Frank-Re-Bold-Natui-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רה מודגש",
+    "file": "Frank-Re-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רה רגיל נטוי",
+    "file": "Frank-Re-Regular-Natui-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רה רגיל",
+    "file": "Frank-Re-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל דפ מודגש",
+    "file": "FrankRuehl-Dp-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל דפ רגיל",
+    "file": "FrankRuehl-Dp-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל ליברה בינוני",
+    "file": "FrankRuhlLibre-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל ליברה מודגש",
+    "file": "Frank-Ruhl-Libre-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל ליברה קל",
+    "file": "FrankRuhlLibre-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל ליברה רגיל",
+    "file": "FrankRuhlLibre-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל ליברה שחור",
+    "file": "FrankRuhlLibre-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל מ\"פ מודגש א",
+    "file": "FrankRuhlMF-BoldA.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל מ\"פ מודגש א",
+    "file": "FrankRuhlMF-Bold-A.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק רוהל רגיל",
+    "file": "FrankRuehl-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק ריל בינוני",
+    "file": "FrankReal-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק ריל מודגש",
+    "file": "FrankReal-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק ריל קל",
+    "file": "FrankReal-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנק ריל רגיל",
+    "file": "FrankReal-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנקי בוי רגיל",
+    "file": "Frankiboy-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנקלין גותיק נטוי",
+    "file": "Frabkit-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנקלין דמי נטוי",
+    "file": "Fradmit-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנקלין הבי נטוי",
+    "file": "Frahvit-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנקלין מדיום נטוי",
+    "file": "Framdit-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרנקפורט רגיל",
+    "file": "Frankfurt-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרפטואה נטוי",
+    "file": "Peri-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה פרו בינוני",
+    "file": "PracticaPro-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה פרו מודגש מאוד",
+    "file": "PracticaPro-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה פרו מודגש",
+    "file": "PracticaPro-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה פרו קל מאוד",
+    "file": "PracticaPro-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה פרו קל",
+    "file": "PracticaPro-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה פרו רגיל",
+    "file": "PracticaPro-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה פרו שחור",
+    "file": "PracticaPro-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה צר מודגש",
+    "file": "Practicanarrow-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרקטיקה שחור",
+    "file": "Practica-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פרשנדתא רגיל",
+    "file": "Parshendata-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פשוט מוטבע רגיל",
+    "file": "Pashut-Inline-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "פשפש",
+    "file": "Pishpesh.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "צבע טרי רגיל",
+    "file": "Tzeva-Tari-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ציפלון רגיל",
+    "file": "Tziflon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "צלילה באוהאוס מודגש",
+    "file": "Tslilabau-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "צלילה באוהאוס רגיל",
+    "file": "Tslilabau-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "צעצועים רגיל",
+    "file": "Toys-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "צפון רגיל",
+    "file": "Tsafon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קארמה בינוני",
+    "file": "Karma-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קארמה חצי מודגש",
+    "file": "Karma-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קארמה מודגש",
+    "file": "Karma-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קארמה קל מאוד",
+    "file": "Karma-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קארמה קל",
+    "file": "Karma-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קארמה רגיל",
+    "file": "Karma-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קבאנוס בינוני",
+    "file": "Cabanus-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדילאק סנס 1 רגיל",
+    "file": "kdilak-sans-1-regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סנס מודגש",
+    "file": "Kedem-Sans-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סנס קל מאוד",
+    "file": "Kedem-Sans-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סנס קל",
+    "file": "Kedem-Sans-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סנס רגיל",
+    "file": "Kedem-Sans-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סנס שחור מודגש",
+    "file": "Kedem-Sans-Black-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סריף דקיק נטוי",
+    "file": "Kedem-Serif-Ultralight-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סריף חלול מודגש נטוי",
+    "file": "Kedem-Serif-Hollow-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סריף מודגש נטוי",
+    "file": "Kedem-Serif-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סריף קל מאוד נטוי",
+    "file": "Kedem-Serif-Ultra-Light-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סריף קל נטוי",
+    "file": "Kedem-Serif-Light-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סריף רגיל נטוי",
+    "file": "Kedem-Serif-Regular-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קדם סריף שחור מודגש נטוי",
+    "file": "Kedem-Serif-Black-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוביסט 2 רגיל",
+    "file": "CubistTwo-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוהרנטי פרו 1 בינוני",
+    "file": "CoherentiPro-1-medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוהרנטי פרו 1 מודגש",
+    "file": "CoherentiPro-1-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוהרנטי פרו 1 קל מאוד",
+    "file": "CoherentiPro-1-Extra-light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוהרנטי פרו 1 קל",
+    "file": "CoherentiPro-1-light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוהרנטי פרו 1 רגיל",
+    "file": "CoherentiPro-1-regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוהרנטי פרו 1 שחור",
+    "file": "CoherentiPro-1-black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קולמוס רגיל",
+    "file": "Kulmus-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קומיק סנס מודגש נטוי",
+    "file": "Comic-Sans-Ms-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קומיק סנס מודגש",
+    "file": "Comic-Sans-Ms-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קומיק סנס נטוי",
+    "file": "Comic Sans Ms Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קומיק סנס נטוי",
+    "file": "Comic-Sans-Ms-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קומיק סנס רגיל",
+    "file": "Comic-Sans-Ms-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קומיקה רגיל",
+    "file": "Comika-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קומפוזיט אות רגיל",
+    "file": "Composite-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קונדיטור מודגש",
+    "file": "Conditor-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קונדיטור קל",
+    "file": "Conditor-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קונדיטור רגיל",
+    "file": "Conditor-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קונדליני מחוספס",
+    "file": "Kundalini-Rough.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קונסולס נטוי",
+    "file": "Consolai-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קונסטרוקטור שחור",
+    "file": "Constructor-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קונספט רגיל",
+    "file": "Concept-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קוסמטיקס רגיל",
+    "file": "Cosmetics-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קופי רגיל",
+    "file": "Copy-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורבל נטוי",
+    "file": "Corbelli-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורייר ניו מודגש נטוי",
+    "file": "Courier-New-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורייר ניו מודגש",
+    "file": "Courier-New-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורייר ניו נטוי",
+    "file": "Courier New Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורייר ניו נטוי",
+    "file": "Courier-New-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורייר ניו רגיל",
+    "file": "Courier-New-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורלי בינוני",
+    "file": "Korali-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורלי מודגש",
+    "file": "Korali-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורלי קל מאוד",
+    "file": "Korali-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורלי קל",
+    "file": "Korali-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורלי רגיל",
+    "file": "Korali-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורסיב רגיל",
+    "file": "Cursive-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קורסיבה רגיל",
+    "file": "Mtcorsva-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קטיפה מודגש",
+    "file": "Ktifa-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קיוסק כבד אות",
+    "file": "Kiyosk-Heavy-Ot.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קינגפוקס מודגש",
+    "file": "Kingfox-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קישקושים 1 רגיל",
+    "file": "Kishkushim-1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קישקושים 2 רגיל",
+    "file": "Kishkushim-2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קישקושים 3 רגיל",
+    "file": "Kishkushim-3-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלאווה רגיל",
+    "file": "Clave-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלאסיק מודגש",
+    "file": "Classic-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלאסיק קו מתאר רגיל",
+    "file": "Classic-Outline-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלאסיק קל",
+    "file": "Classic-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלאסיק רגיל",
+    "file": "Classic-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלאסיקה בינוני",
+    "file": "Classica-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלוגמן רגיל",
+    "file": "Klugman-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי מודגש נטוי",
+    "file": "Calibri-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי מודגש",
+    "file": "Calibri-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי נטוי",
+    "file": "Calibri Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי נטוי",
+    "file": "Calibri-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי קל נטוי",
+    "file": "Calibri Light Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי קל נטוי",
+    "file": "Calibri-Light-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי קל",
+    "file": "Calibri-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליברי רגיל",
+    "file": "Calibri-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליגרף פתיח",
+    "file": "Caligraphpatiach.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליגרפר רגיל",
+    "file": "Calligraphr-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליניקה רגיל",
+    "file": "Clinica-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליסטו נטוי",
+    "file": "Calisti-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קליפורניה נטוי",
+    "file": "Califi-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלישר שחור",
+    "file": "Kalisher-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלפיון אייקונים",
+    "file": "Kalpion-Icons.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלפיון קו מתאר",
+    "file": "Kalpion-Outline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קלפיון רגיל",
+    "file": "Kalpion-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קמבריה נטוי",
+    "file": "Cambriai-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קמבריה תת-גופן 1 רגיל",
+    "file": "Cambria-Sub1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קמבריה תת-גופן 2 רגיל",
+    "file": "Cambria-Sub2-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קמומיל רגיל",
+    "file": "Chamomile-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קמחי רגיל",
+    "file": "Kimchi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קנדרה נטוי",
+    "file": "Candarai-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קנדרה קל נטוי קל נטוי",
+    "file": "Candarali-Light-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קנובה שחור",
+    "file": "Kanuba-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קפה שחור רגיל",
+    "file": "KaffeShachor-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קפריזה רגיל",
+    "file": "Kapriza-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קצפת קל",
+    "file": "Katsefet-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קצפת רגיל",
+    "file": "Katsefet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קקאו רגיל",
+    "file": "Cackau-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרבון עב-אנ מודגש",
+    "file": "Carbonhebeng-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרואסון רגיל",
+    "file": "Kroason-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרוואן 120 רגיל",
+    "file": "caravan-120-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרוואן 150 רגיל",
+    "file": "caravan-150-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרוואן 180 רגיל",
+    "file": "caravan-180-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרוואן 210 מודגש",
+    "file": "Caravan-210-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרוואן 90 רגיל",
+    "file": "Caravan-90-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריאה עב-אנ מודגש",
+    "file": "ReadingHebEng-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריאה עב-אנ קל",
+    "file": "Readinghebeng-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריאה עב-אנ רגיל",
+    "file": "ReadingHebEng-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריאה עב-אנ שחור",
+    "file": "ReadingHebEng-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריולה רגיל",
+    "file": "Crayola-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריסטל רגיל",
+    "file": "Crystal-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריסטלקס רגיל",
+    "file": "Crystalex-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריספר מובלט",
+    "file": "Krisper-Emboss.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריספר מודגש",
+    "file": "Krisper-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריספר רשת 2",
+    "file": "Krisper-Wireframe2.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריספר רשת",
+    "file": "Krisper-Wireframe.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קריקטורה רגיל",
+    "file": "Caricature-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך עב-אנ בינוני",
+    "file": "KarlibachHebEng-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך עב-אנ דק",
+    "file": "KarlibachHebEng-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך עב-אנ מודגש",
+    "file": "KarlibachHebEng-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך עב-אנ קל",
+    "file": "KarlibachHebEng-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך עב-אנ רגיל",
+    "file": "KarlibachHebEng-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך צר בינוני",
+    "file": "KarlibachCon-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך צר דק",
+    "file": "KarlibachCon-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך צר מודגש",
+    "file": "KarlibachCon-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך צר קל",
+    "file": "KarlibachCon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרליבך צר רגיל",
+    "file": "KarlibachCon-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרם אות רגיל",
+    "file": "Cream-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרמל מודגש",
+    "file": "Karamel-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרנבל רגיל",
+    "file": "Carnaval-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרנטינה מודגש",
+    "file": "Karantina-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרנטינה קל",
+    "file": "Karantina-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "קרנטינה רגיל",
+    "file": "Karantina-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רביצקי מודגש",
+    "file": "Ravitzky-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רבקה באוהאוס מודגש",
+    "file": "Rivkabau-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רבקה באוהאוס רגיל",
+    "file": "Rivkabau-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רגב טורבו מודגש",
+    "file": "Regevturbo-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רגב פרסי מודגש",
+    "file": "Regevparsi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רגע רגיל",
+    "file": "Regga-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק 1 רגיל",
+    "file": "Rubik-One-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק אבני חן רגיל",
+    "file": "Rubik-Gemstones-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק איזומטרי רגיל",
+    "file": "Rubik-Iso-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק בועות רגיל",
+    "file": "Rubik-Bubbles-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק בינוני",
+    "file": "Rubik-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק ביסטלי רגיל",
+    "file": "Rubik-Beastly-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק גליץ' פופ רגיל",
+    "file": "Rubik-GlitchPop-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק גליץ' רגיל",
+    "file": "Rubik-Glitch-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק גרפיטי רגיל",
+    "file": "Rubik-SprayPaint-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק הסוואה ימית רגיל",
+    "file": "Rubik-SeaCamouflage-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק ויניל רגיל",
+    "file": "Rubik-Vinyl-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק חיידק רגיל",
+    "file": "Rubik-Microbe-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק לכלוך רגיל",
+    "file": "Rubik-Dirt-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק מבוך רגיל",
+    "file": "Rubik-Maze-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק מודגש נטוי",
+    "file": "Rubik-Bold-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק מודגש",
+    "file": "Rubik-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק מפות רגיל",
+    "file": "Rubik-Maps-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק מרקר רגיל",
+    "file": "Rubik-MarkerHatch-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק נטוי שחור",
+    "file": "Rubik-Italic-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק סלעי ירח רגיל",
+    "file": "Rubik-MoonRocks-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק סערה רגיל",
+    "file": "Rubik-Storm-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק פייד אייטיז רגיל",
+    "file": "Rubik-80sFade-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק פיקסלים רגיל",
+    "file": "Rubik-Pixels-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק פקס שבור רגיל",
+    "file": "Rubik-BrokenFax-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק צבע רטוב רגיל",
+    "file": "Rubik-WetPaint-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק קווים רגיל",
+    "file": "Rubik-Lines-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק קל",
+    "file": "Rubik-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק רגיל",
+    "file": "Rubik-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק ריר רגיל",
+    "file": "Rubik-Goo-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק שחוק רגיל",
+    "file": "Rubik-Distressed-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק שחור",
+    "file": "Rubik-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק שלוליות רגיל",
+    "file": "Rubik-Puddles-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק שרבוט משולשים רגיל",
+    "file": "Rubik-DoodleTriangles-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק שרבוט צללית רגיל",
+    "file": "Rubik-DoodleShadow-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק שרבוט רגיל",
+    "file": "Rubik-Scribble-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוביק שרוף רגיל",
+    "file": "Rubik-Burned-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוגטקה חלול",
+    "file": "Rugatka-Halul.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוגטקה מודגש",
+    "file": "Rugatka-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוגטקה צללית",
+    "file": "Rugatka-Shadow.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוד רגיל",
+    "file": "Rod-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוזטה מודגש",
+    "file": "Rozeta-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוזנברג בינוני",
+    "file": "Rosenberg-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוחמה בינוני",
+    "file": "Ruhama-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוחמה מודגש",
+    "file": "Ruhama-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוחמה רגיל",
+    "file": "Ruhama-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוחמה שחור",
+    "file": "Ruhama-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוטונדה רגיל",
+    "file": "Rotonda-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רולינג רגיל",
+    "file": "Ruling-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רומנו מודגש",
+    "file": "Romano-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רומנו קל",
+    "file": "Romano-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רומנו רגיל",
+    "file": "Romano-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רומנטיקה רגיל",
+    "file": "Romantica-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוץ אורגפרו",
+    "file": "Rutz-Oeregpro.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רוקוול נטוי",
+    "file": "Rocki-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רותם רגיל",
+    "file": "Rotem-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רטרו רגיל",
+    "file": "Retros-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ריטריט רגיל",
+    "file": "Retreat-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רייספדר מודגש",
+    "file": "Reissfeder-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רימונה עב-אנ רגיל",
+    "file": "Rimonahebeng-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ריפלקס עב-אנ מודגש",
+    "file": "Riflexhebeng-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז גלעד מודגש",
+    "file": "RmzGaled-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז גלעד מודגש",
+    "file": "Rmz-Galed-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז גלעד רגיל",
+    "file": "RmzGaled-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז גלעד רגיל",
+    "file": "Rmz-Galed-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז דוד מודגש",
+    "file": "RmzDavid-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז דוד מודגש",
+    "file": "Rmz-David-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז דוד רגיל",
+    "file": "RmzDavid-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז דוד רגיל",
+    "file": "Rmz-David-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז הדס מודגש",
+    "file": "RmzHadas-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז הדס מודגש",
+    "file": "Rmz-Hadas-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז הדס רגיל",
+    "file": "RmzHadas-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז הדס רגיל",
+    "file": "Rmz-Hadas-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז וילנא מודגש",
+    "file": "RmzVilna-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז וילנא מודגש",
+    "file": "Rmz-Vilna-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז וילנא רגיל",
+    "file": "RmzVilna-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז וילנא רגיל",
+    "file": "Rmz-Vilna-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז מאירי מודגש",
+    "file": "RmzMeiri-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז מאירי מודגש",
+    "file": "Rmz-Meiri-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז מאירי רגיל",
+    "file": "RmzMeiri-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז מאירי רגיל",
+    "file": "Rmz-Meiri-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז סופר רגיל",
+    "file": "RmzSofer-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז סופר רגיל",
+    "file": "Rmz-Sofer-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז פרנק מודגש",
+    "file": "RmzFrank-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז פרנק מודגש",
+    "file": "Rmz-Frank-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז פרנק רגיל",
+    "file": "RmzFrank-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז פרנק רגיל",
+    "file": "Rmz-Frank-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז רש\"י מודגש",
+    "file": "RmzRashi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז רש\"י מודגש",
+    "file": "Rmz-Rashi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז רש\"י רגיל",
+    "file": "RmzRashi-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רמז רש\"י רגיל",
+    "file": "Rmz-Rashi-Normal.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רסיסים רגיל",
+    "file": "Resisim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רעשן רגיל",
+    "file": "Raashan-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רפונזל רגיל",
+    "file": "Reponzel-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רפורמה צר מודגש",
+    "file": "Reformanarrow-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רפורמה קל",
+    "file": "Reforma-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רקיע מודגש",
+    "file": "Rakia-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רקפת רגיל",
+    "file": "Rakefet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רש\"י אות רגיל",
+    "file": "Rashi-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רש\"י ארט 1 רגיל",
+    "file": "Rashi-Art1-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רש\"י דפ רגיל",
+    "file": "Rashi-Dp-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "רש\"י רגיל",
+    "file": "Rashy-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "ש' וילנא חדש רגיל",
+    "file": "S-Vilna-New-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שביס רגיל",
+    "file": "Shavis-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שגיאה",
+    "file": "Shgiaa.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שולטיק רגיל",
+    "file": "Sholtik-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 בינוני",
+    "file": "Shuneet3-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 דק",
+    "file": "Shuneet3-Thin.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 חצי מודגש רגיל",
+    "file": "Shuneet3-Demi-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 כבד",
+    "file": "Shuneet3-Heavy.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 מודגש",
+    "file": "Shuneet3-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 מקורי מודגש",
+    "file": "Shuneet3-Original-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 מקורי רגיל",
+    "file": "Shuneet3-Original-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 מרובע מודגש",
+    "file": "Shuneet3-Square-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 מרובע רגיל",
+    "file": "Shuneet3-Square-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 ספר רגיל",
+    "file": "Shuneet3-Book-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 קל",
+    "file": "Shuneet3-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 קלאסי מודגש",
+    "file": "Shuneet3-Classic-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 קלאסי נטוי מודגש",
+    "file": "Shuneet3-Classic-Italic-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 קלאסי נטוי",
+    "file": "Shuneet3 Classic Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 קלאסי נטוי",
+    "file": "Shuneet3-Classic-Italic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שונית 3 קלאסי רגיל",
+    "file": "Shuneet3-Classic-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שוקולד רגיל",
+    "file": "Shokolad-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שושן רגיל",
+    "file": "Shoshan-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שושנים מודגש",
+    "file": "Shoshanim-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שחר הדר קטן רגיל",
+    "file": "Shahar-Hadar-Small-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שחרית רגיל",
+    "file": "Shaharit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שיגור מודגש",
+    "file": "Shigur-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שיפנוק רגיל",
+    "file": "Shifnuk-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שיק רגיל",
+    "file": "Szyk-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שירבושקה רגיל",
+    "file": "Shirbushka-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שירי קל",
+    "file": "Shiri-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שירנקה רגיל",
+    "file": "Shiranke-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שלג רגיל",
+    "file": "Sheleg-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שלהבת רגיל",
+    "file": "Shalhevet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שלום רגיל",
+    "file": "Shalom-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שלוק רגיל",
+    "file": "Shluk-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שליטה אינרליין",
+    "file": "Shlita-Innerline.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שליטה גראנג'",
+    "file": "Shlita-Grunge.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שלכת רגיל",
+    "file": "Shalehet-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמאלץ 1 צר מודגש",
+    "file": "Shmaltz-1-Con-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמאלץ 1 צר קל",
+    "file": "Shmaltz-1-Con-light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמאלץ 1 צר רגיל",
+    "file": "Shmaltz-1-Con-regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמאלץ 1 רחב מודגש",
+    "file": "Shmaltz-1-Wide-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמאלץ 1 רחב קל",
+    "file": "Shmaltz-1-Wide-light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמאלץ 1 רחב רגיל",
+    "file": "Shmaltz-1-Wide-regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמאלץ רחב קל",
+    "file": "Shmaltz-Wide-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמיים 3",
+    "file": "Shamaim-Regular-3.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמיים רגיל",
+    "file": "Shamaim-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמעון קל",
+    "file": "Shimon-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שמפניה רגיל",
+    "file": "Champagne-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שסק מקווקו",
+    "file": "Shesek-Dashed.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שסק רגיל",
+    "file": "Shesek-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שערי צדק אות רגיל",
+    "file": "Shaareyzedek-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שעשועים אות רגיל",
+    "file": "Shaashuim-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפגאט מודגש",
+    "file": "Shpagat-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפינגר בינוני",
+    "file": "Shapinger-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפינגר מודגש",
+    "file": "Shapinger-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפינגר קל מאוד",
+    "file": "Shapinger-Extra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפינגר קל",
+    "file": "Shapinger-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפינגר רגיל",
+    "file": "Shapinger-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפינגר שחור",
+    "file": "Shapinger-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפיצר עב-אנ רגיל",
+    "file": "ShpitzerEnHeb-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפע קלאסי",
+    "file": "Shefaclassic.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שפע",
+    "file": "Shefa.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שרביט רגיל",
+    "file": "Sharvit-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "שרה נמה מרוסק",
+    "file": "Saranamamerusak.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תאום בינוני",
+    "file": "Teom-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תאום חצי מודגש",
+    "file": "Teom-Demi-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תאום מודגש",
+    "file": "Teom-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תאום רגיל",
+    "file": "Teom-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תהילה בינוני",
+    "file": "TehilaMedium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תהילה בינוני",
+    "file": "Tehila-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תהילה רגיל 2",
+    "file": "Tehila-Regular_2.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תהילה רגיל",
+    "file": "Tehila-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תהילות רגיל",
+    "file": "Tehilot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תולעת ספרים בינוני",
+    "file": "Tolaatsfarim-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תוצרת הארץ שחור",
+    "file": "Tozeretharez-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תורן רגיל",
+    "file": "Toiren-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תטואן ללא תגים מודגש",
+    "file": "Tetouan-No-Tags-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תינוק רגיל",
+    "file": "Tinok-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תירוש אות רגיל",
+    "file": "Tirosh-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תלפיות קלאס רגיל",
+    "file": "Talpiot-Class-Reg-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תלפיות רגיל",
+    "file": "Talpiot-Reg-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמליל צר עב-אנ קל",
+    "file": "Tamlilcondensedhebeng-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמליל שחור",
+    "file": "Tamlil-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמר משתנה בינוני",
+    "file": "TamarVF-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמר משתנה מודגש",
+    "file": "TamarVF-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמר משתנה קל",
+    "file": "TamarVF-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמר משתנה רגיל",
+    "file": "TamarVF-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמר משתנה שחור",
+    "file": "TamarVF-Black.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמר עב-אנ קל",
+    "file": "TamarHebEng-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תמר רגיל",
+    "file": "Tamar-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תעמולה בינוני",
+    "file": "Taamula-Medium.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תעמולה מודגש מאוד",
+    "file": "Taamula-Ultra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תעמולה מודגש",
+    "file": "Taamula-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תעמולה קל מאוד",
+    "file": "Taamula-Ultra-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תעמולה קל",
+    "file": "Taamula-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תעמולה רגיל",
+    "file": "Taamula-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תפארת מודגש מאוד",
+    "file": "Tiferet-Extra-Bold.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תצפית קל",
+    "file": "Tazpit-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תקומה קל",
+    "file": "Tkuma-Light.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תרמוס אות רגיל",
+    "file": "Termus-Ot-Regular.woff2",
+    "format": "woff2"
+  },
+  {
+    "family": "תשרי רגיל",
+    "file": "Tishrey-Regular.woff2",
+    "format": "woff2"
+  }
+]
