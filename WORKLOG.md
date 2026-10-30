@@ -29,6 +29,19 @@
   - `node scripts/migration/verify-work-conventions.mjs` — ירוק (האינווריאנט התפתח: קוד ישן לא נערך; package.json הוספות בלבד).
 - **ממצאים:** `workspace:*` אינו נתמך ב־npm — נעשה שימוש בגרסה מדויקת `0.1.0` לקישור חבילות העבודה. חבילות נתונים (test-fixtures) הן תלות npm בלבד ללא הפניית בנייה; ייבוא צולב ייאכף אוטומטית בשלב 8 (ESLint + dependency-cruiser).
 
+### שלב 8 — חוקי תלות ואכיפתם (M1) — הושלם 2026-10-30
+- **תוצרים:**
+  - `eslint.config.js` — אכיפת איסור DOM/Node בחבילות הליבה: `no-restricted-globals` (34 גלובלים של דפדפן בכל החבילות + 11 גלובלים של Node בליבה), `no-restricted-imports` (מודולי Node וספריות React/Zustand אסורים בליבה; render-html אינו מייבא measurement — אין מדידה מחדש).
+  - `.dependency-cruiser.cjs` — 15 כללי גרף (חבילה ← תלויותיה בלבד, בדיוק), איסור מודולי ליבה של Node ב־10 חבילות הליבה, איסור תלות חבילות→מעטפת, איסור תלות מעגלית. layout-engine ↛ policy-torah ו־audit-core ↛ layout-engine נאכפים ישירות מהגרף.
+  - `.github/workflows/ci.yml` — צנרת CI לפי נספח ו (בשלבו הנוכחי): npm ci ← build ← typecheck ← lint ← deps:check ← בדיקה שלילית ← שבעת מאמתי ההגירה ← workspaces + מוסכנות. נעול ל־Node מתוך ‎.nvmrc, היסטוריה מלאה לבדיקת 'הקוד הישן לא נערך'.
+  - `scripts/migration/verify-dependency-rules.mjs` — 22 בדיקות כולל **בדיקה שלילית חיה**.
+  - סקריפטים חדשים: `lint:packages`, `deps:check`, `verify:deps` (הוספות בלבד ל־package.json; התלות החדשה dependency-cruiser נוספה ל־devDependencies ללא שינוי רשומות ישנות — נאכף).
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run lint:packages` — PASS (55 מודולים); `npm run deps:check` — PASS (0 הפרות).
+  - `node scripts/migration/verify-dependency-rules.mjs` — 22/22 OK, יציאה 0. **הבדיקה השלילית הוכיחה:** הזרקת קובץ מפר ב־layout-engine (יבוא policy-torah + node:fs + document) → depcruise נכשל עם הפרות graph-layout-engine/core-no-node-builtins, eslint נכשל על הגלובל האסור; לאחר מחיקה — שוב ירוק.
+  - רגרסיה: `verify-work-conventions` — 44/44 OK (רשימת הנתיבים המאושרים הורחבה לקבצי התצורה החדשים).
+- **ממצאים:** הפרת גבול נתפסת אוטומטית בשלוש שכבות (גרף ב־depcruise, גלובלים ויבואים ב־ESLint, וכל אלה ב־CI). אין עדכון golden אוטומטי ב־CI.
+
 ## קפיצת אבן דרך — M0 הושלם ואומת (2026-10-30)
 
 כל ששת שלבי פרק א הושלמו ואומתו: מקורות נעולים, מלאי העברה מלא עם 1,806 גופנים ו־1,053 עיצובים, בייסליין ריצה עקבי (639/659 עמודים, דטרמיניזם מוכח), 26 fixtures נעולים, מטריצת parity עם 16 יעדי differential, ומוסכנות עבודה מחייבות. **שער M0 ירוק** (`node scripts/migration/verify-work-conventions.mjs`).
