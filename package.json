@@ -28,6 +28,7 @@
     "lint:packages": "eslint packages",
     "deps:check": "depcruise packages --config .dependency-cruiser.cjs",
     "verify:deps": "node scripts/migration/verify-dependency-rules.mjs",
+    "verify:parser": "node scripts/migration/verify-parser.mjs",
     "test:packages": "vitest run --config vitest.packages.config.ts"
   },
   "dependencies": {

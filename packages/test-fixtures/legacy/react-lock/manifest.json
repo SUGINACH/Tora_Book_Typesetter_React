@@ -1,0 +1,83 @@
+{
+ "schemaVersion": 1,
+ "provenance": {
+  "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+  "sourceCommit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+  "role": "מלאי דרישות ובייסליין להשוואה בלבד — הפרסר הישן המופעל בבדיקות differential של שלב 17 (כלל 7 בתכנית)",
+  "usage": "הקוד מועתק כמות-שהוא מהקומיט הנעול ומאומת מולו ביט-ביט; אסור לייבא אותו מחבילות הייצור"
+ },
+ "files": [
+  {
+   "path": "src/parser/ast-builder.ts",
+   "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a"
+  },
+  {
+   "path": "src/parser/custom-style-parser.ts",
+   "sha256": "3ef8ab0861356c28b8ca4c49f6a6e97f1f396e6232f3df1cfa66f14934cd8abc"
+  },
+  {
+   "path": "src/parser/editorial-note-parser.ts",
+   "sha256": "c20d249576faa30f7adfbf300751238485e64aa3f6c429a970052346135ce07c"
+  },
+  {
+   "path": "src/parser/endnote-parser.ts",
+   "sha256": "5ebcdad0a54ef7dc464bfcf70135d6d7503dce1fd068a9217d972b28f714b52e"
+  },
+  {
+   "path": "src/parser/footnote-parser.ts",
+   "sha256": "41998ed76902a2343d392fa95393eae7d4427c6782da201182e5ede58dff36ed"
+  },
+  {
+   "path": "src/parser/header-parser.ts",
+   "sha256": "11319257376366ea9523eed713b063772ebf60558b399613c301a046d1567fb6"
+  },
+  {
+   "path": "src/parser/index.ts",
+   "sha256": "ea37fdefae7a3a57c74e6fbe49c1bf96d6ee10ca92e92df23937685d07cbcd7a"
+  },
+  {
+   "path": "src/parser/metadata-parser.ts",
+   "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55"
+  },
+  {
+   "path": "src/parser/nested-bracket-matcher.ts",
+   "sha256": "a64d3b1cb12c7bc50c040f52819a962299c220d23817cf803b635291249fa276"
+  },
+  {
+   "path": "src/parser/sidenote-parser.ts",
+   "sha256": "987f3287c7e5eae49bd491d654072dca935db91d939ce0135b9735aa809c79f7"
+  },
+  {
+   "path": "src/types/index.ts",
+   "sha256": "b32ac7a2245ed0e38fdb02b903d5a932da8fab1deeee6d6dfa66fc07f0dad718"
+  },
+  {
+   "path": "src/types/layout.ts",
+   "sha256": "31e7e4572acb7ea57e91fcd8b363ad18347d71365a6e50ac598fd8efb634af13"
+  },
+  {
+   "path": "src/types/main-settings.ts",
+   "sha256": "d246478150a77c0819fca95c943782cabe3f532727b112ac1b2bd8605ab27070"
+  },
+  {
+   "path": "src/types/settings.ts",
+   "sha256": "163a94f44d9e02c7077e8b298e78bc7435f7feaf38be3a04ec276154a00ca418"
+  },
+  {
+   "path": "src/types/text.ts",
+   "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1"
+  },
+  {
+   "path": "src/types/worker.ts",
+   "sha256": "45daea5268aa829db931f93de4225f52240005b0290e86dd1e4aea4043504a6c"
+  },
+  {
+   "path": "src/worker/inputs/fnv-hash.ts",
+   "sha256": "5335d6f4bffd0e21aeabfb9de3c1483591f1f1cf3829dbb983bfbb0edd8db68c"
+  },
+  {
+   "path": "tests/unit/parser/parser.test.ts",
+   "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13"
+  }
+ ]
+}

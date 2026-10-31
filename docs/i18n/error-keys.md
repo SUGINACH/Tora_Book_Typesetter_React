@@ -99,4 +99,26 @@
 | `errors.document.UNRESOLVED_NOTE_REFERENCE` | noteId | error | הפניית הערה שאין לה יעד: {noteId} |
 | `errors.document.INVALID_SOURCE_HASH` | sourceHash | error | sourceHash חייב ריק או 64 תווי hex קטנים: {sourceHash} |
 
+### content-model · parser (שלב 17)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`; מוצאן ב־`parser/parse.ts`.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.parser.REGISTRY_RECORD_MISSING` | recordId | fatal | רשומת מרשם חסרה: {recordId} |
+| `errors.parser.INVALID_OPTIONS` | reason | error | אפשרויות פרסר לא תקינות: {reason} |
+| `errors.parser.SENTINEL_IN_INPUT` | offset | error | הקלט מכיל תווי sentinel אסורים (בהיסט {offset}) |
+| `errors.parser.INVALID_CONTROL_CHAR` | offset, codePoint | error | תו בקרה אסור במקור (היסט {offset}, קוד {codePoint}) |
+| `errors.parser.DUPLICATE_METADATA_KEY` | key, startUtf16 | error | מפתח metadata כפול: {key} (בהיסט {startUtf16}) |
+| `errors.parser.INVALID_ENDNOTE_PREFIX` | prefix | error | קידומת הערות סיום חייבת מחרוזת לא ריקה: {prefix} |
+| `errors.parser.INVALID_CUSTOM_STYLE` | styleId, reason | error | הגדרת סגנון מותאם לא חוקית ({styleId}): {reason} |
+| `errors.parser.WARN_PRE_HEADING_CONTENT` | (ללא) | warning | שורה לפני הכותרת הראשונה שאינה metadata נשמרת כתוכן |
+| `errors.parser.WARN_EDITORIAL_REMOVED` | (ללא) | warning | הערת עורך הוסרה מהגוף ונשמרה בזרם editorial; ההסרה נרשמה |
+| `errors.parser.WARN_UNMATCHED_EDITORIAL` | (ללא) | warning | ## שלא נסגר — נשאר טקסט מילולי |
+| `errors.parser.WARN_H7_SIMAN_DISCARDED` | simanNumber | warning | מספר הסימן ({simanNumber}) על כותרת 7 נזנח |
+| `errors.parser.WARN_UNMATCHED_FOOTNOTE` | (ללא) | warning | תוחם הערת שוליים פתוח שלא נסגר — ההמשך מילולי |
+| `errors.parser.WARN_NEAR_MISS_HEADING` | (ללא) | warning | שורה שמתחילה ב"כותרת" ולא תואמה — נשארת פסקה |
+| `errors.parser.WARN_UNMATCHED_INLINE_MARKER` | styleId | warning | תוחם פתיחה של {styleId} שלא נסגר — טקסט מילולי |
+| `errors.parser.WARN_HTML_IN_TEXT` | (ללא) | warning | תגית HTML בקלט — נשמרת מילולית; אין HTML כמקור אמת |
+
 **כללי הוספה:** קוד חדש נרשם ב־`ERROR_CATALOG` בלבד (סטטי, קפוא); הוספה מלווה בשורה כאן ובבדיקה שהמפתח רשום. מפתחות אינם משתנים לאחר פרסום — שינוי משמעות מחייב קוד חדש.

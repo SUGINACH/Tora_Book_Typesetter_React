@@ -87,6 +87,9 @@ for (const f of srcFiles) {
   // קוד-מקור בלבד: src/ (לא dist, לא test); units.ts עצמו פטור — בו מרוכז העיגול ומתועדים האיסורים
   // units.ts — מרכז העיגול; hash.ts — פרימיטיבים של SHA-256/FNV (מילים של 32 סיביות, ADR-002 §4)
   const EXEMPT = rel === 'packages/measurement-api/src/units.ts' || rel === 'packages/layout-api/src/hash.ts';
+  // הפרסר הישן המוחזק (React lock, שלב 17) — עותק מילולי קפוא לבדיקות differential;
+  // קוד הייחוס עצמו (למשל fnv-hash עם הזזות סיביות) אינו נושא המדיניות — רק הקוד החדש.
+  if (rel.startsWith("packages/test-fixtures/legacy/")) continue;
   if (!rel.includes('/src/') || EXEMPT) continue;
   const text = readFileSync(f, 'utf8');
   if (/\bMath\.round\b/.test(text)) roundOutside.push(rel);

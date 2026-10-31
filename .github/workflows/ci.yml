@@ -41,7 +41,7 @@ jobs:
       - name: בדיקה שלילית — הפרת גבול נתפסת אוטומטית
         run: node scripts/migration/verify-dependency-rules.mjs
 
-      - name: בדיקות יחידה של החבילות (יחידות, גיבוב, spans, atoms, inline/blocks)
+      - name: בדיקות יחידה של החבילות (יחידות, גיבוב, spans, atoms, inline/blocks, פרסר)
         run: |
           npm run test:packages
           node scripts/migration/verify-units.mjs
@@ -51,6 +51,7 @@ jobs:
           node scripts/migration/verify-spans.mjs
           node scripts/migration/verify-atoms.mjs
           node scripts/migration/verify-inline-blocks.mjs
+          node scripts/migration/verify-parser.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |

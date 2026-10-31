@@ -86,6 +86,22 @@ export const CONTENT_MODEL_ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEn
   'errors.document.DUPLICATE_NOTE_ID': { i18nKey: 'errors.document.DUPLICATE_NOTE_ID', params: ['noteId'], severity: 'error' },
   'errors.document.UNRESOLVED_NOTE_REFERENCE': { i18nKey: 'errors.document.UNRESOLVED_NOTE_REFERENCE', params: ['noteId'], severity: 'error' },
   'errors.document.INVALID_SOURCE_HASH': { i18nKey: 'errors.document.INVALID_SOURCE_HASH', params: ['sourceHash'], severity: 'error' },
+  // ── parser (שלב 17; מוצאן ב-parser/parse.ts) ──
+  'errors.parser.REGISTRY_RECORD_MISSING': { i18nKey: 'errors.parser.REGISTRY_RECORD_MISSING', params: ['recordId'], severity: 'fatal' },
+  'errors.parser.INVALID_OPTIONS': { i18nKey: 'errors.parser.INVALID_OPTIONS', params: ['reason'], severity: 'error' },
+  'errors.parser.SENTINEL_IN_INPUT': { i18nKey: 'errors.parser.SENTINEL_IN_INPUT', params: ['offset'], severity: 'error' },
+  'errors.parser.INVALID_CONTROL_CHAR': { i18nKey: 'errors.parser.INVALID_CONTROL_CHAR', params: ['offset', 'codePoint'], severity: 'error' },
+  'errors.parser.DUPLICATE_METADATA_KEY': { i18nKey: 'errors.parser.DUPLICATE_METADATA_KEY', params: ['key', 'startUtf16'], severity: 'error' },
+  'errors.parser.INVALID_ENDNOTE_PREFIX': { i18nKey: 'errors.parser.INVALID_ENDNOTE_PREFIX', params: ['prefix'], severity: 'error' },
+  'errors.parser.INVALID_CUSTOM_STYLE': { i18nKey: 'errors.parser.INVALID_CUSTOM_STYLE', params: ['styleId', 'reason'], severity: 'error' },
+  'errors.parser.WARN_PRE_HEADING_CONTENT': { i18nKey: 'errors.parser.WARN_PRE_HEADING_CONTENT', params: [], severity: 'warning' },
+  'errors.parser.WARN_EDITORIAL_REMOVED': { i18nKey: 'errors.parser.WARN_EDITORIAL_REMOVED', params: [], severity: 'warning' },
+  'errors.parser.WARN_UNMATCHED_EDITORIAL': { i18nKey: 'errors.parser.WARN_UNMATCHED_EDITORIAL', params: [], severity: 'warning' },
+  'errors.parser.WARN_H7_SIMAN_DISCARDED': { i18nKey: 'errors.parser.WARN_H7_SIMAN_DISCARDED', params: ['simanNumber'], severity: 'warning' },
+  'errors.parser.WARN_UNMATCHED_FOOTNOTE': { i18nKey: 'errors.parser.WARN_UNMATCHED_FOOTNOTE', params: [], severity: 'warning' },
+  'errors.parser.WARN_NEAR_MISS_HEADING': { i18nKey: 'errors.parser.WARN_NEAR_MISS_HEADING', params: [], severity: 'warning' },
+  'errors.parser.WARN_UNMATCHED_INLINE_MARKER': { i18nKey: 'errors.parser.WARN_UNMATCHED_INLINE_MARKER', params: ['styleId'], severity: 'warning' },
+  'errors.parser.WARN_HTML_IN_TEXT': { i18nKey: 'errors.parser.WARN_HTML_IN_TEXT', params: [], severity: 'warning' },
 });
 
 /** השגיאה הבסיסית של content-model — עוברת דרך הקטלוג בזמן יצירה. */

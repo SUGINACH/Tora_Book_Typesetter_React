@@ -124,6 +124,26 @@ export {
   serializeDocument,
 } from './document.js';
 
+// ── שלב 17: פורט הפרסר הישן — מרשם המזהים והתוחמים ──
+export type {
+  CoverageProof,
+  CustomStyleGrammar,
+  CustomStyleMatcher,
+  DiagnosticSeverity,
+  ParseResult,
+  ParserDiagnostic,
+  ParserOptions,
+  SyntaxSpan,
+} from './parser/parse.js';
+export { parseSourceText } from './parser/parse.js';
+export type { IdentifierRecord } from './parser/registry-data.js';
+export {
+  IDENTIFIER_RECORDS,
+  PIPELINE_STAGES,
+  REGISTRY_FROZEN_AT,
+  REGISTRY_SCHEMA_VERSION,
+} from './parser/registry-data.js';
+
 // ── קטלוג שגיאות מקומי (אותו דפוס שלב 12; content-model חסר תלויות) ──
 export type { ErrorCatalogEntry, ErrorParamValue, ErrorParams } from './errors.js';
 export {

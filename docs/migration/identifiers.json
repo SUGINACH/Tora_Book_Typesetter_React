@@ -1,0 +1,2528 @@
+{
+ "schemaVersion": 1,
+ "frozenAt": "2026-11-01",
+ "stage": 17,
+ "authority": "אפיון §3.3 (שימור צנרת הפרסר) · §6.2 (אין sentinel, provenance) · §7 (צנרת) · §18-M2 · תכנית 100 השלבים, שלב 17",
+ "purpose": "מרשם machine-readable של כל מזהי הטקסט ותוחמי הקלט מכל קובצי הפרסר והמבחנים במקורות הנעולים. מקור אחד: הפרסר צורך את התחביר מהנתונים הנגזרים מכאן (registry-data.ts), ו־identifiers.md מופק מכאן.",
+ "scanScope": {
+  "method": "סריקה שיטתית של כל קובצי הפרסר, הטוקנייזר והמבחנים בשבעת המקורות הנעולים; ההשוואה למקור קובעת שהמרשם מלא (סורק הכיסוי במאמת)",
+  "lockedSources": [
+   {
+    "id": "React",
+    "role": "הפרסר המופורט (TypeScript) — סמכות התחביר",
+    "files": "src/parser/*.ts, src/types/*.ts, tests/unit/parser/parser.test.ts (מוחזק ב־packages/test-fixtures/legacy/react-lock)"
+   },
+   {
+    "id": "Orange",
+    "role": "הבייסליין — טוקנייזר שורות בדפדפן + מדיניות תצוגה",
+    "files": "typesetter.js, app.js, index.html"
+   },
+   {
+    "id": "Yellow",
+    "role": "וריאנט מנוע — אותו טוקנייזר",
+    "files": "typesetter.js"
+   },
+   {
+    "id": "Gold",
+    "role": "וריאנט מנוע — אותו טוקנייזר",
+    "files": "typesetter.js"
+   },
+   {
+    "id": "Green",
+    "role": "וריאנט מנוע — אותו טוקנייזר",
+    "files": "typesetter.js"
+   },
+   {
+    "id": "IMUD_TORANI",
+    "role": "מפרט הקלט §7–§8",
+    "files": "shared/specs/Software_specification.md"
+   },
+   {
+    "id": "Typesetter_doc",
+    "role": "חוזה מוצר — ללא תחביר קלט נוסף",
+    "files": "—"
+   }
+  ]
+ },
+ "precedence": {
+  "pipelineStages": [
+   "1. metadata (לפני הכותרת הראשונה בלבד)",
+   "2. editorial pre-pass (תוכן כל שורה)",
+   "3. sidenote H7 (שורה שלמה)",
+   "4. endnote prefix (שורה שלמה)",
+   "5. footnote brackets (inline על הטקסט המחובר שנותר)",
+   "6. custom linePrefix (שורה)",
+   "7. heading (שורה)",
+   "8. paragraph assembly (AST)"
+  ],
+  "perLine": "metadata-key(10) → sidenote-h7(20) → endnote-prefix(30) → custom-style-linePrefix(40) → heading-line(50) → paragraph(90)",
+  "inline": "editorial-notes(5, קדם-מעבר) → footnote-brackets(60) → custom-style-inlineMarker(61)",
+  "conflictRule": "סדר הצינור הישן נשמר במדויק: מי שמוקדם בצינור גובר; בתוך שלב הסגנונות — ההגדרה המופעלת הראשונה בסדר המערך זוכה"
+ },
+ "records": [
+  {
+   "recordId": "metadata-block",
+   "category": "block-rule",
+   "legacyId": "פתח הספר — שורות metadata לפני הכותרת הראשונה; שורה ריקה אחרי הפתיח סוגרת את הבלוק",
+   "status": "active-input",
+   "syntax": {
+    "kind": "rule",
+    "firstHeadingDetector": "^כותרת\\s+\\d+",
+    "scope": "before-first-heading",
+    "blockEnd": "blank line after the opening block (per spec §7.6)"
+   },
+   "stream": "metadata",
+   "precedence": 10,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "22-58"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/index.ts",
+     "sha256": "ea37fdefae7a3a57c74e6fbe49c1bf96d6ee10ca92e92df23937685d07cbcd7a",
+     "lines": "19-21"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "401-421"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "שורה שאינה metadata ואינה כותרת לפני הכותרת הראשונה",
+     "legacyBehavior": "React: השורה נזרקת בשקט מהגוף (parseMetadata מסיר את כל השורות עד הכותרת)",
+     "newBehavior": "השורה נשמרת כבלוק גוף — אין אטום אבוד (§6.2); הבדל מתועד",
+     "decision": "new: preserve"
+    },
+    {
+     "case": "שורות ריקות בין ה-metadata לכותרת הראשונה",
+     "legacyBehavior": "נמחקות (endIdx walk-back) — אין בהן תוכן",
+     "newBehavior": "נחשבות מפרידי־פסקה (syntax) — זהות סמנטית",
+     "decision": "equivalent"
+    },
+    {
+     "case": "שורת metadata אחרי הכותרת הראשונה",
+     "legacyBehavior": "React: לא מזוהה (נשארת תוכן); Orange: parseMetadataFromText מפרסר את כל הטקסט ומסיר שורות metadata בכל מקום",
+     "newBehavior": "לפני הכותרת הראשונה בלבד — כאפיון §7.6 וכהוראת התכנית; הבדל Orange מתועד",
+     "decision": "React + spec §7.6"
+    },
+    {
+     "case": "מפתח metadata כפול (אותו מפתח פעמיים לפני הכותרת)",
+     "legacyBehavior": "React: הערך האחרון דורס את הקודם (מיפוי לפי שדה)",
+     "newBehavior": "נדחה: errors.parser.DUPLICATE_METADATA_KEY — המסמך מאומת ללא מפתחות כפולים (שלב 16)",
+     "decision": "new: reject"
+    }
+   ],
+   "fixtureId": "ident-metadata-block",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry[]",
+    "detail": "ערך עם SourceSpan בזרם metadata; המפתח והתוחם — syntax spans"
+   }
+  },
+  {
+   "recordId": "metadata-key:שם הספר",
+   "category": "line-marker",
+   "legacyId": "שם הספר - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^שם הספר\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "שם הספר - מקום בינה",
+    "keyField": "bookName",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-bookName",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'שם הספר', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:נושא",
+   "category": "line-marker",
+   "legacyId": "נושא - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^נושא(?:[\\/\\\\].+)?\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "נושא/כותרת משנה - הוצאה",
+    "keyField": "subject",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-subject",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'נושא', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:נושא מפורט",
+   "category": "line-marker",
+   "legacyId": "נושא מפורט - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^נושא מפורט(?:[\\/\\\\].+)?\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "נושא מפורט\\תיאור - הקדמות",
+    "keyField": "detailedSubject",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-detailedSubject",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'נושא מפורט', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:פרטי מהדורא",
+   "category": "line-marker",
+   "legacyId": "פרטי מהדורא - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^פרטי מהדורא(?:[\\/\\\\].+)?\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "פרטי מהדורא/חלקים - מהדורת ניסיון",
+    "keyField": "editionDetails",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-editionDetails",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'פרטי מהדורא', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:שם המחבר",
+   "category": "line-marker",
+   "legacyId": "שם המחבר - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^שם המחבר\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "שם המחבר - נתנאל",
+    "keyField": "authorName",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-authorName",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'שם המחבר', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:מקום ושנת הוצאה",
+   "category": "line-marker",
+   "legacyId": "מקום ושנת הוצאה - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^מקום ושנת הוצאה\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "מקום ושנת הוצאה - ירושלים",
+    "keyField": "placeAndYear",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-placeAndYear",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'מקום ושנת הוצאה', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:שמירת זכויות",
+   "category": "line-marker",
+   "legacyId": "שמירת זכויות - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^שמירת זכויות\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "שמירת זכויות - הפקר",
+    "keyField": "copyright",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-copyright",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'שמירת זכויות', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:פרטי הוצאה לאור",
+   "category": "line-marker",
+   "legacyId": "פרטי הוצאה לאור - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^פרטי הוצאה לאור\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "פרטי הוצאה לאור - הוצאת זוכמיר",
+    "keyField": "publisherDetails",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-publisherDetails",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'פרטי הוצאה לאור', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:פרטי קשר",
+   "category": "line-marker",
+   "legacyId": "פרטי קשר - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^פרטי קשר\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "פרטי קשר - 052-7666666",
+    "keyField": "contactDetails",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-contactDetails",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'פרטי קשר', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "metadata-key:פרטים נוספים",
+   "category": "line-marker",
+   "legacyId": "פרטים נוספים - <ערך>",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^פרטים נוספים\\s*[-–—:]\\s*(.+)$",
+    "flags": "i",
+    "example": "פרטים נוספים - אין לסמוך",
+    "keyField": "additionalDetails",
+    "note": "תוחם: - – — : (איחוד React ‎[-:]‎ ו־Orange ‎[-–—:]‎); סיומת /<תווית> או \\<תווית> לנושא/נושא מפורט/פרטי מהדורא (איחוד React ‎(?:\\/.+)?‎ עם תוויות Orange)"
+   },
+   "stream": "metadata",
+   "precedence": 11,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "3-14"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "749-809"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "151-182"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "403-419"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "ערך ריק (\"שם הספר -\")",
+     "legacyBehavior": "React: אין התאמה (‎(.+)‎) — השורה נשארת תוכן; Orange: מזוהה עם ערך ריק ומוסרת",
+     "newBehavior": "כ־React — אין התאמה; אין אטום אבוד",
+     "decision": "React"
+    },
+    {
+     "case": "סיומת גרידית — התוחם שנבחר הוא האחרון האפשרי (backtracking של ‎.+‎)",
+     "legacyBehavior": "React: ‎נושא/א - ב - ג‎ ← ערך=ג",
+     "newBehavior": "זהה (אותה תבנית גרידית)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחם – או — (קו מתח/קו ארוך)",
+     "legacyBehavior": "React: לא מזוהה; Orange: מזוהה",
+     "newBehavior": "מזוהה — איחוד Orange; הבדל מתועד",
+     "decision": "union"
+    }
+   ],
+   "fixtureId": "ident-metadata-additionalDetails",
+   "mapping": {
+    "target": "TorahDocument.metadata: MetadataEntry {key:'פרטים נוספים', value, source}",
+    "detail": "LEGACY_METADATA_KEYS (שלב 16); מפתח נוסף מהמקור יתווסף כאן אוטומטית על ידי סורק הכיסוי"
+   }
+  },
+  {
+   "recordId": "heading-line",
+   "category": "line-marker",
+   "legacyId": "כותרת <N> [מספר <X> [(<Y>)]] - <טקסט> (N=0–7)",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^כותרת\\s+(\\d+)(?:\\s+מספר\\s+(\\d+)(?:\\s*\\((\\d+)\\))?)?\\s*[-–—]\\s*(.+)$",
+    "laxPattern": "^כותרת\\s+(\\d+).*?[-–—]\\s*(.+)$",
+    "flags": "",
+    "structures": [
+     "כותרת N - text",
+     "כותרת N מספר X - text",
+     "כותרת N מספר X (Y) - text"
+    ],
+    "dashVariants": [
+     "-",
+     "–",
+     "—"
+    ],
+    "unionRule": "קודם התבנית המובנית של React (עם לכידת מספר X (Y)); אם לא התאימה — התבנית הגמישה של Orange (כל טקסט בין הרמה למקף, המקף הראשון חותך, בלי לכידת מספר) — הבייסליין בפועל; הרמה חייבת 0–7 והטקסט אינו ריק (React)",
+    "note": "נורמליזציה של ‎(?:\\s*-\\s*|\\s*–\\s*|\\s*—\\s*|\\s*-\\s*)‎ הישן ל־‎\\s*[-–—]\\s*‎ — שקולה לחלוטין. התבנית הגמישה נדרשת בפועל: 82 שורות 'כותרת 7 (מקור: …) - …' בקורפוס הקנוני שהבייסליין מזהה כהערות צד"
+   },
+   "stream": "body",
+   "precedence": 50,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/header-parser.ts",
+     "sha256": "11319257376366ea9523eed713b063772ebf60558b399613c301a046d1567fb6",
+     "lines": "14-49"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/ast-builder.ts",
+     "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a",
+     "lines": "45-74"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "10-58"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4053-4110"
+    },
+    {
+     "repo": "Yellow",
+     "commit": "878535e12eb4aa7e3c4a72e0e79687082d8a6d3b",
+     "path": "typesetter.js",
+     "sha256": "b2c772bbff07d88a872ee94c9c9e1b1716482c3af3763795e33aa8237f752908",
+     "lines": "3051-3055"
+    },
+    {
+     "repo": "Green",
+     "commit": "e5cde5f194d0d9e9b20fdaa2a742f9bf6e8aec53",
+     "path": "typesetter.js",
+     "sha256": "f1fd6ff697acf10650ee4382f0588b7e14a971b2b355cb1b5778addf606decdb",
+     "lines": "4030-4034"
+    },
+    {
+     "repo": "Gold",
+     "commit": "a444d34ccad30fd5ed0d6fd3873adbe9c23cb7e0",
+     "path": "typesetter.js",
+     "sha256": "cb68b79163f0cae4cb177a40a2550c1500f2b134f824383afd80b0b4ab846c0b",
+     "lines": "4143-4147"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "333-352"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "רמה 8 ומעלה",
+     "legacyBehavior": "React: null — פסקה רגילה; Orange: מזוהה ככותרת (אין בדיקת גבול)",
+     "newBehavior": "כ־React — פסקה + אזהרה ממוקמת (לא נבלע בשקט)",
+     "decision": "React"
+    },
+    {
+     "case": "בלי מקף (\"כותרת 3 טקסט\")",
+     "legacyBehavior": "לא כותרת — פסקה בשקט (מבחן ישן מפורש)",
+     "newBehavior": "פסקה + אזהרה ממוקמת",
+     "decision": "React + warning"
+    },
+    {
+     "case": "טקסט ריק אחרי המקף (\"כותרת 2 -\")",
+     "legacyBehavior": "React: לא כותרת (‎(.+)‎); Orange: כותרת עם טקסט ריק (‎(.*)‎)",
+     "newBehavior": "כ־React — פסקה + אזהרה",
+     "decision": "React"
+    },
+    {
+     "case": "טקסט עודף בין הרמה למקף — למשל \"כותרת 7 (מקור: הוצאה, 7, 367) - חובת שמירה\"",
+     "legacyBehavior": "React: פסקה; Orange (הבייסליין): כותרת — הטוקנייזר עם ‎.*?‎; 82 שורות כאלה בקורפוס הקנוני",
+     "newBehavior": "כותרת לפי התבנית הגמישה (Orange) — הבייסליין קובע; החלק העודף נצרך כ-syntax; הפרש מול React-הישן מוסבר במאמת הדיפרנציאלי",
+     "decision": "Orange (baseline)"
+    },
+    {
+     "case": "מקף בתוך הטקסט העודף (\"כותרת 7 (א-ב) - ג\")",
+     "legacyBehavior": "Orange: המקף הראשון חותך — הטקסט נחתך מוקדם",
+     "newBehavior": "זהה ל־Orange — התבנית הגמישה עצלה",
+     "decision": "Orange parity"
+    },
+    {
+     "case": "ללא רווח אחרי 'כותרת' (\"כותרת2 - x\")",
+     "legacyBehavior": "React: פסקה (‎\\s+‎); Orange: כותרת (‎\\s*‎)",
+     "newBehavior": "כ־React",
+     "decision": "React"
+    },
+    {
+     "case": "רווחים מקדימים/עוקבים בשורה",
+     "legacyBehavior": "שני המנועים מקצצים (trim) לפני ההתאמה",
+     "newBehavior": "זהה; הרווחים החתוכים — syntax spans (line-trim)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "מספר שלילי/לא תקין",
+     "legacyBehavior": "parseInt — ערכים לא תקינים לא עוברים את ‎\\d+‎",
+     "newBehavior": "זהה (‎\\d+‎ בלבד)",
+     "decision": "equivalent"
+    }
+   ],
+   "fixtureId": "ident-heading-line",
+   "mapping": {
+    "target": "ContentBlock {role:'heading', headingLevel:0–7}",
+    "detail": "מזהה בלוק נגזר; הקידומת 'כותרת N [מספר X (Y)] - ' — syntax spans; הטקסט — אטומים"
+   }
+  },
+  {
+   "recordId": "sidenote-h7",
+   "category": "line-marker",
+   "legacyId": "כותרת 7 - <טקסט הערת צד> (הערת צד מוצמדת לפסקה הבאה)",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^כותרת\\s+7(?:\\s+מספר\\s+\\d+(?:\\s*\\(\\d+\\))?)?\\s*[-–—]\\s*(.+)$",
+    "flags": "",
+    "note": "כל שורת H7 — הערת צד; בדומה ל־H5/H6 במצב side_note (הגדרה, לא קלט)"
+   },
+   "stream": "sidenote",
+   "precedence": 20,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/sidenote-parser.ts",
+     "sha256": "987f3287c7e5eae49bd491d654072dca935db91d939ce0135b9735aa809c79f7",
+     "lines": "8-30"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/index.ts",
+     "sha256": "ea37fdefae7a3a57c74e6fbe49c1bf96d6ee10ca92e92df23937685d07cbcd7a",
+     "lines": "26-28"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "124-137"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4060-4067"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "386-390"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "H7 עם מספר (\"כותרת 7 מספר 395 - ...\")",
+     "legacyBehavior": "React: המספר נזרק (ParsedSidenote בלי מספר); מופיע בקורפוס (ch63)",
+     "newBehavior": "כ־React — המספר לא נשמר בפרט ההערה; אזהרה ממוקמת מתעדת את הזנחתו",
+     "decision": "React parity"
+    },
+    {
+     "case": "H7 עם ##הערת עורך## בטקסט",
+     "legacyBehavior": "הערת העורך מוסרת לפני חילוץ הערת הצד (סדר הצינור)",
+     "newBehavior": "זהה — התוכן של אחרי ההסרה; ההסרה נרשמת כ־suppress",
+     "decision": "equivalent"
+    },
+    {
+     "case": "H7 שכולו הערת עורך (\"כותרת 7 - ##x##\")",
+     "legacyBehavior": "אחרי ההסרה אין טקסט → לא כותרת → השורה כולה נשארת פסקה",
+     "newBehavior": "זהה — פסקה עם הטקסט הגולמי שנותר + אזהרה",
+     "decision": "equivalent"
+    },
+    {
+     "case": "סוגריים [..] בטקסט H7",
+     "legacyBehavior": "לא מחולצים כהערות שוליים — שורת H7 הוסרה לפני שלב הסוגריים",
+     "newBehavior": "זהה — סוגריים מילוליים בגוף הערת הצד",
+     "decision": "equivalent"
+    }
+   ],
+   "fixtureId": "ident-sidenote-h7",
+   "mapping": {
+    "target": "notes.sidenotes: NoteEntry + בלוק סמן heading בגוף",
+    "detail": "בלוק heading-7 בגוף ש-inline שלו הוא note-reference להערה; טקסט ההערה — אטומים בזרם sidenote; העיגון לפסקה הבאה — מדיניות שלב 54"
+   },
+   "policyStage": 54
+  },
+  {
+   "recordId": "endnote-prefix",
+   "category": "line-marker",
+   "legacyId": "הערת סיום - <טקסט> (קידומת המוגדרת ב-settings.notes.endnotePrefix)",
+   "status": "active-input",
+   "syntax": {
+    "kind": "prefix",
+    "prefix": "הערת סיום -",
+    "configurable": "settings.notes.endnotePrefix",
+    "match": "startsWith על שורה מקוצצת; התוכן = השאר אחרי הקידומת, מקוצץ",
+    "note": "React: ‎slice(prefix.length).trim()‎ בלבד; Orange מוריד גם ‎^\\s*[:\\-–—]\\s*‎ אחרי הקידומת — הבדל מתועד, ההחלטה: תחביר React"
+   },
+   "stream": "endnote",
+   "precedence": 30,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/endnote-parser.ts",
+     "sha256": "5ebcdad0a54ef7dc464bfcf70135d6d7503dce1fd068a9217d972b28f714b52e",
+     "lines": "7-31"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/index.ts",
+     "sha256": "ea37fdefae7a3a57c74e6fbe49c1bf96d6ee10ca92e92df23937685d07cbcd7a",
+     "lines": "30-43"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "110-122"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4046-4051"
+    },
+    {
+     "repo": "Yellow",
+     "commit": "878535e12eb4aa7e3c4a72e0e79687082d8a6d3b",
+     "path": "typesetter.js",
+     "sha256": "b2c772bbff07d88a872ee94c9c9e1b1716482c3af3763795e33aa8237f752908",
+     "lines": "3026-3046"
+    },
+    {
+     "repo": "Green",
+     "commit": "e5cde5f194d0d9e9b20fdaa2a742f9bf6e8aec53",
+     "path": "typesetter.js",
+     "sha256": "f1fd6ff697acf10650ee4382f0588b7e14a971b2b355cb1b5778addf606decdb",
+     "lines": "4005-4025"
+    },
+    {
+     "repo": "Gold",
+     "commit": "a444d34ccad30fd5ed0d6fd3873adbe9c23cb7e0",
+     "path": "typesetter.js",
+     "sha256": "cb68b79163f0cae4cb177a40a2550c1500f2b134f824383afd80b0b4ab846c0b",
+     "lines": "4118-4138"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "374-379"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "שורת הערה שכולה הערה (ממוצעת לשורה עצמה)",
+     "legacyBehavior": "React: השורה הופכת לשורת placeholder במקומה; ב־AST היא מצטרפת לפסקה עם השורות הסמוכות",
+     "newBehavior": "בלוק גוף ש-inline שלו note-reference באותה מיקום זרימה",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תווים נוספים אחרי הקידומת (\":\" או מקף נוסף)",
+     "legacyBehavior": "React: נשמרים בטקסט ההערה; Orange: מוסרים",
+     "newBehavior": "כ־React; הבדל Orange מתועד",
+     "decision": "React"
+    },
+    {
+     "case": "סוגריים [..] בטקסט הערת הסיום",
+     "legacyBehavior": "ליטרליים — הערת הסיום חולצה לפני שלב הסוגריים",
+     "newBehavior": "זהה — אטומים מילוליים בגוף ההערה",
+     "decision": "equivalent"
+    },
+    {
+     "case": "קידומת ריקה (הגדרת משתמש)",
+     "legacyBehavior": "startsWith('') מתאים לכל שורה — כל שורה הערת סיום; אין מגן בישן",
+     "newBehavior": "נדחה: errors.parser.INVALID_ENDNOTE_PREFIX — קידומת ריקה אסורה",
+     "decision": "new: reject"
+    }
+   ],
+   "fixtureId": "ident-endnote-prefix",
+   "mapping": {
+    "target": "notes.endnotes: NoteEntry + InlineItem {kind:'note-reference'} בגוף",
+    "detail": "הקידומת — syntax span; טקסט ההערה — אטומים בזרם endnote; השלמת endnotes בסוף חלק — שלב 55"
+   },
+   "policyStage": 55
+  },
+  {
+   "recordId": "footnote-brackets",
+   "category": "inline-delimiter",
+   "legacyId": "[ <טקסט הערה> ] (תוחמים המוגדרים ב-settings.notes.footnoteDelimiters; קינון נספר)",
+   "status": "active-input",
+   "syntax": {
+    "kind": "delimiters",
+    "open": "[",
+    "close": "]",
+    "configurable": "settings.notes.footnoteDelimiters",
+    "nesting": "depth counting — findMatchingCloseBracket הישן",
+    "note": "חילוץ על הטקסט המחובר (join('\\n')) — הערה יכולה לחצות שורות; תוחם פתוח בלי סוגר — לא הערה (מילולי)"
+   },
+   "stream": "footnote",
+   "precedence": 60,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/footnote-parser.ts",
+     "sha256": "41998ed76902a2343d392fa95393eae7d4427c6782da201182e5ede58dff36ed",
+     "lines": "13-57"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/nested-bracket-matcher.ts",
+     "sha256": "a64d3b1cb12c7bc50c040f52819a962299c220d23817cf803b635291249fa276",
+     "lines": "7-22"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/index.ts",
+     "sha256": "ea37fdefae7a3a57c74e6fbe49c1bf96d6ee10ca92e92df23937685d07cbcd7a",
+     "lines": "45-51"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "60-108"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "361-372"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "סוגר פתוח בלי סוגר (\"טקסט [ללא סגירה\")",
+     "legacyBehavior": "לא הערה — הטקסט נשאר כמו שהוא (מבחן ישן מפורש)",
+     "newBehavior": "זהה + אזהרה ממוקמת",
+     "decision": "equivalent + warning"
+    },
+    {
+     "case": "קינון (\"[ראה [פנימי] חיצוני]\")",
+     "legacyBehavior": "הערה אחת — הסוגר התואם החיצוני; הסוגריים הפנימיים בטקסט ההערה",
+     "newBehavior": "זהה — אטומים בגוף ההערה כולל הסוגריים הפנימיים",
+     "decision": "equivalent"
+    },
+    {
+     "case": "הערה חוצת שורות",
+     "legacyBehavior": "אפשרית — החילוץ על הטקסט המחובר; בטקסט ההערה נשמר \\n",
+     "newBehavior": "גוף ההערה כולל explicit-break במקום ה\\n (אטום לא יכול להכיל תו בקרה); מיקום זהה",
+     "decision": "equivalent (mapping)"
+    },
+    {
+     "case": "הערה בתוך שורת כותרת / שורת סגנון מותאם",
+     "legacyBehavior": "מחולצת — שלב הסוגריים לפני ה־AST; ה-placeholder בטקסט הכותרת",
+     "newBehavior": "זהה — note-reference בתוך ה-inline של בלוק הכותרת/הסגנון",
+     "decision": "equivalent"
+    },
+    {
+     "case": "תוחמים מותאמים (למשל ( ) )",
+     "legacyBehavior": "נתמך דרך ההגדרות",
+     "newBehavior": "זהה — ParserOptions.footnoteDelimiters",
+     "decision": "equivalent"
+    }
+   ],
+   "fixtureId": "ident-footnote-brackets",
+   "mapping": {
+    "target": "notes.footnotes: NoteEntry + InlineItem {kind:'note-reference'}",
+    "detail": "התוחמים — syntax spans; תוכן ההערה — אטומים בזרם footnote; ההפניה נושאת SourceSpan של כל הטווח התחום; מספור טרם עימוד — שלב 20"
+   },
+   "policyStage": 20
+  },
+  {
+   "recordId": "editorial-notes",
+   "category": "inline-delimiter",
+   "legacyId": "##<טקסט הערת עריכה>## — מוסר מהגוף לחלוטין",
+   "status": "active-input",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "##[^#]+##",
+    "flags": "g",
+    "perLine": true,
+    "note": "React: פר-שורה, בלי # בתוכן; Orange/Yellow/Green/Gold: ‎##[\\s\\S]*?####‎ רב-שורתי בזמן רינדור — הבדל מתועד; ההסרה בחדש נרשמת כ־TransformRecord מסוג suppress"
+   },
+   "stream": "editorial",
+   "precedence": 5,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/editorial-note-parser.ts",
+     "sha256": "c20d249576faa30f7adfbf300751238485e64aa3f6c429a970052346135ce07c",
+     "lines": "11-13"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/index.ts",
+     "sha256": "ea37fdefae7a3a57c74e6fbe49c1bf96d6ee10ca92e92df23937685d07cbcd7a",
+     "lines": "23-24"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "139-149"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "19-24"
+    },
+    {
+     "repo": "Yellow",
+     "commit": "878535e12eb4aa7e3c4a72e0e79687082d8a6d3b",
+     "path": "typesetter.js",
+     "sha256": "b2c772bbff07d88a872ee94c9c9e1b1716482c3af3763795e33aa8237f752908",
+     "lines": "17-22"
+    },
+    {
+     "repo": "Green",
+     "commit": "e5cde5f194d0d9e9b20fdaa2a742f9bf6e8aec53",
+     "path": "typesetter.js",
+     "sha256": "f1fd6ff697acf10650ee4382f0588b7e14a971b2b355cb1b5778addf606decdb",
+     "lines": "17-22"
+    },
+    {
+     "repo": "Gold",
+     "commit": "a444d34ccad30fd5ed0d6fd3873adbe9c23cb7e0",
+     "path": "typesetter.js",
+     "sha256": "cb68b79163f0cae4cb177a40a2550c1500f2b134f824383afd80b0b4ab846c0b",
+     "lines": "17-22"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "392-401"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "## בודד (מספר אי-זוגי של ##)",
+     "legacyBehavior": "לא מוסר — נשאר טקסט מילולי",
+     "newBehavior": "זהה + אזהרה ממוקמת (לא נבלע בשקט)",
+     "decision": "equivalent + warning"
+    },
+    {
+     "case": "# בתוך התוכן (##a#b##)",
+     "legacyBehavior": "React: אין התאמה (‎[^#]+‎) — מילולי",
+     "newBehavior": "זהה",
+     "decision": "equivalent"
+    },
+    {
+     "case": "שורה שכולה הערת עורך",
+     "legacyBehavior": "אחרי ההסרה השורה מתרוקנת → מפריד פסקאות (הערה בתיעוד הישן: אין לסנן שורות ריקות)",
+     "newBehavior": "זהה — השורה מתרוקנת; התוכן נשמר בזרם editorial",
+     "decision": "equivalent"
+    },
+    {
+     "case": "שתי הערות בשורה אחת",
+     "legacyBehavior": "שתיהן מוסרות (global replace)",
+     "newBehavior": "שתי רשומות editorial + שני suppress",
+     "decision": "equivalent"
+    },
+    {
+     "case": "הערת עורך רב-שורתית",
+     "legacyBehavior": "React: לא מוסרת (פר-שורה); מנועי הדפדפן: מוסרת (רב-שורתי)",
+     "newBehavior": "כ־React הפרסר; הבדל המנועים מתועד",
+     "decision": "React"
+    }
+   ],
+   "fixtureId": "ident-editorial-notes",
+   "mapping": {
+    "target": "notes.editorial: NoteEntry + TransformRecord {kind:'suppress'}",
+    "detail": "הסרה מהגוף אסור ש'תיעלם' (§6.2): התוכן נשמר כבלוק note-body בזרם editorial, ה־## — syntax, וההסרה נרשמת בספר הטרנספורמציות; הערות editorial יתומות מטבען עד שלב 21"
+   }
+  },
+  {
+   "recordId": "paragraph-separator",
+   "category": "block-rule",
+   "legacyId": "שורה ריקה (אחרי ניקוי הערות עריכה) מפרידה פסקאות",
+   "status": "active-input",
+   "syntax": {
+    "kind": "rule",
+    "emptyLine": "trimmed === '' (אחרי הסרת הערות עריכה)",
+    "note": "מופיע בתיעוד editorial-note-parser הישן: 'שורות ריקות מפרידות פסקאות ב-AST builder'"
+   },
+   "stream": "body",
+   "precedence": 90,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/ast-builder.ts",
+     "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a",
+     "lines": "45-51"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/editorial-note-parser.ts",
+     "sha256": "c20d249576faa30f7adfbf300751238485e64aa3f6c429a970052346135ce07c",
+     "lines": "8-10"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4056-4059"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "שורה שהתרוקנה מהערת עורך",
+     "legacyBehavior": "מפריד פסקאות (השוואה אחרי ההסרה)",
+     "newBehavior": "זהה — השורה מסומנת ריקה לאחר ניקוי",
+     "decision": "equivalent"
+    },
+    {
+     "case": "שורות ריקות עוקבות",
+     "legacyBehavior": "מתפקדות כמפריד אחד (flushParagraph מרוקן מערך ריק)",
+     "newBehavior": "זהה",
+     "decision": "equivalent"
+    }
+   ],
+   "fixtureId": "ident-paragraph-separator",
+   "mapping": {
+    "target": "חלוקת ContentBlock לפסקאות",
+    "detail": "השורות הריקות — syntax spans (מפרידים); אין אטום אבוד"
+   }
+  },
+  {
+   "recordId": "line-join",
+   "category": "block-rule",
+   "legacyId": "שורות רצופות לא-ריקות מתאחדות לפסקה אחת בחיבור רווח בודד",
+   "status": "active-input",
+   "syntax": {
+    "kind": "rule",
+    "joinWith": "' ' (רווח אחד בין שורות)",
+    "note": "ast-builder ישן: ‎currentParagraph.join(' ')‎ — הרווח מוחדר על ידי הפרסר, אינו במקור"
+   },
+   "stream": "body",
+   "precedence": 91,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/ast-builder.ts",
+     "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a",
+     "lines": "25-43, 98-100"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "שלוש שורות רצופות",
+     "legacyBehavior": "פסקה אחת: שורה1 שורה2 שורה3 (רווח בודד בין כל שתיים)",
+     "newBehavior": "זהה — אטום רווח מוחדר עם origin מפורש לכל חיבור; ה\\n — syntax span",
+     "decision": "equivalent"
+    },
+    {
+     "case": "סוף מסמך בלי שורה ריקה",
+     "legacyBehavior": "flushParagraph בסוף — הפסקה האחרונה נסגרת",
+     "newBehavior": "זהה",
+     "decision": "equivalent"
+    }
+   ],
+   "fixtureId": "ident-line-join",
+   "mapping": {
+    "target": "ContentBlock {role:'body'} עם אטומי החדרה",
+    "detail": "הרווח המוחדר הוא אטום בעל פרוסה ריקה עם origin='parser:paragraph-join' (שלב 15); לא נעלם בכיסוי"
+   }
+  },
+  {
+   "recordId": "line-trim",
+   "category": "parser-behavior",
+   "legacyId": "קיצוץ רווחים/\\r מתחילת וסוף כל שורה",
+   "status": "active-input",
+   "syntax": {
+    "kind": "rule",
+    "trim": "leading/trailing whitespace (incl. \\r) — כל שלבי הפרסר הישן מקצצים",
+    "note": "בקורפוס הנעול יש שורות עם רווחים עוקבים (very_long: 482) — לא תיאורטי"
+   },
+   "stream": "body",
+   "precedence": 95,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/ast-builder.ts",
+     "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a",
+     "lines": "46"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/metadata-parser.ts",
+     "sha256": "01b4724aab095808e62c74b40e8fcf3685f6ab38ac200c53400a280ebd974f55",
+     "lines": "29"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/endnote-parser.ts",
+     "sha256": "5ebcdad0a54ef7dc464bfcf70135d6d7503dce1fd068a9217d972b28f714b52e",
+     "lines": "15"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4057"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "רווחים בקצה שורת תוכן",
+     "legacyBehavior": "נחתכים — לא מופיעים בטקסט הפסקה",
+     "newBehavior": "הטקסט הסמנטי זהה; הרווחים החתוכים — syntax spans מתועדים (אין אטום אבוד)",
+     "decision": "equivalent + accounting"
+    },
+    {
+     "case": "\\r\\n (סיומות Windows)",
+     "legacyBehavior": "ה\\r נחתך בקיצוץ",
+     "newBehavior": "זהה — ה\\r בתוך syntax span של הקיצוץ",
+     "decision": "equivalent"
+    }
+   ],
+   "fixtureId": "ident-line-trim",
+   "mapping": {
+    "target": "SyntaxSpan (accounting)",
+    "detail": "הרווחים החתוכים נרשמים כ-syntax spans מסוג line-trim — כל תו מקור מוכר בכיסוי"
+   }
+  },
+  {
+   "recordId": "custom-style-linePrefix",
+   "category": "line-marker",
+   "legacyId": "קידומת שורה מוגדרת־משתמש (סגנון טקסט מיובא, matcher.type === 'linePrefix')",
+   "status": "active-input",
+   "syntax": {
+    "kind": "prefix",
+    "prefix": "",
+    "configurable": "settings.customStyles[].matcher.prefix",
+    "match": "startsWith על שורה מקוצצת; הראשון בסדר ההגדרות (המופעלות) זוכה",
+    "contentRule": "React: ‎slice(prefix.length).trim()‎",
+    "note": "Orange מוריד גם ‎^\\s*[:\\-–—]\\s*‎ ומנתב לפי target/layoutMode (endnote/side_note/run_in/heading סינתטי) — הבדלים מתועדים; ההחלטה: תחביר React, הניתוב — מדיניות פריסה"
+   },
+   "stream": "body",
+   "precedence": 40,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/custom-style-parser.ts",
+     "sha256": "3ef8ab0861356c28b8ca4c49f6a6e97f1f396e6232f3df1cfa66f14934cd8abc",
+     "lines": "19-50"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/ast-builder.ts",
+     "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a",
+     "lines": "77-96"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/settings.ts",
+     "sha256": "163a94f44d9e02c7077e8b298e78bc7435f7feaf38be3a04ec276154a00ca418",
+     "lines": "105-108"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4078-4117"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "app.js",
+     "sha256": "1e10f71cb7c517c33e69504c4cb178a670299de957baaae11de0a6dcb9679dbf",
+     "lines": "664-681"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "428-438"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "שתי הגדרות שהקידומת שלהן מתאימה לאותה שורה",
+     "legacyBehavior": "הראשונה בסדר המערך (המופעלות) זוכה; break",
+     "newBehavior": "זהה — סדר ההגדרות קובע; נרשם כלל precedence",
+     "decision": "equivalent"
+    },
+    {
+     "case": "שורה שמתאימה גם לקידומת וגם לכותרת",
+     "legacyBehavior": "הסגנון רץ אחרי שלב הסוגריים ולפני ה־AST — sentinel מוצמד לשורה והיא כבר לא כותרת ב־AST",
+     "newBehavior": "זהה — הקידומת גוברת על זיהוי הכותרת (הסדר הישן נשמר)",
+     "decision": "equivalent"
+    },
+    {
+     "case": "target/layoutMode של Orange (endnote/side_note/run_in)",
+     "legacyBehavior": "Orange מנתב את השורה לזרם/תפקיד בהתאם להגדרה",
+     "newBehavior": "בלוק custom בגוף; הניתוב — מדיניות פריסה (שלבים 54–58) וההגדרות — settings-schema (שלב 30)",
+     "decision": "documented"
+    },
+    {
+     "case": "קידומת ריקה",
+     "legacyBehavior": "startsWith('') מתאים לכל שורה — אין מגן",
+     "newBehavior": "נדחית הגדרה עם קידומת ריקה: errors.parser.INVALID_CUSTOM_STYLE",
+     "decision": "new: reject"
+    }
+   ],
+   "fixtureId": "ident-custom-lineprefix",
+   "mapping": {
+    "target": "ContentBlock {role:'custom', styleId} + customStyleIds",
+    "detail": "הקידומת — syntax span; התוכן — אטומים; הערות שוליים בתוך השורה חולצו קודם (סדר הצינור) וההפניות בתוך הבלוק"
+   },
+   "policyStage": 30
+  },
+  {
+   "recordId": "custom-style-inlineMarker",
+   "category": "inline-delimiter",
+   "legacyId": "תוחמי inline מוגדרים־משתמש (matcher.type === 'inlineMarker', למשל « »)",
+   "status": "active-input",
+   "syntax": {
+    "kind": "delimiters",
+    "open": "",
+    "close": "",
+    "configurable": "settings.customStyles[].matcher.{open,close}",
+    "scan": "indexOf(open) → indexOf(close אחרי open+open.length) — הסוגר הראשון זוכה, בלי קינון",
+    "ranges": "start=פתיחה; end=סגירה+אורם; content=[start+len(open), end)",
+    "note": "מוגדר באפיון §8.1 ובטיפוסים הישנים (StyleMatcher) עם עזר findInlineMarkers — אך לא חובר לצינור הישן; ממומש כאן לפי הוראת התכנית ('פורט linePrefix ו־inlineMarker לפי התחביר הישן')"
+   },
+   "stream": "body",
+   "precedence": 61,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/custom-style-parser.ts",
+     "sha256": "3ef8ab0861356c28b8ca4c49f6a6e97f1f396e6232f3df1cfa66f14934cd8abc",
+     "lines": "55-79"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/settings.ts",
+     "sha256": "163a94f44d9e02c7077e8b298e78bc7435f7feaf38be3a04ec276154a00ca418",
+     "lines": "105-108"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "428-438"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "app.js",
+     "sha256": "1e10f71cb7c517c33e69504c4cb178a670299de957baaae11de0a6dcb9679dbf",
+     "lines": "664-681"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "פתיחה בלי סגירה",
+     "legacyBehavior": "findInlineMarkers עוצר (אין תוצאה) — הטקסט מילולי",
+     "newBehavior": "זהה + אזהרה ממוקמת",
+     "decision": "equivalent + warning"
+    },
+    {
+     "case": "קינון («א «ב» ג»)",
+     "legacyBehavior": "אין תמיכת קינון — הסגירה הראשונה סוגרת",
+     "newBehavior": "זהה",
+     "decision": "equivalent"
+    },
+    {
+     "case": "פתיחה/סגירה ריקים",
+     "legacyBehavior": "אין מגן",
+     "newBehavior": "נדחה: errors.parser.INVALID_CUSTOM_STYLE",
+     "decision": "new: reject"
+    }
+   ],
+   "fixtureId": "ident-custom-inlinemarker",
+   "mapping": {
+    "target": "InlineItem {kind:'inline-box', boxId:styleId}",
+    "detail": "התוחמים — syntax spans; התוכן — אטומים; ה-inline-box מסמן את הטווח המעוצב כולו (start..end)"
+   },
+   "policyStage": 30
+  },
+  {
+   "recordId": "custom-style-regex",
+   "category": "line-marker",
+   "legacyId": "matcher.type === 'regex' — תנאי זיהוי כללי (מוגדר בטיפוסים הישנים)",
+   "status": "specified-not-implemented",
+   "syntax": {
+    "kind": "none",
+    "note": "לא מומש באף מקור נעול (הערה מפורשת בקוד הישן: 'inlineMarker ו-regex יטופלו אחרת')"
+   },
+   "stream": "body",
+   "precedence": 41,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/custom-style-parser.ts",
+     "sha256": "3ef8ab0861356c28b8ca4c49f6a6e97f1f396e6232f3df1cfa66f14934cd8abc",
+     "lines": "42-43"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/settings.ts",
+     "sha256": "163a94f44d9e02c7077e8b298e78bc7435f7feaf38be3a04ec276154a00ca418",
+     "lines": "105-108"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "428-438"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "הגדרת regex בקלט",
+     "legacyBehavior": "לא מיושם — השורה נשארת תוכן רגיל",
+     "newBehavior": "זהה — לא מיושם גם בחדש; נרשם כאן כדי שהסריקה תוכיח שאין מזהה חסר; יידון בשלב 30",
+     "decision": "parity"
+    }
+   ],
+   "fixtureId": "ident-custom-regex",
+   "mapping": {
+    "target": "—",
+    "detail": "מחוץ להיקף הפרסר; החלטה מתועדת — settings-schema (שלב 30) יחליט אם נדרש"
+   },
+   "policyStage": 30
+  },
+  {
+   "recordId": "siman-numbering",
+   "category": "structure",
+   "legacyId": "מספר X (Y) בכותרת + מספור אוטומטי של סימנים (H2)",
+   "status": "active-input",
+   "syntax": {
+    "kind": "rule",
+    "explicit": "מספר X ← simanNumber; (Y) ← subNumber (חלק מתבנית הכותרת)",
+    "auto": "H2 בלי מספר — ממשיך את רצף המספרים בחלק (קודם+1)",
+    "note": "Orange: simanCounter לפי H2 בלבד, ‎סימן <גימטריה>‎ + resetSimanOnH1 — תצוגה בלבד, מדיניות שלב 58+; הפרסר החדש שומר מספר מפורש על הסימן"
+   },
+   "stream": "body",
+   "precedence": 51,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/header-parser.ts",
+     "sha256": "11319257376366ea9523eed713b063772ebf60558b399613c301a046d1567fb6",
+     "lines": "36-41"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "78-88"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4424-4429"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "index.html",
+     "sha256": "0f5b426205ccfe78eec8ca44bc2e3f2282aafd62afa692ebebb19b81ebb09598",
+     "lines": "709"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "tests/unit/parser/parser.test.ts",
+     "sha256": "c95bd0d8025919e4f13e970e1197d7c9921770131f8e2dee6304cf6f9a6f4c13",
+     "lines": "17-27"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "כותרת ברמה שאינה H2 עם מספר (\"כותרת 3 מספר 18 - ...\"; \"כותרת 0 מספר 1 - ...\")",
+     "legacyBehavior": "React: simanNumber על הצומת; Orange: לא פותח סימן",
+     "newBehavior": "כל כותרת (H0–H6) עם מספר מפורש פותחת Siman עם אותו מספר — שימור הנתון; H7 כמו בישן (המספר נזנח)",
+     "decision": "preserve via Siman"
+    },
+    {
+     "case": "H1 עם מספר (\"כותרת 1 מספר 4 - ...\")",
+     "legacyBehavior": "React: simanNumber=4 על צומת הכותרת",
+     "newBehavior": "H1 פותח חלק; אם יש מספר — נפתח גם סימן עם אותו מספר שבלוק הכותרת הראשון שלו הוא ה־H1",
+     "decision": "preserve via Siman"
+    },
+    {
+     "case": "תוכן לפני פותח־סימן ראשון בחלק",
+     "legacyBehavior": "הצומת יושב בשורש ללא מספר",
+     "newBehavior": "סימן סינתטי (מספר 1 ברצף) עוטף את התוכן — מבנה המסמך דורש סימן; הצמדה חד־חד־ערכית",
+     "decision": "new: structural"
+    }
+   ],
+   "fixtureId": "ident-siman-numbering",
+   "mapping": {
+    "target": "Siman {simanNumber, subNumber}",
+    "detail": "המספרים המפורשים — חלק מה-syntax של הכותרת; האוטומטיים — נגזרים דטרמיניסטית; תווית התצוגה (גימטריה) — שלב 67"
+   },
+   "policyStage": 67
+  },
+  {
+   "recordId": "h2-siman-prefix-strip",
+   "category": "structure",
+   "legacyId": "הסרת 'סימן <א-ת>:' מפתיחת טקסט H2 בזמן תצוגה (Orange)",
+   "status": "layout-computed",
+   "syntax": {
+    "kind": "regex",
+    "pattern": "^סימן\\s+[א-ת]+[:\\-–—\\s]*",
+    "flags": "i",
+    "note": "רץ על טקסט הכותרת בזמן הרינדור כשautoSimanH2 פועל — לא שינוי תוכן; הפרסר שומר את הטקסט המלא כמו שהוא"
+   },
+   "stream": "body",
+   "precedence": 52,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4424-4429"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "H2 שמתחיל ב'סימן א:'",
+     "legacyBehavior": "התווית מוסרת בתצוגה ומוחלפת בתווית האוטומטית",
+     "newBehavior": "הטקסט המלא נשמר באטומים; ההסרה — טרנספורמציית תצוגה (שלב 61/67)",
+     "decision": "preserve; display policy"
+    }
+   ],
+   "fixtureId": "ident-h2-prefix-strip",
+   "mapping": {
+    "target": "ContentBlock {role:'heading'} — הטקסט נשמר במלואו",
+    "detail": "טרנספורמציית תצוגה בלבד"
+   },
+   "policyStage": 61
+  },
+  {
+   "recordId": "shaar-designs",
+   "category": "structure",
+   "legacyId": "עיצובי שער: ראשי (main) / אחורי (back) / משנה (sub) — נכסים shaar_main/shaar_back/shaar_sub",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "אין תחביר קלט — הבחירה בהגדרות ובנכסים (1,053 עיצובים במלאי ההעברה); H1 במצב sub_shaar פותח שער משנה בפריסה"
+   },
+   "stream": "body",
+   "precedence": 70,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4173-4189, 4216-4232"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "55-64"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "280-287"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "בחירת עיצוב לסימן",
+     "legacyBehavior": "הגדרות UI + קבצי העיצובים; PageType בטיפוסים הישנים",
+     "newBehavior": "Siman.shaarDesign ('main'|'back'|'sub') זמין במודל; הפרסר אינו קובע — המדיניות (שלב 58/60/68) תמלא",
+     "decision": "settings-driven"
+    }
+   ],
+   "fixtureId": "ident-shaar-designs",
+   "mapping": {
+    "target": "Siman.shaarDesign (optional)",
+    "detail": "הבחירה בזמן פריסה לפי מדיניות; הנכסים — manifest נכסים (שלב 68)"
+   },
+   "policyStage": 68
+  },
+  {
+   "recordId": "first-word-window",
+   "category": "layout-computed",
+   "legacyId": "מילה ראשונה בחלון (first-word-window) — מילת הפתיחה של הפסקה הפותחת בגודל מוגדל",
+   "status": "layout-computed",
+   "syntax": {
+    "kind": "none",
+    "note": "מחושב בזמן עימוד: גודל/אורך/סף שורות מינימום — הכול הגדרות (§6.6 בישן); אין תחביר קלט"
+   },
+   "stream": "body",
+   "precedence": 80,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "288-338, 458-465"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "353-360"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "24-25"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "פסקה בתוך סוגריים פתוחות",
+     "legacyBehavior": "insideParen → דילוג על עיצוב מילה ראשונה",
+     "newBehavior": "הפרסר מספק את האטומים והמיקומים; ההחלטה — מדיניות שלב 64",
+     "decision": "layout policy"
+    }
+   ],
+   "fixtureId": "ident-first-word",
+   "mapping": {
+    "target": "InlineItem {kind:'marker', markerId:'first-word-window'} (בזמן פריסה)",
+    "detail": "הפרסר מסמן את מילת הפתיחה של כל פסקה פותחת־סימן כעוגן נתונים בלבד (ללא שינוי תוכן)"
+   },
+   "policyStage": 64
+  },
+  {
+   "recordId": "drop-word",
+   "category": "layout-computed",
+   "legacyId": "drop-word — מילת הפתיחה מוגדלת בחלון בראש הסימן",
+   "status": "layout-computed",
+   "syntax": {
+    "kind": "none",
+    "note": "createDropWord בישן — מחושב בזמם רינדור; TextType 'drop-word' הישן מעולם לא הופק על ידי הפרסר הישן"
+   },
+   "stream": "body",
+   "precedence": 81,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "338-392"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "24-25"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/ast-builder.ts",
+     "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a",
+     "lines": "12-125"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "מפגש עם הערות/סוגריים במילה הראשונה",
+     "legacyBehavior": "createDropWord מטפל בסימון הערה זעיר בתוך המילה",
+     "newBehavior": "האטומים וההפניות זמינים; העיצוב — שלב 64",
+     "decision": "layout policy"
+    }
+   ],
+   "fixtureId": "ident-drop-word",
+   "mapping": {
+    "target": "InlineItem {kind:'marker', markerId:'drop-word'} (בזמם פריסה)",
+    "detail": "כמו first-word — מדיניות שלב 64; TextType הישן מופה כאן באופן מלא"
+   },
+   "policyStage": 64
+  },
+  {
+   "recordId": "dibbur-hamatchil",
+   "category": "layout-computed",
+   "legacyId": "דיבור המתחיל (ד\"ה) — זיהוי אוטומטי של הפתיח עד המפריד הראשון",
+   "status": "layout-computed",
+   "syntax": {
+    "kind": "none",
+    "separators": ". - – — (isSep בישן)",
+    "window": "עד 80 תווים ראשונים; דילוג על תגיות HTML בסריקה (באג שתוקן בישן)",
+    "note": "applyDibburHamatchil בישן רץ על HTML בזמן רינדור; החדש יחשב על אטומים (שלב 64) — בלי HTML כמקור אמת"
+   },
+   "stream": "body",
+   "precedence": 82,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "209-260"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "361-365"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "25-26"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "מפריד בתוך 80 התווים הראשונים",
+     "legacyBehavior": "הפתיח עד המפריד (כולל) מסומן ד\"ה",
+     "newBehavior": "הפרסר מספק אטומים + breakBefore; החישוב — שלב 64 על אטומים",
+     "decision": "layout policy"
+    },
+    {
+     "case": "RUN_IN_START (כותרת רצה בפתיחת הפסקה)",
+     "legacyBehavior": "ד\"ה לא מוחל",
+     "newBehavior": "הפרסר מזהה בלוק כותרת נפרד; ההחלטה — שלב 64",
+     "decision": "layout policy"
+    }
+   ],
+   "fixtureId": "ident-dibbur-hamatchil",
+   "mapping": {
+    "target": "InlineItem {kind:'marker', markerId:'dibbur-hamatchil'} (בזמן פריסה)",
+    "detail": "המפרידים והחלון מתועדים כאן; המימוש על אטומים — שלב 64"
+   },
+   "policyStage": 64
+  },
+  {
+   "recordId": "paren-nesting",
+   "category": "inline-delimiter",
+   "legacyId": "סוגריים מקוננות ( ) — טקסט בסוגריים מוקטן לפי רמת קינון",
+   "status": "active-input",
+   "syntax": {
+    "kind": "delimiters",
+    "open": "(",
+    "close": ")",
+    "note": "בפרסר: תוכן מילולי — אין חלוקה (הסגנון בזמן רינדור); עץ הסוגריים המלא — שלב 19; סוגריים חוצי עמוד/טור — שלב 65"
+   },
+   "stream": "body",
+   "precedence": 62,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "2559-2666"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "37"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "4241-4246"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "סוגריים לא מאוזנות חוצות פסקאות",
+     "legacyBehavior": "findParenMatches מסמן balanced:false — סגנון עד סוף/מתחילת הטקסט; markInsideParenParagraphs מסמן פסקאות בתוך קינון",
+     "newBehavior": "הפרסר שומר סוגריים מילוליים; עץ הסוגריים והחצייה — שלב 19/65",
+     "decision": "stage 19"
+    }
+   ],
+   "fixtureId": "ident-paren-nesting",
+   "mapping": {
+    "target": "אטומים מילוליים (פרסר) → עץ סוגריים (שלב 19)",
+    "detail": "TextType 'paren-text' הישן ממופה לאטומים + מבנה סוגריים עתידי"
+   },
+   "policyStage": 19
+  },
+  {
+   "recordId": "running-headers",
+   "category": "page-furniture",
+   "legacyId": "כותרות רצות — 3 אזורים (ימין/מרכז/שמאל), Recto/Verso, פיצול שם הספר לפי מקף",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "ריהוט עמוד — לא תוכן קלט; נגזר מהמסמך (כותרות נוכחיות) + הגדרות"
+   },
+   "stream": "body",
+   "precedence": 71,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "583-716"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "35"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "366-371"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "תוכן הכותרת העליונה",
+     "legacyBehavior": "נגזר בזמן רינדור מהכותרות בעמוד",
+     "newBehavior": "אותו חישוב בשלב 67 על בסיס ה־AST וה־Layout IR",
+     "decision": "stage 67"
+    }
+   ],
+   "fixtureId": "ident-running-headers",
+   "mapping": {
+    "target": "PageTemplate (layout-api) + anchors",
+    "detail": "TextType 'running-header' הישן — החלטת זניחה מתועדת בשלב 16: ריהוט, לא תוכן"
+   },
+   "policyStage": 67
+  },
+  {
+   "recordId": "page-folio",
+   "category": "page-furniture",
+   "legacyId": "מספור עמודים — גימטריה/'דף'+גימטריה/ספרות, מסגרת, מיקום, ערך התחלתי",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "toGematria/toGematriaWithGeresh בישן — פונקציות טהורות שיעברו ל־policy-torah"
+   },
+   "stream": "body",
+   "precedence": 72,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "56-92"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "34"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "סימן עמוד מדומה",
+     "legacyBehavior": "מוזרק בזמן רינדור",
+     "newBehavior": "אטום החדרה עם origin מפורש (§6.2) — שלב 67",
+     "decision": "stage 67"
+    }
+   ],
+   "fixtureId": "ident-page-folio",
+   "mapping": {
+    "target": "InlineItem/אטום החדרה בזמן פריסה",
+    "detail": "TextType 'page-number' הישן — אטום החדרה (שלב 16)"
+   },
+   "policyStage": 67
+  },
+  {
+   "recordId": "section-divider",
+   "category": "asset",
+   "legacyId": "מפריד סוף־פרק — פירמידת וילנא / רומח / שושנתא / סלסול / תמונה / ללא",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "323 עיצובים ב־section_dividers.json; fitSectionDividerToPage בישן"
+   },
+   "stream": "body",
+   "precedence": 73,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "1540-1554, 5150-5156"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "36"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "355-358"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "מפריד שלא נכנס בתחתית העמוד",
+     "legacyBehavior": "fitSectionDividerToPage — דחיפה לעמוד הבא",
+     "newBehavior": "אילוץ בתוך חיפוש העמוד (שלבים 51–52, 68)",
+     "decision": "layout"
+    }
+   ],
+   "fixtureId": "ident-section-divider",
+   "mapping": {
+    "target": "ContentBlock {role:'custom', styleId:'section-divider'} + manifest נכסים",
+    "detail": "כמיפוי שלב 16; הנכסים — שלב 68"
+   },
+   "policyStage": 68
+  },
+  {
+   "recordId": "heading-ornaments",
+   "category": "asset",
+   "legacyId": "עיטורי כותרות — H2 עליון+תחתון (התאמת רוחב), H3 ימין+שמאל, שערים",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "header_ornaments.json / ornaments_left_right.json / ornaments_up_down.json; fitH2OrnamentsToText"
+   },
+   "stream": "body",
+   "precedence": 74,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "3591-3612"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "355-358"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "התאמת רוחב עיטור H2 לטקסט",
+     "legacyBehavior": "מדידה בזמן רינדור",
+     "newBehavior": "שלב 69 אחרי מדידה",
+     "decision": "layout"
+    }
+   ],
+   "fixtureId": "ident-heading-ornaments",
+   "mapping": {
+    "target": "manifest נכסים + layout",
+    "detail": "אין תחביר קלט"
+   },
+   "policyStage": 68
+  },
+  {
+   "recordId": "toc",
+   "category": "generated",
+   "legacyId": "תוכן עניינים — כללי + מפורט בשערי משנה; לכל רמה: הצגה/קיבוץ/גופן/גודל",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "buildStructuredTOC/renderPaginatedTOC בישן — נגזר מהכותרות; נקודת שבת fixed-point בחדש"
+   },
+   "stream": "body",
+   "precedence": 75,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "3401-3554"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "373-377"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "מספרי עמודים בתוכן העניינים",
+     "legacyBehavior": "נבנה אחרי עימוד ממפת הכותרות",
+     "newBehavior": "AnchorTable + fixed-point (שלבים 70–71)",
+     "decision": "stage 70"
+    }
+   ],
+   "fixtureId": "ident-toc",
+   "mapping": {
+    "target": "AnchorTable (שלב 70)",
+    "detail": "אין תחביר קלט"
+   },
+   "policyStage": 70
+  },
+  {
+   "recordId": "special-page-parts",
+   "category": "page-furniture",
+   "legacyId": "חלקי עמוד מיוחדים — הקדשה, הסכמות, עמודים מותאמים (סוגי עמוד מיובאים), תמונות מוטמעות",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "importedPageTypes/importedImagePages בישן; PageType הישן (regular…custom)"
+   },
+   "stream": "body",
+   "precedence": 76,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "app.js",
+     "sha256": "1e10f71cb7c517c33e69504c4cb178a670299de957baaae11de0a6dcb9679dbf",
+     "lines": "632-700"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/text.ts",
+     "sha256": "c543351ee323c7f5fe57e2bf2656c05f109cd1330c5914e949e337fa31363cd1",
+     "lines": "55-64"
+    },
+    {
+     "repo": "IMUD_TORANI",
+     "commit": "706ba95578c8666b1179d08de57da13a33987b96",
+     "path": "shared/specs/Software_specification.md",
+     "sha256": "3c4b6e75cbe680df1912f7592957f8b031a151e87d6563ac5e4165eddb8f0d65",
+     "lines": "423-449"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "עמוד מותאם אישית (JSON מיובא)",
+     "legacyBehavior": "מוצמד לפי insertionAnchor/repeatMode",
+     "newBehavior": "תבניות עמוד ב־layout-api (שלב 50) + manifest (שלב 68)",
+     "decision": "stage 50"
+    }
+   ],
+   "fixtureId": "ident-special-pages",
+   "mapping": {
+    "target": "PageTemplate (layout-api)",
+    "detail": "החלטת זניחה מתועדת שלב 16: PageType — מושג פריסה"
+   },
+   "policyStage": 50
+  },
+  {
+   "recordId": "note-divider",
+   "category": "page-furniture",
+   "legacyId": "קו מפריד מעל הערות השוליים — רגיל/עיגולים/ניצוץ/כוכבית/יהלום/קצר מימין/חצי קו/קו כפול/ללא",
+   "status": "settings-driven",
+   "syntax": {
+    "kind": "none",
+    "note": "note_rules.json + dividerStyle ב־NoteRules הישן — הגדרה, לא קלט"
+   },
+   "stream": "body",
+   "precedence": 77,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/types/settings.ts",
+     "sha256": "163a94f44d9e02c7077e8b298e78bc7435f7feaf38be3a04ec276154a00ca418",
+     "lines": "65-91"
+    },
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "app.js",
+     "sha256": "1e10f71cb7c517c33e69504c4cb178a670299de957baaae11de0a6dcb9679dbf",
+     "lines": "1360"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "בחירת המפריד",
+     "legacyBehavior": "הגדרות בלבד",
+     "newBehavior": "settings-schema (שלב 30) + רינדור (שלבים 53, 68)",
+     "decision": "settings"
+    }
+   ],
+   "fixtureId": "ident-note-divider",
+   "mapping": {
+    "target": "settings-schema",
+    "detail": "NoteRules הישן — החלטת זניחה מתועדת שלב 16 (הגדרות, לא תוכן)"
+   },
+   "policyStage": 30
+  },
+  {
+   "recordId": "sentinels-forbidden",
+   "category": "negative-rule",
+   "legacyId": "איסור sentinel (\\u0001…\\u0002) בקלט ובפלט — FN/EN/CUSTOM של הישן",
+   "status": "negative",
+   "syntax": {
+    "kind": "none",
+    "note": "הישן החדיר ‎\\u0001FN:id\\u0002‎, ‎\\u0001EN:id\\u0002‎, ‎\\u0001CUSTOM:id\\u0002‎ לטקסט; אפיון §6.2 אוסר; בחדש: הפניית הערה = InlineItem מפורש, סגנון = בלוק מפורש"
+   },
+   "stream": "body",
+   "precedence": 99,
+   "sources": [
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/footnote-parser.ts",
+     "sha256": "41998ed76902a2343d392fa95393eae7d4427c6782da201182e5ede58dff36ed",
+     "lines": "52"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/endnote-parser.ts",
+     "sha256": "5ebcdad0a54ef7dc464bfcf70135d6d7503dce1fd068a9217d972b28f714b52e",
+     "lines": "24"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/custom-style-parser.ts",
+     "sha256": "3ef8ab0861356c28b8ca4c49f6a6e97f1f396e6232f3df1cfa66f14934cd8abc",
+     "lines": "40"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "קלט המכיל \\u0001/\\u0002",
+     "legacyBehavior": "לא נבדק — sentinel יכול לזהם את הקלט",
+     "newBehavior": "נדחה מראש: errors.parser.SENTINEL_IN_INPUT — הפרסר מסרב לקלט מזוהם",
+     "decision": "new: reject"
+    },
+    {
+     "case": "פלט המכיל sentinel",
+     "legacyBehavior": "מחרוזות הביניים הכילו sentinels",
+     "newBehavior": "נאסר ונבדק: סריקת הפלט המלא (בדיקה שלילית במאמת)",
+     "decision": "new: verified"
+    }
+   ],
+   "fixtureId": "ident-sentinel-negative",
+   "mapping": {
+    "target": "—",
+    "detail": "בדיקה שלילית מחייבת: לא sentinel בקלט, לא sentinel בפלט, לא HTML כמקור אמת"
+   }
+  },
+  {
+   "recordId": "html-in-input",
+   "category": "negative-rule",
+   "legacyId": "HTML בקלט — אין פרשנות; תגיות הן טקסט מילולי",
+   "status": "negative",
+   "syntax": {
+    "kind": "none",
+    "note": "הישן הזריק HTML בשלבי רינדור (buildRunInHeadingHTML, applyDibburHamatchil סרק תגיות) — הקלט עצמו לא פורש כ־HTML באף פרסר נעול; החדש: תוכן HTML-נראה = אטומים מילוליים + אזהרה"
+   },
+   "stream": "body",
+   "precedence": 98,
+   "sources": [
+    {
+     "repo": "Orange",
+     "commit": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+     "path": "typesetter.js",
+     "sha256": "e5fe969a9d487ebd0819b6d58a7910e696b0e1eab22dba65031c95243ec15d67",
+     "lines": "209-260, 3355-3369"
+    },
+    {
+     "repo": "React",
+     "commit": "0c7b9927c33dbab32fedafdf4adf54c7431d11c5",
+     "path": "src/parser/ast-builder.ts",
+     "sha256": "63e554961295eb727b1de9ce9c280aae3506613c3c8edfda2517ed9b8201e72a",
+     "lines": "12-125"
+    }
+   ],
+   "edgeCases": [
+    {
+     "case": "שורה עם תגית (<b>טקסט</b>)",
+     "legacyBehavior": "הפרסרים הישנים לא פרשו HTML בקלט (ה־HTML נוצר בהמשך הצינור)",
+     "newBehavior": "אטומים מילוליים + אזהרה ממוקמת; שום החלטה לא נשענת על HTML כמקור אמת",
+     "decision": "literal + warning"
+    }
+   ],
+   "fixtureId": "ident-html-negative",
+   "mapping": {
+    "target": "אטומים מילוליים",
+    "detail": "מנע� 'ניחוש' מקור מתוך HTML (§6.2: 'אין לנחש מקור מ-HTML')"
+   }
+  }
+ ]
+}

@@ -70,6 +70,9 @@ module.exports = {
   ],
   options: {
     doNotFollow: { path: 'node_modules' },
+    // הפרסר הישן המוחזק (React lock, שלב 17) — עותק מילולי קפוא לבדיקות differential
+    // בלבד; אינו חלק מגרף ה־12 חבילות ואין מתקנים בו (כולל תלות טיפוסים מעגלית מקורית).
+    exclude: { path: 'packages/test-fixtures/legacy' },
     tsPreCompilationDeps: true,
     enhancedResolveOptions: { exportsFields: ['exports'], conditionNames: ['import', 'types'] },
     reporterOptions: { text: {} },
