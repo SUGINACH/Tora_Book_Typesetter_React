@@ -122,3 +122,13 @@
 | `errors.parser.WARN_HTML_IN_TEXT` | (ללא) | warning | תגית HTML בקלט — נשמרת מילולית; אין HTML כמקור אמת |
 
 **כללי הוספה:** קוד חדש נרשם ב־`ERROR_CATALOG` בלבד (סטטי, קפוא); הוספה מלווה בשורה כאן ובבדיקה שהמפתח רשום. מפתחות אינם משתנים לאחר פרסום — שינוי משמעות מחייב קוד חדש.
+
+### content-model · unicode (שלב 18, ADR-007)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`; מוצאן ב־`unicode.ts`. הערה: אין קוד "טקסט לא תקין" — צורת המקור אינה נפסלת (ADR-007); הקודים למיפוי/טיפוסים בלבד.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.unicode.INVALID_FORM` | form | error | צורת נרמול לא חוקית: {form} (החוקיות: NFC, NFD, NFKC, NFKD) |
+| `errors.unicode.INVALID_TEXT` | reason | error | קלט לא מחרוזת במודול ה־Unicode ({reason}) |
+| `errors.unicode.MAPPING_MISMATCH` | expected, actual | error | מיפוי view↔source אינו עקבי (ציפוי {expected}, נמצא {actual}) |

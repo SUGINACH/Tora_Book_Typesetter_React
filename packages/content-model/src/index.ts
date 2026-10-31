@@ -4,10 +4,10 @@
  * שלב 7: שלד · שלב 14 (פרק ג): SourceSpan וזרמי תוכן · שלב 15 (פרק ג):
  * TextAtom, AtomId דטרמיניסטי, פיצול/איחוד, ספר טרנספורמציות וכיסוי אטומים.
  * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד (אפיון §5).
- * המשך המימוש: blocks/inline (16), פרסר (17+).
+ * המשך המימוש: blocks/inline (16), פרסר (17), נאמנות Unicode (18).
  */
 export const PACKAGE_NAME = '@tora/content-model' as const;
-export const SKELETON_NOTE = 'פרק ג בבנייה — spans (14), atoms (15) ו־inline/blocks/document (16) הושלמו; הפרסר בהמשך (17+)' as const;
+export const SKELETON_NOTE = 'פרק ג בבנייה — spans (14), atoms (15), inline/blocks/document (16), הפרסר (17) ונאמנות Unicode (18) הושלמו; המשך הפרק: עץ סוגריים (19)' as const;
 
 // ── שלב 14: SourceSpan וזרמי תוכן ──
 export type {
@@ -143,6 +143,27 @@ export {
   REGISTRY_FROZEN_AT,
   REGISTRY_SCHEMA_VERSION,
 } from './parser/registry-data.js';
+
+// ── שלב 18: נאמנות נוסח ו־Unicode (ADR-007) ──
+export type {
+  AtomFidelityIssue,
+  NormalizationSpan,
+  NormalizationView,
+  UnicodeFidelityPolicyKind,
+  UnicodeFidelityRule,
+  UnicodeInventory,
+  UnicodeNormalizationForm,
+} from './unicode.js';
+export {
+  UNICODE_FIDELITY_RULES,
+  UNICODE_NORMALIZATION_FORMS,
+  UNICODE_POLICY_VERSION,
+  atomFidelityIssues,
+  findNormalizationSpans,
+  inspectUnicode,
+  normalizeView,
+  normalizationDetectionInvariantHolds,
+} from './unicode.js';
 
 // ── קטלוג שגיאות מקומי (אותו דפוס שלב 12; content-model חסר תלויות) ──
 export type { ErrorCatalogEntry, ErrorParamValue, ErrorParams } from './errors.js';

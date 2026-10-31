@@ -102,6 +102,10 @@ export const CONTENT_MODEL_ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEn
   'errors.parser.WARN_NEAR_MISS_HEADING': { i18nKey: 'errors.parser.WARN_NEAR_MISS_HEADING', params: [], severity: 'warning' },
   'errors.parser.WARN_UNMATCHED_INLINE_MARKER': { i18nKey: 'errors.parser.WARN_UNMATCHED_INLINE_MARKER', params: ['styleId'], severity: 'warning' },
   'errors.parser.WARN_HTML_IN_TEXT': { i18nKey: 'errors.parser.WARN_HTML_IN_TEXT', params: [], severity: 'warning' },
+  // ── unicode (שלב 18, ADR-007; מוצאן ב-unicode.ts) ──
+  'errors.unicode.INVALID_FORM': { i18nKey: 'errors.unicode.INVALID_FORM', params: ['form'], severity: 'error' },
+  'errors.unicode.INVALID_TEXT': { i18nKey: 'errors.unicode.INVALID_TEXT', params: ['reason'], severity: 'error' },
+  'errors.unicode.MAPPING_MISMATCH': { i18nKey: 'errors.unicode.MAPPING_MISMATCH', params: ['expected', 'actual'], severity: 'error' },
 });
 
 /** השגיאה הבסיסית של content-model — עוברת דרך הקטלוג בזמן יצירה. */
