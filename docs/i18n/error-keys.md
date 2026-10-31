@@ -35,4 +35,30 @@
 | `errors.span.INVALID_ID` | kind, value | error | ערך מזהה לא חוקי ל־{kind}: {value} |
 | `errors.span.NOT_A_SPAN` | reason | error | הערך אינו SourceSpan תקין: {reason} |
 
+### content-model · atoms (שלב 15)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`, מוצאן ב־`atoms.ts`.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.atom.NOT_AN_ATOM` | reason | error | הערך אינו TextAtom תקין (כולל אמיתת גזירת המזהה): {reason} |
+| `errors.atom.INVALID_SPAN` | reason | error | פרוסת מקור לא תקינה לאטום: {reason} |
+| `errors.atom.INVALID_TEXT` | reason, excerpt | error | טקסט אטום לא חוקי ({reason}): {excerpt} |
+| `errors.atom.TEXT_SPAN_MISMATCH` | textLength, spanLength | error | אטום מקור חייב להכסות את פרוסתו במדויק (טקסט {textLength}, פרוסה {spanLength}) |
+| `errors.atom.INVALID_SCRIPT` | script | error | כתב אטום לא חוקי: {script} |
+| `errors.atom.INVALID_BIDI_LEVEL` | value | error | רמת BiDi חייבת שלם בטוח 0–125: {value} |
+| `errors.atom.INVALID_BREAK_BEFORE` | value | error | סוג שבירה לא חוקי: {value} |
+| `errors.atom.INVALID_ORIGIN` | origin | error | מקור החדרה לא חוקי: {origin} |
+| `errors.atom.INVALID_ORDINAL` | value | error | סידור אטום חייב שלם בטוח ואי־שלילי: {value} |
+| `errors.atom.ID_DERIVATION_TOO_LONG` | length | error | המזהה הנגזר חורג מ־512 תווים (אורך {length}) |
+| `errors.atom.SPLIT_OUT_OF_RANGE` | at, length | error | נקודת פיצול מחוץ לטקסט: {at} מתוך {length} |
+| `errors.atom.SPLIT_MID_SURROGATE` | at | error | אין לפצל באמצע surrogate pair (מיקום {at}) |
+| `errors.atom.SPLIT_MID_GRAPHEME` | at | error | אין לפצל בתוך צרור גרפמה (מיקום {at}) |
+| `errors.atom.SPLIT_EMPTY_SPAN` | startUtf16 | error | פיצול אטום החדרה (פרוסה ריקה ב־{startUtf16}) אינו נתמך |
+| `errors.atom.MERGE_NOT_ADJACENT` | aEnd, bStart | error | איחוד חוקי רק בסמיכות מלאה (סוף {aEnd} מול התחלה {bStart}) |
+| `errors.atom.MERGE_INCOMPATIBLE_ORIGIN` | aOrigin, bOrigin | error | אין לאחד מקורות החדרה שונים ({aOrigin} מול {bOrigin}) |
+| `errors.atom.MERGE_INCOMPATIBLE_BIDI` | aBidiLevel, bBidiLevel | error | אין לאחד רמות BiDi שונות ({aBidiLevel} מול {bBidiLevel}) |
+| `errors.atom.INVALID_TRANSFORM` | reason | error | רשומת טרנספורמציה לא חוקית: {reason} |
+| `errors.atom.COVERAGE_INVALID_LENGTH` | expectedLength | error | אורך מסמך צפוי לא חוקי: {expectedLength} |
+
 **כללי הוספה:** קוד חדש נרשם ב־`ERROR_CATALOG` בלבד (סטטי, קפוא); הוספה מלווה בשורה כאן ובבדיקה שהמפתח רשום. מפתחות אינם משתנים לאחר פרסום — שינוי משמעות מחייב קוד חדש.

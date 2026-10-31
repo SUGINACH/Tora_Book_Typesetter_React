@@ -12,6 +12,19 @@
 - **אימות:** בדיקת מבנה מקומית של התכנית — 100 כותרות ממוספרות ייחודיות ורציפות 1–100; לכל שלב מטרה, פעולות, תוצרים, בדיקות ושער מעבר; כל סימוני ההשלמה ב־CHECKLIST נשמרו.
 - **תיקון שחזור:** לאחר הדחיפה הראשונה של התיאום שוחזרו כל רשומות היומן המקוריות מ־commit `26eb77e`; אין מחיקה או קיצור של היסטוריה.
 
+### שלב 15 — TextAtom ומזהים דטרמיניסטיים (M2) — הושלם 2026-11-01
+- **תוצרים:**
+  - `packages/content-model/src/atoms.ts` — `TextAtom` לפי אפיון §6.2 (text, source, script, bidiLevel, breakBefore) וגורמי הזהות `ordinal`+`origin` (הרחבה תואמת לסידור שדות): `makeTextAtom` מאומתת — אטום מקור חייב לכסות את פרוסתו במדויק; אטום החדרה חייב `origin` מפורש ("insertion מקבל מקור מפורש"); אין lone surrogates ואין תווי בקרה בטקסט.
+  - **גזירת AtomId** — `deriveAtomId(source, ordinal?, origin?)`: ‎atom:v1|מסמך|זרם|start+end|origin|ordinal‎ — הזהות מהמקור בלבד, בלי אקראיות/זמן/מונים; קידוד מקטעים אטום ל־`|` ו־`%`; דחיית מזהה חורג 512. `isTextAtom` מאמת גם שהמזהה באמת נגזר מהשדות.
+  - `classifyScript` + `isCombiningMark` — סיווג דטרמיניסטי ברמת התוכן (הגוש העברי כולל ניקוד/טעמים/גרשיים/מקף; רווח ופיסוק → punctuation; בקרות פורמט → other). ה־shaping עצמו נשאר במדידה (§6.4, שלבים 24+).
+  - `splitAtom`/`mergeAtoms` — פיצול בגבולות חוקיים בלבד (לא באמצע surrogate pair, לא בין בסיס לניקוד, לא אחרי ZWJ; פיצול אטום החדרה נדחה — החלטה מתועדת); איחוד רק בסמיכות מלאה, באותו origin ורמת BiDi; **merge(split(x)) === x במדויק כולל המזהה**; הבן הימני של פיצול מסומן `forbidden` (פיצול provenance אינו הזדמנות שבירה — תרחיש איחוי runs של DOCX).
+  - **ספר טרנספורמציות (זרע שלב 21)** — `TransformRecord` ‎{kind: split|merge|insert|suppress|reorder|bidi, from, to, reason, detail}‎ + `AtomLedger` בלתי־הפיך + `ledgerIntegrityIssues` (לידה כפולה / מקור שלא נולד) + `transformsTouching`.
+  - `computeAtomCoverage` — **שער השלב הוכח: כיסוי אטומים של זרם על [0, N) נחשב בלי רינדור ובלי מדידה**: רווחים, חפיפות, כפילויות, חריגות גבול, החדרות ואטומים זרים.
+  - קטלוג שגיאות: 19 מפתחות `errors.atom.*` חדשים (27 סה"כ ב־content-model); 37 בדיקות חדשות (יחידה+property: אי־תלות בסדר ריצה, חד־חד־ערכיות גזירה, round-trip פיצול/איחוד, כיסוי חלוקות שרירותיות); `scripts/migration/verify-atoms.mjs` — 51 בדיקות; CI מחובר; i18n ו־GLOSSARY עודכנו.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 147/147 OK (110 קודמות + 37 חדשות); `node scripts/migration/verify-atoms.mjs` — 51/51 OK; רגרסיה מלאה: כל 15 המאמתים PASS (כולל source-manifest עם GITHUB_TOKEN).
+- **ממצאים:** אין שינוי מנוע. גבולות מודעים שתועדו: (א) אין tokenizer ציבורי בשלב זה — הפרסר (שלב 17) הוא הבעלים של חלוקת הטקסט לאטומים; (ב) פיצול אטום החדרה נדחה עד שיופיע צורך אמיתי (ידרוש מנגנון סידורים מפורש). **תיקום מאמת:** `verify-work-conventions` לא הכיר את תיקון התכנית המבוקר (ed3b856 + תיקון a1674fb, המתועד ביומן) — נוסף תנאי מדויק: התכנית מתקבלת רק אם לא נערכה מאז a1674fb; כל עריכה עתידית תיתפס. שים לב: `src/index.js` השלד הישן משלב 7 עדיין קיים ומועד להצללה — הבדיקות ממשיכות לייבא ישירות ממודולי המקור (`../src/atoms.js`).
+
 ### שלב 14 — SourceSpan וזרמי תוכן (M2) — הושלם 2026-10-30
 - **תוצרים:**
   - `packages/content-model/src/spans.ts` — `SourceSpan` מלא: `documentId`, `stream` (‎body | footnote | endnote | sidenote | metadata‎), טווח UTF-16 חצי־פתוח ‎[startUtf16, endUtf16)‎, `importerPath` אופציונלי; בנייה מאומתת בזמן יצירה (`makeSourceSpan`); עזרים דטרמיניסטיים: `spanLength`, `isEmptySpan`, `sameStream`, `spanCovers`, `spansOverlap`, `compareSpans` (סדר קנוני), `sliceSpan` (תת־פרוסה לפרסר עם ירושת importerPath).

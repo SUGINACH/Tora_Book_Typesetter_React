@@ -32,6 +32,26 @@ export const CONTENT_MODEL_ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEn
   'errors.span.SLICE_OUT_OF_RANGE': { i18nKey: 'errors.span.SLICE_OUT_OF_RANGE', params: ['from', 'to', 'length'], severity: 'error' },
   'errors.span.INVALID_ID': { i18nKey: 'errors.span.INVALID_ID', params: ['kind', 'value'], severity: 'error' },
   'errors.span.NOT_A_SPAN': { i18nKey: 'errors.span.NOT_A_SPAN', params: ['reason'], severity: 'error' },
+  // ── atoms (שלב 15; מוצאן ב-atoms.ts) ──
+  'errors.atom.NOT_AN_ATOM': { i18nKey: 'errors.atom.NOT_AN_ATOM', params: ['reason'], severity: 'error' },
+  'errors.atom.INVALID_SPAN': { i18nKey: 'errors.atom.INVALID_SPAN', params: ['reason'], severity: 'error' },
+  'errors.atom.INVALID_TEXT': { i18nKey: 'errors.atom.INVALID_TEXT', params: ['reason', 'excerpt'], severity: 'error' },
+  'errors.atom.TEXT_SPAN_MISMATCH': { i18nKey: 'errors.atom.TEXT_SPAN_MISMATCH', params: ['textLength', 'spanLength'], severity: 'error' },
+  'errors.atom.INVALID_SCRIPT': { i18nKey: 'errors.atom.INVALID_SCRIPT', params: ['script'], severity: 'error' },
+  'errors.atom.INVALID_BIDI_LEVEL': { i18nKey: 'errors.atom.INVALID_BIDI_LEVEL', params: ['value'], severity: 'error' },
+  'errors.atom.INVALID_BREAK_BEFORE': { i18nKey: 'errors.atom.INVALID_BREAK_BEFORE', params: ['value'], severity: 'error' },
+  'errors.atom.INVALID_ORIGIN': { i18nKey: 'errors.atom.INVALID_ORIGIN', params: ['origin'], severity: 'error' },
+  'errors.atom.INVALID_ORDINAL': { i18nKey: 'errors.atom.INVALID_ORDINAL', params: ['value'], severity: 'error' },
+  'errors.atom.ID_DERIVATION_TOO_LONG': { i18nKey: 'errors.atom.ID_DERIVATION_TOO_LONG', params: ['length'], severity: 'error' },
+  'errors.atom.SPLIT_OUT_OF_RANGE': { i18nKey: 'errors.atom.SPLIT_OUT_OF_RANGE', params: ['at', 'length'], severity: 'error' },
+  'errors.atom.SPLIT_MID_SURROGATE': { i18nKey: 'errors.atom.SPLIT_MID_SURROGATE', params: ['at'], severity: 'error' },
+  'errors.atom.SPLIT_MID_GRAPHEME': { i18nKey: 'errors.atom.SPLIT_MID_GRAPHEME', params: ['at'], severity: 'error' },
+  'errors.atom.SPLIT_EMPTY_SPAN': { i18nKey: 'errors.atom.SPLIT_EMPTY_SPAN', params: ['startUtf16'], severity: 'error' },
+  'errors.atom.MERGE_NOT_ADJACENT': { i18nKey: 'errors.atom.MERGE_NOT_ADJACENT', params: ['aEnd', 'bStart'], severity: 'error' },
+  'errors.atom.MERGE_INCOMPATIBLE_ORIGIN': { i18nKey: 'errors.atom.MERGE_INCOMPATIBLE_ORIGIN', params: ['aOrigin', 'bOrigin'], severity: 'error' },
+  'errors.atom.MERGE_INCOMPATIBLE_BIDI': { i18nKey: 'errors.atom.MERGE_INCOMPATIBLE_BIDI', params: ['aBidiLevel', 'bBidiLevel'], severity: 'error' },
+  'errors.atom.INVALID_TRANSFORM': { i18nKey: 'errors.atom.INVALID_TRANSFORM', params: ['reason'], severity: 'error' },
+  'errors.atom.COVERAGE_INVALID_LENGTH': { i18nKey: 'errors.atom.COVERAGE_INVALID_LENGTH', params: ['expectedLength'], severity: 'error' },
 });
 
 /** השגיאה הבסיסית של content-model — עוברת דרך הקטלוג בזמן יצירה. */

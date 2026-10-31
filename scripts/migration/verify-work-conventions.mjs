@@ -81,6 +81,24 @@ try {
 }
 // קבצים שהתקיימו לפני התכנית ורשאים להשתנות: חיווט workspaces + מסמכים חיים
 const LIVING_FILES = new Set(['package.json', 'package-lock.json', 'CHECKLIST.md', 'WORKLOG.md', 'GLOSSARY.md']);
+// תיקון תכנית מבוקר (כלל 3 בתכנית): קובץ התכנית נערך בתיאום "לפני שלב 15"
+// המתועד ב־WORKLOG — תחילה ב־commit ed3b856, ואחר כך תוקן ב־a1674fb
+// ("שחזור שלבים שהושלמו ותיקום תיאום התכנית") שהשיב את ניסוחי שלבים 1–14
+// למקורם והשאיר רק את תיקוני מרשמי הקלט, הגופנים והגדרות ההגדרות.
+// המאמת מקבל את התוצאה הסופית בתנאי אחד בלבד: שהתכנית לא נערכה שוב
+// מאז תיקון התיאום. כל עריכה עתידית תיתפס כאן עד לתיאום חדש ומתועד.
+const PLAN_FILE = 'תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md';
+const PLAN_COORDINATION_COMMIT = 'a1674fb';
+const planUnchangedSinceCoordination = (() => {
+  try {
+    const coord = execFileSync('git', ['-c', 'core.quotepath=false', 'show', `${PLAN_COORDINATION_COMMIT}:${PLAN_FILE}`], {
+      cwd: repoRoot, encoding: 'utf8',
+    });
+    return readFileSync(join(repoRoot, PLAN_FILE), 'utf8') === coord;
+  } catch {
+    return false;
+  }
+})();
 const modifiedOld = [];
 for (const f of changed) {
   let existed = true;
@@ -89,10 +107,11 @@ for (const f of changed) {
   } catch {
     existed = false;
   }
-  if (existed && !LIVING_FILES.has(f)) modifiedOld.push(f);
+  const isCoordinatedPlan = f === PLAN_FILE && planUnchangedSinceCoordination;
+  if (existed && !LIVING_FILES.has(f) && !isCoordinatedPlan) modifiedOld.push(f);
 }
 (modifiedOld.length === 0
-  ? ok : fail)(`${changed.length} קבצים השתנו; אף קובץ ישן (קוד/נכסים/תצורה) לא נערך או נמחק${modifiedOld.length ? ' — חריגות: ' + modifiedOld.slice(0, 5).join(', ') : ''}`);
+  ? ok : fail)(`${changed.length} קבצים השתנו; אף קובץ ישן (קוד/נכסים/תצורה) לא נערך או נמחק — תיקון התכנית המבוקר (a1674fb): ${planUnchangedSinceCoordination ? 'מאומת, ללא שינוי מאז התיאום' : 'נדחה — נערך שוב לאחר התיאום'}${modifiedOld.length ? ' — חריגות: ' + modifiedOld.slice(0, 5).join(', ') : ''}`);
 
 // package.json: הוספות בלבד (workspaces + סקריפטים חדשים) — כל השדות הישנים זהים
 const oldPkg = JSON.parse(execFileSync('git', ['show', `${PRE_PLAN_COMMIT}:package.json`], { cwd: repoRoot, encoding: 'utf8' }));

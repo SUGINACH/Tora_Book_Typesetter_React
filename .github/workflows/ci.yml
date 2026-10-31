@@ -41,7 +41,7 @@ jobs:
       - name: בדיקה שלילית — הפרת גבול נתפסת אוטומטית
         run: node scripts/migration/verify-dependency-rules.mjs
 
-      - name: בדיקות יחידה של החבילות (ADR-001 יחידות, ADR-002 גיבוב, spans)
+      - name: בדיקות יחידה של החבילות (ADR-001 יחידות, ADR-002 גיבוב, spans, atoms)
         run: |
           npm run test:packages
           node scripts/migration/verify-units.mjs
@@ -49,6 +49,7 @@ jobs:
           node scripts/migration/verify-error-catalog.mjs
           node scripts/migration/verify-fixtures-schema.mjs
           node scripts/migration/verify-spans.mjs
+          node scripts/migration/verify-atoms.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |
