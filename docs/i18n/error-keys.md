@@ -61,4 +61,42 @@
 | `errors.atom.INVALID_TRANSFORM` | reason | error | רשומת טרנספורמציה לא חוקית: {reason} |
 | `errors.atom.COVERAGE_INVALID_LENGTH` | expectedLength | error | אורך מסמך צפוי לא חוקי: {expectedLength} |
 
+### content-model · inline / block / document (שלב 16)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`; מוצאן ב־`inline.ts`, `blocks.ts`, `document.ts`.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.inline.NOT_AN_ITEM` | reason | error | רכיב inline לא תקין: {reason} |
+| `errors.inline.EMPTY_TEXT` | count | error | רכיב טקסט חייב לפחות אטום אחד (קיבל {count}) |
+| `errors.inline.ATOM_NOT_VALID` | reason | error | אטום לא תקין ברכיב טקסט: {reason} |
+| `errors.inline.MIXED_STREAMS` | reason | error | אטומי רכיב טקסט חייבים אותו מסמך וזרם: {reason} |
+| `errors.inline.INVALID_ID` | which, value | error | מזהה {which} לא חוקי: {value} |
+| `errors.block.NOT_A_BLOCK` | reason | error | בלוק תוכן לא תקין: {reason} |
+| `errors.block.INVALID_ROLE` | role | error | תפקיד בלוק לא חוקי: {role} |
+| `errors.block.INVALID_STYLE_ID` | styleId | error | מזהה סגנון לא חוקי: {styleId} |
+| `errors.block.HEADING_LEVEL_REQUIRED` | role | error | בלוק כותרת חייב headingLevel (H0–H7) |
+| `errors.block.HEADING_LEVEL_FORBIDDEN` | role, level | error | headingLevel מוגדר רק לבלוקי כותרת ({role}, קיבל {level}) |
+| `errors.block.INVALID_HEADING_LEVEL` | level | error | רמת כותרת חייבת שלם 0–7: {level} |
+| `errors.block.INVALID_CHILDREN` | reason | error | ילדי הבלוק לא תקינים: {reason} |
+| `errors.block.DUPLICATE_NODE_ID` | id, path | error | מזהה בלוק כפול: {id} (בנתיב {path}) |
+| `errors.block.DEPTH_EXCEEDED` | depth, limit | error | עומק קינון בלוקים {depth} חורג מהמגבלה {limit} |
+| `errors.block.INVALID_ORDINAL` | value | error | סידור בלוק חייב שלם בטוח ואי־שלילי: {value} |
+| `errors.block.INVALID_ORIGIN` | origin | error | מקור בלוק לא חוקי: {origin} |
+| `errors.block.ID_DERIVATION_TOO_LONG` | length | error | המזהה הנגזר חורג מ־512 תווים (אורך {length}) |
+| `errors.document.NOT_A_DOCUMENT` | reason | error | מסמך לא תקין: {reason} |
+| `errors.document.INVALID_SCHEMA_VERSION` | version | error | גרסת סכמה לא נתמכת: {version} |
+| `errors.document.INVALID_DOCUMENT_ID` | documentId | error | מזהה מסמך לא חוקי: {documentId} |
+| `errors.document.INVALID_METADATA` | reason, key | error | ערך metadata לא תקין ({reason}): {key} |
+| `errors.document.DUPLICATE_METADATA_KEY` | key | error | מפתח metadata כפול: {key} |
+| `errors.document.INVALID_PART` | reason, partId | error | חלק לא תקין: {reason} |
+| `errors.document.INVALID_SIMAN` | reason | error | סימן לא תקין: {reason} |
+| `errors.document.INVALID_SIMAN_NUMBER` | simanNumber | error | מספר סימן לא חוקי: {simanNumber} |
+| `errors.document.INVALID_SHAAR_DESIGN` | shaarDesign | error | עיצוב שער לא חוקי: {shaarDesign} |
+| `errors.document.INVALID_NOTE` | reason, kind | error | הערה לא תקינה ({reason}, סוג {kind}) |
+| `errors.document.INVALID_NOTE_BLOCK_ROLE` | noteId, role | error | גוף הערה {noteId} חייב תפקיד note-body (קיבל {role}) |
+| `errors.document.DUPLICATE_NOTE_ID` | noteId | error | מזהה הערה כפול: {noteId} |
+| `errors.document.UNRESOLVED_NOTE_REFERENCE` | noteId | error | הפניית הערה שאין לה יעד: {noteId} |
+| `errors.document.INVALID_SOURCE_HASH` | sourceHash | error | sourceHash חייב ריק או 64 תווי hex קטנים: {sourceHash} |
+
 **כללי הוספה:** קוד חדש נרשם ב־`ERROR_CATALOG` בלבד (סטטי, קפוא); הוספה מלווה בשורה כאן ובבדיקה שהמפתח רשום. מפתחות אינם משתנים לאחר פרסום — שינוי משמעות מחייב קוד חדש.

@@ -12,6 +12,17 @@
 - **אימות:** בדיקת מבנה מקומית של התכנית — 100 כותרות ממוספרות ייחודיות ורציפות 1–100; לכל שלב מטרה, פעולות, תוצרים, בדיקות ושער מעבר; כל סימוני ההשלמה ב־CHECKLIST נשמרו.
 - **תיקון שחזור:** לאחר הדחיפה הראשונה של התיאום שוחזרו כל רשומות היומן המקוריות מ־commit `26eb77e`; אין מחיקה או קיצור של היסטוריה.
 
+### שלב 16 — InlineItem ו־ContentBlock (M2) — הושלם 2026-11-01
+- **תוצרים:**
+  - `packages/content-model/src/inline.ts` — `InlineItem` שישה סוגים: חמשת סוגי האפיון §6.2 (text, note-reference, anchor, explicit-break, inline-box) + `marker` כפי שהתכנית דורשת — הביטוי הקנוני של drop-word/dibbur hamatchil בלי sentinel בטקסט; בנאים מאומתים (`makeTextItem` מחייב אטומים תקינים באותו מסמך וזרם) + `isInlineItem`.
+  - `packages/content-model/src/blocks.ts` — `ContentBlock` רקורסיבי לפי §6.2 בדיוק (role/headingLevel/styleId/source/inline/children) + גורמי זהות ordinal/origin בדפוס שלב 15; `headingLevel` חובה ל־'heading' ואסור לשאר (H0–H7 כמו הישן); `children` חוקי לכל תפקיד — בירושה מ־ast-builder הישן (כותרת פותחת בלוק עם ילדים); גזירת `NodeId` ‎node:v1|…‎ ו־`AnchorId` ‎anchor:v1|…‎; עומק מוגבל 32.
+  - `packages/content-model/src/document.ts` — `TorahDocument`: `metadata` עם מקור בזרם metadata (עשרת המפתחות ההכרחיים ב־`LEGACY_METADATA_KEYS`, רישום פתוח), `parts`←`simanim`←בלוקים (simanNumber/subNumber/shaarDesign main|back|sub), `NoteStreams` — ארבעה זרמי הערות (שוליים/סיום/צד/עורך) עם גוף `note-body`, `customStyleIds`, `sourceHash` (מאומת 64-hex/ריק, מוזרק מ־ADR-002) ו־`sourceLength`; `serializeDocument`/`parseDocument` — **round-trip ביט-ביט** (אותו מסמך ← אותה מחרוזת); `findOrphanNotes` — הערה יתומה מדווחת ולא נבלעת; כל הפניית הערה חייבת להיפתר (`UNRESOLVED_NOTE_REFERENCE`).
+  - **מסמך שער:** `docs/migration/content-model-mapping.md` — מיפוי מלא של כל שדה וטיפוס מהישן (ParsedDocument/ParsedNode/TextType ה-17/BookMetadata/LayoutMode/TextPosition/PageType/ColumnLayout/noteRules/customStyles) לביטוי בחדש או להחלטת זניחה מתועדת (הגדרות → settings-schema שלב 30; פריסה → Page Templates שלבים 50+; sentinel CUSTOM אסור — הפרסר בשלב 17 ממפה לבלוק מפורש).
+  - קטלוג שגיאות: 31 מפתחות חדשים (errors.inline.* ‎5‎, errors.block.* ‎12‎, errors.document.* ‎14‎) — 58 סה"כ ב־content-model; 18 בדיקות חדשות (יחידה + property של round-trip); `scripts/migration/verify-inline-blocks.mjs` — 57 בדיקות כולל סריקת איסור sentinel וכיסוי מסמך המיפוי; CI מחובר; i18n ו־GLOSSARY עודכנו.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 165/165 OK (147 קודמות + 18 חדשות); `node scripts/migration/verify-inline-blocks.mjs` — 57/57 OK; רגרסיה מלאה: כל 16 המאמתים PASS.
+- **ממצאים:** אין שינוי מנוע; אין שינוי בקוד הישן. למדים: (א) אינווריאנט אורך־הטקסט/פרוסה משלב 15 תפס בפועל טעויות ידניות בפרוסות הבדיקה — חוזק עדות לערכו; הפרוסות בבדיקות נגזרות כעת מאורכי הטקסט כמו שהפרסר יעשה. (ב) שם הפרמטר `document` בפונקציות המסמך הצליל את הגלובל האסור — הוחלף ל־`doc`. (ג) השלד הישן `src/index.js` משלב 7 ממשיך להצל ייבוא ישיר של index — המאמתים מייבאים דרך `@tora/content-model` (dist) בלבד.
+
 ### שלב 15 — TextAtom ומזהים דטרמיניסטיים (M2) — הושלם 2026-11-01
 - **תוצרים:**
   - `packages/content-model/src/atoms.ts` — `TextAtom` לפי אפיון §6.2 (text, source, script, bidiLevel, breakBefore) וגורמי הזהות `ordinal`+`origin` (הרחבה תואמת לסידור שדות): `makeTextAtom` מאומתת — אטום מקור חייב לכסות את פרוסתו במדויק; אטום החדרה חייב `origin` מפורש ("insertion מקבל מקור מפורש"); אין lone surrogates ואין תווי בקרה בטקסט.
