@@ -32,6 +32,9 @@ jobs:
       - name: בדיקת טיפוסים
         run: npm run typecheck:packages
 
+      - name: בדיקת טיפוסים — קוד מעטפת חדש (src/worker-host, src/renderers, tests)
+        run: npx tsc --noEmit
+
       - name: lint חבילות (איסור DOM/Node בליבה)
         run: npm run lint:packages
 
@@ -70,6 +73,7 @@ jobs:
           node scripts/migration/verify-layout-engine.mjs
           node scripts/migration/verify-render-html.mjs
           node scripts/migration/verify-cli.mjs
+          node scripts/migration/verify-worker-host.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |

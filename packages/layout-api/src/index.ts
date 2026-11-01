@@ -45,6 +45,7 @@ export type {
   Cost,
   Rect,
   FontFaceKey,
+  FontManifestRecord,
   ShapeRequest,
   ShapedRun,
   ShapedGlyph,

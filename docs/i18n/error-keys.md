@@ -226,3 +226,13 @@
 | `errors.cli.ENGINE_FAILED` | code, reason | error | המנוע נכשל [{code}]: {reason} |
 | `errors.cli.REPEAT_MISMATCH` | run, expected, actual | fatal | ריצה {run} נתנה hash שונה ({actual} ≠ {expected}) — לא דטרמיניסטי |
 | `errors.cli.OUTPUT_WRITE_FAILED` | path, reason | fatal | כתיבת פלט נכשלה: {path} — {reason} |
+
+## worker-host — פרוטוקול ה-Worker (שלב 35, פרק ה)
+
+מקור: `src/worker-host/engine-worker.ts` (צד המעטפת; §12.1 — אין ערוץ
+שגיאה גלובלי, כל שגיאה קשורה ל-jobId ונושאת מפתח קטלוגי + params).
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.worker.DUPLICATE_JOB` | jobId | fatal | job {jobId} כבר רץ בעובד — אין הרצה כפולה |
+| `errors.worker.ENGINE_UNCLASSIFIED` | reason | fatal | שגיאת מנוע לא מקוטלגת ({reason}) — דווח לפיתוח |

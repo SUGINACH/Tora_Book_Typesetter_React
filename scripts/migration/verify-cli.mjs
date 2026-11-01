@@ -120,7 +120,7 @@ for (const key of Object.keys(cliMod.CLI_ERROR_CATALOG)) {
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
 const testOut = run('npm', ['run', 'test:packages']);
-(testOut !== null && /Tests\s+568\s+passed/m.test(testOut) ? ok : fail)('test:packages — 568/568 (560 + 8 CLI)');
+(testOut !== null && /Tests\s+581\s+passed/m.test(testOut) ? ok : fail)('test:packages — 581/581 (560 + 8 CLI + 13 worker-host)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 
