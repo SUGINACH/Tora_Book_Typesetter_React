@@ -902,8 +902,22 @@ export function parseSourceText(raw: string, options: ParserOptions): ParseResul
       const ranges = seg.ranges.filter((r) => r.end > r.start);
       let prevEnd = -1;
       for (const r of ranges) {
-        if (prevEnd >= 0 && r.start > prevEnd && raw.slice(prevEnd, r.start).includes('\n')) {
-          items.push(makeExplicitBreak(spanOf(stream, prevEnd, r.start)));
+        // פער בין טווחים שורדים שמכיל מפרידי שורות — כל רצף מפרידים הוא שבירה
+        // מפורשת אחת (השורות נבלעו בהערה חוצת שורות — כמו join('\n') הישן).
+        // תוכן שהוסר בפער (למשל הערת עורך שהוצאה קודם) אינו חלק מהשבירה —
+        // הוא מכוסה על ידי הספר/התחביר שלו; נמצא על ידי ה-fuzz של שלב 21.
+        if (prevEnd >= 0 && r.start > prevEnd) {
+          let g = prevEnd;
+          while (g < r.start) {
+            if (raw[g] === '\n' || raw[g] === '\r') {
+              let h = g + 1;
+              while (h < r.start && (raw[h] === '\n' || raw[h] === '\r')) h = h + 1;
+              items.push(makeExplicitBreak(spanOf(stream, g, h)));
+              g = h;
+            } else {
+              g = g + 1;
+            }
+          }
         }
         const atoms = atomsForRanges(raw, [r], documentId, stream, firstBreak);
         if (atoms.length > 0) {

@@ -152,3 +152,16 @@
 | `errors.notes.INVALID_POLICY` | reason | error | מדיניות מספור הערות לא חוקית ({reason}) |
 | `errors.notes.INVALID_ORDINAL` | ordinal | error | מספר סידורי של הערה חייב להיות שלם חיובי (קיבל {ordinal}) |
 | `errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT` | scope | error | מספור בהיקף page דורש הקשר עמודים (החלטות העימוד) — אין לנחש |
+
+### audit-core · Text Audit v1 (שלב 21, שער M2)
+
+מקור: `AUDIT_CORE_ERROR_CATALOG` ב־`packages/audit-core/src/text-audit.ts` (שגיאות זריקה) + `TEXT_AUDIT_FINDING_CODES` (ממצאי דוח — לא נזרקים; messageKey = קוד הממצא).
+
+**שגיאות (נזרקות):**
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.audit.INVALID_INPUT` | reason | error | קלט לביקורת לא תקין ({reason}) |
+| `errors.audit.UNREGISTERED_FINDING_CODE` | code | fatal | קוד ממצא לא רשום: {code} |
+
+**ממצאי דוח (§14.1/§14.3):** `audit.text.MISSING_ATOM` (HIGH) · `audit.text.DUPLICATE_ATOM` (HIGH) · `audit.text.OVERLAP_ATOM_SYNTAX` (HIGH) · `audit.text.DUPLICATE_ATOM_ID` (HIGH) · `audit.text.UNRESOLVED_NOTE_REFERENCE` (HIGH) · `audit.text.ORPHAN_NOTE` (MEDIUM) · `audit.text.LEDGER_ISSUE` (HIGH) · `audit.text.RAW_CONTROL_PLACEHOLDER` (HIGH) · `audit.text.HTML_IN_ATOMS` (LOW) · `audit.text.COVERAGE_DISAGREEMENT` (HIGH) · `audit.text.ATOM_TEXT_MISMATCH` (HIGH).

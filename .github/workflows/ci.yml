@@ -55,6 +55,7 @@ jobs:
           node scripts/migration/verify-unicode.mjs
           node scripts/migration/verify-brackets.mjs
           node scripts/migration/verify-notes.mjs
+          node scripts/migration/verify-text-audit.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |
