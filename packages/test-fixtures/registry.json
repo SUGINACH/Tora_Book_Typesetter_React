@@ -143,7 +143,7 @@
     "sourcePath": "very_long_test_text.txt",
     "reason": "המסמך הארוך הקנוני — ריצת הייחוס של כל המערכת מ־Orange/Green; hash מתועד גם ב־PROVENANCE.md. מכסה: H0–H7, הערות שוליים וצד, סוגריים חוצי עמוד, פרקים מרובים, מוספים ומחיצות. בייסליין: 639 עמודים, 39 ממצאים (0 גבוהים), 857 רשומות ספר החלטות."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -174,7 +174,7 @@
     "sourcePath": "long_test_text.txt",
     "reason": "מסמך ארוך 1 — קורפוס בדיקות מסמך ארוך מהתוכנה הישנה."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -205,7 +205,7 @@
     "sourcePath": "long_test_text_2.txt",
     "reason": "מסמך ארוך 2 — וריאציה שנייה של מסמך ארוך לבדיקות רגרסיה."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -237,7 +237,7 @@
     "sourcePath": "long_test_text_no_parentheses.txt",
     "reason": "מסמך ארוך ללא סוגריים — מפעיל את מסלול העימוד ללא הגנת סוגריים/סוגריים חוצי עמוד; מבחן הפרד בין שני מסלולי הפרסר."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -270,7 +270,7 @@
     "sourcePath": "mid_long_test_text.txt",
     "reason": "מסמך בינוני (125 עמודים בבייסליין) עם אודיט מלא step-by-step — כולל 4 ממצאי imbalance ו־4 containment-rounding מתועדים שיש לשמר או לתקן במנוע החדש במפורש."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -301,7 +301,7 @@
     "sourcePath": "fixtures/base_very_long_test_text.txt",
     "reason": "בסיס להשוואת מסמך ארוך — משמש לבדיקות differential בין גרסאות עימוד של אותו גוף טקסט."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -333,7 +333,7 @@
     "sourcePath": "fixtures/ch63_final_paragraph_failure_case.txt",
     "reason": "באג מתועד: כשל עימוד של הפסקה האחרונה בפרק 63 — קובץ ממוקד שנוצר במפורש כדי לשחזר את הכשל. בייסליין: 8 עמודים, 3 ממצאים (0 גבוהים)."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -365,7 +365,7 @@
     "sourcePath": "tests/fixtures/no-legal-two-column-split.txt",
     "reason": "התנהגות מתועדת: עמוד שבו אין נקודת פיצול חוקית לשני טורים — בודק את מדיניות החירום כשאין מועמד חוקי. בייסליין: 4 עמודים, 2 ממצאים."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -397,7 +397,7 @@
     "sourcePath": "tests/fixtures/geometry-audit-smoke.txt",
     "reason": "קלט smoke לאימות הצינור המלא של ביקורת הגאומטריה. בייסליין: 6 עמודים, 3 ממצאים (container-gap, sparse-page, structural-fallback)."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -428,7 +428,7 @@
     "sourcePath": "tests/fixtures/geometry-audit-diagnostics-smoke.txt",
     "reason": "קלט smoke לאימות ערוץ האבחון (diagnostics) של ביקורת הגאומטריה."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -465,7 +465,7 @@
     "sha256": "1a4e63bf5f3799cdd093aa96ea236ce4be58fdc5a738e103aff2917a8abdda89",
     "bytes": 8075
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -502,7 +502,7 @@
     "sha256": "5e0f35c0fb9fddc08b7701234fbefa6a31a54b486e4097c00ce8107a5f4a8216",
     "bytes": 8062
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -539,7 +539,7 @@
     "sha256": "f6bb9435c23516374318dcbf5be37dc23d5c4384d06584c1a0e34f3a56d71fd4",
     "bytes": 8085
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -570,7 +570,7 @@
     "sourcePath": "fixtures/chapters_focus/ch05.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch05) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -601,7 +601,7 @@
     "sourcePath": "fixtures/chapters_focus/ch09.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch09) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -632,7 +632,7 @@
     "sourcePath": "fixtures/chapters_focus/ch13.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch13) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -663,7 +663,7 @@
     "sourcePath": "fixtures/chapters_focus/ch35.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch35) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -694,7 +694,7 @@
     "sourcePath": "fixtures/chapters_focus/ch42.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch42) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -725,7 +725,7 @@
     "sourcePath": "fixtures/chapters_focus/ch55.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch55) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -756,7 +756,7 @@
     "sourcePath": "fixtures/chapters_focus/ch62.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch62) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -787,7 +787,7 @@
     "sourcePath": "fixtures/chapters_focus/ch63.txt",
     "reason": "פרק 63 במלואו — הפרק שממנו נולחץ מקרה הכשל של הפסקה האחרונה; בדיקת רגרסיה ממוקדת."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -818,7 +818,7 @@
     "sourcePath": "fixtures/chapters_focus/ch67.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch67) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -849,7 +849,7 @@
     "sourcePath": "fixtures/chapters_focus/ch71.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch71) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -880,7 +880,7 @@
     "sourcePath": "fixtures/chapters_focus/ch72.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch72) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -911,7 +911,7 @@
     "sourcePath": "fixtures/chapters_focus/ch73.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch73) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   },
   {
@@ -942,12 +942,12 @@
     "sourcePath": "fixtures/chapters_focus/ch75.txt",
     "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch75) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
    },
-   "fontManifestSha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc",
+   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
    "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
   }
  ],
  "fontsManifest": {
   "path": "assets/fonts/manifest.json",
-  "sha256": "394a8557d4d9a2b72ebd1ff3367225be1e4dd662dca4b345c3da0d26880d85dc"
+  "sha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f"
  }
 }
