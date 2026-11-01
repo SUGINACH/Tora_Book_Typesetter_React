@@ -1,9 +1,10 @@
 /**
- * @tora/settings-schema — schema, defaults, validation, migrations
- *
- * שלד שלב 7 בתכנית 100 השלבים (אפיון §5).
- * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד.
- * המימוש ייבנה בפרקים ג–ה.
+ * index.ts — @tora/settings-schema (שלב 30): מרשם, ייבוא, EffectiveSettings,
+ * configHash קנוני ומיגרציות (אפיון §6.3 · תכנית שלב 30).
  */
 export const PACKAGE_NAME = '@tora/settings-schema' as const;
-export const SKELETON_NOTE = 'שלד שלב 7 — עדיין ללא מימוש; החוזה הציבורי ייבנה בפרקים ג–ה' as const;
+export const SCHEMA_VERSION = 1 as const;
+
+export * from './errors.js';
+export * from './schema.js';
+export * from './migrations.js';

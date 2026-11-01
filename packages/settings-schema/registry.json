@@ -1,0 +1,4778 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/migration/gen-settings-registry.mjs",
+  "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378",
+  "sourceSha256": {
+    "defaultSettings": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+    "presetParshanuth": "f7705745c20b449871b7d4ac73ff32707d8ae1366454fb0e7aa85a84ac42f9ce",
+    "presetKonteres": "567461b08a9b184967525301183c2db928907d126056f26f0a7d13258a536d07",
+    "presetTalmud": "d27ae1d52e85dadf42109103b75ab856ac8f2966d7c716509c7302ece0a5b8d1",
+    "layoutDependencyMap": "006da8e9b7807e1a5c27a5614143fac850c6d4957b118662736dfab28644453e"
+  },
+  "totalKeys": 257,
+  "uiOnlyKeys": 21,
+  "affectsLayoutKeys": 236,
+  "settings": [
+    {
+      "legacyKey": "active-theme-select",
+      "canonicalKey": "active-theme-select",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "json_theme_40",
+      "type": "enum",
+      "enum": [
+        "builtin_1",
+        "json_theme_40"
+      ],
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "select",
+        "labelKey": "settings.active-theme-select"
+      }
+    },
+    {
+      "legacyKey": "assets-folder-input",
+      "canonicalKey": "assets-folder-input",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.assets-folder-input"
+      }
+    },
+    {
+      "legacyKey": "auto-dh",
+      "canonicalKey": "auto-dh",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "checkbox",
+        "labelKey": "settings.auto-dh"
+      }
+    },
+    {
+      "legacyKey": "avoid-orphans",
+      "canonicalKey": "avoid-orphans",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "checkbox",
+        "labelKey": "settings.avoid-orphans"
+      }
+    },
+    {
+      "legacyKey": "avoid-runt-word",
+      "canonicalKey": "avoid-runt-word",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "checkbox",
+        "labelKey": "settings.avoid-runt-word"
+      }
+    },
+    {
+      "legacyKey": "avoid-widows",
+      "canonicalKey": "avoid-widows",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "checkbox",
+        "labelKey": "settings.avoid-widows"
+      }
+    },
+    {
+      "legacyKey": "back-shaar-count-numbering",
+      "canonicalKey": "back-shaar-count-numbering",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.back-shaar-count-numbering"
+      }
+    },
+    {
+      "legacyKey": "back-shaar-show-number",
+      "canonicalKey": "back-shaar-show-number",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.back-shaar-show-number"
+      }
+    },
+    {
+      "legacyKey": "body-last-line-align",
+      "canonicalKey": "body-last-line-align",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "center",
+      "type": "enum",
+      "enum": [
+        "center",
+        "right"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "select",
+        "labelKey": "settings.body-last-line-align"
+      }
+    },
+    {
+      "legacyKey": "builder-back-bottom",
+      "canonicalKey": "builder-back-bottom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "18",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-back-bottom"
+      }
+    },
+    {
+      "legacyKey": "builder-back-left",
+      "canonicalKey": "builder-back-left",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "95",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-back-left"
+      }
+    },
+    {
+      "legacyKey": "builder-back-right",
+      "canonicalKey": "builder-back-right",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-back-right"
+      }
+    },
+    {
+      "legacyKey": "builder-back-top",
+      "canonicalKey": "builder-back-top",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "22",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-back-top"
+      }
+    },
+    {
+      "legacyKey": "builder-main-bottom",
+      "canonicalKey": "builder-main-bottom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "16",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-main-bottom"
+      }
+    },
+    {
+      "legacyKey": "builder-main-left",
+      "canonicalKey": "builder-main-left",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-main-left"
+      }
+    },
+    {
+      "legacyKey": "builder-main-right",
+      "canonicalKey": "builder-main-right",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-main-right"
+      }
+    },
+    {
+      "legacyKey": "builder-main-top",
+      "canonicalKey": "builder-main-top",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-main-top"
+      }
+    },
+    {
+      "legacyKey": "builder-sub-bottom",
+      "canonicalKey": "builder-sub-bottom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-sub-bottom"
+      }
+    },
+    {
+      "legacyKey": "builder-sub-left",
+      "canonicalKey": "builder-sub-left",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-sub-left"
+      }
+    },
+    {
+      "legacyKey": "builder-sub-right",
+      "canonicalKey": "builder-sub-right",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "95",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-sub-right"
+      }
+    },
+    {
+      "legacyKey": "builder-sub-top",
+      "canonicalKey": "builder-sub-top",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-sub-top"
+      }
+    },
+    {
+      "legacyKey": "builder-theme-name",
+      "canonicalKey": "builder-theme-name",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.builder-theme-name"
+      }
+    },
+    {
+      "legacyKey": "cbg-h0Open-color",
+      "canonicalKey": "cbg-h0Open-color",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "#f4f1e8",
+      "type": "color",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.cbg-h0Open-color"
+      }
+    },
+    {
+      "legacyKey": "cbg-h0Open-mode",
+      "canonicalKey": "cbg-h0Open-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "select",
+        "labelKey": "settings.cbg-h0Open-mode"
+      }
+    },
+    {
+      "legacyKey": "cbg-h0Open-opacity",
+      "canonicalKey": "cbg-h0Open-opacity",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.cbg-h0Open-opacity"
+      }
+    },
+    {
+      "legacyKey": "cbg-h2Open-color",
+      "canonicalKey": "cbg-h2Open-color",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "#f4f1e8",
+      "type": "color",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.cbg-h2Open-color"
+      }
+    },
+    {
+      "legacyKey": "cbg-h2Open-mode",
+      "canonicalKey": "cbg-h2Open-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "select",
+        "labelKey": "settings.cbg-h2Open-mode"
+      }
+    },
+    {
+      "legacyKey": "cbg-h2Open-opacity",
+      "canonicalKey": "cbg-h2Open-opacity",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.cbg-h2Open-opacity"
+      }
+    },
+    {
+      "legacyKey": "cbg-regular-color",
+      "canonicalKey": "cbg-regular-color",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "#f4f1e8",
+      "type": "color",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.cbg-regular-color"
+      }
+    },
+    {
+      "legacyKey": "cbg-regular-mode",
+      "canonicalKey": "cbg-regular-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "select",
+        "labelKey": "settings.cbg-regular-mode"
+      }
+    },
+    {
+      "legacyKey": "cbg-regular-opacity",
+      "canonicalKey": "cbg-regular-opacity",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.cbg-regular-opacity"
+      }
+    },
+    {
+      "legacyKey": "col-divider-style",
+      "canonicalKey": "col-divider-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "misc",
+        "control": "select",
+        "labelKey": "settings.col-divider-style"
+      }
+    },
+    {
+      "legacyKey": "data-builder-back-svg",
+      "canonicalKey": "data-builder-back-svg",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.data-builder-back-svg"
+      }
+    },
+    {
+      "legacyKey": "data-builder-main-svg",
+      "canonicalKey": "data-builder-main-svg",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.data-builder-main-svg"
+      }
+    },
+    {
+      "legacyKey": "data-builder-sub-svg",
+      "canonicalKey": "data-builder-sub-svg",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "text",
+        "labelKey": "settings.data-builder-sub-svg"
+      }
+    },
+    {
+      "legacyKey": "data-cbg-h0Open-img",
+      "canonicalKey": "data-cbg-h0Open-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.data-cbg-h0Open-img"
+      }
+    },
+    {
+      "legacyKey": "data-cbg-h2Open-img",
+      "canonicalKey": "data-cbg-h2Open-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.data-cbg-h2Open-img"
+      }
+    },
+    {
+      "legacyKey": "data-cbg-regular-img",
+      "canonicalKey": "data-cbg-regular-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "backgrounds",
+        "control": "text",
+        "labelKey": "settings.data-cbg-regular-img"
+      }
+    },
+    {
+      "legacyKey": "data-hdr-c-img",
+      "canonicalKey": "data-hdr-c-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.data-hdr-c-img"
+      }
+    },
+    {
+      "legacyKey": "data-sec-div-img",
+      "canonicalKey": "data-sec-div-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.data-sec-div-img"
+      }
+    },
+    {
+      "legacyKey": "detailed-toc-count-numbering",
+      "canonicalKey": "detailed-toc-count-numbering",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "checkbox",
+        "labelKey": "settings.detailed-toc-count-numbering"
+      }
+    },
+    {
+      "legacyKey": "detailed-toc-show-numbering",
+      "canonicalKey": "detailed-toc-show-numbering",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "checkbox",
+        "labelKey": "settings.detailed-toc-show-numbering"
+      }
+    },
+    {
+      "legacyKey": "dim-h2-btm-h",
+      "canonicalKey": "dim-h2-btm-h",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1.25em",
+      "type": "dimension",
+      "enum": null,
+      "unit": "em",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h2-btm-h"
+      }
+    },
+    {
+      "legacyKey": "dim-h2-btm-w",
+      "canonicalKey": "dim-h2-btm-w",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "65%",
+      "type": "dimension",
+      "enum": null,
+      "unit": "%",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h2-btm-w"
+      }
+    },
+    {
+      "legacyKey": "dim-h2-title-side-h",
+      "canonicalKey": "dim-h2-title-side-h",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1.1em",
+      "type": "dimension",
+      "enum": null,
+      "unit": "em",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h2-title-side-h"
+      }
+    },
+    {
+      "legacyKey": "dim-h2-title-side-w",
+      "canonicalKey": "dim-h2-title-side-w",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20px",
+      "type": "dimension",
+      "enum": null,
+      "unit": "px",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h2-title-side-w"
+      }
+    },
+    {
+      "legacyKey": "dim-h2-top-h",
+      "canonicalKey": "dim-h2-top-h",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1.25em",
+      "type": "dimension",
+      "enum": null,
+      "unit": "em",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h2-top-h"
+      }
+    },
+    {
+      "legacyKey": "dim-h2-top-w",
+      "canonicalKey": "dim-h2-top-w",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "65%",
+      "type": "dimension",
+      "enum": null,
+      "unit": "%",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h2-top-w"
+      }
+    },
+    {
+      "legacyKey": "dim-h3-side-h",
+      "canonicalKey": "dim-h3-side-h",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1em",
+      "type": "dimension",
+      "enum": null,
+      "unit": "em",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h3-side-h"
+      }
+    },
+    {
+      "legacyKey": "dim-h3-side-w",
+      "canonicalKey": "dim-h3-side-w",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "50px",
+      "type": "dimension",
+      "enum": null,
+      "unit": "px",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-h3-side-w"
+      }
+    },
+    {
+      "legacyKey": "dim-note-side-h",
+      "canonicalKey": "dim-note-side-h",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "0.9em",
+      "type": "dimension",
+      "enum": null,
+      "unit": "em",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-note-side-h"
+      }
+    },
+    {
+      "legacyKey": "dim-note-side-w",
+      "canonicalKey": "dim-note-side-w",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "40px",
+      "type": "dimension",
+      "enum": null,
+      "unit": "px",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-note-side-w"
+      }
+    },
+    {
+      "legacyKey": "dim-secdiv-h",
+      "canonicalKey": "dim-secdiv-h",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "28px",
+      "type": "dimension",
+      "enum": null,
+      "unit": "px",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-secdiv-h"
+      }
+    },
+    {
+      "legacyKey": "dim-secdiv-w",
+      "canonicalKey": "dim-secdiv-w",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "50%",
+      "type": "dimension",
+      "enum": null,
+      "unit": "%",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "ornaments",
+        "control": "text",
+        "labelKey": "settings.dim-secdiv-w"
+      }
+    },
+    {
+      "legacyKey": "drop-word-count",
+      "canonicalKey": "drop-word-count",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "text",
+        "labelKey": "settings.drop-word-count"
+      }
+    },
+    {
+      "legacyKey": "drop-word-min-lines",
+      "canonicalKey": "drop-word-min-lines",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "2",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "text",
+        "labelKey": "settings.drop-word-min-lines"
+      }
+    },
+    {
+      "legacyKey": "drop-word-mode",
+      "canonicalKey": "drop-word-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "window",
+      "type": "enum",
+      "enum": [
+        "none",
+        "window"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "select",
+        "labelKey": "settings.drop-word-mode"
+      }
+    },
+    {
+      "legacyKey": "en-line-prefix",
+      "canonicalKey": "en-line-prefix",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "הערת סיום -",
+      "type": "enum",
+      "enum": [
+        "הערת סיום -"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.en-line-prefix"
+      }
+    },
+    {
+      "legacyKey": "enable-detailed-toc",
+      "canonicalKey": "enable-detailed-toc",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "checkbox",
+        "labelKey": "settings.enable-detailed-toc"
+      }
+    },
+    {
+      "legacyKey": "enable-general-toc",
+      "canonicalKey": "enable-general-toc",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "checkbox",
+        "labelKey": "settings.enable-general-toc"
+      }
+    },
+    {
+      "legacyKey": "enable-shaar-box-editor",
+      "canonicalKey": "enable-shaar-box-editor",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.enable-shaar-box-editor"
+      }
+    },
+    {
+      "legacyKey": "f-dh",
+      "canonicalKey": "f-dh",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'AlphaBlack', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dh"
+      }
+    },
+    {
+      "legacyKey": "f-dtoc-1",
+      "canonicalKey": "f-dtoc-1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dtoc-1"
+      }
+    },
+    {
+      "legacyKey": "f-dtoc-2",
+      "canonicalKey": "f-dtoc-2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dtoc-2"
+      }
+    },
+    {
+      "legacyKey": "f-dtoc-3",
+      "canonicalKey": "f-dtoc-3",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dtoc-3"
+      }
+    },
+    {
+      "legacyKey": "f-dtoc-4",
+      "canonicalKey": "f-dtoc-4",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dtoc-4"
+      }
+    },
+    {
+      "legacyKey": "f-dtoc-5",
+      "canonicalKey": "f-dtoc-5",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dtoc-5"
+      }
+    },
+    {
+      "legacyKey": "f-dtoc-6",
+      "canonicalKey": "f-dtoc-6",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dtoc-6"
+      }
+    },
+    {
+      "legacyKey": "f-dtoc-7",
+      "canonicalKey": "f-dtoc-7",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-dtoc-7"
+      }
+    },
+    {
+      "legacyKey": "f-gtoc-1",
+      "canonicalKey": "f-gtoc-1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-gtoc-1"
+      }
+    },
+    {
+      "legacyKey": "f-gtoc-2",
+      "canonicalKey": "f-gtoc-2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-gtoc-2"
+      }
+    },
+    {
+      "legacyKey": "f-gtoc-3",
+      "canonicalKey": "f-gtoc-3",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-gtoc-3"
+      }
+    },
+    {
+      "legacyKey": "f-gtoc-4",
+      "canonicalKey": "f-gtoc-4",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-gtoc-4"
+      }
+    },
+    {
+      "legacyKey": "f-gtoc-5",
+      "canonicalKey": "f-gtoc-5",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-gtoc-5"
+      }
+    },
+    {
+      "legacyKey": "f-gtoc-6",
+      "canonicalKey": "f-gtoc-6",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-gtoc-6"
+      }
+    },
+    {
+      "legacyKey": "f-gtoc-7",
+      "canonicalKey": "f-gtoc-7",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-gtoc-7"
+      }
+    },
+    {
+      "legacyKey": "f-h0",
+      "canonicalKey": "f-h0",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'AlphaBlack', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h0"
+      }
+    },
+    {
+      "legacyKey": "f-h0-body",
+      "canonicalKey": "f-h0-body",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Frank Ruhl Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h0-body"
+      }
+    },
+    {
+      "legacyKey": "f-h1",
+      "canonicalKey": "f-h1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Lia Sgula', 'Bellefair', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h1"
+      }
+    },
+    {
+      "legacyKey": "f-h2",
+      "canonicalKey": "f-h2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'AlphaBlack', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h2"
+      }
+    },
+    {
+      "legacyKey": "f-h3",
+      "canonicalKey": "f-h3",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Alpha', 'Noto Serif Hebrew', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h3"
+      }
+    },
+    {
+      "legacyKey": "f-h4",
+      "canonicalKey": "f-h4",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Alpha', 'Frank Ruhl Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h4"
+      }
+    },
+    {
+      "legacyKey": "f-h5",
+      "canonicalKey": "f-h5",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'AlphaLight', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h5"
+      }
+    },
+    {
+      "legacyKey": "f-h6",
+      "canonicalKey": "f-h6",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Noto Serif Hebrew', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h6"
+      }
+    },
+    {
+      "legacyKey": "f-h7",
+      "canonicalKey": "f-h7",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Hadassah Friedlaender', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-h7"
+      }
+    },
+    {
+      "legacyKey": "f-hdr-c",
+      "canonicalKey": "f-hdr-c",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-hdr-c"
+      }
+    },
+    {
+      "legacyKey": "f-hdr-l",
+      "canonicalKey": "f-hdr-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-hdr-l"
+      }
+    },
+    {
+      "legacyKey": "f-hdr-r",
+      "canonicalKey": "f-hdr-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-hdr-r"
+      }
+    },
+    {
+      "legacyKey": "f-hdr-verso-c",
+      "canonicalKey": "f-hdr-verso-c",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-hdr-verso-c"
+      }
+    },
+    {
+      "legacyKey": "f-hdr-verso-l",
+      "canonicalKey": "f-hdr-verso-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-hdr-verso-l"
+      }
+    },
+    {
+      "legacyKey": "f-hdr-verso-r",
+      "canonicalKey": "f-hdr-verso-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-hdr-verso-r"
+      }
+    },
+    {
+      "legacyKey": "f-note-body",
+      "canonicalKey": "f-note-body",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Frank Ruhl Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.f-note-body"
+      }
+    },
+    {
+      "legacyKey": "f-note-title",
+      "canonicalKey": "f-note-title",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.f-note-title"
+      }
+    },
+    {
+      "legacyKey": "f-paren",
+      "canonicalKey": "f-paren",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-paren"
+      }
+    },
+    {
+      "legacyKey": "f-sh-author",
+      "canonicalKey": "f-sh-author",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-sh-author"
+      }
+    },
+    {
+      "legacyKey": "f-sh-desc",
+      "canonicalKey": "f-sh-desc",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'Frank Ruhl Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-sh-desc"
+      }
+    },
+    {
+      "legacyKey": "f-sh-sec",
+      "canonicalKey": "f-sh-sec",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-sh-sec"
+      }
+    },
+    {
+      "legacyKey": "f-sh-sub",
+      "canonicalKey": "f-sh-sub",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Livorna', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-sh-sub"
+      }
+    },
+    {
+      "legacyKey": "f-sh-title",
+      "canonicalKey": "f-sh-title",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Lia Sgula', 'Bellefair', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-sh-title"
+      }
+    },
+    {
+      "legacyKey": "f-sh-year",
+      "canonicalKey": "f-sh-year",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-sh-year"
+      }
+    },
+    {
+      "legacyKey": "f-siman",
+      "canonicalKey": "f-siman",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'AlphaBlack', 'David Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.f-siman"
+      }
+    },
+    {
+      "legacyKey": "file-builder-back-svg",
+      "canonicalKey": "file-builder-back-svg",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-builder-back-svg"
+      }
+    },
+    {
+      "legacyKey": "file-builder-main-svg",
+      "canonicalKey": "file-builder-main-svg",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-builder-main-svg"
+      }
+    },
+    {
+      "legacyKey": "file-builder-sub-svg",
+      "canonicalKey": "file-builder-sub-svg",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-builder-sub-svg"
+      }
+    },
+    {
+      "legacyKey": "file-cbg-h0Open-img",
+      "canonicalKey": "file-cbg-h0Open-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-cbg-h0Open-img"
+      }
+    },
+    {
+      "legacyKey": "file-cbg-h2Open-img",
+      "canonicalKey": "file-cbg-h2Open-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-cbg-h2Open-img"
+      }
+    },
+    {
+      "legacyKey": "file-cbg-regular-img",
+      "canonicalKey": "file-cbg-regular-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-cbg-regular-img"
+      }
+    },
+    {
+      "legacyKey": "file-hdr-c-img",
+      "canonicalKey": "file-hdr-c-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-hdr-c-img"
+      }
+    },
+    {
+      "legacyKey": "file-sec-div-img",
+      "canonicalKey": "file-sec-div-img",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:setting_sets",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "misc",
+        "control": "text",
+        "labelKey": "settings.file-sec-div-img"
+      }
+    },
+    {
+      "legacyKey": "fn-columns",
+      "canonicalKey": "fn-columns",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.fn-columns"
+      }
+    },
+    {
+      "legacyKey": "fn-delim-close",
+      "canonicalKey": "fn-delim-close",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "]",
+      "type": "enum",
+      "enum": [
+        "]"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.fn-delim-close"
+      }
+    },
+    {
+      "legacyKey": "fn-delim-open",
+      "canonicalKey": "fn-delim-open",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "[",
+      "type": "enum",
+      "enum": [
+        "["
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.fn-delim-open"
+      }
+    },
+    {
+      "legacyKey": "fn-layout-mode",
+      "canonicalKey": "fn-layout-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "block",
+      "type": "enum",
+      "enum": [
+        "block"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.fn-layout-mode"
+      }
+    },
+    {
+      "legacyKey": "fn-reset-mode",
+      "canonicalKey": "fn-reset-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "page",
+      "type": "enum",
+      "enum": [
+        "page"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.fn-reset-mode"
+      }
+    },
+    {
+      "legacyKey": "fn-title-text",
+      "canonicalKey": "fn-title-text",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.fn-title-text"
+      }
+    },
+    {
+      "legacyKey": "font-body",
+      "canonicalKey": "font-body",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'Guttman Rashi', 'Frank Ruhl Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.font-body"
+      }
+    },
+    {
+      "legacyKey": "font-first-word",
+      "canonicalKey": "font-first-word",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "'FrankReal', 'Frank Ruhl Libre', serif",
+      "type": "font-stack",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.font-first-word"
+      }
+    },
+    {
+      "legacyKey": "general-toc-count-numbering",
+      "canonicalKey": "general-toc-count-numbering",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "checkbox",
+        "labelKey": "settings.general-toc-count-numbering"
+      }
+    },
+    {
+      "legacyKey": "general-toc-show-numbering",
+      "canonicalKey": "general-toc-show-numbering",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "checkbox",
+        "labelKey": "settings.general-toc-show-numbering"
+      }
+    },
+    {
+      "legacyKey": "h2-auto-siman",
+      "canonicalKey": "h2-auto-siman",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "checkbox",
+        "labelKey": "settings.h2-auto-siman"
+      }
+    },
+    {
+      "legacyKey": "h2-orn-fit-text",
+      "canonicalKey": "h2-orn-fit-text",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "checkbox",
+        "labelKey": "settings.h2-orn-fit-text"
+      }
+    },
+    {
+      "legacyKey": "h2-orn-scope",
+      "canonicalKey": "h2-orn-scope",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "both",
+      "type": "enum",
+      "enum": [
+        "both"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-orn-scope"
+      }
+    },
+    {
+      "legacyKey": "h2-ornament-bottom-style",
+      "canonicalKey": "h2-ornament-bottom-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-ornament-bottom-style"
+      }
+    },
+    {
+      "legacyKey": "h2-ornament-set",
+      "canonicalKey": "h2-ornament-set",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-ornament-set"
+      }
+    },
+    {
+      "legacyKey": "h2-ornament-top-style",
+      "canonicalKey": "h2-ornament-top-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-ornament-top-style"
+      }
+    },
+    {
+      "legacyKey": "h2-reset-siman",
+      "canonicalKey": "h2-reset-siman",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "checkbox",
+        "labelKey": "settings.h2-reset-siman"
+      }
+    },
+    {
+      "legacyKey": "h2-title-orn-mode",
+      "canonicalKey": "h2-title-orn-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-title-orn-mode"
+      }
+    },
+    {
+      "legacyKey": "h2-title-ornament-bottom-style",
+      "canonicalKey": "h2-title-ornament-bottom-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-title-ornament-bottom-style"
+      }
+    },
+    {
+      "legacyKey": "h2-title-ornament-l",
+      "canonicalKey": "h2-title-ornament-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-title-ornament-l"
+      }
+    },
+    {
+      "legacyKey": "h2-title-ornament-r",
+      "canonicalKey": "h2-title-ornament-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-title-ornament-r"
+      }
+    },
+    {
+      "legacyKey": "h2-title-ornament-top-style",
+      "canonicalKey": "h2-title-ornament-top-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h2-title-ornament-top-style"
+      }
+    },
+    {
+      "legacyKey": "h2-top-distance",
+      "canonicalKey": "h2-top-distance",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "22%",
+      "type": "dimension",
+      "enum": null,
+      "unit": "%",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "text",
+        "labelKey": "settings.h2-top-distance"
+      }
+    },
+    {
+      "legacyKey": "h3-ornament-l",
+      "canonicalKey": "h3-ornament-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h3-ornament-l"
+      }
+    },
+    {
+      "legacyKey": "h3-ornament-r",
+      "canonicalKey": "h3-ornament-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h3-ornament-r"
+      }
+    },
+    {
+      "legacyKey": "h3-ornament-set",
+      "canonicalKey": "h3-ornament-set",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.h3-ornament-set"
+      }
+    },
+    {
+      "legacyKey": "hdr-alternating",
+      "canonicalKey": "hdr-alternating",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "checkbox",
+        "labelKey": "settings.hdr-alternating"
+      }
+    },
+    {
+      "legacyKey": "hdr-c-align",
+      "canonicalKey": "hdr-c-align",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "center",
+      "type": "enum",
+      "enum": [
+        "center"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-c-align"
+      }
+    },
+    {
+      "legacyKey": "hdr-c-custom",
+      "canonicalKey": "hdr-c-custom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-c-custom"
+      }
+    },
+    {
+      "legacyKey": "hdr-c-type",
+      "canonicalKey": "hdr-c-type",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "h2_without_siman",
+      "type": "enum",
+      "enum": [
+        "h2_without_siman",
+        "spear"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-c-type"
+      }
+    },
+    {
+      "legacyKey": "hdr-distinct-even-odd",
+      "canonicalKey": "hdr-distinct-even-odd",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "checkbox",
+        "labelKey": "settings.hdr-distinct-even-odd"
+      }
+    },
+    {
+      "legacyKey": "hdr-divider-style",
+      "canonicalKey": "hdr-divider-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "gray",
+      "type": "enum",
+      "enum": [
+        "gray"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-divider-style"
+      }
+    },
+    {
+      "legacyKey": "hdr-h1-title-mode",
+      "canonicalKey": "hdr-h1-title-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "full",
+      "type": "enum",
+      "enum": [
+        "full"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-h1-title-mode"
+      }
+    },
+    {
+      "legacyKey": "hdr-l-align",
+      "canonicalKey": "hdr-l-align",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "center",
+      "type": "enum",
+      "enum": [
+        "center",
+        "left"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-l-align"
+      }
+    },
+    {
+      "legacyKey": "hdr-l-custom",
+      "canonicalKey": "hdr-l-custom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-l-custom"
+      }
+    },
+    {
+      "legacyKey": "hdr-l-type",
+      "canonicalKey": "hdr-l-type",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "book_title_split_l",
+      "type": "enum",
+      "enum": [
+        "book_title_split_l",
+        "h2"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-l-type"
+      }
+    },
+    {
+      "legacyKey": "hdr-r-align",
+      "canonicalKey": "hdr-r-align",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "center",
+      "type": "enum",
+      "enum": [
+        "center",
+        "right"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-r-align"
+      }
+    },
+    {
+      "legacyKey": "hdr-r-custom",
+      "canonicalKey": "hdr-r-custom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-r-custom"
+      }
+    },
+    {
+      "legacyKey": "hdr-r-type",
+      "canonicalKey": "hdr-r-type",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "book_title_split_r",
+      "type": "enum",
+      "enum": [
+        "book_title_split_r",
+        "h1"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-r-type"
+      }
+    },
+    {
+      "legacyKey": "hdr-title-split",
+      "canonicalKey": "hdr-title-split",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "checkbox",
+        "labelKey": "settings.hdr-title-split"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-c-align",
+      "canonicalKey": "hdr-verso-c-align",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "center",
+      "type": "enum",
+      "enum": [
+        "center"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-verso-c-align"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-c-custom",
+      "canonicalKey": "hdr-verso-c-custom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-verso-c-custom"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-c-type",
+      "canonicalKey": "hdr-verso-c-type",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "h1",
+      "type": "enum",
+      "enum": [
+        "h1",
+        "same_as_odd"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-verso-c-type"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-l-align",
+      "canonicalKey": "hdr-verso-l-align",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "center",
+      "type": "enum",
+      "enum": [
+        "center",
+        "left"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-verso-l-align"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-l-custom",
+      "canonicalKey": "hdr-verso-l-custom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-verso-l-custom"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-l-type",
+      "canonicalKey": "hdr-verso-l-type",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "book_title_split_l",
+      "type": "enum",
+      "enum": [
+        "book_title_split_l",
+        "same_as_odd"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-verso-l-type"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-r-align",
+      "canonicalKey": "hdr-verso-r-align",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "center",
+      "type": "enum",
+      "enum": [
+        "center",
+        "right"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-verso-r-align"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-r-custom",
+      "canonicalKey": "hdr-verso-r-custom",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-verso-r-custom"
+      }
+    },
+    {
+      "legacyKey": "hdr-verso-r-type",
+      "canonicalKey": "hdr-verso-r-type",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "book_title_split_r",
+      "type": "enum",
+      "enum": [
+        "book_title_split_r",
+        "same_as_odd"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "select",
+        "labelKey": "settings.hdr-verso-r-type"
+      }
+    },
+    {
+      "legacyKey": "hdr-w-c",
+      "canonicalKey": "hdr-w-c",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "33.34%",
+      "type": "dimension",
+      "enum": null,
+      "unit": "%",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-w-c"
+      }
+    },
+    {
+      "legacyKey": "hdr-w-l",
+      "canonicalKey": "hdr-w-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "33.33%",
+      "type": "dimension",
+      "enum": null,
+      "unit": "%",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-w-l"
+      }
+    },
+    {
+      "legacyKey": "hdr-w-r",
+      "canonicalKey": "hdr-w-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "33.33%",
+      "type": "dimension",
+      "enum": null,
+      "unit": "%",
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "running-headers",
+        "control": "text",
+        "labelKey": "settings.hdr-w-r"
+      }
+    },
+    {
+      "legacyKey": "inp-book-author",
+      "canonicalKey": "inp-book-author",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "הצעיר ידידיה בר אבא הלוי",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-author"
+      }
+    },
+    {
+      "legacyKey": "inp-book-back-contact",
+      "canonicalKey": "inp-book-back-contact",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "052-7666666",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-back-contact"
+      }
+    },
+    {
+      "legacyKey": "inp-book-back-copyright",
+      "canonicalKey": "inp-book-back-copyright",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "כל הזכויות הפקר",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-back-copyright"
+      }
+    },
+    {
+      "legacyKey": "inp-book-back-extra",
+      "canonicalKey": "inp-book-back-extra",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "אין לסמוך על האמור להלכה",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-back-extra"
+      }
+    },
+    {
+      "legacyKey": "inp-book-back-publishing",
+      "canonicalKey": "inp-book-back-publishing",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "הוצאת זוכמיר בע\"מ",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-back-publishing"
+      }
+    },
+    {
+      "legacyKey": "inp-book-desc",
+      "canonicalKey": "inp-book-desc",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "בירור שיטות הראשונים והאחרונים ובירורי הלכות למעשה",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-desc"
+      }
+    },
+    {
+      "legacyKey": "inp-book-sections",
+      "canonicalKey": "inp-book-sections",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "מהדורה שניה ומורחבת בסייעתא דשמיא",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-sections"
+      }
+    },
+    {
+      "legacyKey": "inp-book-subtitle",
+      "canonicalKey": "inp-book-subtitle",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "ביאורים וחידושים עמוקים על מסכתות הש\"ס",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-subtitle"
+      }
+    },
+    {
+      "legacyKey": "inp-book-title",
+      "canonicalKey": "inp-book-title",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "ספר מלכי המלוכה",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-title"
+      }
+    },
+    {
+      "legacyKey": "inp-book-year",
+      "canonicalKey": "inp-book-year",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "ירושלים עיה\"ק תובב\"א שנת ה'תשפ\"ו",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.inp-book-year"
+      }
+    },
+    {
+      "legacyKey": "line-height-body",
+      "canonicalKey": "line-height-body",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1.34",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "body",
+        "control": "text",
+        "labelKey": "settings.line-height-body"
+      }
+    },
+    {
+      "legacyKey": "main-shaar-count-numbering",
+      "canonicalKey": "main-shaar-count-numbering",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.main-shaar-count-numbering"
+      }
+    },
+    {
+      "legacyKey": "main-shaar-show-number",
+      "canonicalKey": "main-shaar-show-number",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.main-shaar-show-number"
+      }
+    },
+    {
+      "legacyKey": "mode-h0",
+      "canonicalKey": "mode-h0",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "new_page_1col",
+      "type": "enum",
+      "enum": [
+        "new_page_1col"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h0"
+      }
+    },
+    {
+      "legacyKey": "mode-h1",
+      "canonicalKey": "mode-h1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "sub_shaar",
+      "type": "enum",
+      "enum": [
+        "sub_shaar"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h1"
+      }
+    },
+    {
+      "legacyKey": "mode-h2",
+      "canonicalKey": "mode-h2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "new_page_1col",
+      "type": "enum",
+      "enum": [
+        "new_page_1col"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h2"
+      }
+    },
+    {
+      "legacyKey": "mode-h3",
+      "canonicalKey": "mode-h3",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "span_1col",
+      "type": "enum",
+      "enum": [
+        "span_1col"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h3"
+      }
+    },
+    {
+      "legacyKey": "mode-h4",
+      "canonicalKey": "mode-h4",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "inline_2col",
+      "type": "enum",
+      "enum": [
+        "inline_2col"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h4"
+      }
+    },
+    {
+      "legacyKey": "mode-h5",
+      "canonicalKey": "mode-h5",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "inline_2col",
+      "type": "enum",
+      "enum": [
+        "inline_2col"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h5"
+      }
+    },
+    {
+      "legacyKey": "mode-h6",
+      "canonicalKey": "mode-h6",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "inline_2col",
+      "type": "enum",
+      "enum": [
+        "inline_2col"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h6"
+      }
+    },
+    {
+      "legacyKey": "mode-h7",
+      "canonicalKey": "mode-h7",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "side_note",
+      "type": "enum",
+      "enum": [
+        "side_note"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "select",
+        "labelKey": "settings.mode-h7"
+      }
+    },
+    {
+      "legacyKey": "note-header-orn-l",
+      "canonicalKey": "note-header-orn-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.note-header-orn-l"
+      }
+    },
+    {
+      "legacyKey": "note-header-orn-r",
+      "canonicalKey": "note-header-orn-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.note-header-orn-r"
+      }
+    },
+    {
+      "legacyKey": "note-listing-num-size",
+      "canonicalKey": "note-listing-num-size",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "8",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.note-listing-num-size"
+      }
+    },
+    {
+      "legacyKey": "note-marker-size",
+      "canonicalKey": "note-marker-size",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "8",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.note-marker-size"
+      }
+    },
+    {
+      "legacyKey": "note-marker-type",
+      "canonicalKey": "note-marker-type",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "super",
+      "type": "enum",
+      "enum": [
+        "super"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.note-marker-type"
+      }
+    },
+    {
+      "legacyKey": "note-num-separator",
+      "canonicalKey": "note-num-separator",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": ".",
+      "type": "enum",
+      "enum": [
+        "."
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.note-num-separator"
+      }
+    },
+    {
+      "legacyKey": "note-numbering-style",
+      "canonicalKey": "note-numbering-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "gematria",
+      "type": "enum",
+      "enum": [
+        "gematria"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.note-numbering-style"
+      }
+    },
+    {
+      "legacyKey": "note-rule-style",
+      "canonicalKey": "note-rule-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "star",
+      "type": "enum",
+      "enum": [
+        "plain",
+        "star"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "select",
+        "labelKey": "settings.note-rule-style"
+      }
+    },
+    {
+      "legacyKey": "odd-h0",
+      "canonicalKey": "odd-h0",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "checkbox",
+        "labelKey": "settings.odd-h0"
+      }
+    },
+    {
+      "legacyKey": "odd-h1",
+      "canonicalKey": "odd-h1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "checkbox",
+        "labelKey": "settings.odd-h1"
+      }
+    },
+    {
+      "legacyKey": "odd-h2",
+      "canonicalKey": "odd-h2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "headings",
+        "control": "checkbox",
+        "labelKey": "settings.odd-h2"
+      }
+    },
+    {
+      "legacyKey": "page-num-format",
+      "canonicalKey": "page-num-format",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "gematria",
+      "type": "enum",
+      "enum": [
+        "gematria"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "folio",
+        "control": "select",
+        "labelKey": "settings.page-num-format"
+      }
+    },
+    {
+      "legacyKey": "page-num-frame",
+      "canonicalKey": "page-num-frame",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "none",
+      "type": "enum",
+      "enum": [
+        "none"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "folio",
+        "control": "select",
+        "labelKey": "settings.page-num-frame"
+      }
+    },
+    {
+      "legacyKey": "page-num-initial-value",
+      "canonicalKey": "page-num-initial-value",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "folio",
+        "control": "text",
+        "labelKey": "settings.page-num-initial-value"
+      }
+    },
+    {
+      "legacyKey": "page-num-position",
+      "canonicalKey": "page-num-position",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "bottom_center",
+      "type": "enum",
+      "enum": [
+        "bottom_center",
+        "bottom_outer"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "folio",
+        "control": "select",
+        "labelKey": "settings.page-num-position"
+      }
+    },
+    {
+      "legacyKey": "page-num-start-idx",
+      "canonicalKey": "page-num-start-idx",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "folio",
+        "control": "text",
+        "labelKey": "settings.page-num-start-idx"
+      }
+    },
+    {
+      "legacyKey": "prop-col",
+      "canonicalKey": "prop-col",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "40",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "grid",
+        "control": "text",
+        "labelKey": "settings.prop-col"
+      }
+    },
+    {
+      "legacyKey": "prop-gap",
+      "canonicalKey": "prop-gap",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "2",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "grid",
+        "control": "text",
+        "labelKey": "settings.prop-gap"
+      }
+    },
+    {
+      "legacyKey": "prop-gutter",
+      "canonicalKey": "prop-gutter",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "2",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "grid",
+        "control": "text",
+        "labelKey": "settings.prop-gutter"
+      }
+    },
+    {
+      "legacyKey": "prop-margin",
+      "canonicalKey": "prop-margin",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "7.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "grid",
+        "control": "text",
+        "labelKey": "settings.prop-margin"
+      }
+    },
+    {
+      "legacyKey": "prop-mb",
+      "canonicalKey": "prop-mb",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "grid",
+        "control": "text",
+        "labelKey": "settings.prop-mb"
+      }
+    },
+    {
+      "legacyKey": "prop-mt",
+      "canonicalKey": "prop-mt",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "grid",
+        "control": "text",
+        "labelKey": "settings.prop-mt"
+      }
+    },
+    {
+      "legacyKey": "prop-mt-h2",
+      "canonicalKey": "prop-mt-h2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "grid",
+        "control": "text",
+        "labelKey": "settings.prop-mt-h2"
+      }
+    },
+    {
+      "legacyKey": "s-dtoc-1",
+      "canonicalKey": "s-dtoc-1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "12",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-dtoc-1"
+      }
+    },
+    {
+      "legacyKey": "s-dtoc-2",
+      "canonicalKey": "s-dtoc-2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "11",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-dtoc-2"
+      }
+    },
+    {
+      "legacyKey": "s-dtoc-3",
+      "canonicalKey": "s-dtoc-3",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-dtoc-3"
+      }
+    },
+    {
+      "legacyKey": "s-dtoc-4",
+      "canonicalKey": "s-dtoc-4",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-dtoc-4"
+      }
+    },
+    {
+      "legacyKey": "s-dtoc-5",
+      "canonicalKey": "s-dtoc-5",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-dtoc-5"
+      }
+    },
+    {
+      "legacyKey": "s-dtoc-6",
+      "canonicalKey": "s-dtoc-6",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-dtoc-6"
+      }
+    },
+    {
+      "legacyKey": "s-dtoc-7",
+      "canonicalKey": "s-dtoc-7",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "8.8",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-dtoc-7"
+      }
+    },
+    {
+      "legacyKey": "s-gtoc-1",
+      "canonicalKey": "s-gtoc-1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "12",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-gtoc-1"
+      }
+    },
+    {
+      "legacyKey": "s-gtoc-2",
+      "canonicalKey": "s-gtoc-2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "11",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-gtoc-2"
+      }
+    },
+    {
+      "legacyKey": "s-gtoc-3",
+      "canonicalKey": "s-gtoc-3",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-gtoc-3"
+      }
+    },
+    {
+      "legacyKey": "s-gtoc-4",
+      "canonicalKey": "s-gtoc-4",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-gtoc-4"
+      }
+    },
+    {
+      "legacyKey": "s-gtoc-5",
+      "canonicalKey": "s-gtoc-5",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-gtoc-5"
+      }
+    },
+    {
+      "legacyKey": "s-gtoc-6",
+      "canonicalKey": "s-gtoc-6",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-gtoc-6"
+      }
+    },
+    {
+      "legacyKey": "s-gtoc-7",
+      "canonicalKey": "s-gtoc-7",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "8.8",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "toc",
+        "control": "text",
+        "labelKey": "settings.s-gtoc-7"
+      }
+    },
+    {
+      "legacyKey": "s-h0",
+      "canonicalKey": "s-h0",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "26",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h0"
+      }
+    },
+    {
+      "legacyKey": "s-h0-body",
+      "canonicalKey": "s-h0-body",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "11.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h0-body"
+      }
+    },
+    {
+      "legacyKey": "s-h1",
+      "canonicalKey": "s-h1",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "50",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h1"
+      }
+    },
+    {
+      "legacyKey": "s-h2",
+      "canonicalKey": "s-h2",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "17",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h2"
+      }
+    },
+    {
+      "legacyKey": "s-h3",
+      "canonicalKey": "s-h3",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "13.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h3"
+      }
+    },
+    {
+      "legacyKey": "s-h4",
+      "canonicalKey": "s-h4",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "12.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h4"
+      }
+    },
+    {
+      "legacyKey": "s-h5",
+      "canonicalKey": "s-h5",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "11.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h5"
+      }
+    },
+    {
+      "legacyKey": "s-h6",
+      "canonicalKey": "s-h6",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "10.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h6"
+      }
+    },
+    {
+      "legacyKey": "s-h7",
+      "canonicalKey": "s-h7",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "6",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-h7"
+      }
+    },
+    {
+      "legacyKey": "s-hdr-c",
+      "canonicalKey": "s-hdr-c",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "11",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-hdr-c"
+      }
+    },
+    {
+      "legacyKey": "s-hdr-l",
+      "canonicalKey": "s-hdr-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-hdr-l"
+      }
+    },
+    {
+      "legacyKey": "s-hdr-r",
+      "canonicalKey": "s-hdr-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-hdr-r"
+      }
+    },
+    {
+      "legacyKey": "s-hdr-verso-c",
+      "canonicalKey": "s-hdr-verso-c",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "11",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-hdr-verso-c"
+      }
+    },
+    {
+      "legacyKey": "s-hdr-verso-l",
+      "canonicalKey": "s-hdr-verso-l",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-hdr-verso-l"
+      }
+    },
+    {
+      "legacyKey": "s-hdr-verso-r",
+      "canonicalKey": "s-hdr-verso-r",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-hdr-verso-r"
+      }
+    },
+    {
+      "legacyKey": "s-note-body",
+      "canonicalKey": "s-note-body",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "9",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.s-note-body"
+      }
+    },
+    {
+      "legacyKey": "s-note-title",
+      "canonicalKey": "s-note-title",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "9",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "notes",
+        "control": "text",
+        "labelKey": "settings.s-note-title"
+      }
+    },
+    {
+      "legacyKey": "s-paren",
+      "canonicalKey": "s-paren",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "-2",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-paren"
+      }
+    },
+    {
+      "legacyKey": "s-paren-mode",
+      "canonicalKey": "s-paren-mode",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "relative",
+      "type": "enum",
+      "enum": [
+        "relative"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "select",
+        "labelKey": "settings.s-paren-mode"
+      }
+    },
+    {
+      "legacyKey": "s-sh-author",
+      "canonicalKey": "s-sh-author",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "15",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-sh-author"
+      }
+    },
+    {
+      "legacyKey": "s-sh-desc",
+      "canonicalKey": "s-sh-desc",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "12",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-sh-desc"
+      }
+    },
+    {
+      "legacyKey": "s-sh-sec",
+      "canonicalKey": "s-sh-sec",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "11.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-sh-sec"
+      }
+    },
+    {
+      "legacyKey": "s-sh-sub",
+      "canonicalKey": "s-sh-sub",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "21",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-sh-sub"
+      }
+    },
+    {
+      "legacyKey": "s-sh-title",
+      "canonicalKey": "s-sh-title",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "46",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-sh-title"
+      }
+    },
+    {
+      "legacyKey": "s-sh-year",
+      "canonicalKey": "s-sh-year",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "12",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-sh-year"
+      }
+    },
+    {
+      "legacyKey": "s-siman",
+      "canonicalKey": "s-siman",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "20",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.s-siman"
+      }
+    },
+    {
+      "legacyKey": "section-divider-style",
+      "canonicalKey": "section-divider-style",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "spear",
+      "type": "enum",
+      "enum": [
+        "spear"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "misc",
+        "control": "select",
+        "labelKey": "settings.section-divider-style"
+      }
+    },
+    {
+      "legacyKey": "select-shaar-back",
+      "canonicalKey": "select-shaar-back",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "theme_default",
+      "type": "enum",
+      "enum": [
+        "theme_default"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "select",
+        "labelKey": "settings.select-shaar-back"
+      }
+    },
+    {
+      "legacyKey": "select-shaar-main",
+      "canonicalKey": "select-shaar-main",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "theme_default",
+      "type": "enum",
+      "enum": [
+        "theme_default"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "select",
+        "labelKey": "settings.select-shaar-main"
+      }
+    },
+    {
+      "legacyKey": "select-shaar-sub",
+      "canonicalKey": "select-shaar-sub",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "theme_default",
+      "type": "enum",
+      "enum": [
+        "theme_default"
+      ],
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "select",
+        "labelKey": "settings.select-shaar-sub"
+      }
+    },
+    {
+      "legacyKey": "show-back-shaar",
+      "canonicalKey": "show-back-shaar",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.show-back-shaar"
+      }
+    },
+    {
+      "legacyKey": "show-main-shaar",
+      "canonicalKey": "show-main-shaar",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.show-main-shaar"
+      }
+    },
+    {
+      "legacyKey": "show-sub-shaar",
+      "canonicalKey": "show-sub-shaar",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.show-sub-shaar"
+      }
+    },
+    {
+      "legacyKey": "size-body",
+      "canonicalKey": "size-body",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "12",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.size-body"
+      }
+    },
+    {
+      "legacyKey": "size-first-word",
+      "canonicalKey": "size-first-word",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "1.5",
+      "type": "number",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "fonts",
+        "control": "text",
+        "labelKey": "settings.size-first-word"
+      }
+    },
+    {
+      "legacyKey": "style-set-select",
+      "canonicalKey": "style-set-select",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": "",
+      "type": "string",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": false,
+      "consumerId": "ui-only",
+      "ui": {
+        "section": "book-meta",
+        "control": "text",
+        "labelKey": "settings.style-set-select"
+      }
+    },
+    {
+      "legacyKey": "sub-shaar-count-numbering",
+      "canonicalKey": "sub-shaar-count-numbering",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": true,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.sub-shaar-count-numbering"
+      }
+    },
+    {
+      "legacyKey": "sub-shaar-show-number",
+      "canonicalKey": "sub-shaar-show-number",
+      "schemaVersion": 1,
+      "source": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e5704405fb2806a126ea1b519a35a87f378:default_settings.json",
+      "fileSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+      "defaultValue": false,
+      "type": "boolean",
+      "enum": null,
+      "unit": null,
+      "affectsLayout": true,
+      "consumerId": "engine",
+      "ui": {
+        "section": "shaar",
+        "control": "checkbox",
+        "labelKey": "settings.sub-shaar-show-number"
+      }
+    }
+  ]
+}
