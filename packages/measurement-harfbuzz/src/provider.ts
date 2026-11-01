@@ -134,7 +134,7 @@ function atomIndexAt(atomStarts: readonly number[], atomEnds: readonly number[],
   let lo = 0;
   let hi = atomStarts.length - 1;
   while (lo <= hi) {
-    const mid = (lo + hi) >> 1;
+    const mid = Math.floor((lo + hi) / 2);
     const s = atomStarts[mid]!;
     const e = atomEnds[mid]!;
     if (cluster < s) hi = mid - 1;

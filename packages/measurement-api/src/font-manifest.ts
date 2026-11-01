@@ -147,8 +147,9 @@ export function binaryFormatOf(bytes: Uint8Array): 'woff2' | 'woff' | 'sfnt' | '
   if (sig === 'wOF2') return 'woff2';
   if (sig === 'wOF ') return 'woff';
   if (sig === 'OTTO' || sig === 'true' || sig === 'ttcf') return 'sfnt';
-  const b0 = ((bytes[0] ?? 0) << 8) | (bytes[1] ?? 0);
-  const b1 = ((bytes[2] ?? 0) << 8) | (bytes[3] ?? 0);
+  // חשבון שלם בטוח (ADR-001): כפל במקום הזזת סיביות — ערך זהה, ללא כיווץ 32-סיביות
+  const b0 = (bytes[0] ?? 0) * 0x100 + (bytes[1] ?? 0);
+  const b1 = (bytes[2] ?? 0) * 0x100 + (bytes[3] ?? 0);
   if (b0 === 0x0001 && b1 === 0x0000) return 'sfnt';
   return 'unknown';
 }

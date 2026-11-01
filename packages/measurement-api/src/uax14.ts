@@ -39,7 +39,7 @@ function binarySearch3(ranges: readonly Range3[], cp: number): Range3 | null {
   let lo = 0;
   let hi = ranges.length - 1;
   while (lo <= hi) {
-    const mid = (lo + hi) >> 1;
+    const mid = Math.floor((lo + hi) / 2);
     const r = ranges[mid]!;
     if (cp < r[0]) hi = mid - 1;
     else if (cp > r[1]) lo = mid + 1;
@@ -52,7 +52,7 @@ function binarySearch2(ranges: readonly Range2[], cp: number): Range2 | null {
   let lo = 0;
   let hi = ranges.length - 1;
   while (lo <= hi) {
-    const mid = (lo + hi) >> 1;
+    const mid = Math.floor((lo + hi) / 2);
     const r = ranges[mid]!;
     if (cp < r[0]) hi = mid - 1;
     else if (cp > r[1]) lo = mid + 1;
@@ -389,7 +389,7 @@ export function computeBreakOpportunities(
     let lo = 0;
     let hi = atomStarts.length - 1;
     while (lo <= hi) {
-      const mid = (lo + hi) >> 1;
+      const mid = Math.floor((lo + hi) / 2);
       if (pos < atomStarts[mid]!) hi = mid - 1;
       else if (mid + 1 < atomStarts.length && pos >= atomStarts[mid + 1]!) lo = mid + 1;
       else return mid;
