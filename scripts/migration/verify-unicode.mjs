@@ -68,7 +68,7 @@ console.log('\n2) ממשק ה־API וקטלוג השגיאות');
   for (const key of ['errors.unicode.INVALID_FORM', 'errors.unicode.INVALID_TEXT', 'errors.unicode.MAPPING_MISMATCH']) {
     (cm.isRegisteredContentModelErrorKey(key) ? ok : fail)(`${key} רשום בקטלוג`);
   }
-  (cm.contentModelErrorCatalogSize() === 76 ? ok : fail)(`קטלוג content-model: 76 קודים (נמצאו ${cm.contentModelErrorCatalogSize()})`);
+  (cm.contentModelErrorCatalogSize() === 79 ? ok : fail)(`קטלוג content-model: 79 קודים — 76 שלב 18 + 3 brackets שלב 19 (נמצאו ${cm.contentModelErrorCatalogSize()})`);
   (cm.UNICODE_POLICY_VERSION === 'unicode-policy:v1' ? ok : fail)('UNICODE_POLICY_VERSION = unicode-policy:v1');
 }
 

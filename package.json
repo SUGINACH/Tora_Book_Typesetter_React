@@ -30,6 +30,7 @@
     "verify:deps": "node scripts/migration/verify-dependency-rules.mjs",
     "verify:parser": "node scripts/migration/verify-parser.mjs",
     "verify:unicode": "node scripts/migration/verify-unicode.mjs",
+    "verify:brackets": "node scripts/migration/verify-brackets.mjs",
     "test:packages": "vitest run --config vitest.packages.config.ts"
   },
   "dependencies": {

@@ -7,7 +7,7 @@
  * המשך המימוש: blocks/inline (16), פרסר (17), נאמנות Unicode (18).
  */
 export const PACKAGE_NAME = '@tora/content-model' as const;
-export const SKELETON_NOTE = 'פרק ג בבנייה — spans (14), atoms (15), inline/blocks/document (16), הפרסר (17) ונאמנות Unicode (18) הושלמו; המשך הפרק: עץ סוגריים (19)' as const;
+export const SKELETON_NOTE = 'פרק ג בבנייה — spans (14), atoms (15), inline/blocks/document (16), הפרסר (17), נאמנות Unicode (18) ועץ סוגריים (19) הושלמו; המשך הפרק: זרמי הערות (20)' as const;
 
 // ── שלב 14: SourceSpan וזרמי תוכן ──
 export type {
@@ -164,6 +164,26 @@ export {
   normalizeView,
   normalizationDetectionInvariantHolds,
 } from './unicode.js';
+
+// ── שלב 19: עץ סוגריים מבני (§10.4) ──
+export type {
+  BracketBlockState,
+  BracketIssue,
+  BracketKind,
+  BracketPairDef,
+  BracketPairNode,
+  BracketScan,
+  BracketScanResult,
+} from './brackets.js';
+export {
+  BRACKET_PAIRS,
+  MAX_BRACKET_DEPTH,
+  blockExitState,
+  crossingPairs,
+  endsInsideBracket,
+  isBracketScanResult,
+  scanBrackets,
+} from './brackets.js';
 
 // ── קטלוג שגיאות מקומי (אותו דפוס שלב 12; content-model חסר תלויות) ──
 export type { ErrorCatalogEntry, ErrorParamValue, ErrorParams } from './errors.js';

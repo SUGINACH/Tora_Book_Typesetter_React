@@ -28,6 +28,8 @@ import { makeContentBlock, deriveNodeId, deriveAnchorId } from '../blocks.js';
 import type { ContentBlock, HeadingLevel } from '../blocks.js';
 import { makeTorahDocument } from '../document.js';
 import type { MetadataEntry, NoteEntry, Part, Siman, TorahDocument } from '../document.js';
+import { scanBrackets } from '../brackets.js';
+import type { BracketScanResult } from '../brackets.js';
 import { IDENTIFIER_RECORDS } from './registry-data.js';
 
 // ─────────────────────────── הציבורי ───────────────────────────
@@ -84,6 +86,8 @@ export interface ParseResult {
   readonly transforms: readonly TransformRecord[];
   readonly diagnostics: readonly ParserDiagnostic[];
   readonly coverage: CoverageProof;
+  /** עץ הסוגריים — גוף + הערות; מבני, מסופק לפני העימוד (שלב 19, §10.4). */
+  readonly brackets: BracketScanResult;
 }
 
 // ─────────────────────────── המרשם — מקור התחביר היחיד ───────────────────────────
@@ -1001,12 +1005,29 @@ export function parseSourceText(raw: string, options: ParserOptions): ParseResul
   // ── הוכחת כיסוי ──
   const coverage = computeCoverage(doc, syntax, raw.length);
 
+  // ── עץ סוגריים (שלב 19, §10.4): מבני, לפני העימוד; בעיות קלט מדווחות ──
+  const brackets = scanBrackets(doc);
+  for (const scan of [brackets.body, ...brackets.notes.map((n) => n.scan)]) {
+    for (const issue of scan.issues) {
+      diagnostics.push({
+        severity: 'warning',
+        code: issue.kind === 'unclosed-open'
+          ? 'errors.parser.WARN_UNCLOSED_BRACKET'
+          : 'errors.parser.WARN_STRAY_CLOSE_BRACKET',
+        message: issue.detail,
+        start: issue.span.startUtf16,
+        end: issue.span.endUtf16,
+      });
+    }
+  }
+
   return {
     doc,
     syntax: Object.freeze(syntax),
     transforms: Object.freeze(transforms),
     diagnostics: Object.freeze(diagnostics),
     coverage,
+    brackets,
   };
 }
 

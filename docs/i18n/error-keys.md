@@ -132,3 +132,13 @@
 | `errors.unicode.INVALID_FORM` | form | error | צורת נרמול לא חוקית: {form} (החוקיות: NFC, NFD, NFKC, NFKD) |
 | `errors.unicode.INVALID_TEXT` | reason | error | קלט לא מחרוזת במודול ה־Unicode ({reason}) |
 | `errors.unicode.MAPPING_MISMATCH` | expected, actual | error | מיפוי view↔source אינו עקבי (ציפוי {expected}, נמצא {actual}) |
+
+### content-model · brackets (שלב 19)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`; מוצאן ב־`brackets.ts` ובפרסר. בעיות סוגריים הן אזהרות קלט מדווחות — לעולם לא "מתוקנות" בשקט (§10.4).
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.bracket.ID_DERIVATION_TOO_LONG` | length | error | מזהה זוג הסוגריים חורג מ־512 תווים ({length}) |
+| `errors.parser.WARN_UNCLOSED_BRACKET` | kind, startUtf16 | warning | סוגר פתיחה מסוג {kind} לא נסגר עד סוף הזרימה (בהיסט {startUtf16}) |
+| `errors.parser.WARN_STRAY_CLOSE_BRACKET` | kind, startUtf16 | warning | סוגר סגירה מסוג {kind} ללא פתיחה מתאימה (בהיסט {startUtf16}) |
