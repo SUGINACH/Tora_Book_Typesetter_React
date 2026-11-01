@@ -4,6 +4,17 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 34 — CLI reference runner (M4) — הושלם 2026-11-02
+- **תוצרים:**
+  - `packages/cli` — **ה־reference runner המלא (§12.2)**: `main.ts` (בינארי דק: args ← runCli ← קוד יציאה; stdout קנוני בלבד, הודעות אנושיות ב־stderr), `args.ts` (מנתח טיעונים ללא תלות חיצונית; דגלים: input/out/settings/preset/fonts-manifest/fonts-dir/body-font/trace/repeat/html/help), `inputs.ts` (קלט מאומת: מרשם הגדרות, שכבות preset+settings דרך buildEffectiveSettings של שלב 30, מניפסט גופנים + פתרון גוף לפי fontId/קובץ/משפחה, loadFontSet + createHarfbuzzProvider — הספק האמיתי), `offline-guard.ts` (שומר רשת מרגע ההתחלה — §19; אין דגל היתר), `runner.ts` (תזמורת: repeat ריצות חייבות אותו hash; אימות round-trip של הסריאליזציה §17.2#9; כתיבת artifacts).
+  - **Artifacts קנוניים ללא חותמות זמן** (§15.1): layout.json (IR מסודר), manifest.json, ledger.json (כש-trace≠off), request.json (קלט מלא לשחזור — מקור+הגדרות+גופן+האשים), report.json (סיכום: layoutHash/עמודים/דטרמיניזם) ו־preview.html עם --html (דרך render-html של שלב 37).
+  - **קודי יציאה מתועדים** (§12.2): 0 הצלחה · 2 שימוש · 3 קלט · 4 גופן/מדידה · 5 מנוע · 6 פלט. קטלוג `CLI_ERROR_CATALOG` — 13 קודים מתועדים ב־docs/i18n/error-keys.md.
+  - **documentId קבוע 'cli-reference'** — שם הקובץ/נתיב אינם נכנסים לפריסה (§17.2#8); גרסת פרסר `content-model@0.1.0` נעולה ונבדקת מול package.json במאמת.
+  - סקריפט שורש `engine:layout`; bin `tora-engine`; `registry.json` של settings-schema נחשף כ-subpath export.
+  - `verify-cli.mjs` — 28 בדיקות: הבינארי כתהליך-בן אמיתי (לא רק ה-API) — exit codes בפועל; שלוש ריצות ⇐ אותו hash; אדישות לשם קובץ; שגיאות ממוקדות עם קוד+מיקום; עקביות גרסאות וקטלוג; רגרסיה מלאה.
+- **בדיקות:** 8 בדיקות יחידה (`cli.test.ts`) — ריצת reference מלאה עם הספק האמיתי; שתי ריצות CLI שלמות ⇐ אותו hash; שם קובץ שונה ⇐ אותו hash; קלט חסר/JSON שגוי/מפתח זר ⇒ exit 3 ממוקד; גופן לא קיים ⇒ exit 4; דגלים שגויים ⇒ exit 2. `npm run test:packages` — 568/568; `verify-cli` — 28/28.
+- **ממצאים:** (א) ה־CLI מפיק IR+מניפסט+פנקס+HTML אך עדיין לא audit — הביקורת נבנית בשלב 38 ואז תתווסף לפלט (תלות טבעית: 34 לפני 38 בתכנית). (ב) wawoff2 חסר טיפוסים — הצהרת vendor.d.ts מקומית ב־CLI בלבד. (ג) הגדרות דרך שכבות בלבד — אין עקיפת צינור הייבוא של שלב 30. אין שינוי בקוד הישן; הוספות בלבד (בחבילת cli שנוצרה בשלב 7).
+
 ### תיקון CI סבב י' — ריכוז העיגול נאכף גם על קוד המנוע (ריצות a452c69/eb43302) — 2026-11-02
 - **הבעיה:** ה־CI נכשל בשלב 33 (ובעקבותיו ב־37) במאמת היחידות: `Math.round` מחוץ ל־units.ts — `packages/layout-engine/src/v0/v0-settings.ts` (שלוש נקודות: קוונטיזציית prop-margin לאחוזים-שלמים, מכפיל line-height לאחוזים, ערך התחלתי של פוליו). מקומית לא נראה כי שלב 33 הריץ את מאמתי היחידות — רק את verify-layout-engine שלו.
 - **התיקון:** הפונקציה `quantizeSetting(value, denominator, ctx)` נוספה ל־`units.ts` (מרכז העיגול לפי ADR-001 §4) עם קוד שגיאה ייעודי `errors.units.NON_FINITE_QUANTIZE`; היא מיוצאת דרך layout-api; שלוש הנקודות ב־v0-settings הוחלפו אליה — **ללא שינוי ערכים** (עיגול חצי-כלפי-∞ זהה). קטלוג השגיאות תועד ב־docs/i18n/error-keys.md; מאמת measurement-api עודכן ל־23 קודים.

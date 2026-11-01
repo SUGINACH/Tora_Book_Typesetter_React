@@ -206,3 +206,23 @@
 | `errors.engine.BODY_FONT_MISSING` | usage | error | לא סופק גופן פתור עבור {usage} |
 | `errors.engine.SHAPING_MISMATCH` | where | fatal | חוסר התאמה בין shaping לאטומים: {where} |
 | `errors.engine.BLOCK_ATOM_GAP` | blockId | fatal | פער בכיסוי האטומים של בלוק {blockId} |
+
+## cli — reference runner (שלב 34, פרק ה)
+
+מקור: `CLI_ERROR_CATALOG` ב־`packages/cli/src/errors.ts`. כל שגיאה נושאת גם קוד יציאה מתועד (§12.2): 3 קלט · 4 גופן · 5 מנוע · 6 פלט.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.cli.INPUT_UNREADABLE` | path, reason | fatal | קריאת מסמך הקלט נכשלה: {path} — {reason} |
+| `errors.cli.INPUT_INVALID` | path, reason | fatal | מסמך הקלט שגוי: {path} — {reason} |
+| `errors.cli.SETTINGS_UNREADABLE` | path, reason | fatal | קריאת קובץ הגדרות נכשלה: {path} — {reason} |
+| `errors.cli.SETTINGS_INVALID` | path, reason | fatal | הגדרות שגויות: {path} — {reason} |
+| `errors.cli.REGISTRY_UNREADABLE` | path, reason | fatal | קריאת מרשם ההגדרות נכשלה: {path} — {reason} |
+| `errors.cli.FONTS_MANIFEST_UNREADABLE` | path, reason | fatal | קריאת מניפסט הגופנים נכשלה: {path} — {reason} |
+| `errors.cli.FONTS_MANIFEST_INVALID` | path, reason | fatal | מניפסט הגופנים שגוי: {path} — {reason} |
+| `errors.cli.FONT_NOT_FOUND` | spec | fatal | גופן לא נמצא במניפסט: {spec} |
+| `errors.cli.FONT_LOAD_FAILED` | file, reason | fatal | טעינת גופן נכשלה: {file} — {reason} |
+| `errors.cli.PROVIDER_FAILED` | reason | fatal | בניית ספק המדידה נכשלה: {reason} |
+| `errors.cli.ENGINE_FAILED` | code, reason | error | המנוע נכשל [{code}]: {reason} |
+| `errors.cli.REPEAT_MISMATCH` | run, expected, actual | fatal | ריצה {run} נתנה hash שונה ({actual} ≠ {expected}) — לא דטרמיניסטי |
+| `errors.cli.OUTPUT_WRITE_FAILED` | path, reason | fatal | כתיבת פלט נכשלה: {path} — {reason} |

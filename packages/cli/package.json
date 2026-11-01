@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "description": "Node 22 reference runner — שלד שלב 7; המימוש בפרק ה (שלב 34)",
+  "description": "Node 22 reference runner (שלב 34; אפיון §12.2) — מסמך+הגדרות+גופנים ← IR+מניפסט+פנקס+HTML; offline",
+  "bin": {
+    "tora-engine": "./dist/main.js"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -15,7 +18,7 @@
   },
   "scripts": {
     "build": "tsc -b tsconfig.json",
-    "typecheck": "tsc -b tsconfig.json --force"
+    "typecheck": "tsc -b tsconfig.json --force && tsc --noEmit -p tsconfig.test.json"
   },
   "dependencies": {
     "@tora/audit-core": "0.1.0",
@@ -28,6 +31,8 @@
     "@tora/policy-torah": "0.1.0",
     "@tora/render-html": "0.1.0",
     "@tora/settings-schema": "0.1.0",
-    "@tora/test-fixtures": "0.1.0"
+    "@tora/test-fixtures": "0.1.0",
+    "harfbuzzjs": "1.6.4",
+    "wawoff2": "2.0.1"
   }
 }

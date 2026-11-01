@@ -11,7 +11,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./registry.json": "./registry.json"
   },
   "scripts": {
     "build": "tsc -b tsconfig.json",
