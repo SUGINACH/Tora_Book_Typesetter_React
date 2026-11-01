@@ -19,3 +19,4 @@ export * from './font-manifest.js';
 export * from './enforcement.js';
 export * from './cache.js';
 export * from './uax14.js';
+export * from './bidi.js';
