@@ -109,6 +109,10 @@ export interface TypesetRequest {
   readonly assets: ResolvedAssetManifest;
   readonly trace: TraceLevel;
   readonly budget: SearchBudget;
+  /** SHA-256 של מקור הקלט (hex קטן) — נכנס ל-inputHash (§6.7). */
+  readonly sourceSha256: string;
+  /** גרסת הפרסר — נכנסת ל-inputHash (§6.7). */
+  readonly parserVersion: string;
 }
 
 export function typesetRequestIssues(r: unknown): string[] {
@@ -127,6 +131,9 @@ export function typesetRequestIssues(r: unknown): string[] {
   issues.push(...resolvedAssetManifestIssues(v.assets).map((x) => `assets.${x}`));
   if (!isTraceLevel(v.trace)) issues.push('trace');
   if (!isSearchBudget(v.budget)) issues.push('budget');
+  const HEX64 = /^[0-9a-f]{64}$/;
+  if (typeof v.sourceSha256 !== 'string' || !HEX64.test(v.sourceSha256)) issues.push('sourceSha256');
+  if (typeof v.parserVersion !== 'string' || v.parserVersion.length === 0 || v.parserVersion.length > 64) issues.push('parserVersion');
   return issues;
 }
 

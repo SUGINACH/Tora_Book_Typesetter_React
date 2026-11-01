@@ -26,7 +26,16 @@ export type {
   SourceSpan,
   TorahDocument,
   TransformRecord,
+  TextAtom,
+  InlineItem,
+  ContentBlock,
+  NoteEntry,
+  NoteStreams,
+  Siman,
+  Part,
+  MetadataEntry,
 } from '@tora/content-model';
+export { allBlocks } from '@tora/content-model';
 
 // יחידות ומדידה (measurement-api) — יחידות LU (ADR-001), Rect, FontFaceKey
 // וספק המדידה (לחתימת auditLayout §12 — הביקורת מקבלת את אותו חוזה).
@@ -58,3 +67,21 @@ export {
 // BiDi (UAX #9, שלב 28) — לשימוש המנוע דרך אותו חוזה (גרף §5).
 export { computeBidi } from '@tora/measurement-api';
 export type { BidiResult, BidiRun, ComputeBidiOptions } from '@tora/measurement-api';
+
+// מספור הערות טרם העימוד (שלב 20) ו־EffectiveSettings (שלב 30) — המנוע
+// (layout-engine) תלוי ב-layout-api בלבד; הכל עובר דרכנו (גרף §5).
+export {
+  DEFAULT_NOTE_NUMBERING_POLICY,
+  collectNoteReferences,
+  formatNoteLabel,
+  numberNotes,
+  toGematriaLabel,
+} from '@tora/content-model';
+export type {
+  NoteKind,
+  NoteNumberAssignment,
+  NoteNumberingPolicy,
+  NoteNumberingResult,
+} from '@tora/content-model';
+export type { EffectiveSettings, SettingRegistry, SettingDefinition } from '@tora/settings-schema';
+export { buildSettingRegistry } from '@tora/settings-schema';

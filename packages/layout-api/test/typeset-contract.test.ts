@@ -66,6 +66,8 @@ function makeRequest(overrides: Partial<TypesetRequest> = {}): TypesetRequest {
     },
     trace: 'off',
     budget: DEFAULT_SEARCH_BUDGET,
+    sourceSha256: '5'.repeat(64),
+    parserVersion: 'test-1',
     ...overrides,
   } as TypesetRequest;
 }

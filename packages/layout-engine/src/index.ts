@@ -1,9 +1,12 @@
 /**
- * @tora/layout-engine — חיפוש מועמדים גנרי לשורה/עמוד/טור
+ * @tora/layout-engine — מנוע העימוד הדטרמיניסטי.
  *
- * שלד שלב 7 בתכנית 100 השלבים (אפיון §5).
- * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד.
- * המימוש ייבנה בפרקים ה–ז (שלבים 33, 41–57).
+ * שלב 33 (פרק ה): מנוע v0 — שלד מהלך מסומן (greedy מילוי מקסימלי, שני
+ * טורים, הערות בעמודי notes; §18-M4). החוזה הציבורי: typeset() (§12).
+ * האלגוריתם הגלובלי מגיע בפרק ו (שלבים 41–48).
  */
 export const PACKAGE_NAME = '@tora/layout-engine' as const;
-export const SKELETON_NOTE = 'שלד שלב 7 — עדיין ללא מימוש; החוזה הציבורי ייבנה בפרקים ה–ז (שלבים 33, 41–57)' as const;
+
+export * from './errors.js';
+export * from './v0/v0-settings.js';
+export * from './v0/typeset-v0.js';

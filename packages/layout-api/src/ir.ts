@@ -344,11 +344,11 @@ export function layoutDocumentIssues(doc: unknown): string[] {
           if (!isSafePositiveInt(sv.fontSizeLu)) issues.push(`${sl}.fontSizeLu`);
           if (!Array.isArray(sv.atomIds) || sv.atomIds.length === 0) issues.push(`${sl}.atomIds:empty`);
           if (!Array.isArray(sv.glyphs) || sv.glyphs.length === 0) issues.push(`${sl}.glyphs:empty`);
-          if (rectIss.length === 0 && isSafeNonNegativeInt(sv.widthLu)) {
+          if (isSafeNonNegativeInt(sv.widthLu)) {
+            // חפיפה בין ריצות — פסול מבני; גלישה מרוחב הקו (overflow) אינה נבדקת
+            // כאן: המנוע חייב להוציא IR גם כשיש גלישה — הביקורת הגיאומטרית (שלב 38)
+            // היא שמדווחת אותה כ-HIGH (§8.2: אין לחתוך מילה; החירום נרשם בפנקס).
             if ((sv.startLu as number) < prevEnd) issues.push(`${sl}.startLu:overlap`);
-            if ((sv.startLu as number) + (sv.widthLu as number) > (rectOf(it.rect).width)) {
-              issues.push(`${sl}:beyond-line-width`);
-            }
             prevEnd = (sv.startLu as number) + (sv.widthLu as number);
           }
         }

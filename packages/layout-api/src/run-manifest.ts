@@ -34,8 +34,12 @@ export function runManifestIssues(m: unknown): string[] {
   if (v.schemaVersion !== 1) issues.push('schemaVersion');
   if (typeof v.engineVersion !== 'string' || v.engineVersion.length === 0 || v.engineVersion.length > 64) issues.push('engineVersion');
   if (typeof v.codeSha !== 'string' || v.codeSha.length === 0 || v.codeSha.length > 80) issues.push('codeSha');
-  for (const k of ['inputHash', 'configHash', 'fontsManifestSha256', 'assetsManifestSha256', 'environmentHash', 'layoutHash'] as const) {
+  for (const k of ['inputHash', 'configHash', 'fontsManifestSha256', 'assetsManifestSha256', 'layoutHash'] as const) {
     if (typeof v[k] !== 'string' || !HEX64.test(v[k] as string)) issues.push(k);
+  }
+  // environmentHash — זהות סביבת הספק: HEX בספקי ייצור; מחרוזת נעולה בספק בדיקה
+  if (typeof v.environmentHash !== 'string' || v.environmentHash.length === 0 || v.environmentHash.length > 128) {
+    issues.push('environmentHash');
   }
   return issues;
 }

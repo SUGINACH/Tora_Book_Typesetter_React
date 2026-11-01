@@ -218,11 +218,19 @@ describe('שלב 31: אימות references ומבנה', () => {
       .toContain('pages:empty');
   });
 
-  test('run חורג מרוחב הקו נתפס', () => {
+  test('run חורג מרוחב הקו — ה-IR תקין מבנית (הגלישה נבדקת על ידי הביקורת הגאומטרית)', () => {
     const doc = buildDoc() as unknown as Record<string, unknown>;
     const line = (doc.pages as Record<string, unknown>[])[0]!.items![0]! as Record<string, unknown>;
     (line.runs as Record<string, unknown>[])[0]!.startLu = 6900000;
-    expect(layoutDocumentIssues(doc)).toEqual(expect.arrayContaining([expect.stringContaining('beyond-line-width')]));
+    expect(layoutDocumentIssues(doc)).toEqual([]);
+  });
+
+  test('ריצות חופפות נתפסות', () => {
+    const doc = buildDoc({ runsPerLine: 3 }) as unknown as Record<string, unknown>;
+    const line = (doc.pages as Record<string, unknown>[])[0]!.items![0]! as Record<string, unknown>;
+    const runs = line.runs as Record<string, unknown>[];
+    runs[1]!.startLu = 0; // חופף לריצה 0
+    expect(layoutDocumentIssues(doc)).toEqual(expect.arrayContaining([expect.stringContaining('startLu:overlap')]));
   });
 
   test('createLayoutDocument זורק עם קוד מקוטלג', () => {

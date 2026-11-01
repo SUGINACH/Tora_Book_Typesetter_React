@@ -194,3 +194,14 @@
 | `errors.layoutir.UNREGISTERED_FALLBACK` | code | fatal | קוד נפילה {code} אינו רשום — אין קוד צד |
 | `errors.layoutir.INVALID_TRACE_LEVEL` | value | error | רמת trace שגויה: {value} |
 | `errors.layoutir.INVALID_BUDGET` | issues | error | תקציב חיפוש שגוי: {issues} |
+
+## layout-engine — מנוע v0 (שלב 33, פרק ה)
+
+מקור: `LAYOUT_ENGINE_ERROR_CATALOG` ב־`packages/layout-engine/src/errors.ts`, מוצאם ב־`v0/v0-settings.ts`, `v0/typeset-v0.ts`.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.engine.SETTING_INVALID` | key, reason | error | הגדרה שגויה למנוע: {key} — {reason} |
+| `errors.engine.BODY_FONT_MISSING` | usage | error | לא סופק גופן פתור עבור {usage} |
+| `errors.engine.SHAPING_MISMATCH` | where | fatal | חוסר התאמה בין shaping לאטומים: {where} |
+| `errors.engine.BLOCK_ATOM_GAP` | blockId | fatal | פער בכיסוי האטומים של בלוק {blockId} |

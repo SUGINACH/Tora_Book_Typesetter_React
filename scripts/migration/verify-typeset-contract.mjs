@@ -63,6 +63,8 @@ const BASE = {
   assets: { schemaVersion: 1, fonts: [{ usage: 'body', font: FONT }], fontsManifestSha256: 'f'.repeat(64), assetsManifestSha256: '0'.repeat(64) },
   trace: 'off',
   budget: { ...api.DEFAULT_SEARCH_BUDGET },
+  sourceSha256: '5'.repeat(64),
+  parserVersion: 'test-1',
 };
 (api.typesetRequestIssues(BASE).length === 0 ? ok : fail)('בקשה תקינה עוברת');
 const badTrace = JSON.parse(JSON.stringify(BASE)); badTrace.trace = 'loud';
