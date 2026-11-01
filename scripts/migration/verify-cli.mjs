@@ -114,13 +114,13 @@ for (const key of Object.keys(cliMod.CLI_ERROR_CATALOG)) {
 }
 (allRegistered ? ok : fail)('כל קודי ה-CLI רשומים בקטלוג');
 (allDocumented ? ok : fail)('כל קודי ה-CLI מתועדים ב-docs/i18n/error-keys.md');
-(Array.isArray(cliMod.EXIT_CODES) && cliMod.EXIT_CODES.join() === '0,2,3,4,5,6'
-  ? ok : fail)('קודי יציאה מוגדרים: 0,2,3,4,5,6');
+(Array.isArray(cliMod.EXIT_CODES) && cliMod.EXIT_CODES.join() === '0,2,3,4,5,6,7'
+  ? ok : fail)('קודי יציאה מוגדרים: 0,2,3,4,5,6,7 (7 = ממצאי ביקורת, שלב 38)');
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
 const testOut = run('npm', ['run', 'test:packages']);
-(testOut !== null && /Tests\s+589\s+passed/m.test(testOut) ? ok : fail)('test:packages — 589/589 (560 + 8 CLI + 13 worker-host + 8 preview)');
+(testOut !== null && /Tests\s+603\s+passed/m.test(testOut) ? ok : fail)('test:packages — 603/603 (…+ 12 audit + 2 CLI-audit שלב 38)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

@@ -9,12 +9,13 @@
  * בלבד, לא בקובץ). המנוע אינו מכיר את ה־CLI; ה־CLI אינו מכיר React/Tauri.
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { typeset, ENGINE_VERSION } from '@tora/layout-engine';
 import {
   canonicalJson,
   DEFAULT_SEARCH_BUDGET,
   layoutHash as layoutHashOf,
+  parseLayoutDocument,
   serializeLayoutDocument,
   sha256Bytes,
   type LayoutDocument,
@@ -22,9 +23,10 @@ import {
   type TypesetSuccess,
 } from '@tora/layout-api';
 import { renderHtml } from '@tora/render-html';
+import { auditLayout, type LayoutAuditReport } from '@tora/audit-core';
 import { type CliArgs } from './args.js';
 import { CliError } from './errors.js';
-import { EXIT_ENGINE, EXIT_INPUT, EXIT_OUTPUT, EXIT_SUCCESS } from './exit-codes.js';
+import { EXIT_AUDIT, EXIT_ENGINE, EXIT_INPUT, EXIT_OUTPUT, EXIT_SUCCESS } from './exit-codes.js';
 import { installNetworkDeny } from './offline-guard.js';
 import {
   displayFamilyOf,
@@ -48,6 +50,8 @@ export interface RunReport {
   readonly repeats: number;
   readonly deterministic: boolean;
   readonly trace: string;
+  /** סיכום הביקורת (שלב 38): ok ⟺ אפס HIGH. */
+  readonly audit: { readonly ok: boolean; readonly high: number; readonly medium: number; readonly low: number };
 }
 
 export interface RunOutcome {
@@ -137,6 +141,10 @@ export async function runCli(
     }, 'round-trip של הסריאליזציה שינה את ה-hash');
   }
 
+  // ── ביקורת עצמאית (§12: בקריאה נפרשת; §14) — על התוצאה כמות שהיא ──
+  const audit = auditLayout({ content: request.document, settings, layout: result.layout });
+  progressLine(`audit: ${audit.findingCount} findings (HIGH=${audit.counts.HIGH}, MEDIUM=${audit.counts.MEDIUM}, LOW=${audit.counts.LOW})`);
+
   // ── פלט ──
   await mkdir(args.out, { recursive: true });
   const report: RunReport = {
@@ -150,6 +158,7 @@ export async function runCli(
     repeats: args.repeat,
     deterministic: true,
     trace: args.trace,
+    audit: { ok: audit.ok, high: audit.counts.HIGH, medium: audit.counts.MEDIUM, low: audit.counts.LOW },
   };
   const files: Array<[string, string]> = [
     ['layout.json', serialized],
@@ -170,6 +179,7 @@ export async function runCli(
       trace: args.trace,
     })],
     ['report.json', canonicalJson(report as unknown as Record<string, unknown>)],
+    ['audit.json', canonicalJson(audit as unknown as Record<string, unknown>)],
   ];
   if (result.ledger !== undefined) {
     files.push(['ledger.json', canonicalJson(result.ledger as unknown as Record<string, unknown>)]);
@@ -191,7 +201,64 @@ export async function runCli(
     await writeArtifact(join(args.out, name), content);
   }
   progressLine(`artifacts: ${files.length} files → ${args.out} (network attempts: ${guard.attempts()})`);
-  return { exitCode: EXIT_SUCCESS, report, artifactsDir: args.out };
+  const exitCode = audit.ok ? EXIT_SUCCESS : EXIT_AUDIT;
+  return { exitCode, report, artifactsDir: args.out, ...(audit.ok ? {} : { error: { code: 'errors.cli.AUDIT_FINDINGS', params: { high: audit.counts.HIGH } } }) };
+}
+
+export interface AuditOutcome {
+  readonly exitCode: number;
+  readonly audit?: LayoutAuditReport;
+  readonly error?: { readonly code: string; readonly params: Readonly<Record<string, string | number | boolean | null>> };
+}
+
+/**
+ * מצב ביקורת עצמאי (engine:audit --layout layout.json; §12) — ביקורת בקריאה
+ * נפרשת על artifacts קיימים: ה-layout מנותח מהסריאליזציה הקנונית, המקור
+ * מנותח מחדש מ-request.json שנכתב בריצת ה-layout. יציאה 7 כשיש HIGH.
+ */
+export async function runAuditCli(
+  layoutPath: string,
+  requestPath: string | undefined,
+  progressLine: (line: string) => void = () => {},
+): Promise<AuditOutcome> {
+  const guard = installNetworkDeny();
+  progressLine('offline guard installed (network denied from start)');
+  const reqPath = requestPath ?? join(dirname(layoutPath), 'request.json');
+  let layoutText: string;
+  let reqText: string;
+  try {
+    layoutText = await readFile(layoutPath, 'utf8');
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.INPUT_UNREADABLE', { path: layoutPath, reason: errText(e) }, `קריאה נכשלה: ${layoutPath}`);
+  }
+  try {
+    reqText = await readFile(reqPath, 'utf8');
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.INPUT_UNREADABLE', { path: reqPath, reason: errText(e) }, `חסר request.json לצד ה-layout (צפה: ${reqPath})`);
+  }
+  let layout: ReturnType<typeof parseLayoutDocument>;
+  let req: { source?: string };
+  try {
+    layout = parseLayoutDocument(layoutText);
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.INPUT_INVALID', { path: layoutPath, reason: errText(e) }, `layout.json שגוי: ${layoutPath}`);
+  }
+  try {
+    req = JSON.parse(reqText) as { source?: string };
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.SETTINGS_INVALID', { path: reqPath, reason: errText(e) }, `request.json שגוי: ${reqPath}`);
+  }
+  if (typeof req.source !== 'string') {
+    throw new CliError(EXIT_INPUT, 'errors.cli.INPUT_INVALID', { path: reqPath, reason: 'source-missing' }, 'request.json חסר source');
+  }
+  const parsed = parseDocumentFile(req.source, reqPath);
+  const content = { ...parsed.doc, transforms: parsed.transforms };
+  const audit = auditLayout({ content, settings: {}, layout });
+  progressLine(`audit: ${audit.findingCount} findings (HIGH=${audit.counts.HIGH}, MEDIUM=${audit.counts.MEDIUM}, LOW=${audit.counts.LOW})`);
+  const outPath = join(dirname(layoutPath), 'audit.json');
+  await writeArtifact(outPath, canonicalJson(audit as unknown as Record<string, unknown>));
+  progressLine(`audit written: ${outPath} (network attempts: ${guard.attempts()})`);
+  return { exitCode: audit.ok ? EXIT_SUCCESS : EXIT_AUDIT, audit };
 }
 
 async function writeArtifact(path: string, content: string): Promise<void> {

@@ -3,11 +3,12 @@
  *
  * שלב 7: שלד · שלב 21 (פרק ג, שער M2): Text Audit v1 — הוכחה שהקלט לא
  * אבד ולא שוכפל בפרסור, על בסיס פרוסות ומזהים (§14.2), בלי תלות בהוכחת
- * הפרסר. ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד (אפיון §5).
- * המשך המימוש: Audit גאומטי וטקסטואלי על IR — פרק ה (שלב 38).
+ * הפרסר. שלב 38 (פרק ה): ביקורת גאומטית וטקסטואלית על IR — כיסוי אטומים,
+ * קישוריות הערות, גאומטריה וסדר טורים (§14.2, §12 auditLayout).
+ * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד (אפיון §5).
  */
 export const PACKAGE_NAME = '@tora/audit-core' as const;
-export const SKELETON_NOTE = 'Text Audit v1 (שלב 21) הושלם; Audit גאומטי על IR — שלב 38' as const;
+export const SKELETON_NOTE = 'Text Audit v1 (שלב 21) + Layout Audit v1 (שלב 38) הושלמו' as const;
 
 // ── שלב 21: Text Audit v1 (§14.1–14.3, §18-M2) ──
 export type {
@@ -25,3 +26,14 @@ export {
   isRegisteredAuditErrorKey,
   runTextAudit,
 } from './text-audit.js';
+
+// ── שלב 38 (פרק ה): ביקורת גאומטית וטקסטואלית על IR (§14, §12) ──
+export type {
+  LayoutAuditFinding,
+  LayoutAuditInput,
+  LayoutAuditReport,
+} from './layout-audit.js';
+export {
+  LAYOUT_AUDIT_FINDING_CODES,
+  auditLayout,
+} from './layout-audit.js';

@@ -15,7 +15,7 @@ import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseCliArgs, runCli, EXIT_CODES, EXIT_INPUT, EXIT_USAGE, EXIT_FONT, EXIT_SUCCESS } from '../src/index.js';
+import { parseCliArgs, runCli, runAuditCli, EXIT_CODES, EXIT_INPUT, EXIT_USAGE, EXIT_FONT, EXIT_SUCCESS, EXIT_AUDIT } from '../src/index.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '..', '..', '..');
@@ -81,6 +81,8 @@ describe('שלב 34: CLI reference runner — artifacts', () => {
     expect(ledger.records.length).toBeGreaterThan(0);
     expect(report.deterministic).toBe(true);
     expect(report.repeats).toBe(1);
+    expect(report.audit.ok).toBe(true);
+    expect(report.audit.high).toBe(0);
     expect(report.pages).toBe(layout.pages.length);
     expect(html).toContain('<!DOCTYPE html>');
     expect(html).toContain('data-page');
@@ -155,8 +157,34 @@ describe('שלב 34: שגיאות ממוקמות וקודי יציאה', () => {
     expect(help.ok && help.help).toBe(true);
   });
 
-  test('כל קודי היציאה החוקיים מוגדרים וזהים לתיעוד', () => {
-    expect(EXIT_CODES).toEqual([0, 2, 3, 4, 5, 6]);
+  test('כל קודי היציאה החוקיים מוגדרים וזהים לתיעוד (שלב 38: +7 ממצאי ביקורת)', () => {
+    expect(EXIT_CODES).toEqual([0, 2, 3, 4, 5, 6, 7]);
     expect(EXIT_USAGE).toBe(2);
+    expect(EXIT_AUDIT).toBe(7);
+  });
+
+  test('מצב ביקורת עצמאי (§12): audit על artifacts קיימים; דגלי layout/input אינם מתערבבים', async () => {
+    // הרצת layout מלאה קודם
+    const layoutOutcome = await runCli(args());
+    expect(layoutOutcome.exitCode).toBe(EXIT_SUCCESS);
+    const c = current as Case;
+    // ביקורת בקריאה נפרשת על ה-artifacts
+    const auditOutcome = await runAuditCli(join(c.out, 'layout.json'), undefined);
+    expect(auditOutcome.exitCode).toBe(EXIT_SUCCESS);
+    expect(auditOutcome.audit?.ok).toBe(true);
+    expect(auditOutcome.audit?.counts.HIGH).toBe(0);
+    expect(auditOutcome.audit?.stats.contentAtoms).toBeGreaterThan(100);
+    // audit.json נכתב
+    const auditJson = JSON.parse(await readFile(join(c.out, 'audit.json'), 'utf8'));
+    expect(auditJson.ok).toBe(true);
+    // דגלים סותרים נדחים
+    expect(parseCliArgs(['--layout', 'x', '--input', 'y']).ok).toBe(false);
+    expect(parseCliArgs(['--layout', 'x']).ok).toBe(true);
+    expect(parseCliArgs([]).ok).toBe(false);
+  });
+
+  test('דגל שגוי/חסר ערך ⇒ exit 2 בניתוח', () => {
+    expect(parseCliArgs(['--input']).ok).toBe(false);
+    expect(parseCliArgs(['--input', 'a', '--out', 'b', '--repeat', '0']).ok).toBe(false);
   });
 });

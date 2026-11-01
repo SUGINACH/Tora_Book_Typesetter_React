@@ -209,7 +209,7 @@
 
 ## cli — reference runner (שלב 34, פרק ה)
 
-מקור: `CLI_ERROR_CATALOG` ב־`packages/cli/src/errors.ts`. כל שגיאה נושאת גם קוד יציאה מתועד (§12.2): 3 קלט · 4 גופן · 5 מנוע · 6 פלט.
+מקור: `CLI_ERROR_CATALOG` ב־`packages/cli/src/errors.ts`. כל שגיאה נושאת גם קוד יציאה מתועד (§12.2): 3 קלט · 4 גופן · 5 מנוע · 6 פלט · 7 ממצאי ביקורת (שלב 38).
 
 | מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
 |---|---|---|---|
@@ -226,6 +226,7 @@
 | `errors.cli.ENGINE_FAILED` | code, reason | error | המנוע נכשל [{code}]: {reason} |
 | `errors.cli.REPEAT_MISMATCH` | run, expected, actual | fatal | ריצה {run} נתנה hash שונה ({actual} ≠ {expected}) — לא דטרמיניסטי |
 | `errors.cli.OUTPUT_WRITE_FAILED` | path, reason | fatal | כתיבת פלט נכשלה: {path} — {reason} |
+| `errors.cli.AUDIT_FINDINGS` | high | error | הביקורת מצאה {high} ממצאי HIGH — הפריסה אינה עוברת שער (יציאה 7) |
 
 ## worker-host — פרוטוקול ה-Worker (שלב 35, פרק ה)
 

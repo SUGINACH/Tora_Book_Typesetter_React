@@ -17,6 +17,9 @@ export interface CliArgs {
   readonly trace: TraceLevel;
   readonly repeat: number;
   readonly html: boolean;
+  /** מצב audit עצמאי (§12: ביקורת בקריאה נפרשת): --layout layout.json. */
+  readonly layout?: string;
+  readonly request?: string;
 }
 
 export type ArgsResult =
@@ -43,13 +46,18 @@ export const USAGE = `@tora/cli — Node 22 reference runner (שלב 34; אפי�
   --trace <level>       off | summary | decisions | full (ברירת מחדל: off)
   --repeat <n>          מספר ריצות לאימות דטרמיניזם (ברירת מחדל: 1; חייב להיות זהה)
   --html                יצירת preview.html נוסף דרך render-html
+  --layout <path>       מצב ביקורת: audit של layout.json קיים (עם request.json לצדו)
+  --request <path>      בקשת המקור לביקורת (ברירת מחדל: request.json לצד ה-layout)
   --help                הצגת הודעה זו
 
 פלט (בספריית --out): layout.json, manifest.json, ledger.json (כש-trace≠off),
-request.json (קלט מלא לשחזור), report.json (סיכום קנוני) ו-preview.html (עם --html).
+request.json (קלט מלא לשחזור), report.json (סיכום קנוני), audit.json (ממצאי
+הביקורת, שלב 38) ו-preview.html (עם --html).
+מצב ביקורת (engine:audit --layout layout.json): ביקורת בקריאה נפרשת (§12)
+על artifacts קיימים; יציאה 7 כשיש ממצאי HIGH.
 הרצה חוסמת רשת חיצונית מרגע ההתחלה (אפיון §19 — reference runs offline).
 
-קודי יציאה: 0 הצלחה · 2 שימוש · 3 קלט · 4 גופן/מדידה · 5 מנוע · 6 פלט.` as const;
+קודי יציאה: 0 הצלחה · 2 שימוש · 3 קלט · 4 גופן/מדידה · 5 מנוע · 6 פלט · 7 ממצאי ביקורת.` as const;
 
 export function parseCliArgs(argv: readonly string[]): ArgsResult {
   const raw = new Map<string, string>();
@@ -79,9 +87,17 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
   }
 
   const input = raw.get('input');
-  if (input === undefined) return { ok: false, error: 'חסר --input <path>', hint: USAGE };
   const out = raw.get('out');
-  if (out === undefined) return { ok: false, error: 'חסר --out <dir>', hint: USAGE };
+  const layout = raw.get('layout');
+  if (layout !== undefined && input !== undefined) {
+    return { ok: false, error: 'מצב ביקורת (--layout) אינו מתערבב עם --input', hint: USAGE };
+  }
+  if (layout === undefined && input === undefined) {
+    return { ok: false, error: 'חסר --input <path> (או --layout למצב ביקורת)', hint: USAGE };
+  }
+  if (layout === undefined && out === undefined) {
+    return { ok: false, error: 'חסר --out <dir>', hint: USAGE };
+  }
 
   const traceRaw = raw.get('trace') ?? 'off';
   if (!(TRACE_LEVELS as readonly string[]).includes(traceRaw)) {
@@ -94,7 +110,7 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
     return { ok: false, error: `--repeat שגוי: ${repeatRaw} (חוקי: שלם 1..100)`, hint: USAGE };
   }
 
-  const known = new Set(['input', 'out', 'settings', 'preset', 'fonts-manifest', 'fonts-dir', 'body-font', 'trace', 'repeat']);
+  const known = new Set(['input', 'out', 'settings', 'preset', 'fonts-manifest', 'fonts-dir', 'body-font', 'trace', 'repeat', 'layout', 'request']);
   for (const k of raw.keys()) {
     if (!known.has(k)) return { ok: false, error: `דגל לא מוכר: --${k}`, hint: USAGE };
   }
@@ -105,8 +121,8 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
     ok: true,
     help: false,
     args: {
-      input,
-      out,
+      input: input ?? '',
+      out: out ?? '',
       settings: raw.get('settings'),
       preset: raw.get('preset'),
       fontsManifest,
@@ -115,6 +131,8 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
       trace: traceRaw as TraceLevel,
       repeat,
       html: flags.has('html'),
+      ...(layout !== undefined ? { layout } : {}),
+      ...(raw.get('request') !== undefined ? { request: raw.get('request') } : {}),
     },
   };
 }

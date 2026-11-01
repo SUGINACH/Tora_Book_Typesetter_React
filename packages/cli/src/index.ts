@@ -10,6 +10,6 @@ export const PACKAGE_NAME = '@tora/cli' as const;
 export * from './args.js';
 export * from './errors.js';
 export * from './exit-codes.js';
-export { runCli, PARSER_VERSION, type RunReport, type RunOutcome } from './runner.js';
+export { runAuditCli, runCli, PARSER_VERSION, type AuditOutcome, type RunReport, type RunOutcome } from './runner.js';
 export { CLI_DOCUMENT_ID } from './inputs.js';
 export { installNetworkDeny, type NetworkGuard } from './offline-guard.js';

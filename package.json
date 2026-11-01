@@ -46,7 +46,8 @@
     "verify:typeset-contract": "node scripts/migration/verify-typeset-contract.mjs",
     "verify:layout-engine": "node scripts/migration/verify-layout-engine.mjs",
     "verify:render-html": "node scripts/migration/verify-render-html.mjs",
-    "engine:layout": "node packages/cli/dist/main.js"
+    "engine:layout": "node packages/cli/dist/main.js",
+    "engine:audit": "node packages/cli/dist/main.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -8,7 +8,7 @@
 import { parseCliArgs, USAGE } from './args.js';
 import { CliError } from './errors.js';
 import { EXIT_SUCCESS, EXIT_USAGE } from './exit-codes.js';
-import { runCli } from './runner.js';
+import { runAuditCli, runCli } from './runner.js';
 
 async function main(): Promise<number> {
   const parsed = parseCliArgs(process.argv.slice(2));
@@ -21,6 +21,13 @@ async function main(): Promise<number> {
     return EXIT_SUCCESS;
   }
   try {
+    if (parsed.args.layout !== undefined) {
+      const outcome = await runAuditCli(parsed.args.layout, parsed.args.request, (line) => process.stderr.write(`${line}\n`));
+      if (outcome.audit !== undefined) {
+        process.stdout.write(`${JSON.stringify({ audit: { ok: outcome.audit.ok, counts: outcome.audit.counts, stats: outcome.audit.stats } })}\n`);
+      }
+      return outcome.exitCode;
+    }
     const outcome = await runCli(parsed.args, (line) => process.stderr.write(`${line}\n`));
     if (outcome.report !== undefined) {
       // שורת סיכום קנונית אחת ל-stdout (מכונה)

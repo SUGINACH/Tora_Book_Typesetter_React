@@ -75,7 +75,7 @@ const handler = readFileSync(join(repoRoot, 'src', 'worker-host', 'engine-worker
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
 const testOut = run('npm', ['run', 'test:packages']);
-(testOut !== null && /Tests\s+589\s+passed/m.test(testOut) ? ok : fail)('test:packages — 589/589 (568 + 13 worker-host + 8 preview)');
+(testOut !== null && /Tests\s+603\s+passed/m.test(testOut) ? ok : fail)('test:packages — 603/603 (568 + 13 worker-host + 8 preview + 12 audit + 2 CLI)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 
