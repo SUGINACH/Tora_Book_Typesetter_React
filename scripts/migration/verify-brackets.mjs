@@ -32,9 +32,16 @@ let checks = 0;
 let failures = 0;
 const ok = (m) => { checks += 1; console.log(`  [OK]   ${m}`); };
 const fail = (m) => { checks += 1; failures += 1; console.log(`  [FAIL] ${m}`); };
+// קודי בקרה ANSI (צבע) — מוסרים מכל פלט תהליך-בן לפני התאמת טקסט
+const ANSI_RE = /\x1b\[[0-9;?]*[ -\/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b[@-Z\\-_]/g;
+
 const run = (cmd, args, opts = {}) => {
   try {
-    return execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], ...opts });
+    // ANSI-safe: ב-CI (CI=true) chalk/vitest מצבעים את הפלט גם שלא דרך TTY; קודי הצבע
+    // בין "Tests" למספר שברו התאמות טקסט (נתגלה ב-GitHub Actions). מנקים קודי בקרה
+    // וגם מזריקים NO_COLOR=1 — שתי הגנות עצמאיות.
+    const out = execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NO_COLOR: '1' }, ...opts });
+    return out.replace(ANSI_RE, '').replace(/\x1b/g, ''); // ניקוי סופי: ESC בודד שנותר
   } catch (e) {
     return e.stdout ?? null;
   }
