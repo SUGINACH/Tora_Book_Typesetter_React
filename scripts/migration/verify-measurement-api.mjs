@@ -82,9 +82,9 @@ console.log('1) החוזה הציבורי של measurement-api');
   for (const key of ['errors.font.MISSING_GLYPH', 'errors.shape.INVALID_REQUEST', 'errors.shape.INVALID_PROVIDER']) {
     (api.isRegisteredErrorKey(key) ? ok : fail)(`${key} רשום בקטלוג`);
   }
-  // הקטלוג גדל עם השלבים: 15 (שלב 12) + 3 (שלב 22) + 3 (שלב 23 — מניפסט גופנים) + 1 (שלב 24 — FONT_SFNT_MISMATCH) = 22
-  (Object.keys(api.ERROR_CATALOG).length === 22
-    ? ok : fail)(`קטלוג measurement-api: 22 קודים (נמצאו ${Object.keys(api.ERROR_CATALOG).length})`);
+  // הקטלוג גדל עם השלבים: 15 (שלב 12) + 3 (שלב 22) + 3 (שלב 23 — מניפסט גופנים) + 1 (שלב 24 — FONT_SFNT_MISMATCH) + 1 (תיקון CI סבב י' — NON_FINITE_QUANTIZE ל-quantizeSetting) = 23
+  (Object.keys(api.ERROR_CATALOG).length === 23
+    ? ok : fail)(`קטלוג measurement-api: 23 קודים (נמצאו ${Object.keys(api.ERROR_CATALOG).length})`);
 }
 
 // ─────────────────────────── 2. אין DOM/Canvas/Node בחבילה ───────────────────────────

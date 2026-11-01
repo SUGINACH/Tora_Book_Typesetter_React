@@ -4,6 +4,30 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### תיקון CI סבב י' — ריכוז העיגול נאכף גם על קוד המנוע (ריצות a452c69/eb43302) — 2026-11-02
+- **הבעיה:** ה־CI נכשל בשלב 33 (ובעקבותיו ב־37) במאמת היחידות: `Math.round` מחוץ ל־units.ts — `packages/layout-engine/src/v0/v0-settings.ts` (שלוש נקודות: קוונטיזציית prop-margin לאחוזים-שלמים, מכפיל line-height לאחוזים, ערך התחלתי של פוליו). מקומית לא נראה כי שלב 33 הריץ את מאמתי היחידות — רק את verify-layout-engine שלו.
+- **התיקון:** הפונקציה `quantizeSetting(value, denominator, ctx)` נוספה ל־`units.ts` (מרכז העיגול לפי ADR-001 §4) עם קוד שגיאה ייעודי `errors.units.NON_FINITE_QUANTIZE`; היא מיוצאת דרך layout-api; שלוש הנקודות ב־v0-settings הוחלפו אליה — **ללא שינוי ערכים** (עיגול חצי-כלפי-∞ זהה). קטלוג השגיאות תועד ב־docs/i18n/error-keys.md; מאמת measurement-api עודכן ל־23 קודים.
+- **השלמת חובות תיעוד:** רישומי ה־WORKLOG של שלבים 33 ו־37 לא נכתבו בזמן (ההודעה נקטעה באמצע הרצה) — הם מושלמים כאן לפי ה־commits המדויקים; CHECKLIST סומן ל־37/100 (31–33, 37).
+- **פקודות בדיקה שרצו (ירוק):** `npm run build:packages`; `npm run test:packages` — 560/560 (557 + 3 בדיקות quantizeSetting); `verify-units` — 39/39; `verify-measurement-api` — 31/31; `verify-parser` עודכן ל־560.
+- **הלקח:** שלב שנוגע בגאומטריה/הגדרות חייב להריץ את `verify-units` (כלל שנלמד בסבב ג' אך לא הוחל על הקוד החדש של פרק ה); ריצת CI אדומה היא חובת תיקון לפני כל שלב הבא.
+
+### שלב 37 — render-html טהור v1 (M4) — הושלם 2026-11-01 (commit eb43302)
+- **תוצרים:**
+  - `packages/render-html/src/render.ts` — **renderHtml(layout, styleManifest?, assetManifest?) טהורה (§15.1)**: היטל HTML/CSS מה־IR בלבד; המרה רציונלית LU→px בלבד (`luToCssPx` = roundDiv(lu,49152), 12pt=16px); escaping קבוע לטקסט/מאפיינים (escapeHtmlText/escapeAttr); עיגון גופנים לפי AssetManifest (@font-face עם src קבוע; אין גופן רשת/CDN); **קנוני ביט-ביט** — אותו layout+assets ⇐ אותם bytes; נקי מ-DOM/CSSOM/רשת/`window.print`.
+  - ייצוג הקו ב-v1 (מסומן כזמני): ריצות ממוקמות פיזית (left/top) עם `dir` לפי כיוון הריצה; ההחלטה הסופית — ADR-008 (שלב 88).
+  - `verify-render-html.mjs` — 24 בדיקות: חוזה מיוצא; קנוניות חיה על פלט v0 (שתי קריאות ביט-ביט; round-trip דרך parseLayoutDocument ⇐ אותם bytes; שינוי IR ⇒ bytes שונים); טוהר הקוד (אין document/window/fetch); רגרסיה.
+- **בדיקות:** 9 בדיקות יחידה (`render-html.test.ts`); `npm run test:packages` — 557/557 (548+9); `verify-render-html` — 24/24.
+- **ממצאים:** אין שינוי בקוד הישן; הוספות בלבד. השלב בוצע מחוץ לסדר (לפני 34–36) — תועד כאן; החובות המסתובכות (CLI/Worker/Preview) בשלבים 34–36.
+
+### שלב 33 — מנוע בסיסי דטרמיניסטי v0 (M4) — הושלם 2026-11-01 (commit a452c69)
+- **תוצרים:**
+  - `packages/layout-engine/src/v0/typeset-v0.ts` (747 שורות) — **הצינור המלא (§5–7, §18-M4)**: קלט → טוקנים (אטומים+סמני הערה+עוגנים+שבירה כפויה) → BiDi (UAX #9 שלב 28) → shaping לפי רצופי רמה → **שבירה גרידית נרשמת בפנקס** (כל קו = רשומת החלטה עם מועמדים, דחיות וחירום רשום EMERGENCY_LINE) → עמודים (טור ימין 0 ואז שמאל 1; §9.3) → עמודי notes לגופי ההערות (NOTES_V0_DEFERRED) → IR + מניפסט + פנקס. אין Canvas/DOM/שעון/אקראיות; observer מדווח בלבד.
+  - `v0-settings.ts` — קריאת הגדרות v0 מאומתות: גאומטריית A4 + שוליים 25mm (ברירת המחדל הנעולה של הישן) + רוחב טורים לפי נוסחת הישן (typeset-document.ts:33–40) בחשבון LU שלם; folio גימטריא.
+  - השלמת חוזה שלב 32: `sourceSha256`/`parserVersion` בבקשה; `environmentHash` רופף למחרוזת נעולה; **גלישת קו הועברה מהאימות המבני של ה־IR לביקורת** (§8.2 — אין חיתוך; האימות בודק הכלה מבנית בלבד והביקורת תדווח overflow בשלב 38).
+  - `verify-layout-engine.mjs` — 30 בדיקות: דטרמיניזם (שתי ריצות ⇐ אותו hash); trace off/on; observer נטול השפעה; חירום מילה ארוכה + כיסוי אטומים 100%; מבנה עמודים/טורים/עמודי notes/סמני הערה; רגרסיה.
+- **בדיקות:** 16 בדיקות יחידה (`typeset-v0.test.ts`); `npm run test:packages` — 548/548 (532+16); `verify-layout-engine` — 30/30.
+- **ממצאים:** (א) עיגול ההגדרות נכתב עם Math.round מקומי — **נתפס על ידי verify-units ב־CI ותוקן בסבב י'** (ראו למעלה). (ב) הערות בהיקף 'page' נדחות בהסבר (NOTES_V0_DEFERRED בפנקס) — שריון אמיתי בפרק ז. אין שינוי בקוד הישן.
+
 ### שלב 32 — חוזה typeset(), RunManifest ו־Decision Ledger (M4) — הושלם 2026-11-02
 - **תוצרים:**
   - `packages/layout-api/src/typeset.ts` — **החוזה המלא (§12)**: `TypesetRequest` (מסמך+הגדרות+נכסים פתורים+trace+budget), `TypesetSuccess`, `LayoutPolicy` (hooks של §10: legalBreaks/hardConstraints/pageTemplate/score/onAnchor/anchorPlacement — ממומשים בפועל בפרק ח; הליבה אינה יודעת מהו H2), `LayoutObserver` (progress בלבד; אין ערוץ השפעה), `ContentDocument` = TorahDocument + ספר טרנספורמציות, `SearchBudget` (יחידות מצבים, לא מילישניות; §9.2), `ResolvedAssetManifest` (גופנים פתורים לפי usage + האשים שנכנסים ל-inputHash).

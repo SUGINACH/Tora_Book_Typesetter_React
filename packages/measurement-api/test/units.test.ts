@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import {
   A4, COST_SCALE, FontUnit, LayoutUnit, MM_DENOMINATOR, MM_NUMERATOR, Rect,
   UnitsError, asFontUnit, asLu, costToNumber, fontUnitsToLu, luToPt, makeCost,
-  mmToLu, ptToLu, rectBottom, rectRight, roundDiv, safeAdd, safeMul, safeSub,
+  mmToLu, ptToLu, quantizeSetting, rectBottom, rectRight, roundDiv, safeAdd, safeMul, safeSub,
 } from '../src/units';
 
 /** אורקל עצמאי: עיגול חצי-כלפי-∞ בחישוב BigInt מלא (בלי לסמוך על המימוש הנבדק). */
@@ -167,5 +167,33 @@ describe('דטרמיניזם בסיסי', () => {
     for (let i = 0; i < 1000; i++) {
       expect([mmToLu(29.7), ptToLu(11.5), fontUnitsToLu(777, 2048)]).toEqual(first);
     }
+  });
+});
+
+describe('quantizeSetting — קוונטיזציה מרוכזת של הגדרות עשרוניות (ADR-001 §4; תיקון CI סבב י)', () => {
+  it('עיגול חצי-כלפי-∞ ברזולוציית אחוזים', () => {
+    expect(quantizeSetting(1.34, 100, 'line-height-body')).toBe(134);
+    expect(quantizeSetting(7.5, 100, 'prop-margin')).toBe(750);
+    expect(quantizeSetting(0.125, 100, 'x')).toBe(13); // 12.5 → חצי כלפי ∞
+    expect(quantizeSetting(-0.125, 100, 'x')).toBe(-12); // -12.5 → חצי כלפי ∞
+  });
+
+  it('denominator=1 שקול לעיגול לשלם (ערך התחלתי של פוליו)', () => {
+    expect(quantizeSetting(2, 1, 'page-num-initial-value')).toBe(2);
+    expect(quantizeSetting(2.6, 1, 'page-num-initial-value')).toBe(3);
+    expect(quantizeSetting(0.4, 1, 'page-num-initial-value')).toBe(0);
+  });
+
+  it('קלט לא-סופי ⇒ UnitsError מקוטלג; מכנה לא חוקי ⇒ INVALID_DENOMINATOR', () => {
+    expect(() => quantizeSetting(Number.NaN, 100, 'x')).toThrowError(UnitsError);
+    expect(() => quantizeSetting(Number.POSITIVE_INFINITY, 100, 'x')).toThrowError(UnitsError);
+    try {
+      quantizeSetting(Number.NaN, 100, 'ctx-probe');
+      expect.unreachable('היה צריך לזרוק');
+    } catch (e) {
+      expect((e as UnitsError).code).toBe('NON_FINITE_QUANTIZE');
+    }
+    expect(() => quantizeSetting(1, 0, 'x')).toThrowError(UnitsError);
+    expect(() => quantizeSetting(1, 1.5, 'x')).toThrowError(UnitsError);
   });
 });

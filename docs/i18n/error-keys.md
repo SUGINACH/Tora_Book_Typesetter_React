@@ -16,6 +16,7 @@
 | `errors.units.UNSAFE_SUB` | a, b, ctx | error | חיסור גאומטרי גלש מהטווח הבטוח ({a} - {b}) בהקשר {ctx} |
 | `errors.units.UNSAFE_MUL` | a, b, ctx | error | כפל גאומטרי גלש מהטווח הבטוח ({a} × {b}) בהקשר {ctx} |
 | `errors.units.NON_FINITE_COST` | value, ctx | error | ערך עלות אינו סופי: {value} בהקשר {ctx} |
+| `errors.units.NON_FINITE_QUANTIZE` | value, ctx | error | ערך הגדרה אינו סופי בקוונטיזציה: {value} בהקשר {ctx} |
 | `errors.hash.UNSUPPORTED_TYPE` | type | error | ערך מסוג {type} אינו ניתן לסריאליזציה קנונית |
 | `errors.hash.NON_FINITE_NUMBER` | value | error | מספר לא סופי אינו ניתן לסריאליזציה קנונית: {value} |
 | `errors.hash.INVALID_LENGTH` | len | error | אורך קלט שגוי לגיבוב: {len} |

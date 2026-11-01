@@ -19,6 +19,7 @@ import {
   type LayoutUnit,
   mmToLu,
   ptToLu,
+  quantizeSetting,
   roundDiv,
   asLu,
 } from '@tora/layout-api';
@@ -80,7 +81,8 @@ export function readV0Settings(settings: EffectiveSettings): V0Settings {
   const margin = mmToLu(MARGIN_MM);
   const textAreaWidth = pageWidth - 2 * margin;
   // חשבון שלם: prop-margin (אחוזים, עשרוני) מוכפל ב-100 ⇐ שלם; רק אז roundDiv
-  const propMarginCentipercent = Math.round(propMargin * 100);
+  // (הקוונטיזציה מרוכזת ב-units.ts לפי ADR-001 §4 — quantizeSetting)
+  const propMarginCentipercent = quantizeSetting(propMargin, 100, 'prop-margin');
   const marginWidth = roundDiv(propMarginCentipercent * textAreaWidth, 100 * 100);
   const mainWidth = textAreaWidth - 2 * marginWidth;
   const columnGap = asLu(roundDiv(mainWidth * GAP_PERCENT, 100));
@@ -88,13 +90,13 @@ export function readV0Settings(settings: EffectiveSettings): V0Settings {
 
   return {
     bodyFontSizeLu: ptToLu(sizeBody),
-    lineHeightFactorPercent: Math.round(lineHeight * 100),
+    lineHeightFactorPercent: quantizeSetting(lineHeight, 100, 'line-height-body'),
     markerFontSizeLu: ptToLu(markerSize),
     markerSuperscript: readEnum<'super' | 'normal'>(settings, 'note-marker-type', ['super', 'normal'], 'super') === 'super',
     noteScope: fnReset === 'page' ? 'siman' : fnReset,
     pageScopeRequested: fnReset === 'page',
     folioFormat,
-    folioInitial: Math.round(folioInitial),
+    folioInitial: quantizeSetting(folioInitial, 1, 'page-num-initial-value'),
     geometry: {
       pageWidth,
       pageHeight,

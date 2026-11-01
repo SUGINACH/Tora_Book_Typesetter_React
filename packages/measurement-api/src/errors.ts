@@ -47,6 +47,7 @@ export const ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEntry>> = Object
   'errors.units.UNSAFE_SUB': { i18nKey: 'errors.units.UNSAFE_SUB', params: ['a', 'b', 'ctx'], severity: 'error' },
   'errors.units.UNSAFE_MUL': { i18nKey: 'errors.units.UNSAFE_MUL', params: ['a', 'b', 'ctx'], severity: 'error' },
   'errors.units.NON_FINITE_COST': { i18nKey: 'errors.units.NON_FINITE_COST', params: ['value', 'ctx'], severity: 'error' },
+  'errors.units.NON_FINITE_QUANTIZE': { i18nKey: 'errors.units.NON_FINITE_QUANTIZE', params: ['value', 'ctx'], severity: 'error' },
   // ── גיבוב קנוני (ADR-002; מוצאן ב-canonical-hash) ──
   'errors.hash.UNSUPPORTED_TYPE': { i18nKey: 'errors.hash.UNSUPPORTED_TYPE', params: ['type'], severity: 'error' },
   'errors.hash.NON_FINITE_NUMBER': { i18nKey: 'errors.hash.NON_FINITE_NUMBER', params: ['value'], severity: 'error' },

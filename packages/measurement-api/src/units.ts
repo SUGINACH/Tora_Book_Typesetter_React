@@ -89,6 +89,22 @@ export function ptToLu(pt: number): LayoutUnit {
 }
 
 /**
+ * קוונטיזציה של מספר רציף מההגדרות לשלם — עיגול חצי-כלפי-∞ ברזולוציית 1/denominator
+ * (ADR-001 §4: כל העיגול מרוכז כאן). לקריאת הגדרות עשרוניות (אחוזים, מקדמים)
+ * בטרם החישוב השלם — התוצאה שקופה ומתועדת; אין עיגול נסתר בתוך אלגוריתם.
+ * דוגמה: quantizeSetting(1.34, 100, 'line-height') = 134.
+ */
+export function quantizeSetting(value: number, denominator: number, ctx: string): number {
+  if (!Number.isFinite(value)) throw new UnitsError('NON_FINITE_QUANTIZE', { value, ctx });
+  if (!Number.isSafeInteger(denominator) || denominator <= 0) {
+    throw new UnitsError('INVALID_DENOMINATOR', { d: denominator });
+  }
+  const scaled = Math.round(value * denominator);
+  assertSafeInt(scaled, `quantizeSetting:${ctx}`);
+  return scaled;
+}
+
+/**
  * יחידות גופן → LU (לפי unitsPerEm של הגופן).
  * המרה מדויקת-ככל האפשרי: חלוקה שלמה אחת עם עיגול מוגדר (חצי-כלפי-∞).
  */

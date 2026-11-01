@@ -57,6 +57,7 @@ export {
   ptToLu,
   luToPt,
   fontUnitsToLu,
+  quantizeSetting,
   safeAdd,
   safeSub,
   safeMul,
