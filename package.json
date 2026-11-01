@@ -41,7 +41,9 @@
     "verify:enforcement": "node scripts/migration/verify-enforcement.mjs",
     "verify:cache": "node scripts/migration/verify-shaping-cache.mjs",
     "verify:uax14": "node scripts/migration/verify-uax14.mjs",
-    "gen:uax14-tables": "node scripts/migration/gen-uax14-tables.mjs"
+    "gen:uax14-tables": "node scripts/migration/gen-uax14-tables.mjs",
+    "verify:layout-ir": "node scripts/migration/verify-layout-ir.mjs",
+    "verify:typeset-contract": "node scripts/migration/verify-typeset-contract.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

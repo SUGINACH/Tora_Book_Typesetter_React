@@ -4,6 +4,25 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 32 — חוזה typeset(), RunManifest ו־Decision Ledger (M4) — הושלם 2026-11-02
+- **תוצרים:**
+  - `packages/layout-api/src/typeset.ts` — **החוזה המלא (§12)**: `TypesetRequest` (מסמך+הגדרות+נכסים פתורים+trace+budget), `TypesetSuccess`, `LayoutPolicy` (hooks של §10: legalBreaks/hardConstraints/pageTemplate/score/onAnchor/anchorPlacement — ממומשים בפועל בפרק ח; הליבה אינה יודעת מהו H2), `LayoutObserver` (progress בלבד; אין ערוץ השפעה), `ContentDocument` = TorahDocument + ספר טרנספורמציות, `SearchBudget` (יחידות מצבים, לא מילישניות; §9.2), `ResolvedAssetManifest` (גופנים פתורים לפי usage + האשים שנכנסים ל-inputHash).
+  - `run-manifest.ts` — RunManifest עם כל ההאשים: input/config/fontsManifest/assetsManifest/environment/layout + engineVersion/codeSha ('dev' בפיתוח, §12). השדה `engine` יתווסף בשלב 40 בלבד (אין לסמן לפי תקווה — כלל 5).
+  - `decision-ledger.ts` — DecisionRecord (stage/scopeId/sourceSpans/stateHash/candidates/selected/rejected/fallbackCode/budget), `DecisionLedgerBuilder` עם trace off|summary|decisions|full (off ⇒ אין ledger; §6.7), סריאליזציה round-trip; **`LAYOUT_FALLBACK_CODES` — קטלוג fallback רשום מראש** (EMERGENCY_LINE/NOTES_V0_DEFERRED ל-v0 + SEARCH_BUDGET_EXHAUSTED/EMERGENCY_STRETCH/LONG_NOTE_SPLIT/TOC_FIXED_POINT_NOT_REACHED לעתיד) — קוד לא רשום נדחה בזמן יצירה; אין קוד צד.
+  - TraceLevel עבר ל-decision-ledger (typeset→decision-ledger הכיוון היחיד) — תפיסת no-circular של depcruise.
+- **בדיקות:** 13 בדיקות (`typeset-contract.test.ts`) — trace off/on; round-trip רשומות; fallback לא רשום ⇒ דחייה; configHash אדיש לסדר מפתחות (§17.2#4). מאמת `verify-typeset-contract.mjs` — 33/33.
+- **ממצאים:** הוספות בלבד; קטלוג שגיאות layout-api (9 קודים) תועד ב-docs/i18n/error-keys.md; אין שינוי בקוד הישן.
+
+### שלב 31 — Layout IR מלא (layout-api) — הושלם 2026-11-02
+- **תוצרים:**
+  - `packages/layout-api/src/ir.ts` — **כל צורות ה-IR (§6.5)**: LayoutDocument (schemaVersion/policyId/pages/anchors/transformations), LayoutPage (parity לפי physicalIndex עוקב; kind; printedFolio), LayoutRegion (7 סוגים; columnIndex 0|1), LineFragment (breakReason/continuation/fragmentIndex/lineIndex/baseline/runs/sourceSpans), PositionedRun (**נושא text בסדר לוגי** — ה-IR נושא את הטקסט כדי ש-render-html יעבוד ללו� תלות ב-content-model; §6.5 "אין contentHtml" — טקסט חי אינו HTML), PositionedGlyph, PositionedRule/Ornament (נכס לפי מזהה+hash; אין SVG מוטמע)/NoteMarker (label resolved + superscript)/Anchor, PageAnchor. PlacedItem = חמשת הסוגים.
+  - אימות מבני מלא `layoutDocumentIssues`: ייחוסי regionId/itemId/pageId/anchorId (כולל כפילויות), physicalIndex עוקב 1..n, parity לפיו, rect חיוביים-בטוחים, **הכלה: region⊆page ו-item⊆region**, runs ללא חפיפה ובלי חריגה מרוחב הקו, baseline בתוך ה-rect. `createLayoutDocument` — אימות + הקפאה עמוקה (deep freeze).
+  - `ir-serialize.ts` — serialize/parse קנוני (canonicalJson) — **round-trip משמר layoutHash ביט-ביט** (§17.2#9).
+  - `projection.ts` — **luToCssPx = roundDiv(lu, 49152)** — רציונלי 1pt=4/3px; לא px/mm ההיסטורי האסור (§6.1).
+  - index.ts: מונחי יסוד מומרזים (AtomId/SourceSpan/Rect/FontFaceKey/MeasurementProvider/computeBidi) — גרף §5 נשמר: הצרכנים מקבלים הכל דרך layout-api.
+- **בדיקות:** 20 בדיקות (`ir.test.ts`) — round-trip; כפילויות/ייחוסי רפא/parity/קו מחוץ לאזור/run חורג; הקפאה (מוטציה נזרקת); היטל px. מאמת `verify-layout-ir.mjs` — 35/35 (כולל סריקה: אין 3.7795 בקוד החבילה).
+- **ממצאים:** (א) בדיקת "אין רווחים קנוניים" נוסחה מחדש — שם משפחת הגופן ('Guttman Rashi') כשלעצמו מכיל רווח; הבדיקה מכוונת למבנה ולא לתוכן. (ב) verify-parser עודכן ל-532 (499 + 20 + 13). אין שינוי בקוד הישן.
+
 ### תיקון CI — הסרת שאריות בנייה מהעקיבה (בין שלב 27 ל־28) — 2026-11-01
 - **הבעיה:** ה־CI ב־GitHub נכשל בצעד "בניית החבילות" מאז שלב 18 (לפחות), בעוד הרצות מקומיות היו ירוקות. **שורש התקלה:** בשלב 7 נכנסו לעקיבה 12 קבצי `tsconfig.tsbuildinfo` (מצב בנייה מקומי של TypeScript) ו־11 קבצי `src/index.d.ts.map` (שאריות פלט בנייה שנפלטו אז אל תוך `src/`; שלב 24 ניקה את ה־`.js`/`.d.ts` אך ה־`.d.ts.map` הושמטו). בשיבוט טרי — כמו בראנר של CI — ‎`dist/`‎ אינו קיים, ו־`tsc -b` קורא את ה־tsbuildinfo הישן ומדלג/נכשל בפתרון `@tora/content-model` ו־`@tora/measurement-api` (TS2307). מקומית זה לא נראה כי ‎`dist/`‎ מהבנייה הקודמת נשאר על הדיסק.
 - **התיקון:** הסרת כל הקבצים מהעקיבה ומהדיסק; הוספת חוקי `.gitignore` (`*.tsbuildinfo`, `packages/*/src/**/*.js|*.js.map|*.d.ts|*.d.ts.map`). בנוסף תוקנה שגיאת lint שנשארה מוסתרת מאחורי ה־CI האדום: ייבוא ‎`PreparedProviderCore`‎ שלא בשימוש ב־`packages/measurement-api/src/cache.ts` (שלב 26) — שתי הבדיקות שנכשלו ב־`verify-dependency-rules` איתרו אותה.

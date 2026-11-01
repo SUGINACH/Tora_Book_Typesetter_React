@@ -179,3 +179,18 @@
 | `errors.audit.UNREGISTERED_FINDING_CODE` | code | fatal | קוד ממצא לא רשום: {code} |
 
 **ממצאי דוח (§14.1/§14.3):** `audit.text.MISSING_ATOM` (HIGH) · `audit.text.DUPLICATE_ATOM` (HIGH) · `audit.text.OVERLAP_ATOM_SYNTAX` (HIGH) · `audit.text.DUPLICATE_ATOM_ID` (HIGH) · `audit.text.UNRESOLVED_NOTE_REFERENCE` (HIGH) · `audit.text.ORPHAN_NOTE` (MEDIUM) · `audit.text.LEDGER_ISSUE` (HIGH) · `audit.text.RAW_CONTROL_PLACEHOLDER` (HIGH) · `audit.text.HTML_IN_ATOMS` (LOW) · `audit.text.COVERAGE_DISAGREEMENT` (HIGH) · `audit.text.ATOM_TEXT_MISMATCH` (HIGH).
+
+## layout-api — Layout IR, חוזה typeset, מניפסט ופנקס (שלבים 31–32, פרק ה)
+
+מקור: `LAYOUT_API_ERROR_CATALOG` ב־`packages/layout-api/src/errors.ts`, מוצאן ב־`ir.ts`, `ir-serialize.ts`, `typeset.ts`, `run-manifest.ts`, `decision-ledger.ts`.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.layoutir.INVALID_DOCUMENT` | issues | error | מסמך עימוד (IR) שגוי: {issues} |
+| `errors.layoutir.INVALID_SERIALIZATION` | reason | error | סריאליזציה של IR שגויה: {reason} |
+| `errors.layoutir.INVALID_REQUEST` | issues | error | בקשת עימוד שגויה: {issues} |
+| `errors.layoutir.INVALID_MANIFEST` | issues | error | מניפסט ריצה שגוי: {issues} |
+| `errors.layoutir.INVALID_LEDGER` | issues | error | פנקס החלטות שגוי: {issues} |
+| `errors.layoutir.UNREGISTERED_FALLBACK` | code | fatal | קוד נפילה {code} אינו רשום — אין קוד צד |
+| `errors.layoutir.INVALID_TRACE_LEVEL` | value | error | רמת trace שגויה: {value} |
+| `errors.layoutir.INVALID_BUDGET` | issues | error | תקציב חיפוש שגוי: {issues} |
