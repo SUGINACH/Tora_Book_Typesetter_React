@@ -254,7 +254,7 @@ console.log('\n5) רגרסיה');
   (deps !== null && !/^\s*✖|\berror\b/m.test(deps) ? ok : fail)('deps:check נקי');
   const tests = run('npm', ['run', 'test:packages']);
   const m = tests?.match(/Tests\s+(\d+)\s+passed/);
-  (m && Number(m[1]) >= 477 ? ok : fail)(`test:packages — ${m ? m[1] : 'נכשל'} עוברות (455 + 22 BiDi)`);
+  (m && Number(m[1]) >= 486 ? ok : fail)(`test:packages — ${m ? m[1] : 'נכשל'} עוברות (477 + 9 cross-host שלב 29)`);
 }
 
 console.log('\n' + '='.repeat(60));

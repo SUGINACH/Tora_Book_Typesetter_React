@@ -63,6 +63,7 @@ jobs:
           node scripts/migration/verify-shaping-cache.mjs
           node scripts/migration/verify-uax14.mjs
           node scripts/migration/verify-bidi.mjs
+          node scripts/migration/verify-cross-host.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |
