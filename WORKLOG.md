@@ -4,6 +4,14 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 39 — מבחן שלד מהלך קצה־לקצה (M4) — הושלם 2026-11-02
+- **תוצרים:**
+  - `tests/e2e-skeleton/e2e-skeleton.test.ts` — **מבחן E2E ארכיטקטוני (10 בדיקות)** על fixture ייחוס אחד עם הספק האמיתי (HarfBuzz/WASM): (1) שלוש ריצות CLI כתהליכים אמיתיים (כולל שם קובץ שונה) ⇐ אותו layoutHash + artifacts מלאים; (2) IR קנוני שומר hash ב-round-trip והמניפסט תואם; (3) Node בתהליך — trace off/decisions ⇐ אותו hash וגם == hash ה-CLI; (4) **cold/warm (withShapingCache שלב 26) ⇐ אותו hash**; (5) **Worker דרך הפרוטוקול (WorkerClient+handler) ⇐ אותו hash — Node==Worker מוכח**; ביטול job עובד ואינו משפיע על הבא; (6) HTML קנוני ביט-ביט — render-html מה-IR של שתי ריצות ו-preview.html של ה-CLI ⇐ אותם bytes; (7) audit נקי עם כיסוי אטומים מלא; (8) מודל preview דטרמיניסטי; (9) engine:audit בקריאה נפרשת ⇒ 0; (10) **שחזור מלא מ-request.json — אותה בקשה ⇐ אותו hash (offline)**.
+  - `scripts/migration/verify-e2e-skeleton.mjs` — 11 בדיקות: ה-E2E ירוק; **ריצת ייחוס ← artifacts/e2e-reference/ (שבעה artifacts) — מועלים כ-artifact ב-CI** (upload-artifact, שמירה 30 יום); engine:verify הרשמי (§12.2) מריץ בדיוק מאמת זה; רגרסיה מלאה.
+  - `artifacts/` נוסף ל-.gitignore (פלט ריצות בלבד).
+- **בדיקות:** `npm run test:packages` — 613/613 (603+10); `verify-e2e-skeleton` — 11/11; `npm run engine:verify` — ירוק.
+- **ממצאים:** (א) השוואת ה-HTML דרשה את אותו AssetManifest שה-CLI מעביר (עיגון גופנים) — הועתק לבדיקה; (ב) הייבוא של קוד המעטפת בבדיקות נעשה סטטי (כמו ב-tests/worker-host) — עקבי ופשוט יותר מדינמי. אין שינוי בקוד הישן.
+
 ### שלב 38 — Audit גאומטי וטקסטואלי על IR (M4) — הושלם 2026-11-02
 - **תוצרים:**
   - `packages/audit-core/src/layout-audit.ts` — **auditLayout (§12, §14.2)**: שכבת טקסט — **כיסוי אטומים** (כל אטום מקור בדיוק פעם אחת בגוף/notes, בניכוי suppress מוצהרות; איבוד/שכפול/זר ⇒ HIGH) + **קישוריות הערות** (סמן↔גוף; גוף ממוספר בלי סמן ⇒ HIGH — sidenotes לא-ממוספרות פטורות ב-v0, החלטת מנוע מתועדת); שכבת גאומטריה — גלישת run מרוחב הקו (HIGH; §8.2 — הועבר מהאימות המבני), הכלה region⊆page ו-item⊆region, חפיפת קווים באזור (HIGH), baseline בתוך הקו (HIGH — הגנה כפולה מעבר לשער ה-IR), ייחוס אזור (HIGH); איכות — סדר טורים RTL (MEDIUM; שמאל מלא בעוד ימין ריק) ואחידות גובה שורה (MEDIUM). ממצא §14.1 מלא: code/severity/messageKey/params + מיקום ב-IR (pageId/regionId/itemId) + sourceSpans + actual/expected. **12 קודי ממצא רשומים — אין קוד צד.**

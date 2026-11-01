@@ -232,7 +232,7 @@ console.log('\n7) differential מלא — הקורפוס כולו מול הפר�
 console.log('\n8) רגרסיה מלאה');
 {
   const testOut = run('npm', ['run', 'test:packages', '--silent']);
-  (testOut !== null && /Tests\s+603\s+passed/.test(testOut) ? ok : fail)('test:packages — 603/603 (589 עד שלב 36 + 12 audit + 2 CLI-audit שלב 38)');
+  (testOut !== null && /Tests\s+613\s+passed/.test(testOut) ? ok : fail)('test:packages — 613/613 (603 עד שלב 38 + 10 e2e שלב 39)');
   const build = run('npm', ['run', 'build:packages', '--silent']);
   (build !== null && !/error TS/.test(build) ? ok : fail)('build:packages');
   const typecheck = run('npm', ['run', 'typecheck:packages', '--silent']);

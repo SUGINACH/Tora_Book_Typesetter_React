@@ -47,7 +47,8 @@
     "verify:layout-engine": "node scripts/migration/verify-layout-engine.mjs",
     "verify:render-html": "node scripts/migration/verify-render-html.mjs",
     "engine:layout": "node packages/cli/dist/main.js",
-    "engine:audit": "node packages/cli/dist/main.js"
+    "engine:audit": "node packages/cli/dist/main.js",
+    "engine:verify": "node scripts/migration/verify-e2e-skeleton.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

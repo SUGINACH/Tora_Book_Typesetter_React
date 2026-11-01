@@ -67,7 +67,7 @@ console.log('\n4) typecheck שורש');
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
 const testOut = run('npm', ['run', 'test:packages']);
-(testOut !== null && /Tests\s+603\s+passed/m.test(testOut) ? ok : fail)('test:packages — 603/603 (581 + 8 preview + 12 audit + 2 CLI)');
+(testOut !== null && /Tests\s+613\s+passed/m.test(testOut) ? ok : fail)('test:packages — 613/613 (581 + 8 preview + 12 audit + 2 CLI + 10 e2e)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

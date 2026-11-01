@@ -76,6 +76,7 @@ jobs:
           node scripts/migration/verify-worker-host.mjs
           node scripts/migration/verify-preview.mjs
           node scripts/migration/verify-layout-audit.mjs
+          node scripts/migration/verify-e2e-skeleton.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |
@@ -84,6 +85,13 @@ jobs:
           node scripts/migration/verify-baseline-run.mjs
           node scripts/migration/verify-test-fixtures.mjs
           node scripts/migration/verify-parity-matrix.mjs
+
+      - name: פרסום artifacts שלד המהלך (manifest/ledger/audit — שלב 39)
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-reference-artifacts
+          path: artifacts/e2e-reference/
+          retention-days: 30
 
       - name: שלד workspaces + מוסכנות עבודה (כולל הקוד הישן לא נערך)
         run: |
