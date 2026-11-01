@@ -25,12 +25,22 @@ let checks = 0;
 const ok = (m) => { checks++; console.log(`  [OK]   ${m}`); };
 const fail = (m) => { checks++; failures++; console.log(`  [FAIL] ${m}`); };
 
+// קודי בקרה ANSI (צבע) — מוסרים מכל פלט תהליך-בן לפני התאמת טקסט
+const ANSI_RE = /\x1b\[[0-9;?]*[ -\/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b[@-Z\\-_]/g;
+
+// ANSI-safe: ב-CI (CI=true) chalk/vitest/eslint מצבעים פלט גם בלי TTY, וקודי צבע
+// שברו התאמות טקסט (נתגלה ב-GitHub Actions; הורחב מ-4 מאמתים לכל המאמתים
+// שמפענחים stdout של תהליכי-בן). stripAnsi משמש את run() בשני המסלולים.
+const stripAnsi = (s) => (s == null ? s : String(s).replace(ANSI_RE, '').replace(/\x1b/g, ''));
+
 const run = (cmd, args, opts = {}) => {
+  // ANSI-safe: הזרקת NO_COLOR=1 (הגנה ראשונה) + ניקוי קודי בקרה (הגנה שנייה)
+  // על שני המסלולים (הצלחה וכשל) — eslint/depcruise מצבעים גם בלי TTY.
   try {
-    const stdout = execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', ...opts });
+    const stdout = stripAnsi(execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', env: { ...process.env, NO_COLOR: '1' }, ...opts })) ?? '';
     return { code: 0, stdout };
   } catch (e) {
-    return { code: e.status ?? 1, stdout: (e.stdout ?? '') + (e.stderr ?? '') };
+    return { code: e.status ?? 1, stdout: stripAnsi((e.stdout ?? '') + (e.stderr ?? '')) ?? '' };
   }
 };
 

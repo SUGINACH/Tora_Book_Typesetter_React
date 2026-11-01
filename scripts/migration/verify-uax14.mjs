@@ -28,11 +28,20 @@ let checks = 0;
 let failures = 0;
 const ok = (m) => { checks += 1; console.log(`  [OK]   ${m}`); };
 const fail = (m) => { checks += 1; failures += 1; console.log(`  [FAIL] ${m}`); };
+// קודי בקרה ANSI (צבע) — מוסרים מכל פלט תהליך-בן לפני התאמת טקסט
+const ANSI_RE = /\x1b\[[0-9;?]*[ -\/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b[@-Z\\-_]/g;
+
+// ANSI-safe: ב-CI (CI=true) chalk/vitest/eslint מצבעים פלט גם בלי TTY, וקודי צבע
+// שברו התאמות טקסט (נתגלה ב-GitHub Actions; הורחב מ-4 מאמתים לכל המאמתים
+// שמפענחים stdout של תהליכי-בן). stripAnsi משמש את run() בשני המסלולים.
+const stripAnsi = (s) => (s == null ? s : String(s).replace(ANSI_RE, '').replace(/\x1b/g, ''));
+
 const run = (cmd, args) => {
+  // ANSI-safe: הזרקת NO_COLOR=1 (הגנה ראשונה) + ניקוי קודי בקרה (הגנה שנייה).
   try {
-    return execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    return stripAnsi(execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NO_COLOR: '1' } }));
   } catch (e) {
-    return e.stdout ?? null;
+    return stripAnsi(e.stdout ?? null);
   }
 };
 const sha256File = (p) => createHash('sha256').update(rf(p)).digest('hex');
