@@ -17,3 +17,4 @@ export * from './provider.js';
 export * from './cache-key.js';
 export * from './font-manifest.js';
 export * from './enforcement.js';
+export * from './cache.js';

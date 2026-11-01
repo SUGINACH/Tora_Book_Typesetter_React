@@ -38,7 +38,8 @@
     "verify:fonts-manifest": "node scripts/migration/verify-fonts-manifest.mjs",
     "gen:fonts-manifest": "node scripts/migration/gen-fonts-manifest.mjs",
     "verify:harfbuzz": "node scripts/migration/verify-harfbuzz-provider.mjs",
-    "verify:enforcement": "node scripts/migration/verify-enforcement.mjs"
+    "verify:enforcement": "node scripts/migration/verify-enforcement.mjs",
+    "verify:cache": "node scripts/migration/verify-shaping-cache.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
