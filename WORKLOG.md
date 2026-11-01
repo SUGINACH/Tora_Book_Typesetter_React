@@ -4,6 +4,15 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 25 — איסור fallback שקט במדידה (M3) — הושלם 2026-11-01
+- **תוצרים:**
+  - `packages/measurement-api/src/enforcement.ts` — **המדיניות הנעולה** `MEASUREMENT_ERROR_POLICY` (שמונה מצבים): חמישה קודי פונט + MEASUREMENT_UNAVAILABLE — חריגה מיידית מקוטלגת; MISSING_GLYPH — דיווח מלא + שער קשיח; SimulatedMeasurer — אסור בייצור. **missingGlyphFindings** — ממצא אחיד (§14.1) לכל אטום חסר: מפתח קטלוגי, path=מזהה האטום, פרמטרים {fontId, fontFingerprint, atomId, atomIndex}, חומרת HIGH לפי §14.3 ("fallback לא מוסבר"); אטום זר מסומן provider-bug ואינו מושמט. **assertNoMissingGlyphs/shapeStrict** — השער הקשיח: MISSING_GLYPH {fontId, count}. **תיעוד tofu**: ‎.notdef‎ (glyphId 0) הוא ה-tofu היחיד — לעולם לא גליף מגופן אחר/מערכת.
+  - **17 בדיקות שליליות** (7 טהורות ב־measurement-api + 10 על הספק האמיתי): ארבעת התרחישים המחייבים — הסרת גופן (MISSING_FONT עם family+fontId; אף תוצאה לא הוחזרה), שינוי byte (FONT_HASH_MISMATCH עם שני הגיבובים; אין טעינה חלקית — סט עם גופן פגום נדחה כולו), גליף חסר (ממצא + שער + tofu=0 בלבד), WASM בלתי-זמין (MEASUREMENT_UNAVAILABLE). **הוכחה מבנית לאי-נסיגה**: טקסט שהגופן אינו מכיל מניב ‎.notdef‎ בלבד (10/11 ב־hello world — הרווח דווקא קיים בגופן, גליף לגיטימי), לעולם לא גליפים מגופן אחר.
+  - מאמת `verify-enforcement.mjs` — 21 בדיקות: המדיניות + תיעוד tofu ב-GLOSSARY + ארבעת התרחישים על הספק האמיתי + סריקת קוד נגד Canvas/fetch/CDN/גופני מערכת/SimulatedMeasurer + רגרסיה.
+- **פקודות בדיקה שרצו (ירוק):**
+  - `npm run test:packages` — 424/424 (407 + 17); `node scripts/migration/verify-enforcement.mjs` — 21/21.
+- **ממצאים:** למידה מהבדיקות: בדיקת הרווח ב־hello world — הרווח קיים בגוטמן-רש"י (גליף לגיטימי) ואינו נחשב חסר; הבדיקה הותאמה להבחין בין גליף חסר אמיתי לבין תו שכן קיים. החומרה HIGH לגליף חסר מגובה ישירות ב§14.3 ("fallback לא מוסבר"). אין שינוי בקוד הישן; הוספות בלבד.
+
 ### שלב 24 — [ADR-003] ספק מדידה HarfBuzz/WASM נעול (M3) — הושלם 2026-11-01
 - **תוצרים:**
   - `docs/adr/ADR-003-harfbuzz-wasm.md` — **ההחלטה נעולה**: HarfBuzz 15.0.0 דרך harfbuzzjs 1.6.4 (exact) + wawoff2 2.0.1 לפריקת WOFF2; שני גיבובי SHA-256 נעולים (harfbuzz.wasm: `6eeed8e1…`, decompress_binding.js: `112a89e7…`); אריזה מקומית בלבד — אין CDN ואין רשת; הפרדת אחריות (shaping בלבד — BiDi ו־UAX #14 חיצוניים, שלבים 27–28); שיקולים שנדחו מתועדים (Canvas, גופן מערכת, פרסר WOFF2 עצמאי, העתקת ה־WASM לתוך הריפו).

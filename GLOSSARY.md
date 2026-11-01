@@ -528,3 +528,12 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 - **מטריקות אנכיות** — מטבלת hhea של ה־sfnt; מוסכמת סימן: ‎yOffsetLu‎ חיובי כלפי מטה (הופכי ל־HarfBuzz) — נעול ב־ADR-003.
 - **environmentHash** — נגזר מהנעילות בלבד (גרסאות + שני גיבובים + תצורת Unicode) ⇒ זהה בכל host לאותה בנייה; הוכחה מלאה בין Node ל־Web Worker — שלב 29.
 - **lineOpportunities (זמני)** — הספק מציג כרגע את הכלל הטריוויאלי לפי שדה האטום; המימוש האמיתי (UAX #14 נעול + hooks) — שלב 27; אין צרכן ייצור עד M4+.
+
+## איסור fallback שקט במדידה (M3; שלב 25)
+
+- **הכלל הנעול** — גופן חסר, byte שהשתנה, גליף חסר או provider בלתי-זמין הם **שגיאות גלויות ומקוטלגות**, לא תוצאה אחרת בשקט. ‎MEASUREMENT_ERROR_POLICY‎ (enforcement.ts) מנעיל את שמונת המצבים: MISSING_FONT/UNKNOWN_FONT_ID/FONT_HASH_MISMATCH/FONT_FORMAT_MISMATCH/FONT_SFNT_MISMATCH/MEASUREMENT_UNAVAILABLE — חריגה מיידית; MISSING_GLYPH — דיווח + שער.
+- **tofu (תיבת גופן חסר)** — כשלגוף אין גליף לתו, ה־shaping מחזיר ‎.notdef‎ (glyphId 0) — התו מוצג כתיבה ריקה/מלבן. הריצה אינה נכשלת מעצמה: האטומים רשומים ב־‎missingGlyphAtomIds‎ וממופים לממצאי ‎errors.font.MISSING_GLYPH‎. גליף 0 הוא הדרך היחידה של tofu — לעולם לא גליף מגופן אחר או מגופן מערכת.
+- **missingGlyphFindings** — ממצא אחיד (§14.1) לכל אטום: מפתח קטלוגי, ‎path = מזהה האטום‎, פרמטרים ‎{fontId, fontFingerprint, atomId, atomIndex}‎ וחומרת HIGH לפי §14.3 ("fallback לא מוסבר"); אטום זר (לא מהבקשה) מסומן כ־provider bug — לא מושמט.
+- **assertNoMissingGlyphs / shapeStrict** — השער הקשיח לריצות קפדניות: ריצה עם גליף חסר נכשלת עם ‎MISSING_GLYPH {fontId, count}‎. שתי הדרכית (ממצאים או כשל) גלויות — אין "המשך כרגיל".
+- **ארבעת התרחישים המחייבים** (מהתכנית) מוכחים על הספק האמיתי: הסרת גופן, שינוי byte, גליף חסר, WASM בלתי-זמין — כולם מסתיימים בחריגה מקוטלגת עם טביעת גופן/מזהה; אף תוצאה לא הוחזרה בעקבות כשל. הוכחה מבנית לאי-נסיגה: טקסט שהגופן אינו מכיל מניב ‎.notdef‎ בלבד (10 מתוך 11 תווים ב־hello world — הרווח דווקא קיים בגופן), לעולם לא גליפים מגופן אחר.
+- **סריקת נתיבי נסיגה** — קוד המדידה נקי מ־Canvas, fetch/XHR, CDN, גופני מערכת (Arial/sans-serif/systemFont) ו־SimulatedMeasurer; הספק המדומה מנוע מייצור גם בטיפוס וגם ב־depcruise (שלב 22).
