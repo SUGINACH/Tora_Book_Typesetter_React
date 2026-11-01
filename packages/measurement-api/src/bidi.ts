@@ -395,7 +395,6 @@ function boundariesFor(entries: readonly XEntry[], seq: readonly number[], parag
 
 // ─────────────────────────── W1–W7 ───────────────────────────
 
-const STRONG = new Set(['L', 'R', 'AL']);
 const NI_TYPES = new Set(['B', 'S', 'WS', 'ON', 'LRI', 'RLI', 'FSI', 'PDI']); // ניטרלי + isolate formatting
 
 function resolveWeak(entries: readonly XEntry[], seq: readonly number[], sos: 'L' | 'R', eos: 'L' | 'R'): void {
@@ -488,7 +487,6 @@ function resolveWeak(entries: readonly XEntry[], seq: readonly number[], sos: 'L
 
 function resolveBrackets(entries: readonly XEntry[], seq: readonly number[], sos: 'L' | 'R'): void {
   const embeddingDir: 'L' | 'R' = (entries[seq[0]!]!.xLevel as number) % 2 === 1 ? 'R' : 'L';
-  const type = (i: number): string => entries[i]!.type;
 
   // BD16: זיהוי הזוגות (עומק מקסימלי 63). רצף עשוי שלא להיות רציף —
   // חברות ברצף נבדקת מראש. סוגר סוגר מחפש במחסנית כלפי מטה (לא רק

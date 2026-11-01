@@ -234,11 +234,11 @@ console.log('\n8) רגרסיה מלאה');
   const testOut = run('npm', ['run', 'test:packages', '--silent']);
   (testOut !== null && /Tests\s+486\s+passed/.test(testOut) ? ok : fail)('test:packages — 486/486 (323 עד שלב 21 + 50+13+21+17+16+15 שלבים 22–27 + 22 BiDi שלב 28 + 9 cross-host שלב 29)');
   const build = run('npm', ['run', 'build:packages', '--silent']);
-  (build !== null ? ok : fail)('build:packages');
+  (build !== null && !/error TS/.test(build) ? ok : fail)('build:packages');
   const typecheck = run('npm', ['run', 'typecheck:packages', '--silent']);
   (typecheck !== null ? ok : fail)('typecheck:packages');
   const lint = run('npm', ['run', 'lint:packages', '--silent']);
-  (lint !== null ? ok : fail)('lint:packages');
+  (lint !== null && !/\berror\b|✖/m.test(lint) ? ok : fail)('lint:packages');
   const deps = run('npm', ['run', 'deps:check', '--silent']);
   (deps !== null ? ok : fail)('deps:check (גבולות תלות)');
 }

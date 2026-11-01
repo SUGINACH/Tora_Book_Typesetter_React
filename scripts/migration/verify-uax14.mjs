@@ -189,7 +189,7 @@ console.log('\n5) רגרסיה');
   const build = run('npm', ['run', 'build:packages']);
   (build !== null && !/error TS/.test(build) ? ok : fail)('build:packages נקי');
   const lint = run('npm', ['run', 'lint:packages']);
-  (lint !== null ? ok : fail)('lint:packages נקי');
+  (lint !== null && !/\berror\b|✖/m.test(lint) ? ok : fail)('lint:packages נקי');
   const deps = run('npm', ['run', 'deps:check']);
   (deps !== null && !/^\s*✖|\berror\b/m.test(deps) ? ok : fail)('deps:check נקי');
   const tests = run('npm', ['run', 'test:packages']);

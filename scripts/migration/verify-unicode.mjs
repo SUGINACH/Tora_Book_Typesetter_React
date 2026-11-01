@@ -238,7 +238,7 @@ console.log('\n7) רגרסיה מלאה');
 {
   const t = run('npm', ['run', 'test:packages']);
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
-  (run('npm', ['run', 'build:packages']) !== null ? ok : fail)('build:packages — PASS');
+  ((x => x !== null && !/error TS/.test(x))(run('npm', ['run', 'build:packages'])) ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');
   (run('npm', ['run', 'lint:packages']) !== null ? ok : fail)('lint:packages — PASS');
   (run('npm', ['run', 'deps:check']) !== null ? ok : fail)('deps:check — 0 הפרות');

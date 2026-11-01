@@ -261,7 +261,7 @@ console.log('\n6) רגרסיה — build, typecheck, lint, deps, בדיקות');
   const tc = run('npm', ['run', 'typecheck:packages']);
   (tc !== null && !/error TS/.test(tc) ? ok : fail)('typecheck:packages נקי');
   const lint = run('npm', ['run', 'lint:packages']);
-  (lint !== null ? ok : fail)('lint:packages נקי');
+  (lint !== null && !/\berror\b|✖/m.test(lint) ? ok : fail)('lint:packages נקי');
   const deps = run('npm', ['run', 'deps:check']);
   (deps !== null && !/^\s*✖|\berror\b/m.test(deps) ? ok : fail)('deps:check נקי (כולל הכללים החדשים של שלב 22)');
   const tests = run('npm', ['run', 'test:packages']);
