@@ -29,6 +29,9 @@
 | `errors.font.MISSING_GLYPH` | fontId, count | error | ל־{count} אטומים אין גליף בגופן {fontId} — דיווח גלוי, אין החלפה שקטה |
 | `errors.shape.INVALID_REQUEST` | reason | error | בקשת shaping לא חוקית: {reason} |
 | `errors.shape.INVALID_PROVIDER` | reason | error | זהות provider לא חוקית: {reason} |
+| `errors.font.UNKNOWN_FONT_ID` | fontId | fatal | מזהה גופן בלתי-מוכר: {fontId} — אין גופן כזה במניפסט |
+| `errors.font.FONT_FORMAT_MISMATCH` | file, expectedFormat, actualFormat | fatal | חתימת הקובץ {file} אינה תואמת את הרשומה (צפוי {expectedFormat}, נמצא {actualFormat}) |
+| `errors.font.MANIFEST_INVALID` | reason | fatal | מניפסט הגופנים אינו תקין: {reason} |
 
 ## content-model — קטלוג מקומי (שלב 14+)
 

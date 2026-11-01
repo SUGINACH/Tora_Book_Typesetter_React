@@ -32,6 +32,10 @@ export const ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEntry>> = Object
   'errors.font.MISSING_GLYPH': { i18nKey: 'errors.font.MISSING_GLYPH', params: ['fontId', 'count'], severity: 'error' },
   'errors.shape.INVALID_REQUEST': { i18nKey: 'errors.shape.INVALID_REQUEST', params: ['reason'], severity: 'error' },
   'errors.shape.INVALID_PROVIDER': { i18nKey: 'errors.shape.INVALID_PROVIDER', params: ['reason'], severity: 'error' },
+  // ── מניפסט גופנים (שלב 23) ──
+  'errors.font.UNKNOWN_FONT_ID': { i18nKey: 'errors.font.UNKNOWN_FONT_ID', params: ['fontId'], severity: 'fatal' },
+  'errors.font.FONT_FORMAT_MISMATCH': { i18nKey: 'errors.font.FONT_FORMAT_MISMATCH', params: ['file', 'expectedFormat', 'actualFormat'], severity: 'fatal' },
+  'errors.font.MANIFEST_INVALID': { i18nKey: 'errors.font.MANIFEST_INVALID', params: ['reason'], severity: 'fatal' },
   // ── יחידות (ADR-001; מוצאן ב-units.ts) ──
   'errors.units.UNSAFE_INTEGER': { i18nKey: 'errors.units.UNSAFE_INTEGER', params: ['what', 'value'], severity: 'error' },
   'errors.units.INVALID_DENOMINATOR': { i18nKey: 'errors.units.INVALID_DENOMINATOR', params: ['d'], severity: 'error' },

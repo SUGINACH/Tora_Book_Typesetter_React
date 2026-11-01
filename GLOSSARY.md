@@ -504,3 +504,14 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 - **batching** — shapeBatch חייב להיות שקוף: תוצאה[i] זהה ביט-ביט ל־shape(requests[i]) בפני עצמו, בכל הרכב/סדר/גודל. אופטימיזציה בלבד — אין סמנטיקת זמן ואין סדר רשת (§6.4).
 - **TestMeasurementProvider ('test-simulated')** — ספק מדומה עם וקטורים קבועים (טבלאות אלפיות em לפי קטגוריית נקודת קוד; טווח U+E000–U+E0FF מדמה גליף חסר) — מוזרק במפורש בבדיקות יחידה בלבד, דרך subpath ‎'./test'‎; providerId מילולי נפרד מונע החלפת ספק ייצור בטיפוס. אכיפה: index אינו מייצא, depcruise (no-test-provider-in-production) והמאמת סורקים שאף קוד ריצה אינו מייבא.
 - **SHA-256 נייב מקומי** — ל־measurement-api אין תלויות והיא אינה רשאית לייבא את layout-api (גרף §5), ולכן hash.ts קנוני מקומי (אותו FIPS-180-4 של שלב 10, מאומת מול וקטורי FIPS ומול node:crypto כאורקל) — בדיוק כמו הקטלוג המקומי של content-model. canonicalJson מקומי באותם כללי ADR-002.
+
+## מניפסט גופנים מלא (M3; שלב 23)
+
+- **manifest v2 (assets/fonts/manifest.json)** — כל 1,796 הגופנים מהמלאי רשומים בכיסוי 100% דו־כיווני מול הדיסק (כל קובץ ← רשומה; כל רשומה ← קובץ; hash מחושב מחדש לכל אחד). לכל גופן: ‎fontId, contentSha256, family, weight, style, unitsPerEm, binaryFormat, nameTable, source, distributionBlocked‎ — אין סינון לפי "שימוש מוכח"; אין השמטה שקטה; אין שינוי bytes.
+- **fontId** — ‎font:v1|<contentSha256>‎ — זהות מה־bytes בלבד: שני קבצים זהי-bytes הם אותו גופן; כל שינוי byte מחליף זהות. מזהה בלתי-מוכר בטעינה = ‎UNKNOWN_FONT_ID‎ (שגיאה גלויה).
+- **binaryFormat לפי החתימה** — הפורמט נקבע מה־magic bytes ולא מהסיומת: הרישום גילה 4 קבצי ‎.woff שתוכנם WOFF2 בפועל (אין אף WOFF1 אמיתי במלאי). binaryFormatOf הוא השופט.
+- **מטא־דאטה בינארית** — unitsPerEm (head), usWeightClass ו־fsSelection (OS/2), nameTable — מהגופן עצמו דרך יישום הייחוס wawoff2 2.0.1 (נעול). תגליות: 116 גופנים עם טבלאות שמות מנוונות (nameID 1 ריק); משקלים לא-סטנדרטיים (usWeightClass 4–99 בחלק מהגופנים) — האמת הבינארית נשמרת; שם המשפחה העברי ממקורות הישן נשאר השם הקנוני לבחירה.
+- **sfntSha256** — SHA-256 של ה־sfnt הקנוני אחרי פריקת WOFF2: נעילת דטרמיניזם הפריקה לקראת זהות המדידה בין hosts (שלב 29). המאמת מוכיח: פריקה חוזרת ⇐ אותו גיבוב.
+- **distributionBlocked (D-001/D-002)** — bundled (1,757) ו־Guttman-Rashi (1) מסומנים LICENSE_UNVERIFIED: כשירים לשימוש לצורך תאימות, מוחרגים מחבילת ההפצה (שער שלב 99). הדגל אינו מסיר מהמרשם, אינו מחליף גופן ואינו משנה bytes. selfhost (38) — OFL-1.1 מתועד, ניתן להפצה עם הרישיון.
+- **loadFontSet — אכיפת טעינה** — כל הגופנים הדרושים לקונפיגורציה נטענים ומאומתים (hash + חתימה) לפני המדידה הראשונה; byte אחד שהשתנה = ‎FONT_HASH_MISMATCH‎; חתימה שאינה תואמת = ‎FONT_FORMAT_MISMATCH‎. ה־bytes מוזרקים (Node/Worker/Tauri) — אין קריאת קבצים בליבה, אין גופן מערכת, אין רשת במסלול.
+- **מחולל דטרמיניסטי (gen-fonts-manifest.mjs)** — אותם קלטים ⇐ אותו מניפסט ביט-ביט (אין תאריך/מונה; ה־idempotent — ריצה על v2 קיים מייצרת אותו פלט). דוח הכיסוי: ‎docs/migration/fonts-coverage.md‎.

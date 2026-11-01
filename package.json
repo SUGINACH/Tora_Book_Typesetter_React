@@ -34,7 +34,9 @@
     "verify:notes": "node scripts/migration/verify-notes.mjs",
     "verify:text-audit": "node scripts/migration/verify-text-audit.mjs",
     "test:packages": "vitest run --config vitest.packages.config.ts",
-    "verify:measurement-api": "node scripts/migration/verify-measurement-api.mjs"
+    "verify:measurement-api": "node scripts/migration/verify-measurement-api.mjs",
+    "verify:fonts-manifest": "node scripts/migration/verify-fonts-manifest.mjs",
+    "gen:fonts-manifest": "node scripts/migration/gen-fonts-manifest.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -69,7 +71,8 @@
     "tsx": "^4.18.0",
     "typescript": "^5.4.5",
     "vite": "^5.4.0",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "wawoff2": "2.0.1"
   },
   "workspaces": [
     "packages/*"
