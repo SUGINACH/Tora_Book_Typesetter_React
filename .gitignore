@@ -14,3 +14,11 @@ dist-ssr
 *.userosscache
 *.sln
 coverage
+
+# פלטי בנייה של TypeScript project references — לעולם לא בעקיבה (תיקון CI)
+# tsbuildinfo הוא מצב מקומי מכונה-תלוי; פלטי src/ הם שאריות משלב 7.
+*.tsbuildinfo
+packages/*/src/**/*.js
+packages/*/src/**/*.js.map
+packages/*/src/**/*.d.ts
+packages/*/src/**/*.d.ts.map
