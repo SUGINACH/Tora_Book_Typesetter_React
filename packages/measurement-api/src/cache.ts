@@ -17,7 +17,6 @@ import { canonicalShapeCacheKey } from './cache-key.js';
 import type { ShapedCacheValue } from './cache-key.js';
 import type {
   AnyMeasurementProvider,
-  PreparedProviderCore,
   ProviderIdentity,
   ShapeRequest,
   ShapedRun,
