@@ -61,6 +61,7 @@ jobs:
           node scripts/migration/verify-harfbuzz-provider.mjs
           node scripts/migration/verify-enforcement.mjs
           node scripts/migration/verify-shaping-cache.mjs
+          node scripts/migration/verify-uax14.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |

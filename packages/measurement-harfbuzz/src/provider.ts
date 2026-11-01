@@ -16,6 +16,7 @@ import { EngineError } from '@tora/measurement-api';
 import {
   assertShapeRequest,
   canonicalJson,
+  computeBreakOpportunities,
   roundDiv,
   shapeBatchViaSingle,
   shapeRequestHash,
@@ -319,14 +320,15 @@ export async function createHarfbuzzProvider(
   };
 
   /**
-   * הזדמנויות שבירה — מימוש זמני לפי שדה האטום (כמו TestMeasurementProvider);
-   * המימוש האמיתי — UAX #14 נעול עם hooks מדיניות — מוחלף בשלב 27. שום
-   * צרכן ייצור אינו קורא זאת עד M4+, ולכן ההחלפה אינה שוברת חוזה.
+   * הזדמנויות שבירה — UAX #14 נעול (rev 53, Unicode 16.0.0; שלב 27) על
+   * טקסט האטומים המאוחד, ממופה לגבולות אטומים. שער השלב: כל נקודה
+   * מקושרת למזהה אטום. ה־hooks של המדיניות (איסור/התרה מקומיים) נצרכים
+   * על ידי המנוע דרך computeBreakOpportunities — כאן ה־UAX הגולמי.
    */
   const lineOpportunities = (atoms: readonly ShapingAtom[]): readonly number[] => {
     const out: number[] = [];
-    for (let i = 1; i < atoms.length; i++) {
-      if (atoms[i]!.breakBefore !== 'forbidden') out.push(i);
+    for (const o of computeBreakOpportunities(atoms)) {
+      if (o.kind === 'opportunity' || o.kind === 'mandatory') out.push(o.atomIndex);
     }
     return Object.freeze(out);
   };
