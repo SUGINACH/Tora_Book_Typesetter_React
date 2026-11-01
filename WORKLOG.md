@@ -4,6 +4,17 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 36 — תצוגה מקדימה בריאקט צורכת IR (M4) — הושלם 2026-11-02
+- **תוצרים:**
+  - `src/renderers/preview-model.ts` — **ההיטל הטהור IR←מודל תצוגה**: חד-כיווני, דטרמיניסטי (אותו IR ⇐ אותו מודל), **CSS logical properties בלבד** — insetInlineStart/insetBlockStart/inlineSize/blockSize בפרשנות הכיוון של ה-DOM (עמוד rtl — מימין), בלי חישוב שמאל/ימין כפול. ההמרה LU→px רציונלית (luToCssPx).
+  - `src/renderers/PageView.tsx` — **PageView מקבל LayoutPage בלבד (§13.2)**: עמודים/אזורים/קווים/ריצות/סמני הערה עם data-page-id/data-region-id/data-fragment-id/data-source-id; הטקסט כערכי React — אין dangerouslySetInnerHTML.
+  - `src/renderers/LayoutPreview.tsx` — המיכל: מצבי loading/error/empty/ready מגיעים מה-props (הקומפוננטה אינה מכירה Worker ואינה מריצה typeset); שגיאה מוצגת כמפתח קטלוגי+params; **zoom הוא transform של המיכל בלבד — אינו מודד מחדש ואינו משתתף ב-layoutHash**.
+  - `src/worker-host/use-typeset-worker.ts` — החיבור ל-WorkerClient: מצב idle/running/done/error/cancelled (תואם runStore §13.1); ריצה חדשה מבטלת את הקודמת (supersede); ה-IR מגיע מ-parseLayoutDocument של התוצאה הקנונית.
+  - `tests/component/preview.test.tsx` — **8 בדיקות ב-jsdom** על IR אמיתי מהמנוע: IR קבוע מוצג עם מאפייני הזהות; **נאמנות היטל — כל span של run נושא בדיוק את טקסט ה-IR** (סדר חזותי כמקובל ב-v1 — ההחלטה הסופית ADR-008 שלב 88); zoom=2.5 משנה transform בלבד והפיקסלים הפנימיים זהים; **אפס קריאות getBoundingClientRect ברינדור**; מצבי error/running/empty; ההיטל טהור (זהות עמוקה + הכלה לוגית); ה-hook עם המנוע האמיתי דרך הערוץ — layoutHash זהה לקריאה ישירה.
+  - `verify-preview.mjs` — 15 בדיקות: אין ייבוא מנוע בתצוגה; אין dangerouslySetInnerHTML בשימוש; אין מדידת DOM בקוד; logical properties בלבד; 8 בדיקות קומפוננטה; typecheck שורש; רגרסיה.
+- **בדיקות:** `npm run test:packages` — 589/589 (581+8); `verify-preview` — 15/15; `tsc --noEmit` (שורש) — ירוק.
+- **ממצאים:** (א) טקסט הריצות ב-IR מאוחסן בסדר חזותי (מיפוי ה-BiDi של שלב 33) — התצוגה נאמנה ל-IR כפי שהוא; ייצוג הקו הסופי יוחלט ב-ADR-008 (שלב 88) ואז כל ההיטלים יתעדכנו יחד. (ב) jsdom מסופק ברמת הקובץ (docblock) בתוך תצורת החבילות. אין שינוי בקוד הישן.
+
 ### שלב 35 — פרוטוקול Worker ו־WorkerClient (M4) — הושלם 2026-11-02
 - **תוצרים:**
   - `src/worker-host/protocol.ts` — **הפרוטוקול לפי §12.1 בדיוק**: WorkerRequest = prepare (jobId + protocolVersion + payload) | cancel; WorkerResponse = progress (stage/completedUnits/totalUnits?) | done | error (errorCode + params — לעולם לא raw message). PreparePayload: בקשת typeset מלאה + גופנים (רשומת מניפסט + bytes) + WASM — **הכול עובר מקומית בערוץ** (אין רשת; §19). אימות הודעות מלא (workerRequestIssues/workerResponseIssues) — errorCode חייב תבנית קטלוגית.
