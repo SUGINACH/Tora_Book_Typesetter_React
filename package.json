@@ -36,7 +36,8 @@
     "test:packages": "vitest run --config vitest.packages.config.ts",
     "verify:measurement-api": "node scripts/migration/verify-measurement-api.mjs",
     "verify:fonts-manifest": "node scripts/migration/verify-fonts-manifest.mjs",
-    "gen:fonts-manifest": "node scripts/migration/gen-fonts-manifest.mjs"
+    "gen:fonts-manifest": "node scripts/migration/gen-fonts-manifest.mjs",
+    "verify:harfbuzz": "node scripts/migration/verify-harfbuzz-provider.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -64,6 +65,7 @@
     "eslint-plugin-react-refresh": "^0.4.9",
     "fast-check": "^4.10.2",
     "gh-pages": "^6.1.0",
+    "harfbuzzjs": "1.6.4",
     "jsdom": "^24.1.1",
     "postcss": "^8.4.40",
     "prettier": "^3.3.3",

@@ -515,3 +515,16 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 - **distributionBlocked (D-001/D-002)** — bundled (1,757) ו־Guttman-Rashi (1) מסומנים LICENSE_UNVERIFIED: כשירים לשימוש לצורך תאימות, מוחרגים מחבילת ההפצה (שער שלב 99). הדגל אינו מסיר מהמרשם, אינו מחליף גופן ואינו משנה bytes. selfhost (38) — OFL-1.1 מתועד, ניתן להפצה עם הרישיון.
 - **loadFontSet — אכיפת טעינה** — כל הגופנים הדרושים לקונפיגורציה נטענים ומאומתים (hash + חתימה) לפני המדידה הראשונה; byte אחד שהשתנה = ‎FONT_HASH_MISMATCH‎; חתימה שאינה תואמת = ‎FONT_FORMAT_MISMATCH‎. ה־bytes מוזרקים (Node/Worker/Tauri) — אין קריאת קבצים בליבה, אין גופן מערכת, אין רשת במסלול.
 - **מחולל דטרמיניסטי (gen-fonts-manifest.mjs)** — אותם קלטים ⇐ אותו מניפסט ביט-ביט (אין תאריך/מונה; ה־idempotent — ריצה על v2 קיים מייצרת אותו פלט). דוח הכיסוי: ‎docs/migration/fonts-coverage.md‎.
+
+## ספק HarfBuzz/WASM נעול (M3; שלב 24, ADR-003)
+
+- **ספק ייצור אחד** — ‎@tora/measurement-harfbuzz‎ מממש את ‎MeasurementProvider‎ (providerId מילולי 'harfbuzz-wasm') על HarfBuzz 15.0.0 דרך harfbuzzjs 1.6.4 הנעולה. שער השלב: אין shaping של דפדפן בחוזה הייצור — ה־UI לעולם אינו מודד בעצמו.
+- **מודל הזרקה** — ל־src של החבילה אין ייבוא של harfbuzzjs/wawoff2 ואין Node/DOM: ה־host (CLI/Worker/Tauri) מייבא את הספריות הנעולות ומזריק אותן + את bytes ה־WASM. כך הספק רץ זהה בכל סביבה.
+- **אימות נעילות בזמן יצירה** — ‎sha256(wasmBytes)‎ מאומת מול ADR-003 (וכן גרסת HarfBuzz ומפרק ה־WOFF2); ‎wasmSha256‎ שהספק מדווח תמיד אמת ומאומת, לא מוצהר סתם. WASM זר = ‎MEASUREMENT_UNAVAILABLE‎.
+- **אימות sfnt כפול** — לכל גופן WOFF2: פריקה דרך wawoff2 ואז ‎sha256(sfnt) === sfntSha256‎ מהמניפסט (שלב 23) — גרסת מפרק שונה או גופן שהוחלף נתפסים לפני כל מדידה (‎FONT_SFNT_MISMATCH‎).
+- **קנה מידה** — shaping בסקייל ‎upem‎ (יחידות גופן שלמות, ללא איבוד בזמן העיצוב); ההמרה ל־LU אחר כך: ‎roundDiv(units × fontSizeLu, upem)‎. חוזה שלב 22 נשמר: ‎widthLu === Σ advanceLu‎; ריווח האותיות בתוך ה־advance של כל גליף.
+- **מיפוי קלסטרים** — הטקסט המעוצד הוא join של טקסטי האטומים; ערכי הקלסטר של HarfBuzz (אינדקסים ב־UTF-16) ממופים ל־‎clusterAtomIndex‎ בחיפוש בינארי. RTL: הגליפים בסדר חזותי (קלסטרים יורדים); ניקוד מתלה על אשכול הבסיס עם advance 0.
+- **גליף חסר** — glyphId 0 (‎.notdef‎) ← האטום נרשם ב־‎missingGlyphAtomIds‎ בסדר לוגי (מקור), בייחוד; אין החלפה שקטה. מדיניות העלייה בשגיאה — שלב 25.
+- **מטריקות אנכיות** — מטבלת hhea של ה־sfnt; מוסכמת סימן: ‎yOffsetLu‎ חיובי כלפי מטה (הופכי ל־HarfBuzz) — נעול ב־ADR-003.
+- **environmentHash** — נגזר מהנעילות בלבד (גרסאות + שני גיבובים + תצורת Unicode) ⇒ זהה בכל host לאותה בנייה; הוכחה מלאה בין Node ל־Web Worker — שלב 29.
+- **lineOpportunities (זמני)** — הספק מציג כרגע את הכלל הטריוויאלי לפי שדה האטום; המימוש האמיתי (UAX #14 נעול + hooks) — שלב 27; אין צרכן ייצור עד M4+.

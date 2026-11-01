@@ -32,6 +32,7 @@
 | `errors.font.UNKNOWN_FONT_ID` | fontId | fatal | מזהה גופן בלתי-מוכר: {fontId} — אין גופן כזה במניפסט |
 | `errors.font.FONT_FORMAT_MISMATCH` | file, expectedFormat, actualFormat | fatal | חתימת הקובץ {file} אינה תואמת את הרשומה (צפוי {expectedFormat}, נמצא {actualFormat}) |
 | `errors.font.MANIFEST_INVALID` | reason | fatal | מניפסט הגופנים אינו תקין: {reason} |
+| `errors.font.FONT_SFNT_MISMATCH` | file, expectedSha256, actualSha256 | fatal | פריקת WOFF2 של {file} אינה תואמת את הנעילה — ה־sfnt השתנה |
 
 ## content-model — קטלוג מקומי (שלב 14+)
 

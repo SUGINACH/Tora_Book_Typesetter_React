@@ -36,6 +36,7 @@ export const ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEntry>> = Object
   'errors.font.UNKNOWN_FONT_ID': { i18nKey: 'errors.font.UNKNOWN_FONT_ID', params: ['fontId'], severity: 'fatal' },
   'errors.font.FONT_FORMAT_MISMATCH': { i18nKey: 'errors.font.FONT_FORMAT_MISMATCH', params: ['file', 'expectedFormat', 'actualFormat'], severity: 'fatal' },
   'errors.font.MANIFEST_INVALID': { i18nKey: 'errors.font.MANIFEST_INVALID', params: ['reason'], severity: 'fatal' },
+  'errors.font.FONT_SFNT_MISMATCH': { i18nKey: 'errors.font.FONT_SFNT_MISMATCH', params: ['file', 'expectedSha256', 'actualSha256'], severity: 'fatal' },
   // ── יחידות (ADR-001; מוצאן ב-units.ts) ──
   'errors.units.UNSAFE_INTEGER': { i18nKey: 'errors.units.UNSAFE_INTEGER', params: ['what', 'value'], severity: 'error' },
   'errors.units.INVALID_DENOMINATOR': { i18nKey: 'errors.units.INVALID_DENOMINATOR', params: ['d'], severity: 'error' },

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "description": "WASM shaping נעול + BiDi adapter — שלד שלב 7; המימוש בפרק ד (שלב 24)",
+  "description": "ספק מדידה HarfBuzz/WASM נעול (ADR-003, שלב 24) — הזרקה מלאה, בלי Node/DOM ב-src",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -15,9 +15,17 @@
   },
   "scripts": {
     "build": "tsc -b tsconfig.json",
-    "typecheck": "tsc -b tsconfig.json --force"
+    "typecheck": "tsc -b tsconfig.json --force && tsc --noEmit -p tsconfig.test.json"
   },
   "dependencies": {
     "@tora/measurement-api": "0.1.0"
+  },
+  "peerDependencies": {
+    "harfbuzzjs": "1.6.4",
+    "wawoff2": "2.0.1"
+  },
+  "devDependencies": {
+    "harfbuzzjs": "1.6.4",
+    "wawoff2": "2.0.1"
   }
 }

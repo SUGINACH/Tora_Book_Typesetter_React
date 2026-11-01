@@ -1,9 +1,8 @@
 /**
- * @tora/measurement-harfbuzz — WASM shaping נעול + BiDi adapter
+ * @tora/measurement-harfbuzz — ספק המדידה הנעול של הייצור (ADR-003, שלב 24).
  *
- * שלד שלב 7 בתכנית 100 השלבים (אפיון §5).
- * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד.
- * המימוש ייבנה בפרק ד (שלב 24).
+ * מודל הזרקה: ה־host מייבא את harfbuzzjs/wawoff2 הנעולות ומזריק אותן
+ * ליצירת הספק; החבילה עצמה אינה מייבאת אותן ב-src — אין Node/DOM בליבה.
  */
-export const PACKAGE_NAME = '@tora/measurement-harfbuzz' as const;
-export const SKELETON_NOTE = 'שלד שלב 7 — עדיין ללא מימוש; החוזה הציבורי ייבנה בפרק ד (שלב 24)' as const;
+export * from './lock.js';
+export * from './provider.js';
