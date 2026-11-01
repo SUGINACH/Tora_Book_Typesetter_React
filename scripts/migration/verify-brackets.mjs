@@ -207,6 +207,7 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
         if (rel.includes('/test/') || rel.includes('.test.')) continue;
         if (rel === 'packages/content-model/src/brackets.ts') continue;
         if (rel.startsWith('packages/content-model/src/parser/')) continue; // תחביר שלב 17 — נעול ומאומת
+        if (rel === 'packages/measurement-api/src/bidi.ts') continue; // שלב 28: BD16 — זיווג סוגריים מקוונים של UAX #9 (Unicode); אינו זיווג סוגריים legacy — סוג אחר לחלוטין, נעול ב-conformance 94,412
         const src = readFileSync(p, 'utf8');
         if (/findMatching|matchBracket|bracketDepth|openBracket|hasOpenBracket|protectParens/.test(src)) {
           offenders.push(rel);

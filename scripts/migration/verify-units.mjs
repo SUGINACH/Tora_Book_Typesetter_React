@@ -88,7 +88,8 @@ for (const f of srcFiles) {
   // units.ts — מרכז העיגול; hash.ts — פרימיטיבים של SHA-256/FNV (מילים של 32 סיביות, ADR-002 §4)
   const EXEMPT = rel === 'packages/measurement-api/src/units.ts'
     || rel === 'packages/layout-api/src/hash.ts'
-    || rel === 'packages/measurement-api/src/hash.ts'; // שלב 22: SHA-256 נייב מקומי — אותו יישור ADR-002 §4
+    || rel === 'packages/measurement-api/src/hash.ts' // שלב 22: SHA-256 נייב מקומי — אותו יישור ADR-002 §4
+    || rel === 'packages/settings-schema/src/hash.ts'; // שלב 30: העתק מקומי של אותו מימוש ל-configHash (גרף §5 — אין ייבוא צולב)
   // הפרסר הישן המוחזק (React lock, שלב 17) — עותק מילולי קפוא לבדיקות differential;
   // קוד הייחוס עצמו (למשל fnv-hash עם הזזות סיביות) אינו נושא המדיניות — רק הקוד החדש.
   if (rel.startsWith("packages/test-fixtures/legacy/")) continue;
