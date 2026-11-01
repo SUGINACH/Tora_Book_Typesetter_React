@@ -197,14 +197,34 @@ console.log('\n5) רגרסיה מלאה — כל מאמתי הפרק + מערכ�
   (run('npm', ['run', 'build:packages']) !== null ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');
   (run('npm', ['run', 'lint:packages']) !== null ? ok : fail)('lint:packages — PASS');
-  const parserVer = run('node', ['scripts/migration/verify-parser.mjs']);
-  (parserVer !== null && !/נכשל/.test(parserVer) ? ok : fail)('verify-parser (דיפרנציאל מלא מול הישן) — PASS');
-  const bracketsVer = run('node', ['scripts/migration/verify-brackets.mjs']);
-  (bracketsVer !== null && !/נכשל/.test(bracketsVer) ? ok : fail)('verify-brackets — PASS');
-  const notesVer = run('node', ['scripts/migration/verify-notes.mjs']);
-  (notesVer !== null && !/נכשל/.test(notesVer) ? ok : fail)('verify-notes — PASS');
-  const unicodeVer = run('node', ['scripts/migration/verify-unicode.mjs']);
-  (unicodeVer !== null && !/נכשל/.test(unicodeVer) ? ok : fail)('verify-unicode — PASS');
+  // מאמתי-בן: כל אחד כבר רץ גם כשלב עצמאי ב-CI; כאן הם רגרסיה כפולה. האב מחזיק את
+  // זיכרון ביקורת הקורפוס שלו בזמן שהבן מריץ קורפוס + vitest משלו — בראנר GitHub
+  // (7GB) נצפה כשל תעתיק חד-פעמי שלא הופיע בריצה העצמאית של אותו מאמת (2bf0c76).
+  // לכן: ניסיון חוזר אחד + הדפסת סוף פלט הבן בכל כשל — כשל אמיתי (דטרמיניסטי)
+  // ייראה בלוג ויישאר אדום; קריסת זיכרון תעבור בניסיון השני.
+  const childVerifier = (label, script) => {
+    let out = run('node', [script]);
+    let passed = out !== null && !/נכשל/.test(out);
+    if (!passed) {
+      console.log(`  [דיאג] ${label} — ניסיון ראשון נכשל; פלט (סוף 25 שורות):`);
+      console.log(out !== null
+        ? out.split('\n').slice(-25).map((l) => `  | ${l}`).join('\n')
+        : '  | (אין פלט — הבן נהרג, כנראה OOM)');
+      out = run('node', [script]);
+      passed = out !== null && !/נכשל/.test(out);
+      if (!passed) {
+        console.log(`  [דיאג] ${label} — גם הניסיון השני נכשל; פלט (סוף 25 שורות):`);
+        console.log(out !== null
+          ? out.split('\n').slice(-25).map((l) => `  | ${l}`).join('\n')
+          : '  | (אין פלט — הבן נהרג, כנראה OOM)');
+      }
+    }
+    (passed ? ok : fail)(`${label} — PASS`);
+  };
+  childVerifier('verify-parser (דיפרנציאל מלא מול הישן)', 'scripts/migration/verify-parser.mjs');
+  childVerifier('verify-brackets', 'scripts/migration/verify-brackets.mjs');
+  childVerifier('verify-notes', 'scripts/migration/verify-notes.mjs');
+  childVerifier('verify-unicode', 'scripts/migration/verify-unicode.mjs');
 }
 
 // ─────────────────────────── סיכום — שער M2 ───────────────────────────
