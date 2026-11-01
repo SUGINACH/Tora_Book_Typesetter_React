@@ -491,3 +491,16 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 - **מטמורפי (§17.2#6)** — פיצול אטום אקראי (סימולציית פיצול XML runs של DOCX) במקום שאינו משנה טקסט: הכיסוי נשמר, טקסט הבלוק זהה, הספר מתעד, ואיחוי חוזר מחזיר את אותו המזהה.
 - **תגלית ה-fuzz** — המחולל חשף באג אמיתי בפרסר (שלב 17): תוחמי הערת שוליים שבולעים הערת עורך שהוצאה — ה-explicit-break כיסה את כל הפער כולל התוכן שהוסר; תוקן: השבירה מכסה רק רצפי מפרידי השורות. הדיפרנציאל נשאר ירוק (הקורפוס אינו מכיל את המקרה).
 - **שער M2 (§18-M2) עבר** — round-trip מוכיח 100% כיסוי אטומים על 26 מסמכי המרשם וכל 63 קבצי הקורפוס; הערות וסוגריים שומרים מקור; שגיאות קלט מקומיות; rollback מתועד (react-lock מאומת SHA, differential בלבד).
+
+## חוזי מדידה ו־shaping (M3; שלב 22)
+
+- **MeasurementProvider** — חוזה המדידה של המנוע (אפיון §6.4): ‎providerId מילולי 'harfbuzz-wasm'‎ לייצור בלבד; ‎shape(ShapeRequest) → ShapedRun‎ ו־lineOpportunities(atoms) סינכרוניים ודטרמיניסטיים אחרי טעינה אסינכרונית (ProviderLoader.load). אין Canvas ואין DOM בחתימות — החוזה רץ זהה ב־Node, Worker ו־Tauri.
+- **ShapingAtom** — חוזה מבני לאטום הנמדד (id/text/script/bidiLevel/breakBefore); ל־measurement-api אין תלויות (גרף §5) ו־TextAtom של content-model מקיים אותו מבנית — המזהים הממותגים זהים (brand 'AtomId'), ולכן השמה דו־כיוונים בלי תלות בין החבילות.
+- **FontFaceKey + fontFingerprint** — מפתח פנים (fontId, contentSha256, family, weight, style); הטביעה = SHA-256 של הייצוג הקנוני — כל שינוי bytes או משקל מחליף טביעה. טעינת bytes מה־manifest בלבד (שלב 23).
+- **ShapeRequest** — הכל מפורש: אטומים, פנים, fontSizeLu (ADR-001), כיוון rtl|ltr, שפה (BCP-47), OpenType features, letterSpacingLu. ולידציה מלאה לפני כל מדידה (shapeRequestIssues/assertShapeRequest) — lone surrogates ותווי בקרה נדחים בהודעה מקוטלגת.
+- **ShapedRun וחשבונאות** — גליפים (glyphId, clusterAtomIndex, advanceLu, offsets), רוחב, מטריקות אנכיות ו־missingGlyphAtomIds. חוזה: ‎widthLu === Σ(advanceLu)‎ — ריווח האותיות נכנס ל־advance של כל גליף (דפוס CSS), כך שרוחב קו ניתן לחישוב מחדש מהגליפים (§6.5). shapedRunAccountingIssues הוא שער החשבונאות של כל provider.
+- **requestHash** — SHA-256 קנוני של (זהות provider, בקשה); סדר מפתחות features אינו משנה; כל רכיב השפעה משנה. environmentHash — זהה בכל host לאותה בנייה (מוכח בשלב 29).
+- **מפתח מטמון קנוני (canonicalShapeCacheKey)** — כל מה שמשפיב על התוצאה ובו בלבד: בקשה + טביעת פנים + זהות provider מלאה. אסור זמן/מונה/מיקום ב־batch — אחרת cold/warm (שלב 26) וזהות בין hosts (שלב 29) היו נשברים. המטמון עצמו — שלב 26 (חוזה ShapingCache מוצהר כבר עכשיו).
+- **batching** — shapeBatch חייב להיות שקוף: תוצאה[i] זהה ביט-ביט ל־shape(requests[i]) בפני עצמו, בכל הרכב/סדר/גודל. אופטימיזציה בלבד — אין סמנטיקת זמן ואין סדר רשת (§6.4).
+- **TestMeasurementProvider ('test-simulated')** — ספק מדומה עם וקטורים קבועים (טבלאות אלפיות em לפי קטגוריית נקודת קוד; טווח U+E000–U+E0FF מדמה גליף חסר) — מוזרק במפורש בבדיקות יחידה בלבד, דרך subpath ‎'./test'‎; providerId מילולי נפרד מונע החלפת ספק ייצור בטיפוס. אכיפה: index אינו מייצא, depcruise (no-test-provider-in-production) והמאמת סורקים שאף קוד ריצה אינו מייבא.
+- **SHA-256 נייב מקומי** — ל־measurement-api אין תלויות והיא אינה רשאית לייבא את layout-api (גרף §5), ולכן hash.ts קנוני מקומי (אותו FIPS-180-4 של שלב 10, מאומת מול וקטורי FIPS ומול node:crypto כאורקל) — בדיוק כמו הקטלוג המקומי של content-model. canonicalJson מקומי באותם כללי ADR-002.

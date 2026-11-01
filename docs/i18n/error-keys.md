@@ -20,6 +20,16 @@
 | `errors.hash.NON_FINITE_NUMBER` | value | error | מספר לא סופי אינו ניתן לסריאליזציה קנונית: {value} |
 | `errors.hash.INVALID_LENGTH` | len | error | אורך קלט שגוי לגיבוב: {len} |
 
+## measurement-api — חוזי מדידה (שלב 22, פרק ד)
+
+מקור: `ERROR_CATALOG` ב־`packages/measurement-api/src/errors.ts`, מוצאן ב־`provider.ts`, `cache-key.ts`, `hash.ts`.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.font.MISSING_GLYPH` | fontId, count | error | ל־{count} אטומים אין גליף בגופן {fontId} — דיווח גלוי, אין החלפה שקטה |
+| `errors.shape.INVALID_REQUEST` | reason | error | בקשת shaping לא חוקית: {reason} |
+| `errors.shape.INVALID_PROVIDER` | reason | error | זהות provider לא חוקית: {reason} |
+
 ## content-model — קטלוג מקומי (שלב 14+)
 
 מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`. ל־content-model אין תלויות (גרף §5) ולכן הקטלוג מקומי — באותם כללי שלב 12 (אכיפת רישום בזמן יצירה; מפתח = מפתח i18n).

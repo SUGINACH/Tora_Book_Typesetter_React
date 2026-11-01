@@ -67,6 +67,23 @@ module.exports = {
       from: {},
       to: { circular: true },
     },
+    {
+      // שלב 22: TestMeasurementProvider — הזרקה בבדיקות בלבד (אפיון §6.4).
+      name: 'no-test-provider-in-production',
+      comment: 'TestMeasurementProvider (subpath @tora/measurement-api/test) אסור בייבוא מקוד ריצה — אין SimulatedMeasurer במסלול production; מוזרק במפורש בבדיקות יחידה בלבד.',
+      severity: 'error',
+      from: { path: '^(packages|src)/', pathNot: ['^packages/measurement-api/', '/test/'] },
+      to: { path: '^packages/measurement-api/(dist/)?test-provider\\.js$' },
+    },
+    {
+      // שלב 22: חוזי המדידה חסרי DOM/Canvas מעצם הגדרתם — הספרייה עצמה אוסרת
+      // זאת, אבל אכיפה כפולה בגרף: אין ייבוא react/jsdom/canvas בחבילות הליבה.
+      name: 'core-no-dom-libs',
+      comment: 'חבילות הליבה אינן מייבאות react/jsdom/canvas — חוזי המדידה והעימוד נטולי DOM מעצם הגדרתם (אפיון §5, §6.4).',
+      severity: 'error',
+      from: { path: `^packages/(${CORE_PACKAGES.join('|')})/`, pathNot: '/test/' },
+      to: { dependencyTypes: ['npm'], path: '(node_modules/)?(react|react-dom|jsdom|canvas)/' },
+    },
   ],
   options: {
     doNotFollow: { path: 'node_modules' },

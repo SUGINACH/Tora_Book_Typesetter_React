@@ -28,6 +28,10 @@ export const ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEntry>> = Object
   'errors.font.MISSING_FONT': { i18nKey: 'errors.font.MISSING_FONT', params: ['family', 'file'], severity: 'fatal' },
   'errors.font.FONT_HASH_MISMATCH': { i18nKey: 'errors.font.FONT_HASH_MISMATCH', params: ['file', 'expectedSha256', 'actualSha256'], severity: 'fatal' },
   'errors.measurement.MEASUREMENT_UNAVAILABLE': { i18nKey: 'errors.measurement.MEASUREMENT_UNAVAILABLE', params: ['provider', 'reason'], severity: 'fatal' },
+  // ── חוזי מדידה (שלב 22) ──
+  'errors.font.MISSING_GLYPH': { i18nKey: 'errors.font.MISSING_GLYPH', params: ['fontId', 'count'], severity: 'error' },
+  'errors.shape.INVALID_REQUEST': { i18nKey: 'errors.shape.INVALID_REQUEST', params: ['reason'], severity: 'error' },
+  'errors.shape.INVALID_PROVIDER': { i18nKey: 'errors.shape.INVALID_PROVIDER', params: ['reason'], severity: 'error' },
   // ── יחידות (ADR-001; מוצאן ב-units.ts) ──
   'errors.units.UNSAFE_INTEGER': { i18nKey: 'errors.units.UNSAFE_INTEGER', params: ['what', 'value'], severity: 'error' },
   'errors.units.INVALID_DENOMINATOR': { i18nKey: 'errors.units.INVALID_DENOMINATOR', params: ['d'], severity: 'error' },

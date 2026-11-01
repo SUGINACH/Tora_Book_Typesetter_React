@@ -33,7 +33,8 @@
     "verify:brackets": "node scripts/migration/verify-brackets.mjs",
     "verify:notes": "node scripts/migration/verify-notes.mjs",
     "verify:text-audit": "node scripts/migration/verify-text-audit.mjs",
-    "test:packages": "vitest run --config vitest.packages.config.ts"
+    "test:packages": "vitest run --config vitest.packages.config.ts",
+    "verify:measurement-api": "node scripts/migration/verify-measurement-api.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
