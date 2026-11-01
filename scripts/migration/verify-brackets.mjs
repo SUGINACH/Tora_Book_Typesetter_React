@@ -53,7 +53,7 @@ console.log('1) ממשק ה־API וקטלוג השגיאות');
   for (const key of ['errors.bracket.ID_DERIVATION_TOO_LONG', 'errors.parser.WARN_UNCLOSED_BRACKET', 'errors.parser.WARN_STRAY_CLOSE_BRACKET']) {
     (cm.isRegisteredContentModelErrorKey(key) ? ok : fail)(`${key} רשום בקטלוג`);
   }
-  (cm.contentModelErrorCatalogSize() === 79 ? ok : fail)(`קטלוג content-model: 79 קודים (נמצאו ${cm.contentModelErrorCatalogSize()})`);
+  (cm.contentModelErrorCatalogSize() === 82 ? ok : fail)(`קטלוג content-model: 82 קודים — 79 שלב 19 + 3 notes שלב 20 (נמצאו ${cm.contentModelErrorCatalogSize()})`);
 }
 
 // ─────────────────────────── 2. differential מול הישן ───────────────────────────

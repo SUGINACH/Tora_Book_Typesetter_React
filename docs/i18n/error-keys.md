@@ -142,3 +142,13 @@
 | `errors.bracket.ID_DERIVATION_TOO_LONG` | length | error | מזהה זוג הסוגריים חורג מ־512 תווים ({length}) |
 | `errors.parser.WARN_UNCLOSED_BRACKET` | kind, startUtf16 | warning | סוגר פתיחה מסוג {kind} לא נסגר עד סוף הזרימה (בהיסט {startUtf16}) |
 | `errors.parser.WARN_STRAY_CLOSE_BRACKET` | kind, startUtf16 | warning | סוגר סגירה מסוג {kind} ללא פתיחה מתאימה (בהיסט {startUtf16}) |
+
+### content-model · notes (שלב 20)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`; מוצאן ב־`notes.ts`.
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.notes.INVALID_POLICY` | reason | error | מדיניות מספור הערות לא חוקית ({reason}) |
+| `errors.notes.INVALID_ORDINAL` | ordinal | error | מספר סידורי של הערה חייב להיות שלם חיובי (קיבל {ordinal}) |
+| `errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT` | scope | error | מספור בהיקף page דורש הקשר עמודים (החלטות העימוד) — אין לנחש |

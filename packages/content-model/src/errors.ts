@@ -110,6 +110,10 @@ export const CONTENT_MODEL_ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEn
   'errors.bracket.ID_DERIVATION_TOO_LONG': { i18nKey: 'errors.bracket.ID_DERIVATION_TOO_LONG', params: ['length'], severity: 'error' },
   'errors.parser.WARN_UNCLOSED_BRACKET': { i18nKey: 'errors.parser.WARN_UNCLOSED_BRACKET', params: ['kind', 'startUtf16'], severity: 'warning' },
   'errors.parser.WARN_STRAY_CLOSE_BRACKET': { i18nKey: 'errors.parser.WARN_STRAY_CLOSE_BRACKET', params: ['kind', 'startUtf16'], severity: 'warning' },
+  // ── notes (שלב 20; מוצאן ב-notes.ts) ──
+  'errors.notes.INVALID_POLICY': { i18nKey: 'errors.notes.INVALID_POLICY', params: ['reason'], severity: 'error' },
+  'errors.notes.INVALID_ORDINAL': { i18nKey: 'errors.notes.INVALID_ORDINAL', params: ['ordinal'], severity: 'error' },
+  'errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT': { i18nKey: 'errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT', params: ['scope'], severity: 'error' },
 });
 
 /** השגיאה הבסיסית של content-model — עוברת דרך הקטלוג בזמן יצירה. */

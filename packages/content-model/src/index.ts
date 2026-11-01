@@ -7,7 +7,7 @@
  * המשך המימוש: blocks/inline (16), פרסר (17), נאמנות Unicode (18).
  */
 export const PACKAGE_NAME = '@tora/content-model' as const;
-export const SKELETON_NOTE = 'פרק ג בבנייה — spans (14), atoms (15), inline/blocks/document (16), הפרסר (17), נאמנות Unicode (18) ועץ סוגריים (19) הושלמו; המשך הפרק: זרמי הערות (20)' as const;
+export const SKELETON_NOTE = 'פרק ג בבנייה — spans (14), atoms (15), inline/blocks/document (16), הפרסר (17), נאמנות Unicode (18), עץ סוגריים (19) ומספור הערות (20) הושלמו; המשך הפרק: Text Audit v1 (21)' as const;
 
 // ── שלב 14: SourceSpan וזרמי תוכן ──
 export type {
@@ -184,6 +184,25 @@ export {
   isBracketScanResult,
   scanBrackets,
 } from './brackets.js';
+
+// ── שלב 20: זרמי הערות ומספורן טרם העימוד (§10.3) ──
+export type {
+  NoteLabelFormat,
+  NoteNumberAssignment,
+  NoteNumberingPolicy,
+  NoteNumberingResult,
+  NoteNumberingScope,
+  NumberingPageContext,
+} from './notes.js';
+export {
+  DEFAULT_NOTE_NUMBERING_POLICY,
+  NOTE_LABEL_FORMATS,
+  NOTE_NUMBERING_SCOPES,
+  collectNoteReferences,
+  formatNoteLabel,
+  numberNotes,
+  toGematriaLabel,
+} from './notes.js';
 
 // ── קטלוג שגיאות מקומי (אותו דפוס שלב 12; content-model חסר תלויות) ──
 export type { ErrorCatalogEntry, ErrorParamValue, ErrorParams } from './errors.js';
