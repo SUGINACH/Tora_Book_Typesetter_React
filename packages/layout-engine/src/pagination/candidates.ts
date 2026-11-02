@@ -319,6 +319,13 @@ interface NotesWalkContext {
   readonly emptyOuterBudgetLu: number;
   /** הערות צד ממתינות בתחילת ההליכה (עקורות מהעמוד הקודם — FIFO). */
   readonly pendingSidenotesAtStart: readonly string[];
+  /** ── כריכת הערות בין טורים (שלב 57; ADR-005 §3) ── */
+  /** גובה הגוף של העמוד (H) — לאילוץ העמודה האחרת. */
+  readonly pageBodyHeightLu: number;
+  /** השימוש בטור האחר של העמוד (מהמצב) — גוש ההערות צורב משני הטורים. */
+  readonly otherColumnUsedLu: number;
+  /** ההערות שכבר נצרבו בעמוד זה (מהמצב) — חלק מתקציד העמוד כולו. */
+  readonly notesUsedAtStartLu: number;
 }
 
 /**
@@ -395,6 +402,7 @@ function buildBoundaries(
       const avail = Math.max(0, Math.min(
         notesCtx.notesRemainingLu - notesGrowTotal,
         remainingLu - firstLineH - notesGrowTotal,
+        notesCtx.pageBodyHeightLu - notesCtx.otherColumnUsedLu - notesCtx.notesUsedAtStartLu - notesGrowTotal,
       ));
       const outcome = reserveNote(spec, avail, notesCtx.emptyBudgetLu, notesCtx.policy);
       if (outcome.kind === 'fits') {
@@ -468,11 +476,14 @@ function buildBoundaries(
         }
         const sep = probePlaced.length === 0 && !separatorBurned ? notesCtx.policy.separatorHeightLu : 0;
         // המרחב המשותף (§9.3#5): ההערה + הקו שנושא אותה חייבים להיכנס
-        // יחד — הזמין להערה = מינימום (תקציד ההערות, מקום הטור אחרי הקו).
-        // בפיצול זה מבטיח שהחלק הראשון + הקו אכן נכנסים לאותו עמוד.
+        // יחד — הזמין להערה = מינימום (תקציד ההערות, מקום הטור אחרי הקו,
+        // **והמקום שנותר לגוש ההערות אחרי הטור האחר** — גוש ההערות ברוחב
+        // מלא צורב משני הטורים כאחד: הערה שנצרבת כאן אינה יכולה לחדור לטקסט
+        // שכבר הוצב בטור האחר; שלב 57 — באג הכריכה הרטרואקטיבית נתפס בסוללה).
         const availForNote = Math.max(0, Math.min(
           notesCtx.notesRemainingLu - probeGrow - sep,
           remainingLu - used - line.heightLu,
+          notesCtx.pageBodyHeightLu - notesCtx.otherColumnUsedLu - notesCtx.notesUsedAtStartLu - probeGrow - sep,
         ));
         const outcome = reserveNote(spec, availForNote, notesCtx.emptyBudgetLu, notesCtx.policy);
         if (outcome.kind === 'fits' || outcome.kind === 'split') {
@@ -702,6 +713,14 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
       const outerRegion = template.regions.find((r) => r.role === 'outer-notes');
       const emptyOuterBudget = outerRegion !== undefined ? outerRegion.rect.height : 0;
       const outerRemaining = outerRegion !== undefined ? (state.remainingByRegion[outerRegionId] ?? emptyOuterBudget) : 0;
+      // כריכת הערות בין טורים (שלב 57; ADR-005 §3): גוש ההערות ברוחב מלא
+      // צורב משני הטורים — האילוץ של העמודה האחרת נכנס להליכה
+      const col0RegionId = `page:${state.physicalPageIndex}:col:0`;
+      const col1RegionId = `page:${state.physicalPageIndex}:col:1`;
+      const colRegionHeight = template.regions.find((r) => r.role === 'body-column' && r.columnIndex === 0)!.rect.height;
+      const otherRegionId = state.columnIndex === 0 ? col1RegionId : col0RegionId;
+      const otherRemaining = state.remainingByRegion[otherRegionId];
+      const otherColumnUsed = otherRemaining !== undefined ? Math.max(0, colRegionHeight - otherRemaining) : 0;
       notesCtx = {
         policy: notePolicy,
         bodies: noteBodies,
@@ -712,6 +731,9 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         outerRemainingLu: outerRemaining,
         emptyOuterBudgetLu: emptyOuterBudget,
         pendingSidenotesAtStart: state.pendingSidenotes,
+        pageBodyHeightLu: colRegionHeight,
+        otherColumnUsedLu: otherColumnUsed,
+        notesUsedAtStartLu: notesUsedOnPage,
       };
     }
     const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx);
@@ -802,10 +824,11 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
           const pageHeight = template.regions.find((r) => r.role === 'body-column' && r.columnIndex === 0)!.rect.height;
           const col0Region = `page:${s.physicalPageIndex}:col:0`;
           const col1Region = `page:${s.physicalPageIndex}:col:1`;
-          const rem0 = s.remainingByRegion[col0Region] ?? 0;
-          const rem1 = s.remainingByRegion[col1Region] ?? 0;
-          const used0 = Math.max(0, pageHeight - rem0);
-          const used1 = Math.max(0, pageHeight - rem1);
+          // טור שאינו קיים בתבנית (חד-טורית) — אינו נחשב מלא: used=0
+          const rem0 = s.remainingByRegion[col0Region];
+          const rem1 = s.remainingByRegion[col1Region];
+          const used0 = rem0 !== undefined ? Math.max(0, pageHeight - rem0) : 0;
+          const used1 = rem1 !== undefined ? Math.max(0, pageHeight - rem1) : 0;
           const barrierY = Math.max(used0, used1);
           const bandTop = barrierY + boundary.h3Barrier.heightLu;
           // המרחב המשותף עם ההערות (§9.3#5): הפס חייב להיכנס גם עם גוש
@@ -823,7 +846,8 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
               transitions.push(b0.transition);
               s = b0.state;
             }
-            if (burn1 > 0) {
+            if (burn1 > 0 && s.remainingByRegion[col1Region] !== undefined) {
+              // טור שני קיים בתבנית בלבד (חד-טורית — אין שריפה)
               const b1 = consumeRegion(s, col1Region, burn1);
               transitions.push(b1.transition);
               s = b1.state;
@@ -843,8 +867,10 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
             continue;
           }
         } else {
-          // מעבר טור/עמוד (§9.3): טור 0 ← 1; טור 1 ← עמוד חדש מהתבנית (שלב 50)
-          if (s.columnIndex === 0) {
+          // מעבר טור/עמוד (§9.3): טור 0 ← 1 (רק בתבנית דו-טורית); טור 1 (או
+          // תבנית חד-טורית) ← עמוד חדש מהתבנית (שלב 50; תיקון שלב 57 — חד-טורי)
+          const hasSecondColumn = template.regions.some((r) => r.role === 'body-column' && r.columnIndex === 1);
+          if (s.columnIndex === 0 && hasSecondColumn) {
             const sw = switchColumn(s, 1);
             transitions.push(sw.transition);
             s = sw.state;
