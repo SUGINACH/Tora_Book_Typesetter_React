@@ -166,7 +166,7 @@ describe('שלב 58 — ברירות מחדל של legacy (H0–H7)', () => {
 
   test('מזהה ההתנהגות הקנוני יציב', () => {
     const h2 = legacyHeadingBehaviorOf(2);
-    expect(headingBehaviorId(h2)).toBe('heading:v1|L2|page-opener|esc2|f1|tbody'); // |t{kind} — התבנית הכפויה (שלב 59; H2 ללא recto — odd-h2=false)
+    expect(headingBehaviorId(h2)).toBe('heading:v1|L2|page-opener|esc2|f1|tbody|s0.22+1.25+1.25'); // |t{kind} תבנית (59); |s{...} ריווח+עיטורים (61; H2 ללא recto — odd-h2=false)
     expect(headingBehaviorId(legacyHeadingBehaviorOf(1))).toBe('heading:v1|L1|page-opener|esc2|f1|tsub-shaar|r1'); // H1: שער + recto (שלב 60)
     expect(headingBehaviorId(h2)).toBe(headingBehaviorId(legacyHeadingBehaviorOf(2)));
   });
@@ -229,7 +229,7 @@ describe('שלב 58 — מרשם הכללים', () => {
     expect(s1).toContain('heading.h0.opener@2'); // גרסה 2 — recto parity (שלב 60; rollback = v1)
     expect(s1).toContain(';');
     expect(headingBehaviorIds()).toBe(headingBehaviorIds());
-    expect(headingBehaviorIds()).toContain('2:heading:v1|L2|page-opener|esc2|f1|tbody');
+    expect(headingBehaviorIds()).toContain('2:heading:v1|L2|page-opener|esc2|f1|tbody|s0.22+1.25+1.25');
   });
 });
 

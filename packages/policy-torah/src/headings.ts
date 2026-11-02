@@ -62,6 +62,16 @@ export interface HeadingBehavior {
    */
   readonly startOnRecto?: boolean;
   /**
+   * ריווח עליון ועיטורי פתיחה (§10.1 H2; שלב 61) — הערכים הגולמיים מההגדרות
+   * (אחוז/יחס-em); המנוע ממדד אותם ל-LU מהגאומטריה ומקווי הכותרת בפועל.
+   * scope='none' ⇒ העיטורים מאופסים (הריווח העליון נשאר — הוא אינו עיטור).
+   */
+  readonly openerSpacing?: {
+    readonly spaceBeforePct: number;
+    readonly ornamentTopEm: number;
+    readonly ornamentBottomEm: number;
+  };
+  /**
    * מספר קווי ליווי מינימום אחרי הכותרת באותו טור (§10.1: ברירת מחדל 2
    * ל־H2+; כותרת תלויה אינה "קנס קטן" — מועמד שבו הכותרת עוברת עם
    * הליווי מקבל עדיפות).
@@ -78,14 +88,20 @@ export interface HeadingBehavior {
 export function headingBehaviorId(b: HeadingBehavior): string {
   return `heading:v1|L${b.level}|${b.flowRole}|esc${b.escortLines}|f${b.forcePageBreak ? 1 : 0}`
     + (b.forcePageTemplate !== undefined ? `|t${b.forcePageTemplate}` : '')
-    + (b.startOnRecto === true ? '|r1' : '');
+    + (b.startOnRecto === true ? '|r1' : '')
+    + (b.openerSpacing !== undefined ? `|s${b.openerSpacing.spaceBeforePct}+${b.openerSpacing.ornamentTopEm}+${b.openerSpacing.ornamentBottomEm}` : '');
 }
 
 /** ברירות המחדל של legacy לכל רמה (המרשם המלא ב־registry.ts). */
 export const LEGACY_HEADING_DEFAULTS: Readonly<Record<number, Omit<HeadingBehavior, 'level'>>> = Object.freeze({
   0: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'body', startOnRecto: true },
   1: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'sub-shaar', startOnRecto: true },
-  2: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'body' },
+  2: {
+    flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0),
+    forcePageTemplate: 'body',
+    openerSpacing: { spaceBeforePct: 0.22, ornamentTopEm: 1.25, ornamentBottomEm: 1.25 },
+    ornaments: { scope: 'both', topAssetIds: [], bottomAssetIds: [] },
+  },
   3: { flowRole: 'full-width-barrier', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
   4: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
   5: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
@@ -109,6 +125,30 @@ export function legacyHeadingBehaviorOf(level: number): HeadingBehavior {
  * כותרת המשנה. המקפים קבועים במדיניות (לא regex בתוך renderer; §10.2
  * ברוחו) ומזוהים כ-span סמנטי; אין מקף ⇒ כל הטקסט הוא החלק הראשי.
  */
+/** פרוס אחוז ממד legacy ('22%' ⇒ 0.22); ערך פסול ⇒ ברירת המחדל (לא קריסה). */
+export function parsePctDimension(raw: unknown, fallback: number): number {
+  if (typeof raw === 'string') {
+    const m = /^(\d+(?:\.\d+)?)%$/.exec(raw.trim());
+    if (m !== null) {
+      const v = Number(m[1]!) / 100;
+      if (Number.isFinite(v) && v >= 0 && v <= 1) return v;
+    }
+  }
+  return fallback;
+}
+
+/** פרוס יחס-em ממד legacy ('1.25em' ⇒ 1.25); ערך פסול ⇒ ברירת המחדל. */
+export function parseEmDimension(raw: unknown, fallback: number): number {
+  if (typeof raw === 'string') {
+    const m = /^(\d+(?:\.\d+)?)em$/.exec(raw.trim());
+    if (m !== null) {
+      const v = Number(m[1]!);
+      if (Number.isFinite(v) && v >= 0 && v <= 100) return v;
+    }
+  }
+  return fallback;
+}
+
 const SHAAR_TITLE_DASHES: readonly string[] = Object.freeze(['—', '–', '-']);
 
 export interface ShaarTitleSplit {
@@ -158,6 +198,12 @@ export function headingBehaviorIssues(b: unknown): string[] {
   if (v.startOnRecto !== undefined) {
     if (typeof v.startOnRecto !== 'boolean') issues.push('startOnRecto');
     else if (v.flowRole !== 'page-opener') issues.push('startOnRecto:not-opener');
+  }
+  if (v.openerSpacing !== undefined) {
+    const sp = v.openerSpacing as Record<string, unknown>;
+    const validDim = (x: unknown): boolean => typeof x === 'number' && Number.isFinite(x) && x >= 0 && x <= 100;
+    if (!validDim(sp.spaceBeforePct) || !validDim(sp.ornamentTopEm) || !validDim(sp.ornamentBottomEm)) issues.push('openerSpacing');
+    else if (v.flowRole !== 'page-opener') issues.push('openerSpacing:not-opener');
   }
   if (v.ornaments !== undefined) {
     const o = v.ornaments as Record<string, unknown> | null;

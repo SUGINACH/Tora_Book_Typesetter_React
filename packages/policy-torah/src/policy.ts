@@ -6,7 +6,7 @@
  * rollback = policyVersion קודם (המרשם מזהה גרסאות; שער M7).
  */
 import type { EffectiveSettings, LayoutPolicy } from '@tora/layout-api';
-import { LEGACY_HEADING_DEFAULTS, legacyHeadingBehaviorOf, type HeadingBehavior } from './headings.js';
+import { LEGACY_HEADING_DEFAULTS, legacyHeadingBehaviorOf, parsePctDimension, parseEmDimension, type HeadingBehavior } from './headings.js';
 import { TORAH_RULE_REGISTRY, headingBehaviorIds, torahRegistrySignature } from './registry.js';
 
 /** גרסת המדיניות — עולה כשסמנטיקת כלל משתנה (rollback משווה). */
@@ -97,6 +97,27 @@ export function createTorahPolicy(
       const base = behaviors.get(1)!;
       behaviors.set(1, Object.freeze({ ...base, forcePageTemplate: 'body', level: 1 }));
     }
+    // H2 — ריווח עליון ועיטורים לפי scope (§10.1 H2; שלב 61): הממדים הגולמיים
+    // מההגדרות (אחוז מגובה הטור, יחס-em לקו); scope 'none' מאפס את העיטורים
+    // (הריווח העליון נשאר — הוא אינו עיטור); המנוע ממדד ל-LU בפועל
+    const values = settings.values as Record<string, unknown>;
+    const scope = ['both', 'siman_only', 'title_only', 'none'].includes(String(values['h2-orn-scope']))
+      ? values['h2-orn-scope'] as 'both' | 'siman_only' | 'title_only' | 'none'
+      : 'both';
+    const pct = parsePctDimension(values['h2-top-distance'], 0.22);
+    const topEm = parseEmDimension(values['dim-h2-top-h'], 1.25);
+    const btmEm = parseEmDimension(values['dim-h2-btm-h'], 1.25);
+    const h2Base = behaviors.get(2)!;
+    behaviors.set(2, Object.freeze({
+      ...h2Base,
+      level: 2,
+      openerSpacing: {
+        spaceBeforePct: pct,
+        ornamentTopEm: scope === 'none' ? 0 : topEm,
+        ornamentBottomEm: scope === 'none' ? 0 : btmEm,
+      },
+      ornaments: { scope, topAssetIds: [], bottomAssetIds: [] },
+    }));
   }
   if (overrides !== undefined) {
     for (const [levelRaw, patch] of Object.entries(overrides)) {
@@ -158,7 +179,7 @@ export function createMinimalPolicy(settings: EffectiveSettings): TorahPolicy {
   for (let level = 0; level <= 7; level++) {
     // גם forcePageTemplate/startOnRecto נמחקים — כותרת inline אינה דורשת
     // תבנית ואינה כופה recto (שלבים 59–60)
-    overrides[level] = { flowRole: 'inline', forcePageBreak: false, escortLines: 0, forcePageTemplate: undefined, startOnRecto: undefined };
+    overrides[level] = { flowRole: 'inline', forcePageBreak: false, escortLines: 0, forcePageTemplate: undefined, startOnRecto: undefined, openerSpacing: undefined };
   }
   const full = createTorahPolicy(settings, overrides);
   return Object.freeze({

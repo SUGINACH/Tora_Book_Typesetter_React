@@ -160,6 +160,12 @@ export interface CandidateGeneratorInput {
     readonly forcePageTemplate?: 'main-shaar' | 'back-shaar' | 'sub-shaar' | 'toc' | 'body' | 'notes';
     /** הפותחת חייבת recto (§10.1 H1 parity; שלב 60) — עמוד ריק לפני verso. */
     readonly startOnRecto?: boolean;
+    /** ריווח ועיטורי פתיחה (§10.1 H2; שלב 61) — ממודדים מהגאומטריה והקווים. */
+    readonly openerSpacing?: {
+      readonly spaceBeforePct: number;
+      readonly ornamentTopEm: number;
+      readonly ornamentBottomEm: number;
+    };
   };
 }
 
@@ -245,6 +251,16 @@ export function candidateInputIssues(input: CandidateGeneratorInput): string[] {
       } else if (b.startOnRecto === true && b.flowRole !== 'page-opener') {
         // כפיית recto תקפה לפותחי-עמוד בלבד (§10.1 parity)
         issues.push(`headingBehaviorOf(${level}).startOnRecto:not-opener`);
+      }
+      const sp = b.openerSpacing as { spaceBeforePct?: unknown; ornamentTopEm?: unknown; ornamentBottomEm?: unknown } | undefined;
+      if (sp !== undefined) {
+        const valid = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 100;
+        if (!valid(sp.spaceBeforePct) || !valid(sp.ornamentTopEm) || !valid(sp.ornamentBottomEm)) {
+          issues.push(`headingBehaviorOf(${level}).openerSpacing`);
+        } else if (b.flowRole !== 'page-opener') {
+          // ריווח פתיחה תקף לפותחי-עמוד בלבד (§10.1 H2)
+          issues.push(`headingBehaviorOf(${level}).openerSpacing:not-opener`);
+        }
       }
     }
   }
@@ -494,6 +510,33 @@ function buildBoundaries(
     }
     notesPlacedHeight = notesGrowTotal;
   }
+  // ── ריווח ועיטורי פתיחה (שלב 61; §10.1 H2 — "measured ornament boxes") ──
+  // ההליכה מתחילה בראש הפותחת: הריווח העליון (h2-top-distance — אחוז מגובה
+  // הטור) והעיטור העליון (dim-h2-top-h — יחס לגובה הקו הראשון) נצרכים לפני
+  // קו הכותרת הראשון; העיטור התחתון (dim-h2-btm-h — יחס לקו האחרון) נצרם
+  // מיד אחריו. הכל ממודד מהגאומטריה והקווים בפועל — העיטור תופס בדיוק
+  // את המקום שנמדד לו (שער השלב). רק כשהפותחת אכן מוצבת כאן (ראש עמוד
+  // חדש מהסוג הנדרש וב-parity הנדרש) — אחרת ההליכה תיעצר בהמשך וגבול
+  // פותח-עמוד ריק יפתח את העמוד הנכון (שלבים 59–60).
+  const startOpenerLevel = pageOpenerLevelAt(pos);
+  let openerBottomPendingLu = 0;
+  let startOpenerPlaced = false;
+  if (startOpenerLevel !== undefined) {
+    const b = headingBehaviorOf(startOpenerLevel);
+    const requiredKind = b.forcePageTemplate ?? flowKind;
+    const rectoOk = b.startOnRecto !== true || state.physicalPageIndex % 2 === 1;
+    const placeableHere = used === 0 && state.columnIndex === 0 && remainingLu === columnHeightLu
+      && state.pageKind === requiredKind && rectoOk;
+    startOpenerPlaced = placeableHere;
+    const sp = b.openerSpacing;
+    if (placeableHere && sp !== undefined) {
+      const openerBlock = map.blocks[pos.blockIndex]!;
+      const firstLineH = openerBlock.lines[pos.lineIndex]?.heightLu ?? 0;
+      const lastLineH = openerBlock.lines[openerBlock.lines.length - 1]!.heightLu;
+      used += Math.round(sp.spaceBeforePct * columnHeightLu) + Math.round(sp.ornamentTopEm * firstLineH);
+      openerBottomPendingLu = Math.round(sp.ornamentBottomEm * lastLineH);
+    }
+  }
   while (true) {
     const at = lineAt(map, pos);
     if (at === null) break;
@@ -505,7 +548,11 @@ function buildBoundaries(
     // וסומן pageOpener; אם לא הוצב דבר (מצב לא-טרי, למשל אחרי מחסום H3)
     // נוצר גבול פותח-עמוד ריק שרק פותח עמוד חדש — בלי להקדים את הסמן.
     const openerLevelHere = pageOpenerLevelAt(pos);
-    if (openerLevelHere !== undefined) {
+    // שלב 61: כשההליכה התחילה בפותחת שאכן מוצבת כאן (ראש עמוד חדש מהסוג
+    // הנדרש) — אין לעצור בה באיטרציה הראשונה: היא מוצבת מכאן והלאה; הריווח
+    // והעיטורים שנצרכו אינם "תוכן שהוצב" לעניין בדיקת הטריות של העצירה.
+    const atPlacedStartOpener = startOpenerPlaced && openerLevelHere === startOpenerLevel && count === 0;
+    if (openerLevelHere !== undefined && !atPlacedStartOpener) {
       // שלב 60: הפותחת מוצבת בראש עמוד חדש רק אם העמוד עצמו מתאים לה —
       // הסוג שהמדיניות דורשת (forcePageTemplate; H1 ⇒ sub-shaar) וגם recto
       // כשהמדיניות דורשת (parity; legacy ensureOddPageStart). עמוד זרימה
@@ -655,6 +702,12 @@ function buildBoundaries(
     // הצבת הקו
     used += line.heightLu;
     count += 1;
+    // העיטור התחתון של הפותחת (שלב 61; §10.1 H2): מיד אחרי קו הכותרת
+    // האחרון — חלק מהמכלול האטומי של הפתיחה; כל גבול שאחרי הכותרת כולל אותו
+    if (openerBottomPendingLu > 0 && block.role === 'heading' && pos.lineIndex + 1 >= block.lines.length) {
+      used += openerBottomPendingLu;
+      openerBottomPendingLu = 0;
+    }
     foot.push(...line.footnoteRefs);
     side.push(...line.sidenoteRefs);
     opens.push(...(line.bracketOpens ?? []));

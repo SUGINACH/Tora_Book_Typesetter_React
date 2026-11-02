@@ -33,6 +33,20 @@ export interface HeadingFlowBehavior {
    * odd-h2=false (default_settings.json של Orange, נעול במרשם ההגדרות).
    */
   readonly startOnRecto?: boolean;
+  /**
+   * ריווח עליון ועיטורי פתיחת פרק (§10.1 H2 — "opener template + measured
+   * ornament boxes"; שלב 61). הערכים מדיניות; המנוע ממדד אותם ל-LU מהגאומטריה
+   * ומהקווים בפועל: הריווח — אחוז מגובה הטור; העיטורים — יחס לגובה הקו
+   * הראשון/האחרון של הכותרת. העיטור תופס בדיוק את המקום שנמדד לו (שער השלב).
+   */
+  readonly openerSpacing?: {
+    /** h2-top-distance — חלק מגובה הטור (0.22 = 22%). */
+    readonly spaceBeforePct: number;
+    /** dim-h2-top-h — יחס לגובה הקו הראשון של הכותרת. */
+    readonly ornamentTopEm: number;
+    /** dim-h2-btm-h — יחס לגובה הקו האחרון של הכותרת. */
+    readonly ornamentBottomEm: number;
+  };
 }
 
 /**
@@ -42,7 +56,7 @@ export interface HeadingFlowBehavior {
 const DEFAULTS: Readonly<Record<number, HeadingFlowBehavior>> = Object.freeze({
   0: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body', startOnRecto: true },
   1: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'sub-shaar', startOnRecto: true },
-  2: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body' },
+  2: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body', openerSpacing: { spaceBeforePct: 0.22, ornamentTopEm: 1.25, ornamentBottomEm: 1.25 } },
   3: { flowRole: 'full-width-barrier', forcePageBreak: false, escortLines: 2 },
   4: { flowRole: 'inline', forcePageBreak: false, escortLines: 2 },
   5: { flowRole: 'inline', forcePageBreak: false, escortLines: 2 },
