@@ -11,6 +11,7 @@
  */
 import type { CostModel, LineContext } from './dp.js';
 import { BADNESS_SCALE, MAX_LINE_BADNESS, justifyBadness } from './cost-scalar.js';
+import { DEFAULT_PARAGRAPH_END_RULES, paragraphEndDebts, type ParagraphEndRules } from './paragraph-end.js';
 
 /** משקלי חומרת fallback לרכיב הראשון (ADR-004; §14.3). */
 export const FALLBACK_SEVERITY_WEIGHT = Object.freeze({ HIGH: 2, MEDIUM: 1 } as const);
@@ -95,28 +96,38 @@ export function lineFallbackCode(ctx: LineContext, columnWidthLu: number): 'EMER
   return m.widthLu > columnWidthLu ? 'EMERGENCY_LINE' : null;
 }
 
-/** עלות השורה כווקטור (ADR-004; תלויות שלב 45 עדיין 0 — מופעלות שם). */
-export function lineQualityVector(ctx: LineContext, columnWidthLu: number): QualityVector {
+/** עלות השורה כווקטור (ADR-004; כללי סיום פסקה — שלב 45: runt ו־widow/orphan ברמת הפסקה). */
+export function lineQualityVector(
+  ctx: LineContext,
+  columnWidthLu: number,
+  rules: ParagraphEndRules = DEFAULT_PARAGRAPH_END_RULES,
+): QualityVector {
   const m = ctx.candidate.metrics;
   const badness = ctx.justification === 'justify'
     ? justifyBadness(m.widthLu, m.stretchLu, m.shrinkLu, columnWidthLu)
     : 0;
   const fallbackCode = lineFallbackCode(ctx, columnWidthLu);
+  const debts = paragraphEndDebts(ctx, rules);
   return Object.freeze({
     ...ZERO_QUALITY,
     fallbackSeverity: fallbackCode === 'EMERGENCY_LINE'
       ? FALLBACK_SEVERITY_WEIGHT.HIGH
       : fallbackCode === 'EMERGENCY_STRETCH' ? FALLBACK_SEVERITY_WEIGHT.MEDIUM : 0,
+    widowOrphanDebt: debts.widowOrphanDebt,
+    runtDebt: debts.runtDebt,
     lineBadness: badness,
     hyphenDebt: m.hyphenEnd ? 1 : 0,
   });
 }
 
 /** המודל הווקטורי — מודל העלות של מסלול הייצור משלב זה (ADR-004). */
-export function createQualityCostModel(columnWidthLu: number): CostModel<QualityVector> {
+export function createQualityCostModel(
+  columnWidthLu: number,
+  rules: ParagraphEndRules = DEFAULT_PARAGRAPH_END_RULES,
+): CostModel<QualityVector> {
   return {
     start: () => ZERO_QUALITY,
-    append: (path: QualityVector, ctx: LineContext) => addQuality(path, lineQualityVector(ctx, columnWidthLu)),
+    append: (path: QualityVector, ctx: LineContext) => addQuality(path, lineQualityVector(ctx, columnWidthLu, rules)),
     compare: compareQuality,
   };
 }

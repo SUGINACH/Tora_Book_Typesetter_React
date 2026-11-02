@@ -552,3 +552,21 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 - **API ברמת האטום** — ‎computeBreakOpportunities(atoms, hooks?)‎: רק החלטות שנופלות בדיוק על גבול בין אטומים; הפלט כולל הזדמנויות + שבירות חובה + רישומי ‎hook:forbid‎ (לביקורת); **כל נקודה מקושרת למזהה האטום** (שער השלב). אין בחירת שורה כאן — מועמדים בלבד (המנוע — M5).
 - **Hooks מדיניות** — ‎forbid/allow‎ מקומיים אחרי UAX עם סיבה מתועדת לכל שינוי (‎hook:forbid(LB31)‎ וכד'); שבירת חובה (mandatory) אינה ניתנת לאיסור. דוגמה מחייבת: **מקף עברי (U+05BE, מחלקה BA)** — UAX ברירת מחדל מתיר שבירה אחריו (LB31), ומדיניות התורה תאסור זאת ב־hook (כמו הישן).
 - **הספק** — ‎lineOpportunities‎ של harfbuzz עבר מהמימוש הזמני (שדה breakBefore) ל־UAX האמיתי; ה־hooks נצרכים על ידי המנוע ישירות דרך ‎computeBreakOpportunities‎.
+
+## שבירת שורות גלובלית — כללי סיום פסקה (M5; שלב 45)
+
+### מדיניות סיום פסקה (ParagraphEndRules)
+כללי הקו האחרון וקו הפתיחה של פסקה, הנקראים מהמרשם (`avoid-runt-word`, `avoid-orphans`, `body-last-line-align`) דרך `readParagraphEndRules` (ערך חסר ← ברירת מחדל נעולה; ערך זר ⇒ SETTING_INVALID מקוטלג). הכללים נכנסים לחישוב העלות של ה-DP ומשפיעים על בחירת מועמדים בלבד — אין post-pass שמזיז מילים אחרי השבירה (בישן: applyAvoidRuntWord מיזג את שתי המילים האחרונות אחרי מדידה — עדות בלבד).
+**קוד:** `layout-engine/src/linebreak/paragraph-end.ts`
+
+### runt (שורה אחרונה חד-מילולית)
+שורת הסיום של פסקה רב-שורתית המכילה מילה אחת; חוב 1 ברכיב `runtDebt` (רכיב 5 בווקטור ADR-004, לפני ה-badness) כש-`avoid-runt-word` פעיל. פסקה חד-שורתית אינה נחשבת ("ויש יותר משורה אחת" — כמו בישן).
+**קוד:** `paragraph-end.ts → paragraphEndDebts`
+
+### יתום ברמת הפסקה (widowOrphanDebt)
+קו פתיחה חד-מילולי של פסקה; חוב 1 ברכיב `widowOrphanDebt` (רכיב 4) כש-`avoid-orphans` פעיל — ההיטל של בקרת "ראש הטור" מהישן לרמת הפסקה. בקרת העמוד המלאה (תחתית/ראש טור; `avoid-widows` אצל הישן, כולל היפוך השמות המתועד שם) מצטרפת ב-M6 לאותו רכיב.
+**קוד:** `paragraph-end.ts → paragraphEndDebts`
+
+### body-last-line-align
+יישור קו סיום הפסקה (`center`|`right`, ברירת מחדל `center` מהמרשם). נאכף ב-policy בכך שקו הסיום אינו ממתח רווחים לעולם (justification `last`), והערך נישא ב-`LadderResult.lastLineAlign` להצבה ול-IR (חיבור מלא בשלב 47).
+**קוד:** `paragraph-end.ts`, `emergency.ts → LadderResult`

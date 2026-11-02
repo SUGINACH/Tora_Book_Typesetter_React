@@ -54,7 +54,7 @@ jobs:
           # NO_COLOR + הסרת ANSI כפולה (שיעור סבב ה': chalk/vitest מצבעים גם בלי TTY תחת CI=true)
           NO_COLOR=1 npm run test:packages > /tmp/testout.raw 2>&1 || { cat /tmp/testout.raw; exit 1; }
           sed -e 's/\x1b\[[0-9;?]*[a-zA-Z]//g' -e 's/\x1b\][^\x07]*\x07//g' /tmp/testout.raw > /tmp/testout.log
-          grep -qE "Tests[[:space:]]+656[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 656 בדיקות"; exit 1; }
+          grep -qE "Tests[[:space:]]+669[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 669 בדיקות"; exit 1; }
           node scripts/migration/verify-units.mjs
           node scripts/migration/verify-canonical-hash.mjs
           node scripts/migration/verify-error-catalog.mjs
@@ -83,6 +83,7 @@ jobs:
           node scripts/migration/verify-paragraph-dp.mjs
           node scripts/migration/verify-quality-comparator.mjs
           node scripts/migration/verify-emergency-policy.mjs
+          node scripts/migration/verify-paragraph-end.mjs
           node scripts/migration/verify-render-html.mjs
           node scripts/migration/verify-cli.mjs
           node scripts/migration/verify-worker-host.mjs

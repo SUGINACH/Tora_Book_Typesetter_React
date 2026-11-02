@@ -25,6 +25,7 @@ import type { JustificationMode } from './candidates.js';
 import { createLevel0Policy } from './policy.js';
 import { coalesceSpans, type BlockTokens, type Cell } from './tokens.js';
 import { createQualityCostModel, lineFallbackCode, type QualityVector } from './quality.js';
+import { DEFAULT_PARAGRAPH_END_RULES, type ParagraphEndRules } from './paragraph-end.js';
 
 /** רמת הסולם שבה נמצא מסלול חוקי. */
 export type EmergencyLevel = 0 | 1 | 2;
@@ -38,11 +39,15 @@ export interface LadderResult {
   readonly perLineFallback: ReadonlyMap<number, LineFallbackCode>;
   /** רשומות חירום לפנקס — כל שלב שנוסה מתועד עם span ועלות. */
   readonly emergencyRecords: readonly AppendDecision[];
+  /** יישור קו סיום הפסקה לפי body-last-line-align — נישא להצבה (חיבור בשלב 47). */
+  readonly lastLineAlign: 'center' | 'right';
 }
 
 export interface LadderOptions {
   /** ברירת מחדל true: גלישה מותרת ברמה 2 עם EMERGENCY_LINE נרשם. */
   readonly allowOverflow?: boolean;
+  /** כללי סיום פסקה (שלב 45) — ברירת מחדל: המרשם (avoid-runt-word, avoid-orphans, center). */
+  readonly rules?: ParagraphEndRules;
 }
 
 /** רמה 1 — מתיחת חירום: סבילות כפולה ל־justify; גלישה עדיין אסורה. */
@@ -106,18 +111,19 @@ export function breakParagraphWithLadder(
   options: LadderOptions = {},
 ): LadderResult {
   const allowOverflow = options.allowOverflow !== false;
-  const model = createQualityCostModel(columnWidthLu);
+  const rules = options.rules ?? DEFAULT_PARAGRAPH_END_RULES;
+  const model = createQualityCostModel(columnWidthLu, rules);
   const failedLevels: EmergencyLevel[] = [];
 
   const level0 = breakParagraphDP(index, model, createLevel0Policy(), columnWidthLu, budget);
   if (level0.best !== null) {
-    return finish(0, level0, blockId, bt, columnWidthLu, failedLevels);
+    return finish(0, level0, blockId, bt, columnWidthLu, failedLevels, rules.lastLineAlign);
   }
   failedLevels.push(0);
 
   const level1 = breakParagraphDP(index, model, createLevel1Policy(), columnWidthLu, budget);
   if (level1.best !== null) {
-    return finish(1, level1, blockId, bt, columnWidthLu, failedLevels);
+    return finish(1, level1, blockId, bt, columnWidthLu, failedLevels, rules.lastLineAlign);
   }
   failedLevels.push(1);
 
@@ -131,7 +137,7 @@ export function breakParagraphWithLadder(
   }
 
   const level2 = breakParagraphDP(index, model, createLevel2Policy(index), columnWidthLu, budget);
-  return finish(2, level2, blockId, bt, columnWidthLu, failedLevels);
+  return finish(2, level2, blockId, bt, columnWidthLu, failedLevels, rules.lastLineAlign);
 }
 
 function finish(
@@ -141,6 +147,7 @@ function finish(
   bt: BlockTokens,
   columnWidthLu: number,
   failedLevels: readonly EmergencyLevel[],
+  lastLineAlign: 'center' | 'right',
 ): LadderResult {
   const perLineFallback = new Map<number, LineFallbackCode>();
   dp.lines.forEach((line, i) => {
@@ -158,7 +165,7 @@ function finish(
   });
   const emergencyRecords = failedLevels.map((failed) => emergencyTryRecord(blockId, failed, level));
   if (level > 0) emergencyRecords.push(emergencyFinalRecord(blockId, bt, level, dp, perLineFallback));
-  return { level, dp, perLineFallback, emergencyRecords };
+  return { level, dp, perLineFallback, emergencyRecords, lastLineAlign };
 }
 
 /** רישום שלב שנכשל: איזו רמה נוסתה ונפסלה — לפני שהודלקה הבאה. */
