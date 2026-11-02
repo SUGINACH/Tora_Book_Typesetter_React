@@ -220,7 +220,7 @@ console.log('\n4) שעד: אין מספור בזמן רינדור; אין קיש
 // ─────────────────────────── 5. רגרסיה ───────────────────────────
 console.log('\n5) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  727 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  740 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   (run('npm', ['run', 'build:packages']) !== null ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');
