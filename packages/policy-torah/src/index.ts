@@ -1,9 +1,12 @@
 /**
  * @tora/policy-torah — H0–H7, הערות, drop-word, סוגריים, שערים
  *
- * שלד שלב 7 בתכנית 100 השלבים (אפיון §5).
+ * שלב 58 (פרק ח; אפיון §10): המדיניות התורנית המוזרקת — הליבה הגנרית
+ * אינה "יודעת" מהו H2; ההתנהגויות מגיעות מהמרשם דרך hooks.
  * ה־API הציבורי של החבילה נחשף דרך קובץ זה בלבד.
- * המימוש ייבנה בפרק ח (שלבים 58–67).
  */
 export const PACKAGE_NAME = '@tora/policy-torah' as const;
-export const SKELETON_NOTE = 'שלד שלב 7 — עדיין ללא מימוש; החוזה הציבורי ייבנה בפרק ח (שלבים 58–67)' as const;
+
+export * from './headings.js';
+export * from './registry.js';
+export * from './policy.js';

@@ -60,6 +60,7 @@ import {
   type NoteReservationPolicy,
 } from './notes.js';
 import type { PageCandidateSource, PageExpansion, PageQualityVector } from './search.js';
+import { legacyHeadingBehaviorOf, type HeadingFlowBehavior } from './heading-defaults.js';
 
 // ─────────────────────────── מודל הקלט ───────────────────────────
 
@@ -145,6 +146,17 @@ export interface CandidateGeneratorInput {
    */
   readonly noteBodies?: ReadonlyMap<string, NoteBodySpec>;
   readonly notePolicy?: NoteReservationPolicy;
+  /**
+   * התנהגות כותרת לפי רמה — מוזרק (שלב 58; §10.1: "הליבה אינה יודעת מהו
+   * H2"). ברירת מחדל: legacy — H0/H1/H2 page-opener, H3 barrier, H4–H6
+   * inline, H7 sidenote-stream. הזרקה מ-policy-torah מחליפה את המספרים
+   * הקשיחים; אין עריכת מנוע לכותרת חדשה.
+   */
+  readonly headingBehaviorOf?: (level: number) => {
+    readonly flowRole: 'page-opener' | 'full-width-barrier' | 'inline' | 'sidenote-stream';
+    readonly forcePageBreak: boolean;
+    readonly escortLines: number;
+  };
 }
 
 // ─────────────────────────── אימות קלט ───────────────────────────
@@ -348,6 +360,7 @@ function buildBoundaries(
   remainingLu: number,
   policy: Required<LegalPageBreakPolicy>,
   notesCtx: NotesWalkContext | null,
+  headingBehaviorOf: (level: number) => HeadingFlowBehavior,
 ): BoundaryCandidate[] {
   const out: BoundaryCandidate[] = [];
   let pos = flowPositionOf(map, state);
@@ -432,7 +445,8 @@ function buildBoundaries(
     // הרגילה נעצרת; נוצר מועמד barrier שמציב את הטקסט שלפניו וסוגר את
     // שני הטורים עד תחתית הכותרת. הטקסט שאחריה — הרחבה חדשה בפס שמתחת.
     // ה-H3 אינה פותחת עמוד מעצמה (§10.1).
-    if (block.role === 'heading' && block.headingLevel === 3) {
+    if (block.role === 'heading' && block.headingLevel !== undefined
+      && headingBehaviorOf(block.headingLevel).flowRole === 'full-width-barrier') {
       const h3Height = block.lines.reduce((n, l) => n + l.heightLu, 0);
       // סוף ה-H3 — אחרי כל קוויה (אטומית)
       const endPos: FlowPosition = { blockIndex: pos.blockIndex + 1, lineIndex: 0 };
@@ -625,6 +639,9 @@ function buildBoundaries(
 
 // ─────────────────────────── המחולל ───────────────────────────
 
+/** ממשק ההתנהגות שהמנוע צורך — מוזרק מ-policy-torah (שלב 58; §10.1). */
+export type { HeadingFlowBehavior } from './heading-defaults.js';
+
 /**
  * מחולל מועמדי העמודים — PageCandidateSource עבור searchPages (שלב 51).
  * טהור ודטרמיניסטי: אותו מצב ⇐ אותן הרחבות באותו סדר (מטמון לפי stateHash).
@@ -643,6 +660,8 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: 'policy' }, 'מדיניות גבולות שגויה');
   }
   const map = buildFlowMap(input.blocks);
+  // התנהגות כותרות מוזרקת (שלב 58) — ברירת מחדל legacy בתוך המנוע
+  const headingBehaviorOf = input.headingBehaviorOf ?? legacyHeadingBehaviorOf;
   const cache = new Map<string, readonly PageExpansion[]>();
   let feasibilityRejections = 0;
   let expansionsGenerated = 0;
@@ -683,10 +702,15 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     }
   }
 
-  /** page opener (H0/H1; §10.1) — סוגר אזור עימוד; forcePageTemplate ב-M7. */
+  /**
+   * page opener (§10.1) — לפי ההתנהגות המוזרקת: flowRole==='page-opener'
+   * סוגר אזור עימוד (H0/H1 legacy; rollback דרך policy version). הליבה
+   * אינה מכירה את הרמות — רק את ההתנהגות (שלב 58).
+   */
   const isPageOpener = (blockIndex: number): boolean => {
     const blk = map.blocks[blockIndex];
-    return blk !== undefined && blk.role === 'heading' && (blk.headingLevel === 0 || blk.headingLevel === 1);
+    return blk !== undefined && blk.role === 'heading' && blk.headingLevel !== undefined
+      && headingBehaviorOf(blk.headingLevel).flowRole === 'page-opener';
   };
 
   const build = (state: PaginationState): readonly PageExpansion[] => {
@@ -736,7 +760,7 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         notesUsedAtStartLu: notesUsedOnPage,
       };
     }
-    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx);
+    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx, headingBehaviorOf);
     const out: PageExpansion[] = [];
     for (const boundary of boundaries) {
       let s = state;
