@@ -149,6 +149,7 @@ export function breakParagraphDP<Q>(
 
   const nodes: DpNode<Q>[] = [];
   const active: DpNode<Q>[] = [];
+  const seqOf = makeSequenceCache(nodes);
   const bestAt = new Map<number, number>(); // breakIdx → nodeId
   const startNode: DpNode<Q> = { id: 0, breakIdx: -1, startTok: 0, lineCount: 0, quality: model.start(), prev: -1 };
   nodes.push(startNode);
@@ -249,7 +250,7 @@ export function breakParagraphDP<Q>(
     // אלומה: הצמתים הפעילים מוגבלים לטובים ביותר לפי המודל (ואז מזהה) —
     // גזימה נרשמת כמיצוי תקציב (§9.2: הבחירה הוכרחה)
     if (active.length > budget.maxBeamWidth) {
-      const sorted = active.slice().sort((a, b) => compareNodes(model, a, b));
+      const sorted = active.slice().sort((a, b) => compareNodes(model, a, b, seqOf));
       const removed = sorted.slice(budget.maxBeamWidth);
       for (const r of removed) {
         const i = active.indexOf(r);
@@ -273,7 +274,7 @@ export function breakParagraphDP<Q>(
   }
   let bestNode: DpNode<Q> = terminals[0]!;
   for (const t of terminals) {
-    if (compareNodes(model, t, bestNode) < 0) bestNode = t;
+    if (compareNodes(model, t, bestNode, seqOf) < 0) bestNode = t;
   }
 
   // שחזור המסלול
@@ -303,13 +304,40 @@ function candidateIdOf<Q>(node: DpNode<Q>, nodes: readonly DpNode<Q>[], points: 
   return `c:${prev.startTok}:${bp.tokenIndex}`;
 }
 
-function compareNodes<Q>(model: CostModel<Q>, a: DpNode<Q>, b: DpNode<Q>): number {
+function compareNodes<Q>(model: CostModel<Q>, a: DpNode<Q>, b: DpNode<Q>, seqOf: (n: DpNode<Q>) => readonly number[]): number {
   const cmp = model.compare(a.quality, b.quality);
   if (cmp !== 0) return cmp;
-  return compareNodeIds(a, b);
+  // תיקו וקטורי מלא — שובר תיקו קנוני לפי רצף אינדקסי השבירה (ADR-004 #3;
+  // §8.2: "כל tie נשבר לפי רשימת break indices"); לבסוף מזהה יצירה
+  const cmpSeq = compareBreakSequences(seqOf(a), seqOf(b));
+  if (cmpSeq !== 0) return cmpSeq;
+  return a.id - b.id;
 }
 
-/** שובר תיקו קנוני סופי: מזהה יצירה (סדר דטרמיניסטי מלא; §8.2 "אין tie לפי זמן"). */
-function compareNodeIds<Q>(a: DpNode<Q>, b: DpNode<Q>): number {
-  return a.id - b.id;
+/** השוואת רצפי אינדקסי שבירה — שובר התיקו הקנוני (ADR-004 #3). ציבורי לבדיקה. */
+export function compareBreakSequences(a: readonly number[], b: readonly number[]): number {
+  const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i++) {
+    if (a[i]! !== b[i]!) return a[i]! < b[i]! ? -1 : 1;
+  }
+  if (a.length !== b.length) return a.length < b.length ? -1 : 1;
+  return 0;
+}
+
+/** רצף אינדקסי השבירה של המסלול עד צומת — עצל (מחושב פעם אחת ונשמר). */
+function makeSequenceCache<Q>(nodes: readonly DpNode<Q>[]): (n: DpNode<Q>) => readonly number[] {
+  const cache = new Map<number, readonly number[]>();
+  return (n: DpNode<Q>): readonly number[] => {
+    const hit = cache.get(n.id);
+    if (hit !== undefined) return hit;
+    const seq: number[] = [];
+    let cur: DpNode<Q> | undefined = n;
+    while (cur !== undefined && cur.prev >= 0) {
+      seq.push(cur.breakIdx);
+      cur = nodes[cur.prev]!;
+    }
+    seq.reverse();
+    cache.set(n.id, seq);
+    return seq;
+  };
 }

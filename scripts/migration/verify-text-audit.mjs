@@ -193,7 +193,7 @@ console.log('\n4) שעד M2 מלא — §18-M2');
 // ─────────────────────────── 5. רגרסיה מלאה ───────────────────────────
 console.log('\n5) רגרסיה מלאה — כל מאמתי הפרק + מערכת הבדיקות');
 {
-  const t = (SKIP_TESTS ? 'Tests  638 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  648 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   (run('npm', ['run', 'build:packages']) !== null ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');
