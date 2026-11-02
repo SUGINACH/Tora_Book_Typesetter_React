@@ -211,6 +211,7 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
         if (rel === 'packages/measurement-api/src/bidi.ts') continue; // שלב 28: BD16 — זיווג סוגריים מקוונים של UAX #9 (Unicode); אינו זיווג סוגריים legacy — סוג אחר לחלוטין, נעול ב-conformance 94,412
         if (rel === 'packages/layout-engine/src/pagination/state.ts') continue; // שלב 49 (§9.1): המצב נושא openBracketStack — שם שדה מחייב מהאפיון; אין כאן זיווג: מזהי הזוגות מגיעים מעץ הסוגריים של הפרסר (§10.4), ה־LIFO מאומת בבדיקות השלב
         if (rel === 'packages/layout-engine/src/pagination/candidates.ts') continue; // שלב 53 (§10.4): המחולל מזרים אירועי סוגריים (bracketOpens/bracketCloses) מעץ הפרסר למצב דרך המעברים bracketOpen/bracketClose — נשיאת אירועים, לא זיווג; אזכורי protectParens בקובץ הם תיעוד היעדרו ("אין protectParens")
+        if (rel === 'packages/policy-torah/src/registry.ts') continue; // שלב 58 (מרשם הכללים): מטא-דאטה טהורה של כללים (ruleId+hook+settingsKeys) — אין כאן שום לוגיקת זיווג; אזכור protectParens הוא מחרוזת תיאור של הכלל brackets.cross-page המתעדת את היעדרו (§10.4: "אין צורך ב-protectParens()")
         const src = readFileSync(p, 'utf8');
         if (/findMatching|matchBracket|bracketDepth|openBracket|hasOpenBracket|protectParens/.test(src)) {
           offenders.push(rel);
