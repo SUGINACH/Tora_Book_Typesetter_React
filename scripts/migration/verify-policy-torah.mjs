@@ -83,7 +83,7 @@ console.log('\n3) המרשם — מזהים, גרסאות, חתימות (rollbac
   const hooks = new Set(policy.TORAH_RULE_REGISTRY.map((r) => r.hook));
   const need = ['heading-behavior', 'legal-breaks', 'note-reservation', 'first-word', 'dibbur', 'drop-word', 'bracket-display', 'chapter-balance', 'running-header', 'folio', 'gematria'];
   (need.every((h) => hooks.has(h)) ? ok : fail)('כיסוי כל ווי M7 במרשם (11 hooks)');
-  (policy.torahRegistrySignature() === policy.torahRegistrySignature() && policy.torahRegistrySignature().includes('heading.h0.opener@1') ? ok : fail)('חתימת המרשם דטרמיניסטית וכוללת גרסאות');
+  (policy.torahRegistrySignature() === policy.torahRegistrySignature() && policy.torahRegistrySignature().includes('heading.h0.opener@2') ? ok : fail)('חתימת המרשם דטרמיניסטית וכוללת גרסאות (h0/h1 @2 — שלב 60; rollback = v1)');
   const hid = policy.headingBehaviorIds();
   ([0, 1, 2, 3, 4, 5, 6, 7].every((l) => hid.includes(`${l}:heading:v1|L${l}|`)) && hid === policy.headingBehaviorIds() ? ok : fail)('headingBehaviorIds: 8 רמות, יציב');
 }

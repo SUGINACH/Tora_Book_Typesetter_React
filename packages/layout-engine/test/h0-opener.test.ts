@@ -85,6 +85,14 @@ const runFull = (blocks: readonly PaginatedBlock[], behaviorOf?: (level: number)
   return { src, res: searchPages(initialState(blocks[0]!.blockId), src, new DecisionLedgerBuilder('decisions')) };
 };
 
+/**
+ * H0 ללא כפיית recto (בידוד מנגנון forcePageTemplate מ-parity של שלב 60):
+ * פותחת body רגילה. בדיקות ה-parity עצמן — בקובץ שלב 60.
+ */
+const h0NoRecto = (level: number) => (level === 0
+  ? { flowRole: 'page-opener' as const, forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body' as const, startOnRecto: false }
+  : legacyHeadingBehaviorOf(level));
+
 /** מצב המקור של הרחבה i במסלול — toState של קודמתה (או המצב ההתחלתי). */
 const fromStateOf = (res: { path: readonly { toState: PaginationState }[] }, i: number, firstBlockId: string): PaginationState =>
   i === 0 ? initialState(firstBlockId) : res.path[i - 1]!.toState;
@@ -116,7 +124,7 @@ describe('שלב 59 — H0 forcePageTemplate (§10.1)', () => {
       h('heading|0|X', lineH, 0),
       block('body|2', Array.from({ length: 10 }, () => LINE(lineH))),
     ];
-    const { src, res } = runFull(blocks);
+    const { src, res } = runFull(blocks, h0NoRecto);
     expect(res.status).toBe('complete');
     // מהמצב ההתחלתי קיים גבול :OPEN שמסתיים בראש ה-H0
     const exps = src.expansions(initialState('body|1'));
@@ -195,7 +203,7 @@ describe('שלב 59 — H0 forcePageTemplate (§10.1)', () => {
       h('heading|0|M', lineH, 0),
       block('body|2', Array.from({ length: 12 }, () => LINE(lineH))),
     ];
-    const { src, res } = runFull(blocks);
+    const { src, res } = runFull(blocks, h0NoRecto);
     expect(res.status).toBe('complete');
     // מכל מצב שקודם ל-H0 — אף הרחבה אינה מזיזה את הסמן מעבר לראש ה-H0
     // (ההליכה נעצרת לפני פותחות; ההצבה שלה עצמה — רק מראש עמוד חדש)
@@ -220,7 +228,7 @@ describe('שלב 59 — H0 forcePageTemplate (§10.1)', () => {
       h('heading|0|P', lineH, 0),
       block('body|1', Array.from({ length: 8 }, () => LINE(lineH))),
     ];
-    const { res } = runFull(blocks);
+    const { res } = runFull(blocks, h0NoRecto);
     expect(res.status).toBe('complete');
     // מצא את ההרחבה הריקה: :OPEN שלא הקדימה סמן (הסמן נשאר בראש ה-H0)
     const emptyIdx = res.path.findIndex((e, i) => e.candidateId.endsWith('heading|0|P@0:OPEN')

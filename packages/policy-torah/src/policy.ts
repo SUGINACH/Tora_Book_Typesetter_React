@@ -71,9 +71,33 @@ export function createTorahPolicy(
   settings: EffectiveSettings,
   overrides?: Readonly<Partial<Record<number, Partial<HeadingBehavior>>>>,
 ): TorahPolicy {
-  // התנהגויות כותרות: legacy בסיס + overrides מוזרקים (מאומתים)
+  // התנהגויות כותרות: legacy בסיס + הגדרות odd/mode + overrides מוזרקים (מאומתים).
+  // ההגדרות (מרשם ההגדרות — מקור Orange הנעול): odd-h0/odd-h1=true, odd-h2=false
+  // (כפיית recto); mode-h1='sub_shaar' (שער משנה) עם חלופה 'new_page_1col'
+  // (כשהשער מוסתר — legacy showSubShaar) — הכל דרך המדיניות, לא במנוע.
   const behaviors = new Map<number, HeadingBehavior>();
   for (let level = 0; level <= 7; level++) behaviors.set(level, legacyHeadingBehaviorOf(level));
+  {
+    // parity לפי odd-h{level} (ברירת המחדל = legacy)
+    const parityOf = (level: 0 | 1 | 2): boolean | undefined => {
+      const key = `odd-h${level}`;
+      const raw = (settings.values as Record<string, unknown>)[key];
+      return typeof raw === 'boolean' ? raw : undefined;
+    };
+    for (const level of [0, 1, 2] as const) {
+      const parity = parityOf(level);
+      if (parity !== undefined) {
+        const base = behaviors.get(level)!;
+        behaviors.set(level, Object.freeze({ ...base, startOnRecto: parity, level }));
+      }
+    }
+    // mode-h1: sub_shaar (ברירת מחדל) או new_page_1col (שער מוסתר — פותחת עמוד רגיל)
+    const modeH1 = (settings.values as Record<string, unknown>)['mode-h1'];
+    if (modeH1 === 'new_page_1col') {
+      const base = behaviors.get(1)!;
+      behaviors.set(1, Object.freeze({ ...base, forcePageTemplate: 'body', level: 1 }));
+    }
+  }
   if (overrides !== undefined) {
     for (const [levelRaw, patch] of Object.entries(overrides)) {
       const level = Number(levelRaw);
@@ -132,8 +156,9 @@ export function createTorahPolicy(
 export function createMinimalPolicy(settings: EffectiveSettings): TorahPolicy {
   const overrides: Partial<Record<number, Partial<HeadingBehavior>>> = {};
   for (let level = 0; level <= 7; level++) {
-    // גם forcePageTemplate נמחק — כותרת inline אינה דורשת תבנית (שלב 59)
-    overrides[level] = { flowRole: 'inline', forcePageBreak: false, escortLines: 0, forcePageTemplate: undefined };
+    // גם forcePageTemplate/startOnRecto נמחקים — כותרת inline אינה דורשת
+    // תבנית ואינה כופה recto (שלבים 59–60)
+    overrides[level] = { flowRole: 'inline', forcePageBreak: false, escortLines: 0, forcePageTemplate: undefined, startOnRecto: undefined };
   }
   const full = createTorahPolicy(settings, overrides);
   return Object.freeze({

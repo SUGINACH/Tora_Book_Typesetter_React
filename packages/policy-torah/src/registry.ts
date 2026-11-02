@@ -27,8 +27,8 @@ export interface TorahRuleEntry {
  */
 export const TORAH_RULE_REGISTRY: readonly TorahRuleEntry[] = Object.freeze([
   // ── כותרות (§10.1; שלבים 58–63) ──
-  { ruleId: 'heading.h0.opener', version: 1, hook: 'heading-behavior', settingsKeys: [], description: 'H0 פותח עמוד/פרק — forcePageTemplate, פתיחת עמוד, ריווח' },
-  { ruleId: 'heading.h1.shaar', version: 1, hook: 'heading-behavior', settingsKeys: [], description: 'H1 שער משנה/חלק — פתיחת עמוד, parity, מספור' },
+  { ruleId: 'heading.h0.opener', version: 2, hook: 'heading-behavior', settingsKeys: ['odd-h0'], description: 'H0 פותח עמוד/פרק — forcePageTemplate (body), פתיחת עמוד, recto (parity)' },
+  { ruleId: 'heading.h1.shaar', version: 2, hook: 'heading-behavior', settingsKeys: ['mode-h1', 'odd-h1'], description: 'H1 שער משנה/חלק — sub-shaar, פתיחת עמוד, recto (parity), פיצול כותרת' },
   { ruleId: 'heading.h2.chapter', version: 1, hook: 'heading-behavior', settingsKeys: ['h2-orn-scope', 'h2-top-distance', 'h2-auto-siman', 'h2-reset-siman', 'dim-h2-top-h', 'dim-h2-btm-h'], description: 'H2 פותח פרק — ריווח עליון ועיטורים לפי scope' },
   { ruleId: 'heading.h3.barrier', version: 1, hook: 'heading-behavior', settingsKeys: ['dim-h3-side-h', 'h3-ornament-l', 'h3-ornament-r'], description: 'H3 כותרת רוחבית — barrier חוצת-טורים, לא פותחת עמוד' },
   { ruleId: 'heading.h456.inline', version: 1, hook: 'heading-behavior', settingsKeys: [], description: 'H4–H6 כותרות inline וליווי (escort)' },

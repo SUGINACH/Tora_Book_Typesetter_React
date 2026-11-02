@@ -1,15 +1,16 @@
 /**
  * heading-defaults.ts — ברירות המחדל של התנהגות כותרות בתוך המנוע
- * (שלב 58; אפיון §10.1; forcePageTemplate — שלב 59).
+ * (שלב 58; אפיון §10.1; forcePageTemplate — שלב 59; שער H1 ו-parity — שלב 60).
  *
  * המנוע אינו תלוי ב־policy-torah (גרף §5: הזרקה בלבד) — קובץ זה מספק
  * את ברירות המחדל המקומיות כששום מדיניות לא הוזרקה. policy-torah הוא
  * הבעלים האמיתי של ההתנהגויות (מרשם + גרסאות); העתק זה מוחזק זהה
  * במבחן השקילות של שלב 58 — כל סטייה נתפסת.
  */
+import type { PageKind } from '@tora/layout-api';
 
 /** סוג העמוד שפותח-עמוד חייב לפתוח (forcePageTemplate; §10.1 H0; שלב 59). */
-export type ForcedPageKind = 'body' | 'toc' | 'notes';
+export type ForcedPageKind = PageKind;
 
 /** סוג ההתנהגות בזרימת העימוד (הליבה אינה מכירה H2 — רק תפקיד). */
 export type HeadingFlowRole = 'page-opener' | 'full-width-barrier' | 'inline' | 'sidenote-stream';
@@ -25,12 +26,22 @@ export interface HeadingFlowBehavior {
    * 'page-opener' בלבד — ההחלטה בתוך ההרחבה שפותחת את העמוד (אין post-pass).
    */
   readonly forcePageTemplate?: ForcedPageKind;
+  /**
+   * הפותחת חייבת להתחיל בעמוד recto (אי-זוגי; §10.1 H1 parity; שלב 60)?
+   * כשהעמוד שהיא פותחת היה נופל על verso — נפתח עמוד ריק לפניו (בתוך
+   * ההרחבה; legacy ensureOddPageStart). ברירות legacy: odd-h0/odd-h1=true,
+   * odd-h2=false (default_settings.json של Orange, נעול במרשם ההגדרות).
+   */
+  readonly startOnRecto?: boolean;
 }
 
-/** ברירות legacy: H0–H2 פותחי-עמוד (תבנית body); H3 barrier; H4–H6 inline; H7 זרם צד. */
+/**
+ * ברירות legacy: H0 פותח עמוד body ב-recto; H1 שער משנה (sub-shaar) ב-recto;
+ * H2 פותח פרק (body, ללא כפיית recto); H3 barrier; H4–H6 inline; H7 זרם צד.
+ */
 const DEFAULTS: Readonly<Record<number, HeadingFlowBehavior>> = Object.freeze({
-  0: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body' },
-  1: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body' },
+  0: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body', startOnRecto: true },
+  1: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'sub-shaar', startOnRecto: true },
   2: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, forcePageTemplate: 'body' },
   3: { flowRole: 'full-width-barrier', forcePageBreak: false, escortLines: 2 },
   4: { flowRole: 'inline', forcePageBreak: false, escortLines: 2 },

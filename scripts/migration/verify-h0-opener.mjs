@@ -73,7 +73,8 @@ console.log('\n2) forcePageTemplate — התבנית שהמדיניות דורש
 {
   const lineH = Math.floor(H / 10);
   const blocks = [block('body|1', Array.from({ length: 5 }, () => LINE(lineH))), hd('heading|0|N', lineH, 0), block('body|2', Array.from({ length: 4 }, () => LINE(lineH)))];
-  const full = policy.createTorahPolicy({ schemaVersion: 1, enginePolicyId: 'torah-v1', values: {}, configHash: 'v' }, { 0: { forcePageTemplate: 'notes' } });
+  // startOnRecto:false — בידוד מנגנון התבנית מ-parity (שלב 60; ברירת המחדל odd-h0=true הייתה מכניסה ריק לפני verso)
+  const full = policy.createTorahPolicy({ schemaVersion: 1, enginePolicyId: 'torah-v1', values: { 'odd-h0': false }, configHash: 'v' }, { 0: { forcePageTemplate: 'notes' } });
   const res = engine.searchPages(initial('body|1'), src(blocks, full.headingBehaviorOf), new Ledger('decisions'));
   (res.status === 'complete' ? ok : fail)('מסלול שלם עם H0 שדורשת notes');
   const openIdx = res.path.findIndex((e) => e.candidateId.endsWith('heading|0|N@0:OPEN'));
@@ -86,7 +87,7 @@ console.log('\n2) forcePageTemplate — התבנית שהמדיניות דורש
   const after = res.path[openIdx + 1];
   (after !== undefined && after.toState.contentCursor.includes('body|2') ? ok : fail)('ה-H0 נצרכת על עמוד ה-notes (המחולל עובד מול state.pageKind)');
   // rollback: המדיניות המלאה בלי override — body רגיל
-  const res2 = engine.searchPages(initial('body|1'), src(blocks, policy.createTorahPolicy({ schemaVersion: 1, enginePolicyId: 'torah-v1', values: {}, configHash: 'v' }).headingBehaviorOf), new Ledger('decisions'));
+  const res2 = engine.searchPages(initial('body|1'), src(blocks, policy.createTorahPolicy({ schemaVersion: 1, enginePolicyId: 'torah-v1', values: { 'odd-h0': false }, configHash: 'v' }).headingBehaviorOf), new Ledger('decisions'));
   const open2 = res2.path.find((e) => e.candidateId.endsWith('heading|0|N@0:OPEN'));
   (open2 !== undefined && open2.toState.pageKind === 'body' && open2.toState.remainingByRegion['page:2:col:1'] !== undefined ? ok : fail)('ברירת המחדל: עמוד body דו-טורי (rollback — בלי override)');
   // התנהגות בלי הזרקה = legacy (העתק המנוע זהה)

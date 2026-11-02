@@ -17,8 +17,8 @@
  */
 import { asLu, type LayoutUnit } from '@tora/layout-api';
 
-/** סוג העמוד שפותח-עמוד חייב לפתוח (forcePageTemplate; §10.1 H0; שלב 59). */
-export type ForcedPageKind = 'body' | 'toc' | 'notes';
+/** סוג העמוד שפותח-עמוד חייב לפתוח (forcePageTemplate; §10.1 H0/H1; שלבים 59–60). */
+export type ForcedPageKind = import('@tora/layout-api').PageKind;
 
 /** סוג ההתנהגות של כותרת בזרימת העימוד (מנוע אינו מכיר את המספרים). */
 export type HeadingFlowRole =
@@ -55,6 +55,13 @@ export interface HeadingBehavior {
    */
   readonly forcePageTemplate?: ForcedPageKind;
   /**
+   * הפותחת חייבת להתחיל בעמוד recto (אי-זוגי; §10.1 H1 parity; שלב 60)?
+   * legacy: odd-h0/odd-h1 = true, odd-h2 = false (default_settings.json של
+   * Orange — נעול במרשם ההגדרות). כשהעמוד שהיא פותחת היה נופל על verso —
+   * המנוע פותח עמוד ריק לפניו (בתוך ההרחבה; legacy ensureOddPageStart).
+   */
+  readonly startOnRecto?: boolean;
+  /**
    * מספר קווי ליווי מינימום אחרי הכותרת באותו טור (§10.1: ברירת מחדל 2
    * ל־H2+; כותרת תלויה אינה "קנס קטן" — מועמד שבו הכותרת עוברת עם
    * הליווי מקבל עדיפות).
@@ -70,13 +77,14 @@ export interface HeadingBehavior {
 /** מזהה ההתנהגות הקנוני — למרשם ול־rollback (כולל התבנית הכפויה — שלב 59). */
 export function headingBehaviorId(b: HeadingBehavior): string {
   return `heading:v1|L${b.level}|${b.flowRole}|esc${b.escortLines}|f${b.forcePageBreak ? 1 : 0}`
-    + (b.forcePageTemplate !== undefined ? `|t${b.forcePageTemplate}` : '');
+    + (b.forcePageTemplate !== undefined ? `|t${b.forcePageTemplate}` : '')
+    + (b.startOnRecto === true ? '|r1' : '');
 }
 
 /** ברירות המחדל של legacy לכל רמה (המרשם המלא ב־registry.ts). */
 export const LEGACY_HEADING_DEFAULTS: Readonly<Record<number, Omit<HeadingBehavior, 'level'>>> = Object.freeze({
-  0: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'body' },
-  1: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'body' },
+  0: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'body', startOnRecto: true },
+  1: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'sub-shaar', startOnRecto: true },
   2: { flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), forcePageTemplate: 'body' },
   3: { flowRole: 'full-width-barrier', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
   4: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
@@ -93,6 +101,38 @@ export function legacyHeadingBehaviorOf(level: number): HeadingBehavior {
   const base = LEGACY_HEADING_DEFAULTS[level];
   if (base !== undefined) return Object.freeze({ level, ...base });
   return Object.freeze({ level, flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) });
+}
+
+/**
+ * פיצול כותרת שער (§10.1 H1 — "פיצול כותרת"; legacy: split(/[-–—]/)[0]) —
+ * החלק הראשי (לפני המקף) הוא שם החלק לכותרות רצות ולתיבת השער; השאר —
+ * כותרת המשנה. המקפים קבועים במדיניות (לא regex בתוך renderer; §10.2
+ * ברוחו) ומזוהים כ-span סמנטי; אין מקף ⇒ כל הטקסט הוא החלק הראשי.
+ */
+const SHAAR_TITLE_DASHES: readonly string[] = Object.freeze(['—', '–', '-']);
+
+export interface ShaarTitleSplit {
+  /** החלק הראשי — לפני המקף הראשון (רצף הרווחים סביב המקף נחתך). */
+  readonly primary: string;
+  /** ההמשך אחרי המקף — ריק כשאין מקף. */
+  readonly secondary: string;
+  /** המקף שחתך (לרישום ולאימות מקור); null כשלא היה פיצול. */
+  readonly dash: string | null;
+}
+
+/** פיצול כותרת שער — טהור ודטרמיניסטי; סדר המקפים קבוע (הארוך קודם). */
+export function splitShaarTitle(text: string): ShaarTitleSplit {
+  for (const dash of SHAAR_TITLE_DASHES) {
+    const idx = text.indexOf(dash);
+    if (idx >= 0) {
+      return {
+        primary: text.slice(0, idx).trim(),
+        secondary: text.slice(idx + dash.length).trim(),
+        dash,
+      };
+    }
+  }
+  return { primary: text.trim(), secondary: '', dash: null };
 }
 
 /** אימות התנהגות — רשימת בעיות (ריקה = תקינה). */
@@ -112,8 +152,12 @@ export function headingBehaviorIssues(b: unknown): string[] {
   // forcePageTemplate (שלב 59; §10.1 H0): תקף לפותחי-עמוד בלבד, ורק סוג
   // עמוד לגיטימי — הרחבה שאינה פותחת עמוד אינה יכולה לדרוש תבנית
   if (v.forcePageTemplate !== undefined) {
-    if (!['body', 'toc', 'notes'].includes(String(v.forcePageTemplate))) issues.push('forcePageTemplate');
+    if (!['main-shaar', 'back-shaar', 'sub-shaar', 'toc', 'body', 'notes'].includes(String(v.forcePageTemplate))) issues.push('forcePageTemplate');
     else if (v.flowRole !== 'page-opener') issues.push('forcePageTemplate:not-opener');
+  }
+  if (v.startOnRecto !== undefined) {
+    if (typeof v.startOnRecto !== 'boolean') issues.push('startOnRecto');
+    else if (v.flowRole !== 'page-opener') issues.push('startOnRecto:not-opener');
   }
   if (v.ornaments !== undefined) {
     const o = v.ornaments as Record<string, unknown> | null;

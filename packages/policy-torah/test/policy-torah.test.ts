@@ -117,10 +117,11 @@ describe('שלב 58 — ברירות מחדל של legacy (H0–H7)', () => {
     expect(Object.isFrozen(LEGACY_HEADING_DEFAULTS)).toBe(true);
   });
 
-  test('forcePageTemplate (שלב 59): H0–H2 פותחים תבנית body; השאר — סוג הזרימה', () => {
-    for (const level of [0, 1, 2]) {
+  test('forcePageTemplate (שלב 59–60): H0/H2 פותחים body; H1 שער משנה (sub-shaar); השאר — סוג הזרימה', () => {
+    for (const level of [0, 2]) {
       expect(legacyHeadingBehaviorOf(level).forcePageTemplate, `H${level}`).toBe('body');
     }
+    expect(legacyHeadingBehaviorOf(1).forcePageTemplate, 'H1 שער משנה').toBe('sub-shaar');
     for (const level of [3, 4, 5, 6, 7]) {
       expect(legacyHeadingBehaviorOf(level).forcePageTemplate, `H${level}`).toBeUndefined();
     }
@@ -165,7 +166,8 @@ describe('שלב 58 — ברירות מחדל של legacy (H0–H7)', () => {
 
   test('מזהה ההתנהגות הקנוני יציב', () => {
     const h2 = legacyHeadingBehaviorOf(2);
-    expect(headingBehaviorId(h2)).toBe('heading:v1|L2|page-opener|esc2|f1|tbody'); // |t{kind} — התבנית הכפויה (שלב 59)
+    expect(headingBehaviorId(h2)).toBe('heading:v1|L2|page-opener|esc2|f1|tbody'); // |t{kind} — התבנית הכפויה (שלב 59; H2 ללא recto — odd-h2=false)
+    expect(headingBehaviorId(legacyHeadingBehaviorOf(1))).toBe('heading:v1|L1|page-opener|esc2|f1|tsub-shaar|r1'); // H1: שער + recto (שלב 60)
     expect(headingBehaviorId(h2)).toBe(headingBehaviorId(legacyHeadingBehaviorOf(2)));
   });
 });
@@ -224,7 +226,7 @@ describe('שלב 58 — מרשם הכללים', () => {
   test('חתימת המרשם דטרמיניסטית וכוללת גרסאות (rollback משווה)', () => {
     const s1 = torahRegistrySignature();
     expect(s1).toBe(torahRegistrySignature());
-    expect(s1).toContain('heading.h0.opener@1');
+    expect(s1).toContain('heading.h0.opener@2'); // גרסה 2 — recto parity (שלב 60; rollback = v1)
     expect(s1).toContain(';');
     expect(headingBehaviorIds()).toBe(headingBehaviorIds());
     expect(headingBehaviorIds()).toContain('2:heading:v1|L2|page-opener|esc2|f1|tbody');
@@ -338,6 +340,7 @@ describe('שלב 58 — שקילות: ברירות המנוע = ברירות pol
       expect(engineB.forcePageBreak, `H${level} forcePageBreak`).toBe(policyB.forcePageBreak);
       expect(engineB.escortLines, `H${level} escortLines`).toBe(policyB.escortLines);
       expect(engineB.forcePageTemplate, `H${level} forcePageTemplate`).toBe(policyB.forcePageTemplate);
+      expect(engineB.startOnRecto, `H${level} startOnRecto`).toBe(policyB.startOnRecto);
     }
     // רמה לא מוכרת — אותה התנהגות בטוחה בשני הצדדים
     const e9 = engineHeadingBehaviorOf(42);

@@ -156,8 +156,10 @@ export interface CandidateGeneratorInput {
     readonly flowRole: 'page-opener' | 'full-width-barrier' | 'inline' | 'sidenote-stream';
     readonly forcePageBreak: boolean;
     readonly escortLines: number;
-    /** תבנית העמוד שהפותח פותח (§10.1 H0; שלב 59) — undefined = סוג הזרימה. */
-    readonly forcePageTemplate?: 'body' | 'toc' | 'notes';
+    /** תבנית העמוד שהפותח פותח (§10.1 H0/H1; שלב 59–60) — undefined = סוג הזרימה. */
+    readonly forcePageTemplate?: 'main-shaar' | 'back-shaar' | 'sub-shaar' | 'toc' | 'body' | 'notes';
+    /** הפותחת חייבת recto (§10.1 H1 parity; שלב 60) — עמוד ריק לפני verso. */
+    readonly startOnRecto?: boolean;
   };
 }
 
@@ -230,13 +232,19 @@ export function candidateInputIssues(input: CandidateGeneratorInput): string[] {
         continue;
       }
       if (b.forcePageTemplate !== undefined) {
-        if (!['body', 'toc', 'notes'].includes(String(b.forcePageTemplate))) {
+        if (!['main-shaar', 'back-shaar', 'sub-shaar', 'toc', 'body', 'notes'].includes(String(b.forcePageTemplate))) {
           issues.push(`headingBehaviorOf(${level}).forcePageTemplate`);
         } else if (b.flowRole !== 'page-opener') {
           // תבנית כפויה תקפה לפותחי-עמוד בלבד (§10.1) — הרחבה שאינה פותחת
           // עמוד אינה יכולה לדרוש תבנית
           issues.push(`headingBehaviorOf(${level}).forcePageTemplate:not-opener`);
         }
+      }
+      if (b.startOnRecto !== undefined && typeof b.startOnRecto !== 'boolean') {
+        issues.push(`headingBehaviorOf(${level}).startOnRecto`);
+      } else if (b.startOnRecto === true && b.flowRole !== 'page-opener') {
+        // כפיית recto תקפה לפותחי-עמוד בלבד (§10.1 parity)
+        issues.push(`headingBehaviorOf(${level}).startOnRecto:not-opener`);
       }
     }
   }
@@ -401,6 +409,7 @@ function buildBoundaries(
   notesCtx: NotesWalkContext | null,
   headingBehaviorOf: (level: number) => HeadingFlowBehavior,
   columnHeightLu: number,
+  flowKind: 'body' | 'toc' | 'notes',
 ): BoundaryCandidate[] {
   const out: BoundaryCandidate[] = [];
   let pos = flowPositionOf(map, state);
@@ -497,7 +506,16 @@ function buildBoundaries(
     // נוצר גבול פותח-עמוד ריק שרק פותח עמוד חדש — בלי להקדים את הסמן.
     const openerLevelHere = pageOpenerLevelAt(pos);
     if (openerLevelHere !== undefined) {
-      const freshPageTop = used === 0 && state.columnIndex === 0 && remainingLu === columnHeightLu;
+      // שלב 60: הפותחת מוצבת בראש עמוד חדש רק אם העמוד עצמו מתאים לה —
+      // הסוג שהמדיניות דורשת (forcePageTemplate; H1 ⇒ sub-shaar) וגם recto
+      // כשהמדיניות דורשת (parity; legacy ensureOddPageStart). עמוד זרימה
+      // רגיל שאינו מתאים (כולל עמוד ריק שנפתח לכפיית recto) — ההליכה נעצרת
+      // וגבול פותח-עמוד ריק יפתח את העמוד הנכון.
+      const openerBehaviorHere = headingBehaviorOf(openerLevelHere);
+      const requiredKindHere = openerBehaviorHere.forcePageTemplate ?? flowKind;
+      const rectoOkHere = openerBehaviorHere.startOnRecto !== true || state.physicalPageIndex % 2 === 1;
+      const freshPageTop = used === 0 && state.columnIndex === 0 && remainingLu === columnHeightLu
+        && state.pageKind === requiredKindHere && rectoOkHere;
       if (!freshPageTop) {
         if (used === 0 && out.length === 0) {
           out.push({
@@ -793,9 +811,107 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     }
   }
 
+  /**
+   * הצבת שער (שלב 60; §10.1 H1, §11.2): הכותרת הפותחת נכנסת לתיבת השער
+   * (custom-box) כמכלול אטומי — כל קוויה יחד; הפניות הערות/סוגריים שלה
+   * זורמות למצב כרגיל (ההערות יתנקזו לעמוד הגוף הבא — אין אזור הערות
+   * בשער). ההמשך — עמוד זרימה חדש. כותרת שאינה נכנסת לתיבה ⇒ אין מועמד
+   * ⇒ כשל מפורש (§8.2; אין חירום לכותרות ואין גלישה שקטה).
+   */
+  const buildShaarPlacement = (state: PaginationState, pos: FlowPosition, blk: PaginatedBlock): readonly PageExpansion[] => {
+    const boxRegion = `page:${state.physicalPageIndex}:box`;
+    const boxRemaining = state.remainingByRegion[boxRegion];
+    if (boxRemaining === undefined) {
+      throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `missing region ${boxRegion}` }, 'אזור תיבת השער חסר בעמוד השער — תבנית שער חייבת custom-box');
+    }
+    const lines = blk.lines.slice(pos.lineIndex);
+    const totalH = lines.reduce((n, l) => n + l.heightLu, 0);
+    if (totalH > boxRemaining || lines.length === 0) return []; // אין מועמד — כשל מפורש בחיפוש
+    let s = state;
+    const transitions: PaginationTransition[] = [];
+    const foot: string[] = [];
+    const side: string[] = [];
+    const opens: { pairId: string; kind: 'round' | 'square' }[] = [];
+    const closes: string[] = [];
+    for (const line of lines) {
+      foot.push(...line.footnoteRefs);
+      side.push(...line.sidenoteRefs);
+      opens.push(...(line.bracketOpens ?? []));
+      closes.push(...(line.bracketCloses ?? []));
+    }
+    try {
+      const cs = consumeRegion(s, boxRegion, totalH);
+      transitions.push(cs.transition);
+      s = cs.state;
+      for (const ref of foot) {
+        const st = pendFootnote(s, ref);
+        transitions.push(st.transition);
+        s = st.state;
+      }
+      for (const ref of side) {
+        const st = pendSidenote(s, ref);
+        transitions.push(st.transition);
+        s = st.state;
+      }
+      for (const open of opens) {
+        const st = bracketOpen(s, open.pairId, open.kind);
+        transitions.push(st.transition);
+        s = st.state;
+      }
+      for (const close of closes) {
+        const st = bracketClose(s, close);
+        transitions.push(st.transition);
+        s = st.state;
+      }
+      // הסמן מעבר לכותרת — לבלוק הבא (או קץ המסמך)
+      const nextPos: FlowPosition = { blockIndex: pos.blockIndex + 1, lineIndex: 0 };
+      const atEnd = nextPos.blockIndex >= map.blocks.length;
+      const lastBlock = map.blocks[map.blocks.length - 1]!;
+      const cursorBlockId = atEnd ? lastBlock.blockId : map.blocks[nextPos.blockIndex]!.blockId;
+      const cursorFragment = atEnd ? lastBlock.lines.length : 0;
+      const adv = advanceCursor(s, { blockId: cursorBlockId, fragmentIndex: cursorFragment, atomIndex: 0 });
+      transitions.push(adv.transition);
+      s = adv.state;
+      // המשך הזרימה — עמוד חדש מסוג הזרימה (אין טורי גוף בשער); בקץ המסמך — אין פתיחה
+      let closesRegion = false;
+      if (!atEnd) {
+        const nextPage = s.physicalPageIndex + 1;
+        const nextTemplate = input.templates.for(input.pageKind, nextPage);
+        const pg = openPage(s, initialRemainingByRegion(nextTemplate, nextPage), input.pageKind);
+        transitions.push(pg.transition);
+        s = pg.state;
+        closesRegion = true;
+      }
+      const v = new Array<number>(9).fill(0);
+      v[8] = closesRegion ? 1 : 0;
+      return [Object.freeze({
+        candidateId: `pg:${state.physicalPageIndex}:0→${cursorBlockId}@${cursorFragment}:SHAAR`,
+        transitions,
+        toState: s,
+        quality: Object.freeze(v) as PageQualityVector,
+        closesRegion,
+      })];
+    } catch {
+      return [];
+    }
+  };
+
   const build = (state: PaginationState): readonly PageExpansion[] => {
     const pos = flowPositionOf(map, state);
     if (pos === null) return []; // קץ המסמך
+    // ── עמוד שער (שלב 60; §10.1 H1, §11.2) ──
+    // עמוד shaar נושא את כותרת הפותחת שלו בתיבת השער (custom-box) ואין
+    // בו טורי גוף כלל (§11.2: העמוד כולו עיטור + תיבות): ההרחבה היחידה
+    // מציבה את הכותרת (אטומית — כל קוויה) בתיבה, מקדימה את הסמן מעבר לה
+    // ופותחת את עמוד הזרימה הבא להמשך התוכן. ההחלטה בתוך ההרחבה (אין post-pass).
+    if (state.pageKind === 'main-shaar' || state.pageKind === 'back-shaar' || state.pageKind === 'sub-shaar') {
+      const blk = map.blocks[pos.blockIndex]!;
+      const behavior = blk.role === 'heading' && blk.headingLevel !== undefined ? headingBehaviorOf(blk.headingLevel) : undefined;
+      if (behavior === undefined || behavior.flowRole !== 'page-opener') {
+        throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `shaar-page-non-opener ${blk.blockId}` }, 'עמוד שער נפתח רק עבור כותרת פותחת-עמוד — הסמן בתחילת העמוד חייב להצביע עליה');
+      }
+      return buildShaarPlacement(state, pos, blk);
+    }
     const columnRegion = `page:${state.physicalPageIndex}:col:${state.columnIndex}`;
     const remaining = state.remainingByRegion[columnRegion];
     if (remaining === undefined) {
@@ -845,7 +961,7 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     // גובה הטור המלא של התבנית הנוכחית — לזיהוי "ראש עמוד חדש" (שלב 59:
     // פותח-עמוד מוצב רק בראש עמוד טרי; טור 0 מלא ושום דבר לא נצרב בעמוד)
     const columnHeightLu = template.regions.find((r) => r.role === 'body-column' && r.columnIndex === 0)!.rect.height;
-    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx, headingBehaviorOf, columnHeightLu);
+    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx, headingBehaviorOf, columnHeightLu, input.pageKind);
     const out: PageExpansion[] = [];
     for (const boundary of boundaries) {
       let s = state;
@@ -983,17 +1099,23 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
             continue;
           }
         } else if (boundary.pageOpener !== undefined) {
-          // ── פותח עמוד (שלב 59; §10.1 H0 — forcePageTemplate) ──
+          // ── פותח עמוד (שלב 59; §10.1 H0/H1 — forcePageTemplate; שלב 60: parity) ──
           // הגבול מסתיים בכותרת פותחת-עמוד: ההרחבה פותחת עמוד חדש מיד —
           // לא מעבר טור ולא מילוי העמוד הנוכחי (השארית ננטשת; תת-המילוי
           // הוא עלות רכיב 8 ואיזון סוף-פרק יטופל בשלב 66). התבנית — לפי
-          // ההתנהגות המוזרקת (forcePageTemplate; ברירת מחדל סוג הזרימה);
-          // parity נגזר מהאינדקס הפיזי הרץ. ההחלטה בתוך ההרחבה — אין post-pass.
-          const openerKind: 'body' | 'toc' | 'notes' = headingBehaviorOf(boundary.pageOpener.level).forcePageTemplate ?? input.pageKind;
+          // ההתנהגות המוזרקת (forcePageTemplate; ברירת מחדל סוג הזרימה).
+          // parity (שלב 60; §10.1 H1): פותחת שחייבת recto והעמוד הבא verso —
+          // נפתח עמוד ריק של הזרימה קודם, והפותחת תיפתח בעמוד העוקב (recto)
+          // על-ידי גבול פותח-עמוד ריק (legacy ensureOddPageStart; ההחלטה
+          // בתוך ההרחבה — אין post-pass; החיפוש מעדיף מסלולים בלי עמודים ריקים).
+          const openerBehavior = headingBehaviorOf(boundary.pageOpener.level);
+          const openerKind = openerBehavior.forcePageTemplate ?? input.pageKind;
           const nextPage = s.physicalPageIndex + 1;
-          const nextTemplate = input.templates.for(openerKind, nextPage);
+          const needsBlankForRecto = openerBehavior.startOnRecto === true && nextPage % 2 === 0;
+          const openedKind = needsBlankForRecto ? input.pageKind : openerKind;
+          const nextTemplate = input.templates.for(openedKind, nextPage);
           const remainingNext = initialRemainingByRegion(nextTemplate, nextPage);
-          const pg = openPage(s, remainingNext, openerKind);
+          const pg = openPage(s, remainingNext, openedKind);
           transitions.push(pg.transition);
           s = pg.state;
           closesRegion = true;
@@ -1067,4 +1189,72 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
       return Object.freeze({ feasibilityRejections, expansionsGenerated });
     },
   };
+}
+
+// ─────────────────── עוגני כותרות (שלב 60; §10.1 H1 "shaar policy + anchor") ───────────────────
+
+/** עוגן כותרת — העמוד הפיזי שבו הוצבה (זרע ל-AnchorTable של שלב 70 ולכותרות רצות של 67). */
+export interface HeadingAnchor {
+  readonly blockId: string;
+  readonly level: number;
+  /** סוג העמוד שנשא את הכותרת (H1 ⇒ sub-shaar; שאר ⇒ סוג הזרימה). */
+  readonly pageKind: import('@tora/layout-api').PageKind;
+  readonly physicalPageIndex: number;
+  /** מזהה ההרחבה שהציבה את הכותרת (לפנקס). */
+  readonly candidateId: string;
+}
+
+/**
+ * טבלת עוגני כותרות ממסלול שעבר: לכל בלוק heading — העמוד שבו הוצב.
+ * טהורה ודטרמיניסטית: הולכת לאורך השרשרת (הסמן שלפני כל הרחבה = toState
+ * של קודמתה), והכותרת שהמסלול מכסה נרשמת בעמוד שבו התחילה ההרחבה שהציבה
+ * אותה. אין pageEstimate — עמוד אמיתי בלבד (§11.1).
+ */
+export function headingAnchorsOf(
+  initial: PaginationState,
+  path: readonly PageExpansion[],
+  blocks: readonly PaginatedBlock[],
+): readonly HeadingAnchor[] {
+  const indexOf = new Map<string, number>();
+  for (let i = 0; i < blocks.length; i++) indexOf.set(blocks[i]!.blockId, i);
+  type Pos = { readonly blockIndex: number; readonly fragment: number };
+  const cursorPos = (cursor: string): Pos => {
+    const c = parseCursor(cursor);
+    const idx = indexOf.get(c.blockId);
+    // קץ המסמך (סמן על הבלוק האחרון בפרגמנט סופי) — מיקום מעבר לכולם
+    if (idx === undefined) return { blockIndex: blocks.length, fragment: 0 };
+    return { blockIndex: idx, fragment: c.fragmentIndex };
+  };
+  const le = (a: Pos, b: Pos): boolean => a.blockIndex < b.blockIndex || (a.blockIndex === b.blockIndex && a.fragment <= b.fragment);
+  const headEndOf = (i: number): Pos => (i + 1 < blocks.length
+    ? { blockIndex: i + 1, fragment: 0 }
+    : { blockIndex: i, fragment: blocks[i]!.lines.length });
+  const out: HeadingAnchor[] = [];
+  let prev = initial;
+  for (const exp of path) {
+    const fromPos = cursorPos(prev.contentCursor);
+    const toPos = cursorPos(exp.toState.contentCursor);
+    const advanced = fromPos.blockIndex !== toPos.blockIndex || fromPos.fragment !== toPos.fragment;
+    if (advanced) {
+      // הכותרת טרם הוצבה לפני ההרחבה ⇔ הסמן היה בראשה או לפניו (fromPos ≤ ראשה);
+      // ההרחבה הציבה אותה ⇔ הסמן אחריה כבר מעבר לסופה (toPos ≥ סופה — תחילת
+      // הבלוק הבא או קץ המסמך). העמוד: זה שבו ההרחבה התחילה (prev).
+      for (let i = 0; i < blocks.length; i++) {
+        const blk = blocks[i]!;
+        if (blk.role !== 'heading' || blk.headingLevel === undefined) continue;
+        const headStart: Pos = { blockIndex: i, fragment: 0 };
+        if (le(fromPos, headStart) && le(headEndOf(i), toPos)) {
+          out.push({
+            blockId: blk.blockId,
+            level: blk.headingLevel,
+            pageKind: prev.pageKind,
+            physicalPageIndex: prev.physicalPageIndex,
+            candidateId: exp.candidateId,
+          });
+        }
+      }
+    }
+    prev = exp.toState;
+  }
+  return out;
 }

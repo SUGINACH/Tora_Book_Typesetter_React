@@ -278,7 +278,7 @@ console.log('\n8) רגרסיה');
   (deps !== null && !/^\s*✖|\berror\b/m.test(deps) ? ok : fail)('deps:check נקי');
   const inv = run('node', ['scripts/migration/verify-transfer-inventory.mjs']);
   (inv !== null && !inv.includes('FAIL') ? ok : fail)('verify-transfer-inventory ירוק (המניפסט v2 תואם לבדיקות שלב 2)');
-  const tests = (SKIP_TESTS ? 'Tests  847 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const tests = (SKIP_TESTS ? 'Tests  859 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   const m = tests?.match(/Tests\s+(\d+)\s+passed/);
   (m && Number(m[1]) >= 386 ? ok : fail)(`test:packages — ${m ? m[1] : 'נכשל'} עוברות (373 + 13 חדשות)`);
 }

@@ -123,8 +123,12 @@ export interface ChapterState {
 /** היקף מספור הערות (§10.3: page/siman/part/continuous) — מוזרק למעברים. */
 export type NoteNumberingScopeKind = 'page' | 'siman' | 'part' | 'continuous';
 
-/** סוגי עמודות תוכן בזרימת העימוד (עמודי שער — M8; שלב 59). */
-export type ContentPageKind = 'body' | 'toc' | 'notes';
+/**
+ * סוג העמוד הנוכחי בזרימת העימוד — כל סוגי התבניות (§9.3#1; שלב 59–60):
+ * עמודי תוכן (body/toc/notes) ועמודי שער (main/back/sub-shaar) שנפתחים
+ * בכוח על-ידי פותחות (forcePageTemplate; §10.1 H1).
+ */
+export type ContentPageKind = import('@tora/layout-api').PageKind;
 
 // ─────────────────────────── המצב ───────────────────────────
 
@@ -258,7 +262,7 @@ export function paginationStateIssues(value: unknown): string[] {
   }
   if (typeof s.physicalPageIndex !== 'number' || !Number.isSafeInteger(s.physicalPageIndex) || s.physicalPageIndex < 1) issues.push('physicalPageIndex');
   if (s.columnIndex !== 0 && s.columnIndex !== 1) issues.push('columnIndex');
-  if (s.pageKind !== undefined && !['body', 'toc', 'notes'].includes(String(s.pageKind))) issues.push('pageKind');
+  if (s.pageKind !== undefined && !['main-shaar', 'back-shaar', 'sub-shaar', 'toc', 'body', 'notes'].includes(String(s.pageKind))) issues.push('pageKind');
   if (typeof s.remainingByRegion !== 'object' || s.remainingByRegion === null || Array.isArray(s.remainingByRegion)) {
     issues.push('remainingByRegion');
   } else {
