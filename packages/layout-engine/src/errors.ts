@@ -18,6 +18,7 @@ export const LAYOUT_ENGINE_ERROR_CATALOG: Readonly<Record<string, EngineErrorEnt
   'errors.engine.BODY_FONT_MISSING': { i18nKey: 'errors.engine.BODY_FONT_MISSING', params: ['usage'], severity: 'error' },
   'errors.engine.SHAPING_MISMATCH': { i18nKey: 'errors.engine.SHAPING_MISMATCH', params: ['where'], severity: 'fatal' },
   'errors.engine.BLOCK_ATOM_GAP': { i18nKey: 'errors.engine.BLOCK_ATOM_GAP', params: ['blockId'], severity: 'fatal' },
+  'errors.engine.NO_LEGAL_LINE_BREAK': { i18nKey: 'errors.engine.NO_LEGAL_LINE_BREAK', params: ['blockId', 'level'], severity: 'error' },
 });
 
 export function isRegisteredEngineErrorKey(key: string): boolean {

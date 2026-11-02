@@ -20,3 +20,4 @@ export * from './linebreak/greedy.js';
 export * from './linebreak/policy.js';
 export * from './linebreak/quality.js';
 export * from './linebreak/ledger-adapter.js';
+export * from './linebreak/emergency.js';

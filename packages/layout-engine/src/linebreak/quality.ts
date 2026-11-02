@@ -79,15 +79,36 @@ export function addQuality(a: QualityVector, b: QualityVector): QualityVector {
   });
 }
 
+/**
+ * קוד ה-fallback של שורה לפי המדידה בלבד (בלי תלות ברמת הסולם שבה נבדקה
+ * חוקיותה): גלישה אחרי כיווץ מלא ⇒ EMERGENCY_LINE (HIGH); חסר מילוי אחרי
+ * מתיחה מלאה ⇒ EMERGENCY_STRETCH (MEDIUM). ברמה 0 קווים כאלה כלל אינם
+ * חוקיים — העלות נכנסת לתמונה רק כשהסולם (שלב 44) התיר אותם.
+ */
+export function lineFallbackCode(ctx: LineContext, columnWidthLu: number): 'EMERGENCY_LINE' | 'EMERGENCY_STRETCH' | null {
+  const m = ctx.candidate.metrics;
+  if (ctx.justification === 'justify') {
+    if (m.widthLu - columnWidthLu > m.shrinkLu) return 'EMERGENCY_LINE';
+    if (columnWidthLu - m.widthLu > m.stretchLu) return 'EMERGENCY_STRETCH';
+    return null;
+  }
+  return m.widthLu > columnWidthLu ? 'EMERGENCY_LINE' : null;
+}
+
 /** עלות השורה כווקטור (ADR-004; תלויות שלב 45 עדיין 0 — מופעלות שם). */
 export function lineQualityVector(ctx: LineContext, columnWidthLu: number): QualityVector {
+  const m = ctx.candidate.metrics;
   const badness = ctx.justification === 'justify'
-    ? justifyBadness(ctx.candidate.metrics.widthLu, ctx.candidate.metrics.stretchLu, ctx.candidate.metrics.shrinkLu, columnWidthLu)
+    ? justifyBadness(m.widthLu, m.stretchLu, m.shrinkLu, columnWidthLu)
     : 0;
+  const fallbackCode = lineFallbackCode(ctx, columnWidthLu);
   return Object.freeze({
     ...ZERO_QUALITY,
+    fallbackSeverity: fallbackCode === 'EMERGENCY_LINE'
+      ? FALLBACK_SEVERITY_WEIGHT.HIGH
+      : fallbackCode === 'EMERGENCY_STRETCH' ? FALLBACK_SEVERITY_WEIGHT.MEDIUM : 0,
     lineBadness: badness,
-    hyphenDebt: ctx.candidate.metrics.hyphenEnd ? 1 : 0,
+    hyphenDebt: m.hyphenEnd ? 1 : 0,
   });
 }
 

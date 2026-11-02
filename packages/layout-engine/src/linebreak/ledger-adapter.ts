@@ -19,6 +19,7 @@ export function dpLedgerEntries(
   bt: BlockTokens,
   dp: DpResult<QualityVector>,
   columnWidthLu: number,
+  perLineFallback?: ReadonlyMap<number, string>,
 ): readonly AppendDecision[] {
   const entries: AppendDecision[] = [];
   // מה הוערך בכל נקודת קצה: דחויים (חוקיות/comparator) — לרישום מלא
@@ -64,6 +65,7 @@ export function dpLedgerEntries(
       ],
       selectedCandidateId: line.candidate.id,
       rejected,
+      ...(perLineFallback?.get(i) !== undefined ? { fallbackCode: perLineFallback.get(i) as string } : {}),
       budget: { generated: dp.budget.generated, pruned: dp.budget.pruned, exhausted: dp.budget.exhausted },
     });
   });

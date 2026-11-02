@@ -237,7 +237,7 @@ console.log('\n6) טבלת UNICODE_FIDELITY_RULES — סגירות מול ADR-00
 // ─────────────────────────── 7. רגרסיה ───────────────────────────
 console.log('\n7) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  648 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  656 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   ((x => x !== null && !/error TS/.test(x))(run('npm', ['run', 'build:packages'])) ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');
