@@ -251,6 +251,11 @@ export class LineCandidateIndex {
     });
   }
 
+  /** מספר הטוקנים בזרם — לסדר עיבוד ותנאי סיום של ה־DP. */
+  get tokenCount(): number {
+    return this.tokens.length;
+  }
+
   atomIdAt(tokenIndex: number): string | null {
     if (tokenIndex < 0 || tokenIndex >= this.tokens.length) return null;
     return this.atomIdByToken[tokenIndex] ?? null;

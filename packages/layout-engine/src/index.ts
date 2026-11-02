@@ -14,3 +14,7 @@ export * from './v0/typeset-v0.js';
 export * from './linebreak/tokens.js';
 export * from './linebreak/shaping.js';
 export * from './linebreak/candidates.js';
+export * from './linebreak/dp.js';
+export * from './linebreak/cost-scalar.js';
+export * from './linebreak/greedy.js';
+export * from './linebreak/policy.js';
