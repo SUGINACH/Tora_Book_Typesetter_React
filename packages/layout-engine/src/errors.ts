@@ -19,6 +19,9 @@ export const LAYOUT_ENGINE_ERROR_CATALOG: Readonly<Record<string, EngineErrorEnt
   'errors.engine.SHAPING_MISMATCH': { i18nKey: 'errors.engine.SHAPING_MISMATCH', params: ['where'], severity: 'fatal' },
   'errors.engine.BLOCK_ATOM_GAP': { i18nKey: 'errors.engine.BLOCK_ATOM_GAP', params: ['blockId'], severity: 'fatal' },
   'errors.engine.NO_LEGAL_LINE_BREAK': { i18nKey: 'errors.engine.NO_LEGAL_LINE_BREAK', params: ['blockId', 'level'], severity: 'error' },
+  // פרק ז (M6) — מצב עימוד וסמני תוכן (שלב 49).
+  'errors.engine.PAGINATION_STATE_INVALID': { i18nKey: 'errors.engine.PAGINATION_STATE_INVALID', params: ['action', 'reason'], severity: 'error' },
+  'errors.engine.CURSOR_INVALID': { i18nKey: 'errors.engine.CURSOR_INVALID', params: ['cursor', 'issues'], severity: 'error' },
 });
 
 export function isRegisteredEngineErrorKey(key: string): boolean {

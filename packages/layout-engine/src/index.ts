@@ -22,3 +22,5 @@ export * from './linebreak/quality.js';
 export * from './linebreak/ledger-adapter.js';
 export * from './linebreak/emergency.js';
 export * from './linebreak/paragraph-end.js';
+// פרק ז (M6) — עמודים, טורים והערות; שלבים 49+
+export * from './pagination/state.js';

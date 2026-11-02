@@ -209,6 +209,7 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
         if (rel === 'packages/content-model/src/brackets.ts') continue;
         if (rel.startsWith('packages/content-model/src/parser/')) continue; // תחביר שלב 17 — נעול ומאומת
         if (rel === 'packages/measurement-api/src/bidi.ts') continue; // שלב 28: BD16 — זיווג סוגריים מקוונים של UAX #9 (Unicode); אינו זיווג סוגריים legacy — סוג אחר לחלוטין, נעול ב-conformance 94,412
+        if (rel === 'packages/layout-engine/src/pagination/state.ts') continue; // שלב 49 (§9.1): המצב נושא openBracketStack — שם שדה מחייב מהאפיון; אין כאן זיווג: מזהי הזוגות מגיעים מעץ הסוגריים של הפרסר (§10.4), ה־LIFO מאומת בבדיקות השלב
         const src = readFileSync(p, 'utf8');
         if (/findMatching|matchBracket|bracketDepth|openBracket|hasOpenBracket|protectParens/.test(src)) {
           offenders.push(rel);
@@ -223,7 +224,7 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
 // ─────────────────────────── 6. רגרסיה ───────────────────────────
 console.log('\n6) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  714 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  727 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   ((x => x !== null && !/error TS/.test(x))(run('npm', ['run', 'build:packages'])) ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');

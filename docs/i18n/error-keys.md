@@ -198,7 +198,7 @@
 
 ## layout-engine — מנוע v0 (שלב 33, פרק ה)
 
-מקור: `LAYOUT_ENGINE_ERROR_CATALOG` ב־`packages/layout-engine/src/errors.ts`, מוצאם ב־`v0/v0-settings.ts`, `v0/typeset-v0.ts`.
+מקור: `LAYOUT_ENGINE_ERROR_CATALOG` ב־`packages/layout-engine/src/errors.ts`, מוצאם ב־`v0/v0-settings.ts`, `v0/typeset-v0.ts`, `linebreak/emergency.ts`, `pagination/state.ts`.
 
 | מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
 |---|---|---|---|
@@ -206,6 +206,9 @@
 | `errors.engine.BODY_FONT_MISSING` | usage | error | לא סופק גופן פתור עבור {usage} |
 | `errors.engine.SHAPING_MISMATCH` | where | fatal | חוסר התאמה בין shaping לאטומים: {where} |
 | `errors.engine.BLOCK_ATOM_GAP` | blockId | fatal | פער בכיסוי האטומים של בלוק {blockId} |
+| `errors.engine.NO_LEGAL_LINE_BREAK` | blockId, level | error | אין שבירת שורה חוקית לבלוק {blockId} גם ברמה {level} |
+| `errors.engine.PAGINATION_STATE_INVALID` | action, reason | error | מצב/מעבר עימוד לא חוקי ({action}): {reason} |
+| `errors.engine.CURSOR_INVALID` | cursor, issues | error | סמן תוכן שגוי ‎{cursor}‎: {issues} |
 
 ## cli — reference runner (שלב 34, פרק ה)
 
