@@ -289,6 +289,14 @@ interface BoundaryCandidate {
   readonly sidenotesPlacedHeightLu: number;
   /** הערות צד עקורות (ממתינות לעמוד הבא) עד לגבול זה — כולל הממתינות מהעבר. */
   readonly sidenotesDisplaced: readonly string[];
+  /** ── מחסום H3 (שלב 56; §9.3#6; §10.1) ── */
+  /**
+   * מחסום H3 — הכותרת הרוחבית חוצה את שני הטורים: הגבול הזה מציב את
+   * הטקסט שלפניו בטור הנוכחי ואז סוגר את שני הטורים עד תחתית הכותרת
+   * (barrier); הטקסט שאחריה ממשיך בפס חדש מתחת. ההכרעה מה למלא לפני
+   * הכותרת — בחיפוש, דרך עלות הרווחים (איזון לפני הכותרת).
+   */
+  readonly h3Barrier?: { readonly heightLu: number };
 }
 
 /** הקשר שריון הערות להליכת הגבולות (שלב 53; ADR-005) — null כשאין גופי הערות. */
@@ -412,6 +420,39 @@ function buildBoundaries(
     const at = lineAt(map, pos);
     if (at === null) break;
     const { line, block } = at;
+    // מחסום H3 (שלב 56; §9.3#6; §10.1): כותרת רוחבית חוצת-טורים — ההליכה
+    // הרגילה נעצרת; נוצר מועמד barrier שמציב את הטקסט שלפניו וסוגר את
+    // שני הטורים עד תחתית הכותרת. הטקסט שאחריה — הרחבה חדשה בפס שמתחת.
+    // ה-H3 אינה פותחת עמוד מעצמה (§10.1).
+    if (block.role === 'heading' && block.headingLevel === 3) {
+      const h3Height = block.lines.reduce((n, l) => n + l.heightLu, 0);
+      // סוף ה-H3 — אחרי כל קוויה (אטומית)
+      const endPos: FlowPosition = { blockIndex: pos.blockIndex + 1, lineIndex: 0 };
+      const atEnd = endPos.blockIndex >= map.blocks.length;
+      const lastBlock = map.blocks[map.blocks.length - 1]!;
+      out.push({
+        end: endPos,
+        cursorBlockId: atEnd ? lastBlock.blockId : map.blocks[endPos.blockIndex]!.blockId,
+        cursorFragment: atEnd ? lastBlock.lines.length : 0,
+        heightLu: used,
+        emergency: false,
+        footnoteRefs: [...foot],
+        sidenoteRefs: [...side],
+        bracketOpens: [...opens],
+        bracketCloses: [...closes],
+        lineCount: count,
+        notesPlacedIds: [...notesPlacedIds],
+        notesPlacedHeightLu: notesPlacedHeight,
+        noteSplits: [...noteSplits],
+        deferredRefs: [],
+        sidenotesPlacedIds: [...sidenotesPlacedIds],
+        sidenotesPlacedHeightLu: sidenotesPlacedHeight,
+        sidenotesDisplaced: [...sidenotesDisplaced],
+        h3Barrier: { heightLu: h3Height },
+      });
+      lastAddedBoundaryLineCount = count;
+      break; // ההליכה נעצרת במחסום — ההמשך הוא הרחבה חדשה בפס שמתחת
+    }
     // feasibility לפני cost: הקו חייב להיכנס גם אחרי שריון ההערות שהוא
     // עצמו גורם (§9.3#5 — "רק אחר כך נקבע שטח הגוף הפנוי")
     if (notesCtx !== null && line.footnoteRefs.length > 0) {
@@ -679,16 +720,19 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
       let s = state;
       const transitions: PaginationTransition[] = [];
       // צריכת גובה — בחירום הקו גולש: מצרכים עד תום הנותר (המצב מתעד; הגלישה
-      // נראית באיכות רכיב 1 וב-audit)
+      // נראית באיכות רכיב 1 וב-audit); H3 בראש פס (בלי טקסט-קודם) — אין
+      // צריכת טור כלל (consumeRegion דורש כמות חיובית)
       const consumeAmount = boundary.emergency ? remaining : boundary.heightLu;
       if (!boundary.emergency && boundary.heightLu > remaining) {
         feasibilityRejections += 1; // לא אמור לקרות (הגבולות נבנו בגבולות הנותר) — הגנה
         continue;
       }
       try {
-        const step = consumeRegion(s, columnRegion, consumeAmount);
-        transitions.push(step.transition);
-        s = step.state;
+        if (consumeAmount > 0) {
+          const step = consumeRegion(s, columnRegion, consumeAmount);
+          transitions.push(step.transition);
+          s = step.state;
+        }
         // שריון ההערות (ADR-005): הצריבה בתוך ההרחבה — לא post-pass.
         // ההפניות ממתינות (pend) ואז מוצבות בגוש ההערות של העמוד;
         // ההמשכים מפיצולים נשארים ממתינים לעמוד הבא.
@@ -747,35 +791,87 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         const adv = advanceCursor(s, { blockId: boundary.cursorBlockId, fragmentIndex: boundary.cursorFragment, atomIndex: 0 });
         transitions.push(adv.transition);
         s = adv.state;
-        // מעבר טור/עמוד (§9.3): טור 0 ← 1; טור 1 ← עמוד חדש מהתבנית (שלב 50)
         let closesRegion = false;
-        if (s.columnIndex === 0) {
-          const sw = switchColumn(s, 1);
-          transitions.push(sw.transition);
-          s = sw.state;
+        let h3GapLu = 0;
+        // ── מחסום H3 (שלב 56; §9.3#6; §10.1): הכותרת הרוחבית חוצת-טורים ──
+        // ההרחבה סוגרת את שני הטורים עד תחתית הכותרת (barrierY = העמוק
+        // מבין הטורים; הרווח שמעל הכותרת בטור הרדוד הוא עלות האי-איזון —
+        // החיפוש מעדיף מסלולים מאוזנים לפני הכותרת); הטקסט שאחריה
+        // ממשיך בפס חדש באותו עמוד (אין פתיחת עמוד מעצמה; §10.1).
+        if (boundary.h3Barrier !== undefined) {
+          const pageHeight = template.regions.find((r) => r.role === 'body-column' && r.columnIndex === 0)!.rect.height;
+          const col0Region = `page:${s.physicalPageIndex}:col:0`;
+          const col1Region = `page:${s.physicalPageIndex}:col:1`;
+          const rem0 = s.remainingByRegion[col0Region] ?? 0;
+          const rem1 = s.remainingByRegion[col1Region] ?? 0;
+          const used0 = Math.max(0, pageHeight - rem0);
+          const used1 = Math.max(0, pageHeight - rem1);
+          const barrierY = Math.max(used0, used1);
+          const bandTop = barrierY + boundary.h3Barrier.heightLu;
+          // המרחב המשותף עם ההערות (§9.3#5): הפס חייב להיכנס גם עם גוש
+          // ההערות שנצרב בעמוד — אחרת ה-H3 עוברת עמוד (feasibility לפני cost)
+          const notesUsedOnPageNow = notesCtx !== null ? Math.max(0, emptyNotesBudget - (s.remainingByRegion[notesRegionId] ?? emptyNotesBudget)) : 0;
+          if (bandTop + notesUsedOnPageNow > pageHeight || bandTop > pageHeight) {
+            feasibilityRejections += 1;
+            continue;
+          }
+          try {
+            const burn0 = bandTop - used0;
+            const burn1 = bandTop - used1;
+            if (burn0 > 0) {
+              const b0 = consumeRegion(s, col0Region, burn0);
+              transitions.push(b0.transition);
+              s = b0.state;
+            }
+            if (burn1 > 0) {
+              const b1 = consumeRegion(s, col1Region, burn1);
+              transitions.push(b1.transition);
+              s = b1.state;
+            }
+            // הטקסט שאחרי הכותרת ממשיך בטור 0 של הפס החדש (§9.3#3)
+            if (s.columnIndex === 1) {
+              const sw = switchColumn(s, 0);
+              transitions.push(sw.transition);
+              s = sw.state;
+            }
+            closesRegion = true; // barrier מוגדר סוגר אזור (§9.2)
+            // עלות אי-האיזון: הרווחים מעל הכותרת בשני הטורים (רכיב 8) —
+            // החיפוש מאזן את הטקסט לפני הכותרת ("איזון לפני הכותרת")
+            h3GapLu = (barrierY - used0) + (barrierY - used1);
+          } catch {
+            feasibilityRejections += 1;
+            continue;
+          }
         } else {
-          const nextPage = s.physicalPageIndex + 1;
-          const nextTemplate = input.templates.for(input.pageKind, nextPage);
-          const remainingNext = initialRemainingByRegion(nextTemplate, nextPage);
-          const pg = openPage(s, remainingNext);
-          transitions.push(pg.transition);
-          s = pg.state;
-          closesRegion = true;
+          // מעבר טור/עמוד (§9.3): טור 0 ← 1; טור 1 ← עמוד חדש מהתבנית (שלב 50)
+          if (s.columnIndex === 0) {
+            const sw = switchColumn(s, 1);
+            transitions.push(sw.transition);
+            s = sw.state;
+          } else {
+            const nextPage = s.physicalPageIndex + 1;
+            const nextTemplate = input.templates.for(input.pageKind, nextPage);
+            const remainingNext = initialRemainingByRegion(nextTemplate, nextPage);
+            const pg = openPage(s, remainingNext);
+            transitions.push(pg.transition);
+            s = pg.state;
+            closesRegion = true;
+          }
         }
         if (!closesRegion && isPageOpener(boundary.end.blockIndex)) closesRegion = true;
         // וקטור איכות אינקרמנטלי (ADR-004): רכיב 1 (fallbackSeverity) —
         // חירום HIGH=2, פיצול הערה MEDIUM=1 לפיצול; רכיב 3 (noteDisplacement)
         // — המשך מוסר מעוגנו; רכיב 8 (columnImbalance) — תת-מילוי הטור
-        // באלפי-LU (מהמרחב האפקטיבי); רכיב 9 (pageCountDebt) — עמוד שנפתח.
+        // באלפי-LU + רווחי אי-האיזון שלפני H3; רכיב 9 — עמוד שנפתח.
         const v = new Array<number>(9).fill(0);
         v[0] = (boundary.emergency ? 2 : 0) + boundary.noteSplits.length;
         // רכיב 3 (noteDisplacement; ADR-004): פיצולי הערות-שוליים + הערות צד
         // עקורות מעוגנן (FIFO לעמוד הבא) — החיפוש מעדיף הצבה קרובה (§10.3)
         v[2] = boundary.noteSplits.length + boundary.sidenotesDisplaced.length;
-        v[7] = Math.min(1024, Math.floor(Math.max(0, effectiveRemaining - boundary.heightLu) / 1000));
+        v[7] = Math.min(1024, Math.floor((Math.max(0, effectiveRemaining - boundary.heightLu) + h3GapLu) / 1000));
         v[8] = closesRegion ? 1 : 0;
         out.push({
-          candidateId: `pg:${state.physicalPageIndex}:${state.columnIndex}→${boundary.cursorBlockId}@${boundary.cursorFragment}${boundary.emergency ? ':EMERGENCY' : ''}${boundary.noteSplits.length > 0 ? ':SPLIT' : ''}`,
+          candidateId: `pg:${state.physicalPageIndex}:${state.columnIndex}→${boundary.cursorBlockId}@${boundary.cursorFragment}${boundary.emergency ? ':EMERGENCY' : ''}${boundary.noteSplits.length > 0 ? ':SPLIT' : ''}${boundary.h3Barrier !== undefined ? ':H3' : ''}`,
           transitions,
           toState: s,
           quality: Object.freeze(v) as PageQualityVector,
