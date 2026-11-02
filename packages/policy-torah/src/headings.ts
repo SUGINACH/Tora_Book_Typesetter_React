@@ -78,6 +78,17 @@ export interface HeadingBehavior {
    */
   readonly barrierOrnamentEm?: number;
   /**
+   * סגנון inline לכותרות גוף (§10.1 H4–H6; שלב 63): מטא-דאטת מדידה —
+   * הגופן והגודל מההגדרות (f-h{level}/s-h{level}); נצרכת על-ידי שכבת
+   * המדידה בחיווט (M9). letter-spacing מוגבל הוא מועמד-קו נפרד עם
+   * fingerprint שונה (§8 "רווחי מילים בלבד, ורק לאחר מכן letter-spacing")
+   * — תחום שבירת-השורות, לא העימוד; אינו נכנס לכאן.
+   */
+  readonly inlineStyle?: {
+    readonly font: string;
+    readonly size: string;
+  };
+  /**
    * מספר קווי ליווי מינימום אחרי הכותרת באותו טור (§10.1: ברירת מחדל 2
    * ל־H2+; כותרת תלויה אינה "קנס קטן" — מועמד שבו הכותרת עוברת עם
    * הליווי מקבל עדיפות).
@@ -110,9 +121,9 @@ export const LEGACY_HEADING_DEFAULTS: Readonly<Record<number, Omit<HeadingBehavi
     ornaments: { scope: 'both', topAssetIds: [], bottomAssetIds: [] },
   },
   3: { flowRole: 'full-width-barrier', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
-  4: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
-  5: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
-  6: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
+  4: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), inlineStyle: { font: "'Alpha', 'Frank Ruhl Libre', serif", size: '12.5' } },
+  5: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), inlineStyle: { font: "'AlphaLight', 'David Libre', serif", size: '11.5' } },
+  6: { flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0), inlineStyle: { font: "'Noto Serif Hebrew', serif", size: '10.5' } },
   7: { flowRole: 'sidenote-stream', forcePageBreak: false, escortLines: 0, spaceBeforeLu: asLu(0), spaceAfterLu: asLu(0) },
 });
 
@@ -205,6 +216,12 @@ export function headingBehaviorIssues(b: unknown): string[] {
   if (v.startOnRecto !== undefined) {
     if (typeof v.startOnRecto !== 'boolean') issues.push('startOnRecto');
     else if (v.flowRole !== 'page-opener') issues.push('startOnRecto:not-opener');
+  }
+  if (v.inlineStyle !== undefined) {
+    const st = v.inlineStyle as Record<string, unknown>;
+    if (typeof st.font !== 'string' || st.font.length === 0 || typeof st.size !== 'string' || st.size.length === 0) {
+      issues.push('inlineStyle');
+    }
   }
   if (v.barrierOrnamentEm !== undefined) {
     if (typeof v.barrierOrnamentEm !== 'number' || !Number.isFinite(v.barrierOrnamentEm) || v.barrierOrnamentEm < 0 || v.barrierOrnamentEm > 100) issues.push('barrierOrnamentEm');

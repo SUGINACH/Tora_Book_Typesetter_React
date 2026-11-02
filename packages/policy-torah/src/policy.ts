@@ -113,6 +113,22 @@ export function createTorahPolicy(
     const ornL = String(values['h3-ornament-l'] ?? 'none');
     const ornR = String(values['h3-ornament-r'] ?? 'none');
     const h3OrnEm = ornL !== 'none' || ornR !== 'none' ? parseEmDimension(values['dim-h3-side-h'], 1) : 0;
+    // H4–H6 — סגנון inline למדידה (§10.1; שלב 63): הגופן/הגודל מההגדרות;
+    // מטא-דאטה לשכבת המדידה (החיווט ב-M9). letter-spacing — מועמד-קו
+    // נפרד (§8), תחום שבירת-השורות
+    for (const level of [4, 5, 6] as const) {
+      const base = behaviors.get(level)!;
+      const font = values[`f-h${level}`];
+      const size = values[`s-h${level}`];
+      behaviors.set(level, Object.freeze({
+        ...base,
+        level,
+        ...(typeof font === 'string' && font.length > 0 && typeof size === 'string' && size.length > 0
+          ? { inlineStyle: { font, size } }
+          : {}),
+        ...(typeof font !== 'string' && typeof size !== 'string' ? {} : {}),
+      }));
+    }
     const h3Base = behaviors.get(3)!;
     behaviors.set(3, Object.freeze({ ...h3Base, level: 3, barrierOrnamentEm: h3OrnEm }));
     const h2Base = behaviors.get(2)!;

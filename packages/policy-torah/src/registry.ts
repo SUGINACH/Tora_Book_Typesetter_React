@@ -31,7 +31,7 @@ export const TORAH_RULE_REGISTRY: readonly TorahRuleEntry[] = Object.freeze([
   { ruleId: 'heading.h1.shaar', version: 2, hook: 'heading-behavior', settingsKeys: ['mode-h1', 'odd-h1'], description: 'H1 שער משנה/חלק — sub-shaar, פתיחת עמוד, recto (parity), פיצול כותרת' },
   { ruleId: 'heading.h2.chapter', version: 3, hook: 'heading-behavior', settingsKeys: ['h2-orn-scope', 'h2-top-distance', 'h2-auto-siman', 'h2-reset-siman', 'dim-h2-top-h', 'dim-h2-btm-h'], description: 'H2 פותח פרק — ריווח עליון ועיטורים לפי scope (measured boxes; שלב 61)' },
   { ruleId: 'heading.h3.barrier', version: 2, hook: 'heading-behavior', settingsKeys: ['dim-h3-side-h', 'h3-ornament-l', 'h3-ornament-r'], description: 'H3 כותרת רוחבית — barrier חוצת-טורים (ADR-006), לא פותחת עמוד; עיטור צד נמדד בגובה הפס' },
-  { ruleId: 'heading.h456.inline', version: 1, hook: 'heading-behavior', settingsKeys: [], description: 'H4–H6 כותרות inline וליווי (escort)' },
+  { ruleId: 'heading.h456.inline', version: 2, hook: 'heading-behavior', settingsKeys: ['f-h4', 's-h4', 'f-h5', 's-h5', 'f-h6', 's-h6'], description: 'H4–H6 כותרות inline — ליווי לפי רמה (escort) + סגנון מדידה (גופן/גודל); letter-spacing — תחום מועמדי-הקו' },
   { ruleId: 'heading.h7.sidenote', version: 1, hook: 'heading-behavior', settingsKeys: [], description: 'H7 הערת צד — זרם sidenote מעוגן לשורה' },
   { ruleId: 'heading.escort.min2', version: 1, hook: 'heading-behavior', settingsKeys: [], description: 'ליווי ברירת מחדל: לפחות שתי שורות גוף אחרי כותרת' },
   // ── שבירות חוקיות (§9.1; מנוע מזריק משלב 52; מרשם משלב 58) ──

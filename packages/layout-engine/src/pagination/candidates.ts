@@ -452,6 +452,9 @@ function buildBoundaries(
   const opens: { pairId: string; kind: 'round' | 'square' }[] = [];
   const closes: string[] = [];
   let linesSinceHeading = Number.MAX_SAFE_INTEGER;
+  // דרישת הליווי של הכותרת האחרונה שהוצבה (שלב 63: לפי רמה מההתנהגות;
+  // רצפה — מדיניות הגבולות השטוחה של המחולל)
+  let escortAfterHeading = policy.headingEscortLines;
   let count = 0;
   let strideCounter = 0;
   let lastAddedBoundaryLineCount = -1;
@@ -725,6 +728,10 @@ function buildBoundaries(
     side.push(...line.sidenoteRefs);
     opens.push(...(line.bracketOpens ?? []));
     closes.push(...(line.bracketCloses ?? []));
+    if (block.role === 'heading' && pos.lineIndex === 0 && block.headingLevel !== undefined) {
+      // הכותרת הפותחת את הבלוק — דרישת הליווי שלה (§10.1; שלב 63)
+      escortAfterHeading = Math.max(policy.headingEscortLines, headingBehaviorOf(block.headingLevel).escortLines);
+    }
     linesSinceHeading = block.role === 'heading' ? 0 : Math.min(linesSinceHeading + 1, Number.MAX_SAFE_INTEGER);
     const nextPos = nextPosition(map, pos);
     const isEndOfBlock = pos.lineIndex + 1 >= block.lines.length;
@@ -740,13 +747,16 @@ function buildBoundaries(
         strideCounter = 0;
       }
     }
-    // ליווי כותרת: גבול פחות מ-K קווים אחרי כותרת — אינו חוקי (§10.1);
-    // חריג אחד (שלב 59): גבול שנופל בדיוק בראש כותרת פותחת-עמוד — אינו
-    // "כותרת תלויה": העמוד נסגר בכוח (forcePageBreak) והפותחת קיבלה עמוד
-    // משלה; אסור לסגור גם את הגבול היחיד שמפריד ממנה (אחרת — תקוע)
+    // ליווי כותרת (§10.1; שלב 63 — לפי רמה מההתנהגות המוזרקת): גבול פחות
+    // מ-K קווים אחרי כותרת — אינו חוקי; K נקבע לפי הכותרת שהוצבה לאחרונה
+    // (ברירת legacy: 2 ל-H0–H6) ולא לפי ערך אחיד. חריגים: (א) גבול שנופל
+    // בדיוק בראש כותרת פותחת-עמוד (שלב 59) — אינו "כותרת תלויה": העמוד
+    // נסגר בכוח; (ב) קץ המסמך (שלב 63) — אחרי הכותרת האחרונה אין טור/עמוד
+    // שממנו היא יכולה להיות תלויה; בלי החריג מסמך המסתיים בכותרת נתקע.
+    const atEndOfDoc = nextPos.blockIndex >= map.blocks.length;
     const openerAfterBoundary = legal || isEndOfBlock ? pageOpenerLevelAt(nextPos) : undefined;
-    if (legal && policy.headingEscortLines > 0 && linesSinceHeading < policy.headingEscortLines
-      && openerAfterBoundary === undefined) {
+    if (legal && escortAfterHeading > 0 && linesSinceHeading < escortAfterHeading
+      && openerAfterBoundary === undefined && !atEndOfDoc) {
       legal = false;
     }
     if (legal) {
@@ -1324,3 +1334,93 @@ export function headingAnchorsOf(
   }
   return out;
 }
+
+// ─────────────────── מבקר כותרות תלויות (שלב 63; §10.1 "אין כותרת תלויה") ───────────────────
+
+/** כותרת תלויה שנמצאה במסלול — עם מיקום לאיתור. */
+export interface HangingHeading {
+  readonly blockId: string;
+  readonly level: number;
+  /** מספר קווי הגוף שהוצבו אחרי הכותרת באותו טור. */
+  readonly escortLinesPlaced: number;
+  /** דרישת הליווי של הכותרת. */
+  readonly escortLinesRequired: number;
+  readonly physicalPageIndex: number;
+  readonly columnIndex: 0 | 1;
+}
+
+/**
+ * מבקר השער של שלב 63: סריקת מסלול שעבר — אף כותרת אינה תלויה. כותרת
+ * תלויה = הגבול הראשון אחריה באותו טור נופל לפני K קווי גוף (K לפי
+ * ההתנהגות שלה), והגבול אינו קץ-מסמך ואינו פתיחת-עמוד כפויה (חריגים
+ * מתועדים ב-ADR/§10.1). טהורה ודטרמיניסטית; משמשת את השער "אין כותרת
+ * תלויה בכל ה-fixtures".
+ */
+export function hangingHeadingsOf(
+  initial: PaginationState,
+  path: readonly PageExpansion[],
+  blocks: readonly PaginatedBlock[],
+  escortOf: (level: number) => number = (level) => legacyHeadingBehaviorOf(level).escortLines,
+): readonly HangingHeading[] {
+  const indexOf = new Map<string, number>();
+  for (let i = 0; i < blocks.length; i++) indexOf.set(blocks[i]!.blockId, i);
+  type Pos = { readonly blockIndex: number; readonly fragment: number };
+  const cursorPos = (cursor: string): Pos => {
+    const c = parseCursor(cursor);
+    const idx = indexOf.get(c.blockId);
+    if (idx === undefined) return { blockIndex: blocks.length, fragment: 0 };
+    return { blockIndex: idx, fragment: c.fragmentIndex };
+  };
+  const le = (a: Pos, b: Pos): boolean => a.blockIndex < b.blockIndex || (a.blockIndex === b.blockIndex && a.fragment <= b.fragment);
+  const hanging: HangingHeading[] = [];
+  let prev = initial;
+  for (const exp of path) {
+    const fromPos = cursorPos(prev.contentCursor);
+    const toPos = cursorPos(exp.toState.contentCursor);
+    const advanced = fromPos.blockIndex !== toPos.blockIndex || fromPos.fragment !== toPos.fragment;
+    if (advanced) {
+      for (let i = 0; i < blocks.length; i++) {
+        const blk = blocks[i]!;
+        if (blk.role !== 'heading' || blk.headingLevel === undefined) continue;
+        const headStart: Pos = { blockIndex: i, fragment: 0 };
+        const headEnd: Pos = i + 1 < blocks.length ? { blockIndex: i + 1, fragment: 0 } : { blockIndex: i, fragment: blk.lines.length };
+        if (!(le(fromPos, headStart) && le(headEnd, toPos))) continue;
+        // כמה קווים הוצבו אחרי הכותרת בהרחבה זו (אותו טור)? כותרת עוקבת
+        // יוצרת קבוצה (המנוע מאפס את מונה הליווי בכותרת — הקבוצה נעה יחד):
+        // כותרת בין הכותרת הנבדקת לגבול אינה תלייה שלה; הדרישה נבדקת
+        // על הכותרת האחרונה בקבוצה בנפרד
+        let escortPlaced = 0;
+        let groupWithNextHeading = false;
+        for (let j = i + 1; j < blocks.length; j++) {
+          const b2 = blocks[j]!;
+          const bStart: Pos = { blockIndex: j, fragment: 0 };
+          if (!le(bStart, toPos)) break;
+          if (b2.role === 'heading') { groupWithNextHeading = true; break; }
+          const upTo = toPos.blockIndex === j ? toPos.fragment : b2.lines.length;
+          escortPlaced += upTo;
+        }
+        if (groupWithNextHeading) continue; // קבוצת כותרות — הדרישה על האחרונה
+        const required = escortOf(blk.headingLevel);
+        const atDocEnd = toPos.blockIndex >= blocks.length - 1 && toPos.fragment >= (blocks[blocks.length - 1]!.lines.length);
+        // חריג פתיחת-עמוד: הגבול נופל בראש כותרת פותחת (המועמד נושא pageOpener
+        // או שהסמן נעצר בראש בלוק heading פותח) — סגירה כפויה, לא תלייה
+        const nextBlk = toPos.blockIndex < blocks.length ? blocks[toPos.blockIndex]! : undefined;
+        const openerBreak = nextBlk !== undefined && nextBlk.role === 'heading' && nextBlk.headingLevel !== undefined
+          && escortOf(nextBlk.headingLevel) >= 0 && (exp.candidateId.includes(':OPEN') || exp.candidateId.includes(':SHAAR') || exp.candidateId.includes(':H3'));
+        if (escortPlaced < required && !atDocEnd && !openerBreak) {
+          hanging.push({
+            blockId: blk.blockId,
+            level: blk.headingLevel,
+            escortLinesPlaced: escortPlaced,
+            escortLinesRequired: required,
+            physicalPageIndex: prev.physicalPageIndex,
+            columnIndex: prev.columnIndex,
+          });
+        }
+      }
+    }
+    prev = exp.toState;
+  }
+  return hanging;
+}
+
