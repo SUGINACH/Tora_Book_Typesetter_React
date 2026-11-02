@@ -45,6 +45,7 @@ import {
   pendFootnote,
   pendSidenote,
   placeFootnotes,
+  placeSidenotes,
   switchColumn,
   type PaginationState,
   type PaginationTransition,
@@ -281,6 +282,13 @@ interface BoundaryCandidate {
   readonly noteSplits: readonly { readonly continuationId: string; readonly spec: NoteBodySpec }[];
   /** הפניות שנדחו (דחיית עוגן) — ההליכה נעצרה לפני הקו הנושא אותן. */
   readonly deferredRefs: readonly string[];
+  /** ── הערות צד (H7; שלב 54) ── */
+  /** הערות צד שהוצבו באזור החיצוני עד לגבול זה (FIFO לפי מקור). */
+  readonly sidenotesPlacedIds: readonly string[];
+  /** גובה שנצרב באזור החיצוני עד לגבול זה. */
+  readonly sidenotesPlacedHeightLu: number;
+  /** הערות צד עקורות (ממתינות לעמוד הבא) עד לגבול זה — כולל הממתינות מהעבר. */
+  readonly sidenotesDisplaced: readonly string[];
 }
 
 /** הקשר שריון הערות להליכת הגבולות (שלב 53; ADR-005) — null כשאין גופי הערות. */
@@ -296,6 +304,13 @@ interface NotesWalkContext {
   readonly notesAlreadyOnPage: boolean;
   /** המשכים ממתינים בתחילת ההליכה — חייבים להיצרב ראשונים. */
   readonly pendingAtStart: readonly string[];
+  /** ── הערות צד (H7; שלב 54; §10.3) ── */
+  /** הנותר באזור החיצוני של העמוד (מהמצב) — אפס כשאין אזור. */
+  readonly outerRemainingLu: number;
+  /** תקציד אזור חיצוני של עמוד ריק. */
+  readonly emptyOuterBudgetLu: number;
+  /** הערות צד ממתינות בתחילת ההליכה (עקורות מהעמוד הקודם — FIFO). */
+  readonly pendingSidenotesAtStart: readonly string[];
 }
 
 /**
@@ -337,11 +352,33 @@ function buildBoundaries(
   const noteSplits: { continuationId: string; spec: NoteBodySpec }[] = [];
   let separatorBurned = notesCtx !== null && notesCtx.notesAlreadyOnPage;
   let notesGrowTotal = 0; // כולל הפרדה + הערות שנצרבו בהליכה זו
+  // הערות צד (H7; שלב 54; §10.3): נצרבות באזור החיצוני **בלי לגזול מהטור**
+  // (השוליים לצד הטור, לא מתחתיו); הממתינות (עקורות FIFO) נצרבות ראשונות
+  // בראש האזור של העמוד; הערה שאינה נכנסת לשארית — עקירה לעמוד הבא בעלות
+  // displacement (רכיב 3); הערה גדולה מאזור ריק — דחיית עוגן (כמו ADR-005:
+  // אין פיצול להערות צד, אין גלישה שקטה)
+  let sidenotesPlacedIds: string[] = [];
+  let sidenotesPlacedHeight = 0;
+  let sidenotesDisplaced: string[] = [];
   if (notesCtx !== null) {
-    // המשכים ממתינים — נצרבים ראשונים (חובת הצבה; אין דחיית עוגן להמשך).
-    // הצריבה מוגבלת גם למרחב המשותף: ההמשך + הקו הראשון שיוצב חייבים
-    // להיכנס יחד לטור (peek לגובה הקו הבא) — אחרת שום גבול לא ייווצר
-    // והמצב ייתקע (§8.2).
+    for (const pendId of notesCtx.pendingSidenotesAtStart) {
+      const spec = notesCtx.bodies.get(pendId);
+      if (spec === undefined) continue;
+      if (spec.heightLu > notesCtx.emptyOuterBudgetLu) {
+        // גדולה מאזור ריק — לעולם לא תיכנס: העוגן נדחה לנצח ⇒ תקוע/כשל
+        // מפורש; כאן — ההליכה מסומנת שתדחה גם את הקו הראשון (אין גבולות)
+        sidenotesDisplaced.push(pendId);
+        continue;
+      }
+      if (spec.heightLu <= notesCtx.outerRemainingLu - sidenotesPlacedHeight) {
+        sidenotesPlacedIds.push(pendId);
+        sidenotesPlacedHeight += spec.heightLu;
+      } else {
+        sidenotesDisplaced.push(pendId); // נותרת ממתינה — עקורה FIFO (עלות)
+      }
+    }
+    // המשכים (footnotes) ממתינים — נצרבים ראשונים (חובת הצבה); הצריבה
+    // מוגבלת למרחב המשותף עם peek לקו הראשון (שלב 53)
     const firstAt = lineAt(map, pos);
     const firstLineH = firstAt !== null ? firstAt.line.heightLu : 0;
     for (const pendId of notesCtx.pendingAtStart) {
@@ -421,6 +458,30 @@ function buildBoundaries(
       notesPlacedHeight = notesGrowTotal;
     }
     if (used + line.heightLu + notesGrowTotal > remainingLu) break; // feasibility: הקו + ההערות אינם נכנסים יחד
+    // הערות צד (H7; שלב 54): הצריבה באזור החיצוני — אינה משפיעה על מקום
+    // הטור (השוליים לצד הטקסט); הערה שאינה נכנסת לשארית האזור נעקרת
+    // לעמוד הבא בעלות displacement; גדולה מאזור ריק — דחיית עוגן (הקו
+    // כולו אינו מוצב; בסופו של דבר תקוע/כשל מפורש — אין גלישה שקטה)
+    if (notesCtx !== null && line.sidenoteRefs.length > 0) {
+      let deferLine = false;
+      for (const ref of line.sidenoteRefs) {
+        const spec = notesCtx.bodies.get(ref);
+        if (spec === undefined) {
+          throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `missing sidenote body ${ref}` }, 'הפניית הערת צד בלי גוף מדוד');
+        }
+        if (spec.heightLu > notesCtx.emptyOuterBudgetLu) {
+          deferLine = true; // גדולה מאזור ריק — דחיית עוגן נצחית (§8.2)
+          break;
+        }
+        if (spec.heightLu <= notesCtx.outerRemainingLu - sidenotesPlacedHeight) {
+          sidenotesPlacedIds.push(ref);
+          sidenotesPlacedHeight += spec.heightLu;
+        } else {
+          sidenotesDisplaced.push(ref); // עקורה FIFO לעמוד הבא (עלות רכיב 3)
+        }
+      }
+      if (deferLine) break; // ההליכה נעצרת לפני הקו — העוגן עובר עמוד
+    }
     const atomic = isAtomicBlock(block, policy);
     // הצבת הקו
     used += line.heightLu;
@@ -466,6 +527,9 @@ function buildBoundaries(
         notesPlacedHeightLu: notesPlacedHeight,
         noteSplits: [...noteSplits],
         deferredRefs: [],
+        sidenotesPlacedIds: [...sidenotesPlacedIds],
+        sidenotesPlacedHeightLu: sidenotesPlacedHeight,
+        sidenotesDisplaced: [...sidenotesDisplaced],
       });
       lastAddedBoundaryLineCount = count;
     }
@@ -476,9 +540,9 @@ function buildBoundaries(
   if (out.length === 0 && used === 0 && lastAddedBoundaryLineCount < 0) {
     const at = lineAt(map, pos);
     if (at !== null && !isAtomicBlock(at.block, policy)
-      && (notesCtx === null || at.line.footnoteRefs.length === 0)) {
+      && (notesCtx === null || (at.line.footnoteRefs.length === 0 && at.line.sidenoteRefs.length === 0))) {
       // הערות על קו חירום: החירום שמור לקו גוף בלבד — קו עם הפניית הערה
-      // שאינו נכנס אינו מקבל חירום (ההערה תגלוש בשקט) — דחיית עוגן (ADR-005)
+      // (שוליים או צד) שאינו נכנס אינו מקבל חירום — דחיית עוגן (ADR-005; שלב 54)
       const { line } = at;
       const nextPos = nextPosition(map, pos);
       const atEnd = nextPos.blockIndex >= map.blocks.length;
@@ -498,6 +562,9 @@ function buildBoundaries(
         notesPlacedHeightLu: notesPlacedHeight,
         noteSplits: [...noteSplits],
         deferredRefs: [],
+        sidenotesPlacedIds: [...sidenotesPlacedIds],
+        sidenotesPlacedHeightLu: sidenotesPlacedHeight,
+        sidenotesDisplaced: [...sidenotesDisplaced],
       });
     }
   }
@@ -547,6 +614,19 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
             throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `missing note body ${ref}` }, 'הפניית הערה בלי גוף מדוד — הקלט חייב לכלול את כל גופי ההערות');
           }
         }
+        for (const ref of line.sidenoteRefs) {
+          if (!noteBodies.has(ref)) {
+            throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `missing sidenote body ${ref}` }, 'הפניית הערת צד בלי גוף מדוד — הקלט חייב לכלול את כל גופי ההערות');
+          }
+        }
+      }
+    }
+    // הערות צד דורשות אזור חיצוני בתבנית (§10.3: recto/verso קובעים את האזור)
+    const hasSidenoteRefs = input.blocks.some((b) => b.lines.some((l) => l.sidenoteRefs.length > 0));
+    if (hasSidenoteRefs) {
+      const first = input.templates.for(input.pageKind, 1);
+      if (!first.regions.some((r) => r.role === 'outer-notes')) {
+        throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: 'sidenotes require outer-notes region (sidenoteWidthLu)' }, 'הערות צד דורשות אזור חיצוני בתבניות — הגדר sidenoteWidthLu');
       }
     }
   }
@@ -576,6 +656,11 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
       const notesRemaining = state.remainingByRegion[notesRegionId] ?? emptyNotesBudget;
       const notesUsedOnPage = Math.max(0, emptyNotesBudget - notesRemaining);
       effectiveRemaining = asLu(Math.max(0, remaining - notesUsedOnPage));
+      // אזור חיצוני להערות צד (שלב 54; §10.3) — אפס כשאין אזור בתבנית
+      const outerRegionId = `page:${state.physicalPageIndex}:outer`;
+      const outerRegion = template.regions.find((r) => r.role === 'outer-notes');
+      const emptyOuterBudget = outerRegion !== undefined ? outerRegion.rect.height : 0;
+      const outerRemaining = outerRegion !== undefined ? (state.remainingByRegion[outerRegionId] ?? emptyOuterBudget) : 0;
       notesCtx = {
         policy: notePolicy,
         bodies: noteBodies,
@@ -583,6 +668,9 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         notesRemainingLu: notesRemaining,
         notesAlreadyOnPage: notesUsedOnPage > 0,
         pendingAtStart: state.pendingFootnotes,
+        outerRemainingLu: outerRemaining,
+        emptyOuterBudgetLu: emptyOuterBudget,
+        pendingSidenotesAtStart: state.pendingSidenotes,
       };
     }
     const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx);
@@ -632,6 +720,20 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
           transitions.push(p.transition);
           s = p.state;
         }
+        // הערות צד (H7; שלב 54): הצריבה באזור החיצוני — הוצבו (כולל העקורות
+        // מהעמוד הקודם שנכנסו עכשיו) נוספו לשרשרת; העקורות נשארות ממתינות
+        // (עלות displacement ברכיב 3) — הכל בתוך ההרחבה, אין post-pass
+        if (notesCtx !== null && boundary.sidenotesPlacedIds.length > 0) {
+          const outerRegionId = `page:${state.physicalPageIndex}:outer`;
+          if (boundary.sidenotesPlacedHeightLu > 0) {
+            const outerStep = consumeRegion(s, outerRegionId, boundary.sidenotesPlacedHeightLu);
+            transitions.push(outerStep.transition);
+            s = outerStep.state;
+          }
+          const sp = placeSidenotes(s, boundary.sidenotesPlacedIds);
+          transitions.push(sp.transition);
+          s = sp.state;
+        }
         for (const open of boundary.bracketOpens) {
           const p = bracketOpen(s, open.pairId, open.kind);
           transitions.push(p.transition);
@@ -667,7 +769,9 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         // באלפי-LU (מהמרחב האפקטיבי); רכיב 9 (pageCountDebt) — עמוד שנפתח.
         const v = new Array<number>(9).fill(0);
         v[0] = (boundary.emergency ? 2 : 0) + boundary.noteSplits.length;
-        v[2] = boundary.noteSplits.length;
+        // רכיב 3 (noteDisplacement; ADR-004): פיצולי הערות-שוליים + הערות צד
+        // עקורות מעוגנן (FIFO לעמוד הבא) — החיפוש מעדיף הצבה קרובה (§10.3)
+        v[2] = boundary.noteSplits.length + boundary.sidenotesDisplaced.length;
         v[7] = Math.min(1024, Math.floor(Math.max(0, effectiveRemaining - boundary.heightLu) / 1000));
         v[8] = closesRegion ? 1 : 0;
         out.push({
