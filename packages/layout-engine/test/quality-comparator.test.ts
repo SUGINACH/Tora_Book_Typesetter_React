@@ -27,8 +27,8 @@ import { shapeParagraph } from '../src/linebreak/shaping.js';
 import { breakParagraphDP, compareBreakSequences } from '../src/linebreak/dp.js';
 import { createLevel0Policy } from '../src/linebreak/policy.js';
 import {
-  addQuality, compareQuality, createQualityCostModel, lineQualityVector,
-  QUALITY_VECTOR_KEYS, ZERO_QUALITY, type QualityVector,
+  addQuality, compareQuality, createQualityCostModel, FALLBACK_SEVERITY_WEIGHT,
+  lineQualityVector, QUALITY_VECTOR_KEYS, ZERO_QUALITY, type QualityVector,
 } from '../src/linebreak/quality.js';
 import { dpLedgerEntries } from '../src/linebreak/ledger-adapter.js';
 
@@ -184,7 +184,7 @@ describe('שלב 43: רישום דחיות וניצחונות בפנקס', () =>
     }
   });
 
-  test('lineQualityVector — last/natural ללא badness; justify עם badness שלם', () => {
+  test('lineQualityVector — last/natural ללא badness; justify עם badness שלם; חומרת fallback לפי המדידה (שלב 44)', () => {
     const { index } = indexFor('א ב ג ד ה ו ז');
     const cand = (tokIdx: number) => {
       const bp = index.breakPlan.points.find((p) => p.tokenIndex === tokIdx)!;
@@ -196,10 +196,21 @@ describe('שלב 43: רישום דחיות וניצחונות בפנקס', () =>
         justification: bp.kind === 'end' ? ('last' as const) : ('justify' as const),
       };
     };
+    // קו justify חוקי (בתוך המתיחה המלאה): badness שלם חיובי, אפס חומרת fallback
+    const qLegal = lineQualityVector(cand(6) as never, 36000);
+    expect(qLegal.fallbackSeverity).toBe(0);
+    expect(Number.isInteger(qLegal.lineBadness)).toBe(true);
+    expect(qLegal.lineBadness).toBeGreaterThan(0);
+    // סמנטיקת שלב 44 (lineFallbackCode בווקטור): קו justify רפוי מעבר למתיחה
+    // המלאה הוא underfill ⇒ EMERGENCY_STRETCH ⇒ חומרת MEDIUM ברכיב הראשון —
+    // גם כשהקו מתומחר ישירות. ברמה 0 קו כזה כלל אינו חוקי ונפסל ב־DP לפני
+    // התמחור (אין המרת אילוץ קשה לקנס רך — שלב 43).
     const q = lineQualityVector(cand(6) as never, 60000);
     expect(Number.isInteger(q.lineBadness)).toBe(true);
-    expect(q.fallbackSeverity).toBe(0);
+    expect(q.fallbackSeverity).toBe(FALLBACK_SEVERITY_WEIGHT.MEDIUM);
+    // שורה אחרונה אינה ממתחת (badness 0); כאן היא גולשת מהעמודה ⇒ EMERGENCY_LINE ⇒ HIGH
     const qLast = lineQualityVector(cand(13) as never, 60000);
-    expect(qLast.lineBadness).toBe(0); // שורה אחרונה אינה ממתחת
+    expect(qLast.lineBadness).toBe(0);
+    expect(qLast.fallbackSeverity).toBe(FALLBACK_SEVERITY_WEIGHT.HIGH);
   });
 });

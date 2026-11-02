@@ -12,6 +12,7 @@
  * שלב 43 יחליף מודל זה ב־QualityVector לקסיקוגרפי (ADR-004) בלי לגעת
  * בליבת ה־DP — המודל כאן הוא שלב הביניים המוכיח את המנגנון.
  */
+import { roundDiv } from '@tora/layout-api';
 import type { CostModel, LineContext } from './dp.js';
 
 /** סקלת ה־badness: יחס מתיחה/כיווץ 1.0 ⇐ 10000. */
@@ -38,9 +39,12 @@ export function justifyBadness(widthLu: number, stretchLu: number, shrinkLu: num
 }
 
 function scaledSquare(num: number, den: number): number {
-  // roundDiv(SCALE · num², den²) בשלמים בטוחים: num ≤ ~10⁷, den ≥ 1 —
-  // num² ≤ 10¹⁴, ×10⁴ = 10¹⁸ < 2⁵³ ✓
-  return Math.round((BADNESS_SCALE * num * num) / (den * den));
+  // תקרה מוקדמת מדויקת: SCALE·num²/den² ≥ MAX ⇔ num ≥ 2·den (MAX/SCALE = 4) —
+  // מונע בניית ריבוע ענק במקרי חירום לפני ה-min. העיגול מרוכז ב־units.ts
+  // (ADR-001): roundDiv בשלמים בלבד; חריגה מהטווח הבטוח נזרקת כ־UnitsError
+  // מקוטלג — אין עיגול שקט של float חורג (num < 2·den ו־den < ~474k ⇒ בטוח).
+  if (num >= 2 * den) return MAX_LINE_BADNESS;
+  return roundDiv(BADNESS_SCALE * num * num, den * den);
 }
 
 /** עלות שורה בודדת (שלם): badness + עונש מקף. */
