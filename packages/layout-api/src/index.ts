@@ -68,6 +68,7 @@ export {
 
 // BiDi (UAX #9, שלב 28) — לשימוש המנוע דרך אותו חוזה (גרף §5).
 export { computeBidi } from '@tora/measurement-api';
+export { computeBreakOpportunities } from '@tora/measurement-api';
 export type { BidiResult, BidiRun, ComputeBidiOptions } from '@tora/measurement-api';
 
 // מספור הערות טרם העימוד (שלב 20) ו־EffectiveSettings (שלב 30) — המנוע

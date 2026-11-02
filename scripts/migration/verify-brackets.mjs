@@ -223,7 +223,7 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
 // ─────────────────────────── 6. רגרסיה ───────────────────────────
 console.log('\n6) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  615 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  628 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   ((x => x !== null && !/error TS/.test(x))(run('npm', ['run', 'build:packages'])) ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');

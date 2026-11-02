@@ -34,15 +34,12 @@ import {
   type Rect,
   roundDiv,
   sha256Hex,
-  type ShapedRun,
   type SourceSpan,
   type TextAtom,
   toGematriaLabel,
   type TypesetRequest,
   type TypesetSuccess,
   validatedLayout,
-  computeBidi,
-  type BidiRun,
   type ContinuationKind,
   numberNotes,
   type NoteNumberingResult,
@@ -52,120 +49,19 @@ import {
 } from '@tora/layout-api';
 import { LayoutEngineError } from '../errors.js';
 import { type V0Settings, readV0Settings, v0LineHeight } from './v0-settings.js';
+import {
+  type BlockTokens,
+  type Cell,
+  type InlineLike,
+  tokenize,
+  tokenizeNotesBody,
+  coalesceSpans,
+} from '../linebreak/tokens.js';
+import { shapeParagraph, type ShapedParagraph } from '../linebreak/shaping.js';
 
 export const ENGINE_VERSION = '0.1.0' as const;
 export const ENGINE_ALGORITHM = 'v0-greedy-walking-skeleton' as const;
 export const CODE_SHA = 'dev' as const;
-
-type ShapingAtomsArg = Parameters<AnyProvider['shape']>[0]['atoms'];
-
-// ─────────────────────────── טוקנים ───────────────────────────
-
-type Cell =
-  | { readonly kind: 'atom'; readonly pIdx: number }
-  | { readonly kind: 'marker'; readonly noteId: string; readonly label: string; readonly source: SourceSpan; readonly bodyPrefix: boolean }
-  | { readonly kind: 'anchor'; readonly anchorId: string; readonly source: SourceSpan };
-
-interface BlockTokens {
-  readonly blockId: string;
-  readonly tokens: readonly Token[];
-  readonly atoms: readonly TextAtom[];
-}
-type Token = Cell | { readonly kind: 'forced' };
-
-type InlineLike = readonly { kind: string; atoms?: readonly TextAtom[]; noteId?: string; source?: SourceSpan; anchorId?: string }[];
-
-function pushInlineItem(tokens: Token[], atoms: TextAtom[], item: NonNullable<InlineLike[number]>, noteLabels: ReadonlyMap<string, string>): void {
-  switch (item.kind) {
-    case 'text': {
-      for (const atom of item.atoms ?? []) {
-        tokens.push({ kind: 'atom', pIdx: atoms.length });
-        atoms.push(atom);
-      }
-      break;
-    }
-    case 'note-reference': {
-      // סמן בגוף: נוצר רק להפניה ממוספרת (H7/sidenote ללא מספור — v0 אינו מציב סמן)
-      const label = item.noteId !== undefined ? noteLabels.get(item.noteId) : undefined;
-      if (label !== undefined && item.source) {
-        tokens.push({ kind: 'marker', noteId: item.noteId as string, label, source: item.source, bodyPrefix: false });
-      }
-      break;
-    }
-    case 'anchor': {
-      if (item.anchorId && item.source) tokens.push({ kind: 'anchor', anchorId: item.anchorId, source: item.source });
-      break;
-    }
-    case 'explicit-break': {
-      tokens.push({ kind: 'forced' });
-      break;
-    }
-    default: break; // inline-box — v0 אינו מציב (M6); הביקורת מדווחת דחייה מתועדת.
-  }
-}
-
-function tokenize(blockId: string, inline: InlineLike, noteLabels: ReadonlyMap<string, string>): BlockTokens {
-  const tokens: Token[] = [];
-  const atoms: TextAtom[] = [];
-  for (const item of inline) pushInlineItem(tokens, atoms, item, noteLabels);
-  return { blockId, tokens, atoms };
-}
-
-// ─────────────────────────── shaping לפסקה ───────────────────────────
-
-interface ShapedParagraph {
-  readonly advances: readonly number[];
-  readonly ascentLu: number;
-  readonly descentLu: number; // חיובי
-  readonly runOfAtom: readonly number[];
-  readonly runs: readonly { readonly run: BidiRun; readonly shaped: ShapedRun }[];
-  readonly visualOrder: readonly number[];
-}
-
-function toShapingAtoms(atoms: readonly TextAtom[]): ShapingAtomsArg {
-  return atoms as unknown as ShapingAtomsArg;
-}
-
-function shapeParagraph(atoms: readonly TextAtom[], provider: AnyProvider, font: FontFaceKey, fontSizeLu: LayoutUnit): ShapedParagraph {
-  const shapingAtoms = toShapingAtoms(atoms);
-  const bidi = computeBidi(shapingAtoms, { paragraphLevel: 'auto' });
-  const runs: { run: BidiRun; shaped: ShapedRun }[] = [];
-  for (const run of bidi.runs) {
-    const slice = shapingAtoms.slice(run.startAtom, run.endAtom + 1);
-    const shaped = provider.shape({
-      atoms: slice,
-      font,
-      fontSizeLu,
-      direction: run.direction,
-      language: 'he',
-      features: {},
-      letterSpacingLu: asLu(0),
-    });
-    runs.push({ run, shaped });
-  }
-  const advances = new Array<number>(atoms.length).fill(0);
-  const runOfAtom = new Array<number>(atoms.length).fill(-1);
-  for (let ri = 0; ri < runs.length; ri++) {
-    const { run, shaped } = runs[ri]!;
-    for (const g of shaped.glyphs) {
-      const ai = run.startAtom + g.clusterAtomIndex;
-      if (ai < 0 || ai >= atoms.length) {
-        throw new LayoutEngineError('errors.engine.SHAPING_MISMATCH', { where: `cluster ${g.clusterAtomIndex}` }, 'מיפוי cluster מחוץ לטווח');
-      }
-      advances[ai] = (advances[ai] ?? 0) + g.advanceLu;
-    }
-    for (let i = run.startAtom; i <= run.endAtom; i++) runOfAtom[i] = ri;
-  }
-  const first = runs[0]?.shaped;
-  return {
-    advances,
-    ascentLu: first ? first.ascentLu : 0,
-    descentLu: first ? first.descentLu : 0,
-    runOfAtom,
-    runs,
-    visualOrder: bidi.visualOrder,
-  };
-}
 
 // ─────────────────────────── שבירה גרידית עם פנקס ───────────────────────────
 
@@ -179,26 +75,6 @@ interface LineSpec {
   readonly sourceSpans: readonly SourceSpan[];
 }
 
-function coalesceSpans(cells: readonly Cell[], atoms: readonly TextAtom[]): readonly SourceSpan[] {
-  const body: SourceSpan[] = [];
-  let cur: SourceSpan | null = null;
-  for (const cell of cells) {
-    if (cell.kind !== 'atom') continue;
-    const sp = atoms[cell.pIdx]!.source;
-    if (cur !== null && cur.stream === sp.stream && cur.endUtf16 === sp.startUtf16) {
-      cur = { ...cur, endUtf16: sp.endUtf16 } as SourceSpan;
-    } else {
-      if (cur !== null) body.push(cur);
-      cur = sp;
-    }
-  }
-  if (cur !== null) body.push(cur);
-  const extras: SourceSpan[] = [];
-  for (const cell of cells) {
-    if (cell.kind === 'marker' || cell.kind === 'anchor') extras.push(cell.source);
-  }
-  return Object.freeze([...body, ...extras]);
-}
 
 function breakBlockGreedy(
   bt: BlockTokens,
@@ -738,13 +614,3 @@ export function typeset(
   return makeTypesetSuccess(layout, manifest, ledger.build() ?? undefined);
 }
 
-/** טוקניזציה של גוף הערה עם קידומת תווית (bodyPrefix ⇒ רווח אחרי התווית). */
-function tokenizeNotesBody(noteId: string, label: string | null, src: SourceSpan, inline: InlineLike): BlockTokens {
-  const tokens: Token[] = [];
-  const atoms: TextAtom[] = [];
-  if (label !== null) {
-    tokens.push({ kind: 'marker', noteId, label, source: src, bodyPrefix: true });
-  }
-  for (const item of inline) pushInlineItem(tokens, atoms, item, new Map());
-  return { blockId: `note:${noteId}`, tokens, atoms };
-}
