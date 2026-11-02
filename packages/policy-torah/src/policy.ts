@@ -132,7 +132,8 @@ export function createTorahPolicy(
 export function createMinimalPolicy(settings: EffectiveSettings): TorahPolicy {
   const overrides: Partial<Record<number, Partial<HeadingBehavior>>> = {};
   for (let level = 0; level <= 7; level++) {
-    overrides[level] = { flowRole: 'inline', forcePageBreak: false, escortLines: 0 };
+    // גם forcePageTemplate נמחק — כותרת inline אינה דורשת תבנית (שלב 59)
+    overrides[level] = { flowRole: 'inline', forcePageBreak: false, escortLines: 0, forcePageTemplate: undefined };
   }
   const full = createTorahPolicy(settings, overrides);
   return Object.freeze({

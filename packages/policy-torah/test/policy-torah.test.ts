@@ -117,6 +117,18 @@ describe('שלב 58 — ברירות מחדל של legacy (H0–H7)', () => {
     expect(Object.isFrozen(LEGACY_HEADING_DEFAULTS)).toBe(true);
   });
 
+  test('forcePageTemplate (שלב 59): H0–H2 פותחים תבנית body; השאר — סוג הזרימה', () => {
+    for (const level of [0, 1, 2]) {
+      expect(legacyHeadingBehaviorOf(level).forcePageTemplate, `H${level}`).toBe('body');
+    }
+    for (const level of [3, 4, 5, 6, 7]) {
+      expect(legacyHeadingBehaviorOf(level).forcePageTemplate, `H${level}`).toBeUndefined();
+    }
+    // אימות: תבנית כפויה תקפה לפותחי-עמוד בלבד; סוג שאינו לגיטימי — נתפס
+    expect(headingBehaviorIssues({ level: 4, flowRole: 'inline', forcePageBreak: false, escortLines: 2, spaceBeforeLu: 0, spaceAfterLu: 0, forcePageTemplate: 'body' })).toContain('forcePageTemplate:not-opener');
+    expect(headingBehaviorIssues({ level: 0, flowRole: 'page-opener', forcePageBreak: true, escortLines: 2, spaceBeforeLu: 0, spaceAfterLu: 0, forcePageTemplate: 'banana' })).toContain('forcePageTemplate');
+  });
+
   test('מיפוי התפקידים: H0–H2 פותחי-עמוד; H3 מחסום; H4–H6 inline; H7 זרם צד', () => {
     expect(legacyHeadingBehaviorOf(0).flowRole).toBe('page-opener');
     expect(legacyHeadingBehaviorOf(1).flowRole).toBe('page-opener');
@@ -153,7 +165,7 @@ describe('שלב 58 — ברירות מחדל של legacy (H0–H7)', () => {
 
   test('מזהה ההתנהגות הקנוני יציב', () => {
     const h2 = legacyHeadingBehaviorOf(2);
-    expect(headingBehaviorId(h2)).toBe('heading:v1|L2|page-opener|esc2|f1');
+    expect(headingBehaviorId(h2)).toBe('heading:v1|L2|page-opener|esc2|f1|tbody'); // |t{kind} — התבנית הכפויה (שלב 59)
     expect(headingBehaviorId(h2)).toBe(headingBehaviorId(legacyHeadingBehaviorOf(2)));
   });
 });
@@ -215,7 +227,7 @@ describe('שלב 58 — מרשם הכללים', () => {
     expect(s1).toContain('heading.h0.opener@1');
     expect(s1).toContain(';');
     expect(headingBehaviorIds()).toBe(headingBehaviorIds());
-    expect(headingBehaviorIds()).toContain('2:heading:v1|L2|page-opener|esc2|f1');
+    expect(headingBehaviorIds()).toContain('2:heading:v1|L2|page-opener|esc2|f1|tbody');
   });
 });
 
@@ -307,6 +319,7 @@ describe('שלב 58 — createMinimalPolicy: מדיניות ריקה לא מפי
       expect(p.headingBehaviorOf(level).flowRole, `H${level}`).toBe('inline');
       expect(p.headingBehaviorOf(level).forcePageBreak, `H${level}`).toBe(false);
       expect(p.headingBehaviorOf(level).escortLines, `H${level}`).toBe(0);
+      expect(p.headingBehaviorOf(level).forcePageTemplate, `H${level}`).toBeUndefined();
     }
     expect(p.pagination.headingEscortLines).toBe(0);
     expect(torahPolicyIssues(p)).toEqual([]);
@@ -324,6 +337,7 @@ describe('שלב 58 — שקילות: ברירות המנוע = ברירות pol
       expect(engineB.flowRole, `H${level} flowRole`).toBe(policyB.flowRole);
       expect(engineB.forcePageBreak, `H${level} forcePageBreak`).toBe(policyB.forcePageBreak);
       expect(engineB.escortLines, `H${level} escortLines`).toBe(policyB.escortLines);
+      expect(engineB.forcePageTemplate, `H${level} forcePageTemplate`).toBe(policyB.forcePageTemplate);
     }
     // רמה לא מוכרת — אותה התנהגות בטוחה בשני הצדדים
     const e9 = engineHeadingBehaviorOf(42);

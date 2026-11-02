@@ -341,11 +341,14 @@ describe('שלב 52 — מועמדים בגבולות חוקיים בלבד (§9
     ];
     const src = createPageCandidateSource(inputFor(blocks));
     const exps = src.expansions(initialState('body|1'));
-    // הגבול בסוף body|1 מציב את הסמן בראש ה-H1 (heading|1|H1@0) — וסוגר
-    // אזור עימוד גם בלי מעבר עמוד כפוי (§9.2: opener סוגר אזור)
-    const beforeH1 = exps.find((e) => e.candidateId.endsWith('heading|1|H1@0'))!;
+    // הגבול בסוף body|1 מציב את הסמן בראש ה-H1 (heading|1|H1@0:OPEN — שלב 59)
+    // — ופותח עמוד חדש מיד (forcePageTemplate; לא מעבר טור); §9.2: opener סוגר אזור
+    const beforeH1 = exps.find((e) => e.candidateId.endsWith('heading|1|H1@0:OPEN'))!;
     expect(beforeH1).toBeDefined();
     expect(beforeH1.closesRegion).toBe(true);
+    // שלב 59: ההרחבה פותחת עמוד חדש (לא מעבר לטור 1) — הפותחת תוצב בראשו
+    expect(beforeH1.toState.physicalPageIndex).toBe(2);
+    expect(beforeH1.toState.columnIndex).toBe(0);
     // הרחבה שמסתיימת בתוך body|1 (בין-קווי) — אינה סוגרת
     const midBody = exps.find((e) => e.candidateId.endsWith('body|1@1'))!;
     expect(midBody.closesRegion).toBe(false);

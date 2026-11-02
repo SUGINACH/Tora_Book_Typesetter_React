@@ -133,14 +133,17 @@ describe('שלב 57 — סוללת מצבי קצה + שער M6 (§18-M6)', () =>
     expect(res.finalState.contentCursor).toContain(`${last.blockId}|f${last.lines.length}`);
     // המסמך חוצה עמודים — recto (1) ו-verso (2) שניהם בשימוש
     expect(res.finalState.physicalPageIndex).toBeGreaterThanOrEqual(2);
-    // המועמד שמסתיים בדיוק לפני ה-H1 (סמן בראש ה-H1) סוגר אזור —
-    // opener סוגר אזור עימוד (§9.2; ההכרעה המלאה של forcePageTemplate — M7)
+    // המועמד שמסתיים בדיוק לפני ה-H1 (סמן בראש ה-H1) — opener סוגר אזור
+    // עימוד (§9.2) ופותח עמוד חדש בתבנית הנדרשת (שלב 59: forcePageTemplate —
+    // ההרחבה היא :OPEN; לא מעבר טור); ה-H1 תוצב בראש העמוד שנפתח
     const src0 = createPageCandidateSource(inputFor(blocks));
     const beforeH1 = src0.expansions(initial('body|1'))
-      .find((e) => e.candidateId.endsWith('heading|1|H1@0'));
+      .find((e) => e.candidateId.endsWith('heading|1|H1@0:OPEN'));
     expect(beforeH1).toBeDefined();
     expect(beforeH1!.closesRegion).toBe(true);
     expect(beforeH1!.toState.contentCursor).toContain('heading|1|H1|f0');
+    expect(beforeH1!.toState.physicalPageIndex).toBe(2);
+    expect(beforeH1!.toState.columnIndex).toBe(0);
   });
 
   test('הערות קיצוניות: הערה בגודל עמוד שלם + הרבה הערות — כיסוי ואינווריאנט', () => {

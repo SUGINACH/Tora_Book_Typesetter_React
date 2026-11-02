@@ -156,6 +156,8 @@ export interface CandidateGeneratorInput {
     readonly flowRole: 'page-opener' | 'full-width-barrier' | 'inline' | 'sidenote-stream';
     readonly forcePageBreak: boolean;
     readonly escortLines: number;
+    /** תבנית העמוד שהפותח פותח (§10.1 H0; שלב 59) — undefined = סוג הזרימה. */
+    readonly forcePageTemplate?: 'body' | 'toc' | 'notes';
   };
 }
 
@@ -207,6 +209,34 @@ export function candidateInputIssues(input: CandidateGeneratorInput): string[] {
       }
       if (line.bracketCloses !== undefined && (!Array.isArray(line.bracketCloses) || (line.bracketCloses as readonly unknown[]).some((c) => typeof c !== 'string' || (c as string).length === 0))) {
         issues.push(`${ll}.bracketCloses`);
+      }
+    }
+  }
+  // התנהגות כותרות מוזרקת (שלב 58) — אימות מבני כולל forcePageTemplate
+  // (שלב 59): התבנית הנדרשת חייבת להיות סוג עמוד לגיטימי של הזרימה
+  if (input.headingBehaviorOf !== undefined) {
+    const levels = new Set<number>();
+    for (const blk of input.blocks) {
+      if (blk.role === 'heading' && blk.headingLevel !== undefined) levels.add(blk.headingLevel);
+    }
+    for (let level = 0; level <= 7; level++) levels.add(level);
+    for (const level of levels) {
+      const b = input.headingBehaviorOf(level);
+      if (typeof b !== 'object' || b === null
+        || !['page-opener', 'full-width-barrier', 'inline', 'sidenote-stream'].includes(String(b.flowRole))
+        || typeof b.forcePageBreak !== 'boolean'
+        || !Number.isSafeInteger(b.escortLines) || b.escortLines < 0) {
+        issues.push(`headingBehaviorOf(${level})`);
+        continue;
+      }
+      if (b.forcePageTemplate !== undefined) {
+        if (!['body', 'toc', 'notes'].includes(String(b.forcePageTemplate))) {
+          issues.push(`headingBehaviorOf(${level}).forcePageTemplate`);
+        } else if (b.flowRole !== 'page-opener') {
+          // תבנית כפויה תקפה לפותחי-עמוד בלבד (§10.1) — הרחבה שאינה פותחת
+          // עמוד אינה יכולה לדרוש תבנית
+          issues.push(`headingBehaviorOf(${level}).forcePageTemplate:not-opener`);
+        }
       }
     }
   }
@@ -309,6 +339,15 @@ interface BoundaryCandidate {
    * הכותרת — בחיפוש, דרך עלות הרווחים (איזון לפני הכותרת).
    */
   readonly h3Barrier?: { readonly heightLu: number };
+  /** ── פותח עמוד (שלב 59; §10.1 H0 — forcePageTemplate) ──
+   * הגבול מסתיים בכותרת פותחת-עמוד: ההרחבה פותחת עמוד חדש בתבנית
+   * הנדרשת (forcePageTemplate של הרמה; ברירת מחדל — סוג הזרימה) והכותרת
+   * תוצב בראשו בהרחבה הבאה. הפותחת אינה מוצבת לעולם באמצע עמוד —
+   * ההליכה נעצרת לפניה (גם בטור חצי-מלא); ההחלטה בתוך ההרחבה (אין
+   * post-pass). גבול ריק (שום קו לפניה — למשל אחרי מחסום H3) רק פותח
+   * את העמוד ואינו מקדם את הסמן (ההתקדמות היא פתיחת העמוד).
+   */
+  readonly pageOpener?: { readonly level: number };
 }
 
 /** הקשר שריון הערות להליכת הגבולות (שלב 53; ADR-005) — null כשאין גופי הערות. */
@@ -361,10 +400,19 @@ function buildBoundaries(
   policy: Required<LegalPageBreakPolicy>,
   notesCtx: NotesWalkContext | null,
   headingBehaviorOf: (level: number) => HeadingFlowBehavior,
+  columnHeightLu: number,
 ): BoundaryCandidate[] {
   const out: BoundaryCandidate[] = [];
   let pos = flowPositionOf(map, state);
   if (pos === null) return out;
+  // פותח-עמוד במיקום זרימה? (שלב 59; §10.1) — ההתנהגות המוזרקת קובעת,
+  // לא הרמה; רק בראש הבלוק (fragment 0)
+  const pageOpenerLevelAt = (p: FlowPosition): number | undefined => {
+    if (p.lineIndex !== 0) return undefined;
+    const blk = map.blocks[p.blockIndex];
+    if (blk === undefined || blk.role !== 'heading' || blk.headingLevel === undefined) return undefined;
+    return headingBehaviorOf(blk.headingLevel).flowRole === 'page-opener' ? blk.headingLevel : undefined;
+  };
   let used = 0;
   const foot: string[] = [];
   const side: string[] = [];
@@ -441,6 +489,43 @@ function buildBoundaries(
     const at = lineAt(map, pos);
     if (at === null) break;
     const { line, block } = at;
+    // ── פותח עמוד (שלב 59; §10.1 H0 — forcePageTemplate) ──
+    // הכותרת הפותחת אינה מוצבת לעולם באמצע עמוד: ההליכה נעצרת לפניה.
+    // בראש עמוד חדש (טור 0 מלא, שום דבר לא הוצב ולא נצרב) היא כן מוצבת
+    // מכאן והלאה (escort כרגיל); אחרת — אם הוצב תוכן, הגבול בסופו כבר נפלט
+    // וסומן pageOpener; אם לא הוצב דבר (מצב לא-טרי, למשל אחרי מחסום H3)
+    // נוצר גבול פותח-עמוד ריק שרק פותח עמוד חדש — בלי להקדים את הסמן.
+    const openerLevelHere = pageOpenerLevelAt(pos);
+    if (openerLevelHere !== undefined) {
+      const freshPageTop = used === 0 && state.columnIndex === 0 && remainingLu === columnHeightLu;
+      if (!freshPageTop) {
+        if (used === 0 && out.length === 0) {
+          out.push({
+            end: pos,
+            cursorBlockId: block.blockId,
+            cursorFragment: 0,
+            heightLu: 0,
+            emergency: false,
+            footnoteRefs: [],
+            sidenoteRefs: [],
+            bracketOpens: [],
+            bracketCloses: [],
+            lineCount: 0,
+            notesPlacedIds: [...notesPlacedIds],
+            notesPlacedHeightLu: notesPlacedHeight,
+            noteSplits: [...noteSplits],
+            deferredRefs: [],
+            sidenotesPlacedIds: [...sidenotesPlacedIds],
+            sidenotesPlacedHeightLu: sidenotesPlacedHeight,
+            sidenotesDisplaced: [...sidenotesDisplaced],
+            pageOpener: { level: openerLevelHere },
+          });
+          lastAddedBoundaryLineCount = 0;
+        }
+        break;
+      }
+      // ראש עמוד חדש — הפותחת מוצבת כאן; ההליכה ממשיכה ממנה
+    }
     // מחסום H3 (שלב 56; §9.3#6; §10.1): כותרת רוחבית חוצת-טורים — ההליכה
     // הרגילה נעצרת; נוצר מועמד barrier שמציב את הטקסט שלפניו וסוגר את
     // שני הטורים עד תחתית הכותרת. הטקסט שאחריה — הרחבה חדשה בפס שמתחת.
@@ -571,8 +656,13 @@ function buildBoundaries(
         strideCounter = 0;
       }
     }
-    // ליווי כותרת: גבול פחות מ-K קווים אחרי כותרת — אינו חוקי (§10.1)
-    if (legal && policy.headingEscortLines > 0 && linesSinceHeading < policy.headingEscortLines) {
+    // ליווי כותרת: גבול פחות מ-K קווים אחרי כותרת — אינו חוקי (§10.1);
+    // חריג אחד (שלב 59): גבול שנופל בדיוק בראש כותרת פותחת-עמוד — אינו
+    // "כותרת תלויה": העמוד נסגר בכוח (forcePageBreak) והפותחת קיבלה עמוד
+    // משלה; אסור לסגור גם את הגבול היחיד שמפריד ממנה (אחרת — תקוע)
+    const openerAfterBoundary = legal || isEndOfBlock ? pageOpenerLevelAt(nextPos) : undefined;
+    if (legal && policy.headingEscortLines > 0 && linesSinceHeading < policy.headingEscortLines
+      && openerAfterBoundary === undefined) {
       legal = false;
     }
     if (legal) {
@@ -596,6 +686,7 @@ function buildBoundaries(
         sidenotesPlacedIds: [...sidenotesPlacedIds],
         sidenotesPlacedHeightLu: sidenotesPlacedHeight,
         sidenotesDisplaced: [...sidenotesDisplaced],
+        ...(openerAfterBoundary !== undefined ? { pageOpener: { level: openerAfterBoundary } } : {}),
       });
       lastAddedBoundaryLineCount = count;
     }
@@ -702,17 +793,6 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     }
   }
 
-  /**
-   * page opener (§10.1) — לפי ההתנהגות המוזרקת: flowRole==='page-opener'
-   * סוגר אזור עימוד (H0/H1 legacy; rollback דרך policy version). הליבה
-   * אינה מכירה את הרמות — רק את ההתנהגות (שלב 58).
-   */
-  const isPageOpener = (blockIndex: number): boolean => {
-    const blk = map.blocks[blockIndex];
-    return blk !== undefined && blk.role === 'heading' && blk.headingLevel !== undefined
-      && headingBehaviorOf(blk.headingLevel).flowRole === 'page-opener';
-  };
-
   const build = (state: PaginationState): readonly PageExpansion[] => {
     const pos = flowPositionOf(map, state);
     if (pos === null) return []; // קץ המסמך
@@ -724,7 +804,9 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     // הקשר שריון ההערות (§9.3#5): אזור ההערות צורב מהמקום הפנוי לגוף של
     // שני הטורים כאחד — המרחב האפקטיבי = נותר הטור − ההערות שנצרבו בעמוד
     const notesRegionId = `page:${state.physicalPageIndex}:notes`;
-    const template = input.templates.for(input.pageKind, state.physicalPageIndex);
+    // התבנית של העמוד הנוכחי — לפי סוג העמוד שבמצב (שלב 59: עמוד שנפתח בכוח
+    // על-ידי פותחת עשוי להיות מסוג שונה מסוג הזרימה; §9.3#1)
+    const template = input.templates.for(state.pageKind, state.physicalPageIndex);
     const emptyNotesBudget = template.footnoteAnchor !== undefined ? template.footnoteAnchor.rect.height : 0;
     let notesCtx: NotesWalkContext | null = null;
     let effectiveRemaining = remaining;
@@ -760,7 +842,10 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         notesUsedAtStartLu: notesUsedOnPage,
       };
     }
-    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx, headingBehaviorOf);
+    // גובה הטור המלא של התבנית הנוכחית — לזיהוי "ראש עמוד חדש" (שלב 59:
+    // פותח-עמוד מוצב רק בראש עמוד טרי; טור 0 מלא ושום דבר לא נצרב בעמוד)
+    const columnHeightLu = template.regions.find((r) => r.role === 'body-column' && r.columnIndex === 0)!.rect.height;
+    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx, headingBehaviorOf, columnHeightLu);
     const out: PageExpansion[] = [];
     for (const boundary of boundaries) {
       let s = state;
@@ -834,9 +919,16 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
           transitions.push(p.transition);
           s = p.state;
         }
-        const adv = advanceCursor(s, { blockId: boundary.cursorBlockId, fragmentIndex: boundary.cursorFragment, atomIndex: 0 });
-        transitions.push(adv.transition);
-        s = adv.state;
+        // גבול פותח-עמוד ריק (שלב 59): הסמן נשאר בראש הפותחת — ההתקדמות
+        // היחידה היא פתיחת העמוד (ההרחבה בהמשך תפתח עמוד חדש ותוכנה
+        // לא הוצב); השמטת advance-cursor כאן מונעת "סמן אינו מתקדם"
+        const curHere = parseCursor(state.contentCursor);
+        const boundaryMovesCursor = boundary.cursorBlockId !== curHere.blockId || boundary.cursorFragment !== curHere.fragmentIndex;
+        if (boundaryMovesCursor) {
+          const adv = advanceCursor(s, { blockId: boundary.cursorBlockId, fragmentIndex: boundary.cursorFragment, atomIndex: 0 });
+          transitions.push(adv.transition);
+          s = adv.state;
+        }
         let closesRegion = false;
         let h3GapLu = 0;
         // ── מחסום H3 (שלב 56; §9.3#6; §10.1): הכותרת הרוחבית חוצת-טורים ──
@@ -890,6 +982,21 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
             feasibilityRejections += 1;
             continue;
           }
+        } else if (boundary.pageOpener !== undefined) {
+          // ── פותח עמוד (שלב 59; §10.1 H0 — forcePageTemplate) ──
+          // הגבול מסתיים בכותרת פותחת-עמוד: ההרחבה פותחת עמוד חדש מיד —
+          // לא מעבר טור ולא מילוי העמוד הנוכחי (השארית ננטשת; תת-המילוי
+          // הוא עלות רכיב 8 ואיזון סוף-פרק יטופל בשלב 66). התבנית — לפי
+          // ההתנהגות המוזרקת (forcePageTemplate; ברירת מחדל סוג הזרימה);
+          // parity נגזר מהאינדקס הפיזי הרץ. ההחלטה בתוך ההרחבה — אין post-pass.
+          const openerKind: 'body' | 'toc' | 'notes' = headingBehaviorOf(boundary.pageOpener.level).forcePageTemplate ?? input.pageKind;
+          const nextPage = s.physicalPageIndex + 1;
+          const nextTemplate = input.templates.for(openerKind, nextPage);
+          const remainingNext = initialRemainingByRegion(nextTemplate, nextPage);
+          const pg = openPage(s, remainingNext, openerKind);
+          transitions.push(pg.transition);
+          s = pg.state;
+          closesRegion = true;
         } else {
           // מעבר טור/עמוד (§9.3): טור 0 ← 1 (רק בתבנית דו-טורית); טור 1 (או
           // תבנית חד-טורית) ← עמוד חדש מהתבנית (שלב 50; תיקון שלב 57 — חד-טורי)
@@ -902,13 +1009,12 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
             const nextPage = s.physicalPageIndex + 1;
             const nextTemplate = input.templates.for(input.pageKind, nextPage);
             const remainingNext = initialRemainingByRegion(nextTemplate, nextPage);
-            const pg = openPage(s, remainingNext);
+            const pg = openPage(s, remainingNext, input.pageKind);
             transitions.push(pg.transition);
             s = pg.state;
             closesRegion = true;
           }
         }
-        if (!closesRegion && isPageOpener(boundary.end.blockIndex)) closesRegion = true;
         // וקטור איכות אינקרמנטלי (ADR-004): רכיב 1 (fallbackSeverity) —
         // חירום HIGH=2, פיצול הערה MEDIUM=1 לפיצול; רכיב 3 (noteDisplacement)
         // — המשך מוסר מעוגנו; רכיב 8 (columnImbalance) — תת-מילוי הטור
@@ -921,7 +1027,7 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         v[7] = Math.min(1024, Math.floor((Math.max(0, effectiveRemaining - boundary.heightLu) + h3GapLu) / 1000));
         v[8] = closesRegion ? 1 : 0;
         out.push({
-          candidateId: `pg:${state.physicalPageIndex}:${state.columnIndex}→${boundary.cursorBlockId}@${boundary.cursorFragment}${boundary.emergency ? ':EMERGENCY' : ''}${boundary.noteSplits.length > 0 ? ':SPLIT' : ''}${boundary.h3Barrier !== undefined ? ':H3' : ''}`,
+          candidateId: `pg:${state.physicalPageIndex}:${state.columnIndex}→${boundary.cursorBlockId}@${boundary.cursorFragment}${boundary.emergency ? ':EMERGENCY' : ''}${boundary.noteSplits.length > 0 ? ':SPLIT' : ''}${boundary.h3Barrier !== undefined ? ':H3' : ''}${boundary.pageOpener !== undefined ? ':OPEN' : ''}`,
           transitions,
           toState: s,
           quality: Object.freeze(v) as PageQualityVector,

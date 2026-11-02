@@ -123,6 +123,9 @@ export interface ChapterState {
 /** היקף מספור הערות (§10.3: page/siman/part/continuous) — מוזרק למעברים. */
 export type NoteNumberingScopeKind = 'page' | 'siman' | 'part' | 'continuous';
 
+/** סוגי עמודות תוכן בזרימת העימוד (עמודי שער — M8; שלב 59). */
+export type ContentPageKind = 'body' | 'toc' | 'notes';
+
 // ─────────────────────────── המצב ───────────────────────────
 
 /**
@@ -135,6 +138,13 @@ export interface PaginationState {
   /** אינדקס העמוד הפיזי, 1-based, רץ בלי דילוגים. */
   readonly physicalPageIndex: number;
   readonly columnIndex: 0 | 1;
+  /**
+   * סוג התבנית של העמוד הנוכחי (§9.3#1 — "בוחרים Page Template לפי סוג
+   * עמוד"; שלב 59 — forcePageTemplate). חלק מהמצב ומה־hash: שני מצבים
+   * עם hash זהה חייבים להיות באותו סוג עמוד (body ו־toc זהים מבנית
+   * אך שונים בפריסה; §9.2).
+   */
+  readonly pageKind: ContentPageKind;
   /** גובה נותר בכל אזור של העמוד הנוכחי, ב-LU — פר-מזהה אזור. */
   readonly remainingByRegion: Readonly<Record<string, LayoutUnit>>;
   /** הערות שוליים שהעוגן שלהן כבר בגוף אך גופן טרם הוצב (§9.3#5). */
@@ -204,6 +214,7 @@ function stateCore(s: Omit<PaginationState, 'stateHash'>): unknown {
     contentCursor: s.contentCursor,
     physicalPageIndex: s.physicalPageIndex,
     columnIndex: s.columnIndex,
+    pageKind: s.pageKind, // §9.2: hash זהה ⇒ אותו סוג עמוד (body≠toc גיאומטרית-זהים)
     remainingByRegion: s.remainingByRegion, // canonicalJson ממיין מפתחות — סדר הכנסה לא משנה
     pendingFootnotes: s.pendingFootnotes,
     pendingSidenotes: s.pendingSidenotes,
@@ -247,6 +258,7 @@ export function paginationStateIssues(value: unknown): string[] {
   }
   if (typeof s.physicalPageIndex !== 'number' || !Number.isSafeInteger(s.physicalPageIndex) || s.physicalPageIndex < 1) issues.push('physicalPageIndex');
   if (s.columnIndex !== 0 && s.columnIndex !== 1) issues.push('columnIndex');
+  if (s.pageKind !== undefined && !['body', 'toc', 'notes'].includes(String(s.pageKind))) issues.push('pageKind');
   if (typeof s.remainingByRegion !== 'object' || s.remainingByRegion === null || Array.isArray(s.remainingByRegion)) {
     issues.push('remainingByRegion');
   } else {
@@ -320,6 +332,8 @@ export interface InitialPaginationInput {
   readonly firstBlockId: string;
   /** נותרי האזורים של העמוד הראשון (פר-מזהה אזור; נבנה בשלב 50 מתבנית). */
   readonly remainingByRegion: Readonly<Record<string, LayoutUnit>>;
+  /** סוג העמודים בזרימה (ברירת מחדל body; שלב 59). */
+  readonly pageKind?: ContentPageKind;
 }
 
 /** המצב ההתחלתי: עמוד 1, טור 0, סמן על תחילת הבלוק הראשון, אין הערות/סוגריים/כותרות. */
@@ -331,6 +345,7 @@ export function initialPaginationState(input: InitialPaginationInput): Paginatio
     contentCursor: formatCursor({ blockId: input.firstBlockId, fragmentIndex: 0, atomIndex: 0 }),
     physicalPageIndex: 1,
     columnIndex: 0,
+    pageKind: input.pageKind ?? 'body',
     remainingByRegion: { ...input.remainingByRegion },
     pendingFootnotes: [],
     pendingSidenotes: [],
@@ -354,6 +369,7 @@ export function clonePaginationState(s: PaginationState): PaginationState {
     contentCursor: s.contentCursor,
     physicalPageIndex: s.physicalPageIndex,
     columnIndex: s.columnIndex,
+    pageKind: s.pageKind,
     remainingByRegion: { ...s.remainingByRegion },
     pendingFootnotes: [...s.pendingFootnotes],
     pendingSidenotes: [...s.pendingSidenotes],
@@ -429,12 +445,17 @@ export function advanceCursor(s: PaginationState, to: ContentCursor): Pagination
  * הערות ממתינות, סוגריים והקשר כותרות נישאים כמו שהם — זו התלות
  * בין עמודים (§9.1: "מצב הפתיחה והסגירה נשמר בין אזורים").
  */
-export function openPage(s: PaginationState, remainingByRegion: Readonly<Record<string, LayoutUnit>>): PaginationStep {
+export function openPage(
+  s: PaginationState,
+  remainingByRegion: Readonly<Record<string, LayoutUnit>>,
+  pageKind: ContentPageKind = s.pageKind,
+): PaginationStep {
   const physicalPageIndex = s.physicalPageIndex + 1;
   return step(s, { kind: 'open-page', physicalPageIndex, remainingByRegion: { ...remainingByRegion } }, {
     ...s,
     physicalPageIndex,
     columnIndex: 0,
+    pageKind,
     remainingByRegion: { ...remainingByRegion },
   });
 }
