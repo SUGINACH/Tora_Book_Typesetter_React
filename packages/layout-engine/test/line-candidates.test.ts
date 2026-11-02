@@ -10,7 +10,7 @@
  *   1. רוחב מחושב מ־glyph advances של הספק — סכום ידני לפי תו.
  *   2. רווחים עוקבים בסוף קו מחוץ לרוחב (trailingSpaceLu), האטומים נשמרים;
  *      NBSP אינו נחתך ואינו נספר.
- *   3. stretch/shrink — חשבון שלם פר־רווח (k·roundDiv(roundDiv(w,k),2)).
+ *   3. stretch/shrink — חשבון שלם פר־רווח (מתיחה k·roundDiv(w,k) — רווח מלא, ADR-004-ר1 שלב 48; כיווץ k·roundDiv(w,3)).
  *   4. מילה שנגמרת במקף ⇒ hyphenEnd.
  *   5. נקודות שבירה: UAX #14 ∩ breakBefore של הפרסר; סוף פסקה תמיד קיים;
  *      הזדמנות שנאסרה מסומנת ב־blocked; explicit-break הוא נקודת forced.
@@ -124,7 +124,9 @@ describe('שלב 41: מועמדי שורה — רוחב מגליפים', () => {
       const k = bt.atoms[tok.pIdx]!.text.length;
       const w = shaped.advances[tok.pIdx] ?? 0;
       const perSpace = Math.round(w / k);
-      stretch += k * Math.round(perSpace / 2);
+      // ADR-004-ר1 (שלב 48): מתיחה = רווח מלא פר-רווח (במקור חצי) — תוקן
+      // על בסיס מדידת קורפוס Gold (ר' דוח ה-differential)
+      stretch += k * perSpace;
       shrink += k * Math.round(perSpace / 3);
       spaces += k;
     }

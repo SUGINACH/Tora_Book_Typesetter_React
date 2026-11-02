@@ -8,7 +8,8 @@
  *     ברשימת החסומים — "candidates חסרים/לא חוקיים מסומנים".
  *   - מדידת מקטע [from,to): רוחב מ־glyph advances של האטומים בלבד
  *     (§8.1#5 — לא מ־CSS ולא מסכום מילים שהומדדו בנפרד); stretch/shrink
- *     מרווחי המילים שנספרו (קוונטיזציה פר־רווח לפי ADR-001/004); רווחים
+ *     מרווחי המילים שנספרו (קוונטיזציה פר־רווח לפי ADR-001; מתיחה = רווח
+ *     מלא פר-רווח לפי ADR-004-ר1 — תיקון שלב 48 על בסיס מדידת קורפוס); רווחים
  *     עוקבים בסוף הקו אינם נמדדים ברוחב אך האטומים נשמרים — אין מחיקה.
  *
  * חוזה שחזור (שער השלב): כל candidate ניתן לשחזור מהמקור ומהמדידה —
@@ -180,7 +181,13 @@ export class LineCandidateIndex {
           const perSpace = roundDiv(w, k);
           isSpace[t] = true;
           sw = w;
-          st = k * roundDiv(perSpace, 2);
+          // מתיחה: רווח מלא פר-רווח (תיקון ADR-004-ר1, שלב 48): הקבוע הקלאסי ½
+          // הניח רווח ברוחב ניכר מהקו — בגופן Guttman Rashi הרווח הוא ~2% מהקו
+          // והחלון שנוצר צר מרוחב מילה אחת ⇒ 98% קווי חירום בקורפוס Gold
+          // (דוח differential שלב 48). מדידה אמפירית של 3,511 קווי מילוי-מקסימלי
+          // (התנהגות הישן; CSS justify ללא הגבלה): חציון 0.56×, P95 1.56×, P99
+          // 2.13× — רווח מלא (1×) ברמה 0 עם הסולם סופג את הזנב (רמה 1 = 2×).
+          st = k * perSpace;
           sh = k * roundDiv(perSpace, 3);
           sc = k;
         }
@@ -338,7 +345,7 @@ export function reconstructMetrics(
       if (isTrimmableSpaceText(bt.atoms[tok.pIdx]!.text)) {
         const k = bt.atoms[tok.pIdx]!.text.length;
         const perSpace = roundDiv(w, k);
-        stretch += k * roundDiv(perSpace, 2);
+        stretch += k * perSpace;
         shrink += k * roundDiv(perSpace, 3);
         spaceCount += k;
       }
@@ -365,7 +372,7 @@ export function reconstructMetrics(
       const k = bt.atoms[tok.pIdx]!.text.length;
       const w = cellWidths[t - fromTok]!;
       const perSpace = roundDiv(w, k);
-      stretch -= k * roundDiv(perSpace, 2);
+      stretch -= k * perSpace;
       shrink -= k * roundDiv(perSpace, 3);
       spaceCount -= k;
     }

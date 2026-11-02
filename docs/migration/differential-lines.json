@@ -1,0 +1,657 @@
+{
+ "schemaVersion": 1,
+ "generatedAtStage": 48,
+ "authority": "תכנית 100 השלבים, שלב 48 · אפיון §17.1, §18-M5 · מול קורפוס Gold (Orange@93ad1e57)",
+ "method": "DP גלובלי (מסלור next) מול פיקסטורת ההשוואה החמדנית — אותו אינדקס מועמדים ומודל רוחב; השוואה על QualityVector מלא (ADR-004); הספק HarfBuzz אמיתי; תקציב 512/64; כללי סיום ברירת מחדל",
+ "fixtures": [
+  {
+   "id": "chapter-focus-ch05",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch05.txt",
+   "bytes": 24999,
+   "run": {
+    "layoutHash": "86aab21da563806ecbeb00cbbbab25297983d3502ae691ae86ab4d0481d0de28",
+    "pages": 9,
+    "lines": 661,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 21,
+    "improvement": 9,
+    "parity": 12,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 623,
+    "greedy": 643
+   },
+   "quality": {
+    "dpEmergencyLines": 50,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch09",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch09.txt",
+   "bytes": 50892,
+   "run": {
+    "layoutHash": "0fa1011087f3ebb1984b2b616d6502066e399fea4ae913162aec262b705c7621",
+    "pages": 17,
+    "lines": 1325,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 29,
+    "improvement": 15,
+    "parity": 14,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 1241,
+    "greedy": 1291
+   },
+   "quality": {
+    "dpEmergencyLines": 21,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch13",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch13.txt",
+   "bytes": 49492,
+   "run": {
+    "layoutHash": "a5fea874c2091c04a27a8f9ab194d265befa1fd426b72d5994977e682331cd54",
+    "pages": 17,
+    "lines": 1289,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 21,
+    "improvement": 10,
+    "parity": 11,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 1217,
+    "greedy": 1270
+   },
+   "quality": {
+    "dpEmergencyLines": 56,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch35",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch35.txt",
+   "bytes": 6842,
+   "run": {
+    "layoutHash": "cc82146b018dd0e57576f0d3d492e32edda3a5dac6feb2dbeb53afa5d3444825",
+    "pages": 3,
+    "lines": 176,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 8,
+    "improvement": 3,
+    "parity": 5,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 163,
+    "greedy": 169
+   },
+   "quality": {
+    "dpEmergencyLines": 5,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch42",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch42.txt",
+   "bytes": 15315,
+   "run": {
+    "layoutHash": "bf9b7a28a129bc080c24aa86c3c0057d94ed780ca4202cced64ca6486c8bb139",
+    "pages": 6,
+    "lines": 398,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 5,
+    "improvement": 2,
+    "parity": 3,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 386,
+    "greedy": 400
+   },
+   "quality": {
+    "dpEmergencyLines": 5,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch55",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch55.txt",
+   "bytes": 71639,
+   "run": {
+    "layoutHash": "89e8696e73f0261acd26a30255d1b385e3956e08d96bc3ab4959d613361104bc",
+    "pages": 23,
+    "lines": 1832,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 15,
+    "improvement": 9,
+    "parity": 6,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 1755,
+    "greedy": 1834
+   },
+   "quality": {
+    "dpEmergencyLines": 9,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch62",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch62.txt",
+   "bytes": 18527,
+   "run": {
+    "layoutHash": "4f017ad1cbf03569919967a57aac048c15fdd97f631254596b13bdd3d14e4b4b",
+    "pages": 7,
+    "lines": 487,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 14,
+    "improvement": 6,
+    "parity": 7,
+    "regression": 0,
+    "baselineNotLegal": 1
+   },
+   "lines": {
+    "dp": 480,
+    "greedy": 499
+   },
+   "quality": {
+    "dpEmergencyLines": 2,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 3,
+    "greedyHyphenEnds": 4
+   },
+   "classification": "documented-improvement",
+   "baselineNotLegal": [
+    {
+     "blockId": "node:v1|diff:chapter-focus-ch62|body|9282+9339|src|15",
+     "dp": {
+      "fallbackSeverity": 1,
+      "headingEscortDebt": 0,
+      "noteDisplacement": 0,
+      "widowOrphanDebt": 1,
+      "runtDebt": 0,
+      "lineBadness": 40000,
+      "hyphenDebt": 0,
+      "columnImbalance": 0,
+      "pageCountDebt": 0
+     },
+     "greedy": {
+      "fallbackSeverity": 1,
+      "headingEscortDebt": 0,
+      "noteDisplacement": 0,
+      "widowOrphanDebt": 0,
+      "runtDebt": 1,
+      "lineBadness": 40000,
+      "hyphenDebt": 0,
+      "columnImbalance": 0,
+      "pageCountDebt": 0
+     },
+     "reason": "greedy-path-violates-stretch-policy"
+    }
+   ]
+  },
+  {
+   "id": "chapter-focus-ch63",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch63.txt",
+   "bytes": 63432,
+   "run": {
+    "layoutHash": "091cda24e18e2edecfd839431ee2b81eb86a800f0d3cb4a3c06172f2f521ca98",
+    "pages": 21,
+    "lines": 1502,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 14,
+    "improvement": 8,
+    "parity": 6,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 1270,
+    "greedy": 1317
+   },
+   "quality": {
+    "dpEmergencyLines": 29,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch67",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch67.txt",
+   "bytes": 31137,
+   "run": {
+    "layoutHash": "2e4ec6f6afe190b0863f25c5a9f24b520e6ac683e59ae328d11d9f8c28564e65",
+    "pages": 11,
+    "lines": 698,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 9,
+    "improvement": 4,
+    "parity": 5,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 564,
+    "greedy": 590
+   },
+   "quality": {
+    "dpEmergencyLines": 10,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch71",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch71.txt",
+   "bytes": 23505,
+   "run": {
+    "layoutHash": "3240acb4913637db16247286fba4103da0df291057e01a8fd81387f467c5c2be",
+    "pages": 8,
+    "lines": 560,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 12,
+    "improvement": 6,
+    "parity": 6,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 495,
+    "greedy": 515
+   },
+   "quality": {
+    "dpEmergencyLines": 19,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch72",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch72.txt",
+   "bytes": 33523,
+   "run": {
+    "layoutHash": "e167707dda679dd3f93718349fcf4eaf4066a98d10fbd43b936bb680024b1278",
+    "pages": 12,
+    "lines": 815,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 13,
+    "improvement": 6,
+    "parity": 7,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 711,
+    "greedy": 742
+   },
+   "quality": {
+    "dpEmergencyLines": 8,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch73",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch73.txt",
+   "bytes": 21344,
+   "run": {
+    "layoutHash": "e3a896225d531d0338f1c3263a7bd38820938a4e644b8086057309b328033b4e",
+    "pages": 8,
+    "lines": 488,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 17,
+    "improvement": 11,
+    "parity": 6,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 398,
+    "greedy": 418
+   },
+   "quality": {
+    "dpEmergencyLines": 16,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "chapter-focus-ch75",
+   "sourcePath": "packages/test-fixtures/corpus/chapters/ch75.txt",
+   "bytes": 32937,
+   "run": {
+    "layoutHash": "1fcc4953ba64f206a16f702e2bfcfadcc46fc4becc01ce4b9e707cdd26cf96d6",
+    "pages": 11,
+    "lines": 663,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 15,
+    "improvement": 8,
+    "parity": 7,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 425,
+    "greedy": 441
+   },
+   "quality": {
+    "dpEmergencyLines": 12,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "ch63-final-paragraph-failure",
+   "sourcePath": "packages/test-fixtures/corpus/cases/ch63_final_paragraph_failure_case.txt",
+   "bytes": 16219,
+   "run": {
+    "layoutHash": "8e397642bd95ad6d4776082853b90d4adea4a32b32f1bfe53afb22c69c6a3281",
+    "pages": 6,
+    "lines": 348,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 2,
+    "improvement": 1,
+    "parity": 1,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 257,
+    "greedy": 268
+   },
+   "quality": {
+    "dpEmergencyLines": 7,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  },
+  {
+   "id": "no-legal-two-column-split",
+   "sourcePath": "packages/test-fixtures/corpus/cases/no-legal-two-column-split.txt",
+   "bytes": 156,
+   "run": {
+    "layoutHash": "5da66dafd0e0dfbf86e21a4e501d1d3e66309aaf3947042dc2fd43c83453fbcf",
+    "pages": 1,
+    "lines": 6,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 4,
+    "improvement": 0,
+    "parity": 4,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 6,
+    "greedy": 6
+   },
+   "quality": {
+    "dpEmergencyLines": 0,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "parity"
+  },
+  {
+   "id": "geometry-audit-smoke",
+   "sourcePath": "packages/test-fixtures/corpus/cases/geometry-audit-smoke.txt",
+   "bytes": 576,
+   "run": {
+    "layoutHash": "426e262b798490423e5c406d8d3dcb389ff8007926162c3b01bf3f5047a2b6fd",
+    "pages": 2,
+    "lines": 19,
+    "auditHigh": 0,
+    "auditMedium": 1,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 7,
+    "improvement": 2,
+    "parity": 4,
+    "regression": 0,
+    "baselineNotLegal": 1
+   },
+   "lines": {
+    "dp": 16,
+    "greedy": 16
+   },
+   "quality": {
+    "dpEmergencyLines": 4,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement",
+   "baselineNotLegal": [
+    {
+     "blockId": "node:v1|diff:geometry-audit-smoke|body|53+251|src|2",
+     "dp": {
+      "fallbackSeverity": 3,
+      "headingEscortDebt": 0,
+      "noteDisplacement": 0,
+      "widowOrphanDebt": 0,
+      "runtDebt": 0,
+      "lineBadness": 66716,
+      "hyphenDebt": 0,
+      "columnImbalance": 0,
+      "pageCountDebt": 0
+     },
+     "greedy": {
+      "fallbackSeverity": 2,
+      "headingEscortDebt": 0,
+      "noteDisplacement": 0,
+      "widowOrphanDebt": 0,
+      "runtDebt": 0,
+      "lineBadness": 87354,
+      "hyphenDebt": 0,
+      "columnImbalance": 0,
+      "pageCountDebt": 0
+     },
+     "reason": "greedy-path-violates-stretch-policy"
+    }
+   ]
+  },
+  {
+   "id": "geometry-audit-diagnostics-smoke",
+   "sourcePath": "packages/test-fixtures/corpus/cases/geometry-audit-diagnostics-smoke.txt",
+   "bytes": 353,
+   "run": {
+    "layoutHash": "136fc1a75a2fbf9778ef660bf7ecefdff1ae2279a64cc1c91a2d63fb576176ff",
+    "pages": 2,
+    "lines": 11,
+    "auditHigh": 0,
+    "auditMedium": 0,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 6,
+    "improvement": 0,
+    "parity": 6,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 9,
+    "greedy": 9
+   },
+   "quality": {
+    "dpEmergencyLines": 0,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "parity"
+  },
+  {
+   "id": "ornament-geometry-smoke",
+   "sourcePath": "packages/test-fixtures/corpus/cases/ornament-geometry-smoke.txt",
+   "bytes": 699,
+   "run": {
+    "layoutHash": "1990a2aab9b6ccc79861f00c1e75cdec05f24b6b3292ace49a4f06e0b5e52cee",
+    "pages": 2,
+    "lines": 20,
+    "auditHigh": 0,
+    "auditMedium": 1,
+    "auditLow": 0,
+    "overflowExplained": true
+   },
+   "paragraphs": {
+    "compared": 7,
+    "improvement": 2,
+    "parity": 5,
+    "regression": 0,
+    "baselineNotLegal": 0
+   },
+   "lines": {
+    "dp": 16,
+    "greedy": 16
+   },
+   "quality": {
+    "dpEmergencyLines": 1,
+    "greedyEmergencyLines": 0,
+    "dpHyphenEnds": 0,
+    "greedyHyphenEnds": 0
+   },
+   "classification": "documented-improvement"
+  }
+ ],
+ "summary": {
+  "fixtures": 18,
+  "compared": 219,
+  "improvement": 102,
+  "parity": 115,
+  "regression": 0,
+  "baselineNotLegal": 2,
+  "auditHigh": 0,
+  "overflowExplained": true,
+  "dpLines": 10032,
+  "greedyLines": 10444,
+  "gate": {
+   "noUnexplainedOverflow": true,
+   "noTrueRegression": true,
+   "contentConserved": true
+  }
+ }
+}

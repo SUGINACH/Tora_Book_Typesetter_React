@@ -144,15 +144,35 @@ console.log('\n3) התנהגויות קצה מחייבות');
   (empty.length >= 2 && empty.every((b) => sameSet(placedIds(b), allIds(b))) ? ok : fail)('שורה ריקה: הפסקאות שמסביב שלמות');
 }
 
-console.log('\n4) רגרסיית החזית (הבאג שהסוללה גילתה)');
+console.log('\n4) רגרסיית החזית (הבאג שהסוללה גילתה; עודכן בשלב 48 לקבוע ADR-004-ר1)');
 {
-  const body = runFixture('long_paragraph.txt', TIGHT).find((r) => r.role === 'body');
-  (body.ladder.dp.lines.length > 0 && sameSet(placedIds(body), allIds(body))
-    ? ok : fail)('תקציב דוק 64/8: כיסוי מלא (לפני התיקון — אפס קווים בשקט)');
-  (body.ladder.dp.budget.exhausted === true ? ok : fail)('המיצוי נרשם (exhausted=true; §9.2)');
+  // תרחיש החזית: טור צר מרוחב כל מילה מכריח קווים חד-מילוליים ברמה 2 —
+  // שם צומת החזית הוא היחיד שיכול להמשיך, והאלומה הדוקה גוזמת אותו ראשון.
+  const raw = readFileSync(join(BATTERY_DIR, 'long_paragraph.txt'), 'utf8');
+  const parsed = cm.parseSourceText(raw, { documentId: 'battery:frontier-v', sourceName: 'long_paragraph.txt' });
+  const bodyBlock = la.allBlocks(parsed.doc).find((b) => b.role === 'body');
+  const bt = engine.tokenize(bodyBlock.id, bodyBlock.inline, new Map());
+  const shaped = engine.shapeParagraph(bt.atoms, provider, FONT, V0.bodyFontSizeLu);
+  const index = new engine.LineCandidateIndex(bt, shaped, () => 0);
+  const NARROW = 26688; // 3 תווים — כל מילה בפסקה רחבה ממנו
+  const ladder = engine.breakParagraphWithLadder(bt.blockId, bt, index, NARROW, TIGHT);
+  const placedNarrow = [];
+  for (const line of ladder.dp.lines) {
+    for (let t = line.startTok; t < line.endTok; t++) {
+      const tok = bt.tokens[t];
+      if (tok.kind === 'atom') placedNarrow.push(bt.atoms[tok.pIdx].id);
+    }
+  }
+  const allNarrow = bt.atoms.map((a) => a.id);
+  (ladder.dp.lines.length > 0 && sameSet(placedNarrow, allNarrow)
+    ? ok : fail)('טור צר + תקציב דוק 64/8: כיסוי מלא (לפני התיקון — אפס קווים בשקט)');
+  (ladder.level === 2 && ladder.dp.budget.exhausted === true ? ok : fail)(`רמה 2 והמיצוי נרשם (exhausted=true; §9.2)`);
+  const tight = runFixture('long_paragraph.txt', TIGHT).find((r) => r.role === 'body');
   const wide = runFixture('long_paragraph.txt', BUDGET).find((r) => r.role === 'body');
-  (wide.ladder.perLineFallback.size < body.ladder.perLineFallback.size
-    ? ok : fail)(`תקציב נדיב ⇒ פחות חירום (${wide.ladder.perLineFallback.size} < ${body.ladder.perLineFallback.size})`);
+  (sameSet(placedIds(wide), allIds(wide)) && sameSet(placedIds(tight), allIds(tight))
+    ? ok : fail)('בטור האמיתי: כיסוי מלא בשני התקציבים');
+  (wide.ladder.perLineFallback.size <= tight.ladder.perLineFallback.size
+    ? ok : fail)(`תקציב נדיב אינו גרוע מהדוק (${wide.ladder.perLineFallback.size} ≤ ${tight.ladder.perLineFallback.size})`);
 }
 
 console.log('\n5) badness עם מכפלה חורגת — מסלול מדויק, לא קריסה');
@@ -210,7 +230,7 @@ console.log('\n7) רגרסיה');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check');
 if (!SKIP_TESTS) {
   const t = run('npm', ['run', 'test:packages']);
-  (/Tests\s+708\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 708/708');
+  (/Tests\s+714\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 714/714');
 } else {
   ok('test:packages — [skipped-in-CI: parent step already ran the suite]');
 }

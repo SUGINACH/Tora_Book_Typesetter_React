@@ -360,21 +360,41 @@ describe('שלב 46: metamorphic — פיצול runs שאינו משנה תוכ�
 // ─────────────────── 4) רגרסיית החזית (הבאג שהסוללה גילתה) ───────────────────
 
 describe('שלב 46: רגרסיה — הגנת חזית האלומה וכשל מפורש ברמה 3', () => {
-  test('פסקה ארוכה בתקציב הדוק (64/8): כיסוי מלא למרות מיצוי תקציב נרשם', () => {
+  // תרחיש החזית (עודכן בשלב 48 לקבוע המתיחה המתוקן ADR-004-ר1): טור צר
+  // מרוחב כל מילה מכריח קווים חד-מילוליים בלבד ברמה 2 — שם צומת החזית הוא
+  // היחיד שיכול להמשיך, והאלומה הדוקה גוזמת אותו ראשון בלי ההגנה.
+  const NARROW = 26688; // 3 תווים — כל מילה בפסקה רחבה ממנו
+
+  test('פסקה ארוכה בטור צר ובתקציב דוק (64/8): כיסוי מלא למרות מיצוי תקציב נרשם', () => {
     // לפני התיקון: האלומה גזמה את צומת החזית והפסקה חזרה עם 0 קווים בשקט
-    const runs = runFixture('long_paragraph.txt', { maxCandidatesPerState: 64, maxBeamWidth: 8 });
-    const body = runs.find((r) => r.role === 'body')!;
-    expect(body.ladder.dp.lines.length).toBeGreaterThan(0);
-    expect([...placedAtomIds(body)].sort()).toEqual([...allAtomIds(body.bt)].sort());
-    expect(body.ladder.dp.budget.exhausted).toBe(true); // המיצוי נרשם, לא שקט (§9.2)
+    const raw = readFileSync(join(BATTERY_DIR, 'long_paragraph.txt'), 'utf8');
+    const parsed = parseSourceText(raw, { documentId: 'battery:frontier', sourceName: 'long_paragraph.txt' });
+    const body = (allBlocks(parsed.doc) as readonly ContentBlock[]).find((b) => b.role === 'body')!;
+    const bt = tokenize(body.id as string, body.inline as InlineLike, new Map());
+    const shaped = shapeParagraph(bt.atoms, provider, FONT, V0.bodyFontSizeLu);
+    const index = new LineCandidateIndex(bt, shaped, () => 0);
+    const ladder = breakParagraphWithLadder(bt.blockId, bt, index, NARROW, { maxCandidatesPerState: 64, maxBeamWidth: 8 });
+    expect(ladder.dp.lines.length).toBeGreaterThan(0);
+    const placed: string[] = [];
+    for (const line of ladder.dp.lines) {
+      for (let t = line.startTok; t < line.endTok; t++) {
+        const tok = bt.tokens[t]!;
+        if (tok.kind === 'atom') placed.push(bt.atoms[tok.pIdx]!.id);
+      }
+    }
+    expect([...placed].sort()).toEqual([...bt.atoms.map((a) => a.id)].sort());
+    expect(ladder.level).toBe(2);
+    expect(ladder.dp.budget.exhausted).toBe(true); // המיצוי נרשם, לא שקט (§9.2)
   });
 
-  test('פסקה ארוכה בתקציב נדיב (512/64): מסלול טוב יותר — פחות קווי חירום', () => {
+  test('פסקה ארוכה בטור האמיתי: כיסוי מלא בשני התקציבים; הנדיב אינו גרוע', () => {
     const tight = runFixture('long_paragraph.txt', { maxCandidatesPerState: 64, maxBeamWidth: 8 })
       .find((r) => r.role === 'body')!;
     const wide = runFixture('long_paragraph.txt')
       .find((r) => r.role === 'body')!;
-    expect(wide.ladder.perLineFallback.size).toBeLessThan(tight.ladder.perLineFallback.size);
     expect([...placedAtomIds(wide)].sort()).toEqual([...allAtomIds(wide.bt)].sort());
+    expect([...placedAtomIds(tight)].sort()).toEqual([...allAtomIds(tight.bt)].sort());
+    // התקציב הנדיב אינו מניב איכות נמוכה מהדוק (fallbacks ≤)
+    expect(wide.ladder.perLineFallback.size).toBeLessThanOrEqual(tight.ladder.perLineFallback.size);
   });
 });

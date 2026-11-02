@@ -104,7 +104,7 @@ function indexFor(text, shapeProvider = provider) {
 const wcOf = (r) => r.lines.map((l) => l.candidate.metrics.wordCount);
 {
   const { index, bt } = indexFor('א ב ג ד ה', createStretchySpaceProvider(2224));
-  const W = 122320;
+  const W = 142336; // עודכן בשלב 48 לקבוע ADR-004-ר1
   const off = engine.breakParagraphDP(index, engine.createQualityCostModel(W, RULES_OFF), engine.createLevel0Policy(), W, BUDGET);
   const on = engine.breakParagraphDP(index, engine.createQualityCostModel(W, engine.DEFAULT_PARAGRAPH_END_RULES), engine.createLevel0Policy(), W, BUDGET);
   (JSON.stringify(wcOf(off)) === JSON.stringify([4, 1]) ? ok : fail)(`בלי הכלל המיטבי הוא [4,1] (התקבל [${wcOf(off)}])`);
@@ -178,7 +178,7 @@ console.log('\n8) body-last-line-align נישא בסולם');
 console.log('\n9) דטרמיניזם');
 {
   const a = indexFor('א ב ג ד ה', createStretchySpaceProvider(2224));
-  const W = 122320;
+  const W = 142336; // עודכן בשלב 48 לקבוע ADR-004-ר1
   const r1 = engine.breakParagraphDP(a.index, engine.createQualityCostModel(W), engine.createLevel0Policy(), W, BUDGET);
   const r2 = engine.breakParagraphDP(a.index, engine.createQualityCostModel(W), engine.createLevel0Policy(), W, BUDGET);
   (JSON.stringify(r1) === JSON.stringify(r2) ? ok : fail)('אותם קלטים ⇒ אותה תוצאה בדיוק');
@@ -198,7 +198,7 @@ console.log('\n11) רגרסיה');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check');
 if (!SKIP_TESTS) {
   const t = run('npm', ['run', 'test:packages']);
-  (/Tests\s+708\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 708/708');
+  (/Tests\s+714\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 714/714');
 } else {
   ok('test:packages — [skipped-in-CI: parent step already ran the suite]');
 }

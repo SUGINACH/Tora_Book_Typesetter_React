@@ -59,7 +59,8 @@ function ladder(text, W, options) {
 }
 const normal = ladder('א ב ג ד ה ו ז ח ט י כ ל מ', 100000);
 (normal.r.level === 0 && normal.r.perLineFallback.size === 0 && normal.r.emergencyRecords.length === 0 ? ok : fail)('פסקה רגילה: רמה 0, אפס fallback, אפס רישומי חירום');
-const stretch = ladder('א ב ג ד', 42000);
+// W=43100 (עודכן בשלב 48 לקבוע ADR-004-ר1 — מתיחה=רווח מלא פר-רווח)
+const stretch = ladder('א ב ג ד', 43100);
 (stretch.r.level === 1 && stretch.r.perLineFallback.get(0) === 'EMERGENCY_STRETCH' && stretch.r.dp.best.fallbackSeverity === 1 ? ok : fail)('רמה 1: EMERGENCY_STRETCH (MEDIUM=1) על הקו החורג');
 const LONG = 'א ב ג ד אאאאאאאאאאאאאאאאאאאא ה ו ז ח';
 const giant = ladder(LONG, 30000);
@@ -121,7 +122,7 @@ console.log('\n7) רגרסיה');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check');
 if (!SKIP_TESTS) {
   const t = run('npm', ['run', 'test:packages']);
-  (/Tests\s+708\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 708/708');
+  (/Tests\s+714\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 714/714');
 } else {
   ok('test:packages — [skipped-in-CI: parent step already ran the suite]');
 }

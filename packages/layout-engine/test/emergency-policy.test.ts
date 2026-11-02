@@ -56,8 +56,12 @@ describe('שלב 44: סולם החירום המדורג', () => {
   });
 
   test('מתיחת חירום — רמה 1 עם EMERGENCY_STRETCH (MEDIUM) על הקו החורג בלבד', () => {
-    // W=42000: שום פיצול רגיל לא ממלא; קו עם סבילות כפולה כן
-    const { result } = ladderFor('א ב ג ד', 42000);
+    // W=43100: פער — [א ב ג|ד] (34688) רפוי ב-surplus 8412 > מתיחה 8000
+    // (2 רווחים × 4000 במלואם — ADR-004-ר1), [א ב|ג ד] רפוי בהרבה יותר,
+    // והפסקה בשלמותה (43584) גולשת — רמה 0 נכשלת; במתיחה כפולה (רמה 1)
+    // [א ב ג|ד] חוקי עם EMERGENCY_STRETCH על הקו הראשון בלבד, [ד] נקי.
+    // (עודכן בשלב 48 לקבוע המתיחה המתוקן — רווח מלא פר-רווח)
+    const { result } = ladderFor('א ב ג ד', 43100);
     expect(result.level).toBe(1);
     expect(result.dp.lines.length).toBe(2);
     expect(result.perLineFallback.get(0)).toBe('EMERGENCY_STRETCH');

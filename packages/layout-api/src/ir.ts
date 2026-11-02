@@ -265,6 +265,24 @@ export function layoutDocumentIssues(doc: unknown): string[] {
   const regionIds = new Set<string>();
   const regionRects = new Map<string, Rect>();
   const itemIds = new Set<string>();
+  // שלב 48 (M5): קווי ייחוס-בלבד — סמני הערה שעומדים לבדם בגוף (למשל הפניית
+  // הערת סיון כבלוק עצמאי) נוצרים כקו בלי ריצות; הסמן מוצב כפריט נפרד המזוהה
+  // עם הקו (‎${lineId}:marker:${noteId}‎). אוספים מראש את הקווים שיש להם סמנים —
+  // רק להם מותר מערך ריצות ריק.
+  const linesWithMarkers = new Set<string>();
+  for (let pi = 0; pi < d.pages.length; pi++) {
+    const pv = d.pages[pi];
+    if (!isPlainObject(pv)) continue;
+    const items = (pv as Record<string, unknown>).items;
+    if (!Array.isArray(items)) continue;
+    for (const iv of items) {
+      if (!isPlainObject(iv) || iv.kind !== 'note-marker') continue;
+      const mid = iv.id;
+      if (typeof mid === 'string' && mid.includes(':marker:')) {
+        linesWithMarkers.add(mid.slice(0, mid.indexOf(':marker:')));
+      }
+    }
+  }
   let prevPhysical = 0;
   for (let pi = 0; pi < d.pages.length; pi++) {
     const pv = d.pages[pi];
@@ -343,7 +361,10 @@ export function layoutDocumentIssues(doc: unknown): string[] {
             issues.push(`${il}.baseline:outside-rect`);
           }
         }
-        if (!Array.isArray(line.runs) || line.runs.length === 0) { issues.push(`${il}.runs:empty`); continue; }
+        if (!Array.isArray(line.runs) || line.runs.length === 0) {
+          // קו ייחוס-בלבד (שלב 48): חוקי רק אם סמן הערה מזוהה עם הקו הזה
+          if (!linesWithMarkers.has(it.id as string)) { issues.push(`${il}.runs:empty`); continue; }
+        }
         let prevEnd = 0;
         for (let si = 0; si < line.runs.length; si++) {
           const sv = line.runs[si] as unknown as Record<string, unknown>;
