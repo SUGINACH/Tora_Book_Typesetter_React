@@ -25,3 +25,4 @@ export * from './linebreak/paragraph-end.js';
 // פרק ז (M6) — עמודים, טורים והערות; שלבים 49+
 export * from './pagination/state.js';
 export * from './pagination/templates.js';
+export * from './pagination/search.js';
