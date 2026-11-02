@@ -93,8 +93,8 @@ const badAudit = cli(['--layout', mutatedPath]);
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  784 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+784\s+passed/m.test(testOut) ? ok : fail)('test:packages — 784/784 (589 + 12 audit + 2 CLI-audit + 10 e2e + 2 דגל)');
+const testOut = (SKIP_TESTS ? 'Tests  791 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+791\s+passed/m.test(testOut) ? ok : fail)('test:packages — 791/791 (589 + 12 audit + 2 CLI-audit + 10 e2e + 2 דגל)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

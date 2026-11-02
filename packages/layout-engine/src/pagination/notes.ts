@@ -187,7 +187,13 @@ function splitAt(spec: NoteBodySpec, availableLu: number, emptyBudgetLu: number)
     placed += 1;
   }
   if (placed === 0) {
-    // אפילו קו אחד לא נכנס — דחיית עוגן (ההמשך ינוסה בעמוד הבא)
+    // אפילו קו אחד לא נכנס לשארית: אם הקו הראשון נכנס לעמוד ריק — דחיית
+    // עוגן (ההערה תיפרש בעמוד הבא); אם הקו הראשון גבוה מעמוד ריק כולו —
+    // אין פיצול שיכול לעזור (פיצול בגבולות קווים בלבד) ⇒ כשל מפורש
+    // (§8.2) — אחרת לולאת defer אינסופית
+    if (spec.lineHeightLu[0]! > emptyBudgetLu) {
+      return { kind: 'fail', reason: `note ${spec.noteId} first line ${String(spec.lineHeightLu[0]!)} > empty page budget ${String(emptyBudgetLu)} — cannot split below line level (ADR-005)` };
+    }
     return { kind: 'defer', placedHeightLu: 0 };
   }
   const restHeight = spec.heightLu - height;

@@ -28,3 +28,4 @@ export * from './pagination/templates.js';
 export * from './pagination/search.js';
 export * from './pagination/candidates.js';
 export * from './pagination/notes.js';
+export * from './pagination/endnotes.js';
