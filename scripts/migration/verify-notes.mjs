@@ -190,12 +190,20 @@ console.log('\n4) שעד: אין מספור בזמן רינדור; אין קיש
       } else if (/\.ts$/.test(name)) {
         const rel = p.slice(repoRoot.length + 1).replace(/\\/g, '/');
         if (rel.includes('/test/') || rel.includes('.test.')) continue;
-        // הבעלים החוקי: notes.ts; re-export מה־index ותחביר הפרסר (מרשם שלב 17) — לגיטימיים
+        // הבעלים החוקי: notes.ts; re-export מה־index ותחביר הפרסר (מרשם שלב 17) — לגיטימיים.
+        // עדכון שלבים 31/33: layout-api/src/index.ts הוא רכזת ה-re-export של הגרף
+        // (§5 — הצרכנים מקבלים הכל דרכה), והמנוע v0 **צורך** את numberNotes/
+        // toGematriaLabel הקנוניים (קריאה, לא מימוש). הבדיקה מעודנת מאזכור-שם
+        // לזיהוי הגדרה מקומית — האנטי-תבנית האמיתית היא מנוע/רינדר שמממש מספור
+        // בעצמו (משלב 20: המספור נקבע טרם העימוד, בעלים אחד).
         if (rel === 'packages/content-model/src/notes.ts') continue;
         if (rel === 'packages/content-model/src/index.ts') continue;
+        if (rel === 'packages/layout-api/src/index.ts') continue;
         if (rel.startsWith('packages/content-model/src/parser/')) continue;
         const src2 = readFileSync(p, 'utf8');
-        if (/toGematria|gematriaOf|noteLabel|numberNotes|noteMarker/.test(src2)) offenders.push(rel);
+        const definesNumbering = /function\s+(?:toGematria\w*|gematriaOf|numberNotes|noteMarker\w*)\s*\(/.test(src2)
+          || /const\s+(?:toGematria\w*|gematriaOf|numberNotes|noteMarker\w*)\s*=\s*(?:\(|function|async)/.test(src2);
+        if (definesNumbering) offenders.push(rel);
         // האנטי־תבנית של §10.3: קישור הערות צד לפי אינדקס עמוד
         if (/sidenotes\s*\[\s*page/i.test(src2) || /pageNumber\s*-\s*1\s*\]\s*\.\s*(text|content)/i.test(src2)) offenders.push(`${rel} (index-link)`);
       }

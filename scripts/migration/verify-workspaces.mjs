@@ -85,10 +85,18 @@ ok('test-fixtures: חבילת נתונים (registry.json + corpus) — ללא �
 console.log('\n3) גרף התלות (אפיון §5)');
 for (const [name, deps] of Object.entries(GRAPH)) {
   const pkg = json(join(PKGS, name, 'package.json'));
-  const declared = Object.keys(pkg.dependencies ?? {}).map((d) => d.replace('@tora/', '')).sort();
+  // הגרף ממפה תלויות פנימיות (@tora/*) בלבד — עדכון שלב 34: למארח (cli)
+  // מותרות תלויות חוץ להרכבת הספק האמיתי (harfbuzzjs/wawoff2 — peer של
+  // measurement-harfbuzz לפי ADR-003; הזרקה מלאה); לחבילות ליבה — אסורות.
+  const declaredAll = Object.keys(pkg.dependencies ?? {});
+  const declared = declaredAll.filter((d) => d.startsWith('@tora/')).map((d) => d.replace('@tora/', '')).sort();
+  const external = declaredAll.filter((d) => !d.startsWith('@tora/')).sort();
   const expectedDeps = [...deps].sort();
   (JSON.stringify(declared) === JSON.stringify(expectedDeps)
     ? ok : fail)(`${name}: dependencies תואמות לגרף (${expectedDeps.join(', ') || 'ללא תלויות'})`);
+  const externalOk = name === 'cli' ? external.every((e) => ['harfbuzzjs', 'wawoff2'].includes(e)) : external.length === 0;
+  (externalOk
+    ? ok : fail)(`${name}: תלויות חוץ ${external.length === 0 ? 'אין' : external.join(', ') + ' (מארח — הרכבת ספק ADR-003)'} — תקין`);
   const tsconfigPath = join(PKGS, name, 'tsconfig.json');
   if (!existsSync(tsconfigPath)) {
     if (!DATA_PACKAGES.has(name)) fail(`${name}: חסר tsconfig.json`);

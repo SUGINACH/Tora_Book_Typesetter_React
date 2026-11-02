@@ -148,8 +148,10 @@ for (const [k, v] of Object.entries(oldPkg.scripts ?? {})) {
 (pkgDiffOk ? ok : fail)('package.json: שדות, סקריפטים ותלויות ישנים זהים; רק הוספות (workspaces, סקריפטים וכלים חדשים)');
 
 // קבצים חדשים: רק בנתיבים המאושרים
+// עדכון שלב 39: [a-z0-9-]+ — שמות תיקיות בדיקה יכולות לכלול ספרות
+// (tests/e2e-skeleton — מבחן שלד המהלך קצה־לקצה).
 const NEW_ALLOWED = [
-  /^docs\//, /^assets\//, /^packages\//, /^scripts\/migration\//, /^tests\/[a-z-]+\//,
+  /^docs\//, /^assets\//, /^packages\//, /^scripts\/migration\//, /^tests\/[a-z0-9-]+\//,
   /^src\/(stores|worker-host|renderers)\//, /^\.github\/(PULL_REQUEST_TEMPLATE\.md|workflows\/ci\.yml)$/,
   /^\.nvmrc$/, /^tsconfig\.base\.json$/, /^eslint\.config\.js$/, /^\.dependency-cruiser\.cjs$/, /^vitest\.packages\.config\.ts$/,
 ];

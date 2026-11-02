@@ -120,12 +120,18 @@ for (const p of CODE_PACKAGES) {
 (run('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (run('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 
-// ד — החבילות אינן מחוברות למסלול הייצוג הישן
+// ד — החבילות אינן מחוברות למסלול הייצור הישן.
+// חריג מתועד (שלבים 35–36): תיקיות המעטפת החדשות — src/worker-host,
+// src/renderers, src/stores — הן הקוד החדש של התכנית (נתיבים מאושרים
+// ב-verify-work-conventions) ורשאיות לצרוך את החבילות; הבדיקה מכוונת
+// לקוד הישן בלבד (App.tsx, components/, hooks/ וכו') שאסור לו להיות
+// מחובר לחבילות עד סיום ההגירה.
+const NEW_SHELL_DIRS = new Set(['worker-host', 'renderers', 'stores']);
 let oldSrcUsesTora = [];
 const scanOld = (dir) => {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, e.name);
-    if (e.isDirectory()) scanOld(p);
+    if (e.isDirectory()) { if (!NEW_SHELL_DIRS.has(e.name)) scanOld(p); }
     else if (/\.(ts|tsx)$/.test(e.name) && readFileSync(p, 'utf8').includes('@tora/')) oldSrcUsesTora.push(p);
   }
 };
