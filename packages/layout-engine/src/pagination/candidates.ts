@@ -33,7 +33,7 @@
  *   5. המדיניות מוזרקת (LegalPageBreakPolicy) — הליבה אינה מכירה H2
  *      (§10); ברירות המחדל נעולות כאן ומתועדות.
  */
-import { type LayoutUnit } from '@tora/layout-api';
+import { asLu, type LayoutUnit } from '@tora/layout-api';
 import { LayoutEngineError } from '../errors.js';
 import {
   advanceCursor,
@@ -44,11 +44,20 @@ import {
   parseCursor,
   pendFootnote,
   pendSidenote,
+  placeFootnotes,
   switchColumn,
   type PaginationState,
   type PaginationTransition,
 } from './state.js';
 import { initialRemainingByRegion, type PageTemplateSet } from './templates.js';
+import {
+  type NoteBodySpec,
+  noteBodyIssues,
+  reserveNote,
+  resolveNotePolicy,
+  splitNoteBodySpec,
+  type NoteReservationPolicy,
+} from './notes.js';
 import type { PageCandidateSource, PageExpansion, PageQualityVector } from './search.js';
 
 // ─────────────────────────── מודל הקלט ───────────────────────────
@@ -127,6 +136,14 @@ export interface CandidateGeneratorInput {
   /** סוג העמודים בזרימה זו. */
   readonly pageKind: 'body' | 'toc' | 'notes';
   readonly policy?: LegalPageBreakPolicy;
+  /**
+   * גופי ההערות המדודים (שלב 53; ADR-005) — כשמסופק, כל הפניית הערה
+   * בקווים נצרבת מיד בתוך הליכת הגבולות (שריון בחיפוש; §9.3#5):
+   * גובה ההערה + הפרדה מצמצמים את המקום לגוף; הערה שאינה נכנסת —
+   * דחיית עוגן; פיצול לפי המדיניות. כשחסר — התנהגות שלב 52 (pend בלבד).
+   */
+  readonly noteBodies?: ReadonlyMap<string, NoteBodySpec>;
+  readonly notePolicy?: NoteReservationPolicy;
 }
 
 // ─────────────────────────── אימות קלט ───────────────────────────
@@ -256,6 +273,29 @@ interface BoundaryCandidate {
   readonly bracketOpens: readonly { pairId: string; kind: 'round' | 'square' }[];
   readonly bracketCloses: readonly string[];
   readonly lineCount: number;
+  /** ההערות שהוצבו בגוש ההערות עד לגבול זה (כולל המשכים שהיו ממתינים). */
+  readonly notesPlacedIds: readonly string[];
+  /** גובה שנצרב בגוש ההערות עד לגבול זה (כולל הפרדה כשנצרבה). */
+  readonly notesPlacedHeightLu: number;
+  /** פיצולים שבוצעו עד לגבול זה: מזהה ההמשך ← מפרט ההמשך. */
+  readonly noteSplits: readonly { readonly continuationId: string; readonly spec: NoteBodySpec }[];
+  /** הפניות שנדחו (דחיית עוגן) — ההליכה נעצרה לפני הקו הנושא אותן. */
+  readonly deferredRefs: readonly string[];
+}
+
+/** הקשר שריון הערות להליכת הגבולות (שלב 53; ADR-005) — null כשאין גופי הערות. */
+interface NotesWalkContext {
+  readonly policy: Required<NoteReservationPolicy>;
+  /** גופי הערות (כולל המשכים שנוצרו בעבר — המחולל מרחיב את המפה). */
+  readonly bodies: ReadonlyMap<string, NoteBodySpec>;
+  /** תקציד אזור ההערות של עמוד ריק (להכרעת fail/split). */
+  readonly emptyBudgetLu: number;
+  /** הנותר בגוש ההערות של העמוד הנוכחי (מהמצב). */
+  readonly notesRemainingLu: number;
+  /** האם כבר נצרבו הערות בעמוד זה (ההפרדה כבר נצרבה)? */
+  readonly notesAlreadyOnPage: boolean;
+  /** המשכים ממתינים בתחילת ההליכה — חייבים להיצרב ראשונים. */
+  readonly pendingAtStart: readonly string[];
 }
 
 /**
@@ -264,12 +304,20 @@ interface BoundaryCandidate {
  * ממשיכה עד סופו — גבולות בתוכו אינם נוצרים; אם הטור מתמלא באמצעו,
  * הגבול האחרון שנוצר הוא לפני תחילתו (הבלוק לא הוצב חלקית לעולם).
  * מועמד חירום יחיד כשאף קו של גוף רגיל אינו נכנס לטור ריק.
+ *
+ * שריון הערות (שלב 53; ADR-005; §9.3#5): כשהקשר ההערות מסופק, קו
+ * הנושא הפניית הערה מצרב את גובה ההערה (+ הפרדה פעם אחת) מהמקום
+ * הפנוי **באותה בדיקת התאמה** — הכל או כלום לקו עם מספר הפניות;
+ * הערה שאינה נכנסת ⇒ דחיית עוגן (ההליכה נעצרת לפני הקו); פיצול
+ * לפי המדיניות בגבולות קווים עם המשך קנוני. המשכים ממתינים מהמצב
+ * נצרבים ראשונים בגוש ההערות של העמוד.
  */
 function buildBoundaries(
   map: FlowMap,
   state: PaginationState,
   remainingLu: number,
   policy: Required<LegalPageBreakPolicy>,
+  notesCtx: NotesWalkContext | null,
 ): BoundaryCandidate[] {
   const out: BoundaryCandidate[] = [];
   let pos = flowPositionOf(map, state);
@@ -283,11 +331,96 @@ function buildBoundaries(
   let count = 0;
   let strideCounter = 0;
   let lastAddedBoundaryLineCount = -1;
+  // הקשר ההערות — מצב מצטבר לאורך ההליכה (ADR-005)
+  let notesPlacedIds: string[] = [];
+  let notesPlacedHeight = 0;
+  const noteSplits: { continuationId: string; spec: NoteBodySpec }[] = [];
+  let separatorBurned = notesCtx !== null && notesCtx.notesAlreadyOnPage;
+  let notesGrowTotal = 0; // כולל הפרדה + הערות שנצרבו בהליכה זו
+  if (notesCtx !== null) {
+    // המשכים ממתינים — נצרבים ראשונים (חובת הצבה; אין דחיית עוגן להמשך).
+    // הצריבה מוגבלת גם למרחב המשותף: ההמשך + הקו הראשון שיוצב חייבים
+    // להיכנס יחד לטור (peek לגובה הקו הבא) — אחרת שום גבול לא ייווצר
+    // והמצב ייתקע (§8.2).
+    const firstAt = lineAt(map, pos);
+    const firstLineH = firstAt !== null ? firstAt.line.heightLu : 0;
+    for (const pendId of notesCtx.pendingAtStart) {
+      const spec = notesCtx.bodies.get(pendId);
+      if (spec === undefined) continue; // לא אמור לקרות — המחולל יוצר את ההמשכים
+      const avail = Math.max(0, Math.min(
+        notesCtx.notesRemainingLu - notesGrowTotal,
+        remainingLu - firstLineH - notesGrowTotal,
+      ));
+      const outcome = reserveNote(spec, avail, notesCtx.emptyBudgetLu, notesCtx.policy);
+      if (outcome.kind === 'fits') {
+        notesPlacedIds.push(pendId);
+        notesGrowTotal += outcome.placedHeightLu;
+      } else if (outcome.kind === 'split') {
+        notesPlacedIds.push(pendId);
+        notesGrowTotal += outcome.placedHeightLu;
+        const contSpec = splitNoteBodySpec(spec, outcome.placedLines);
+        noteSplits.push({ continuationId: outcome.continuationId, spec: contSpec });
+      }
+      // defer/fail להמשך ממתין: הגוש לא יכול להכיל אפילו אותו — ההליכה
+      // תיעצר ממילא בבדיקת ההתאמה הראשונה (notesGrowTotal מרחיב את הלחץ)
+      // ואם לא — המצב ייתקע והחיפוש ייכשל במפורש (§8.2)
+    }
+    if (notesPlacedIds.length > 0 && !separatorBurned) {
+      notesGrowTotal += notesCtx.policy.separatorHeightLu;
+      separatorBurned = true;
+    }
+    notesPlacedHeight = notesGrowTotal;
+  }
   while (true) {
     const at = lineAt(map, pos);
     if (at === null) break;
     const { line, block } = at;
-    if (used + line.heightLu > remainingLu) break; // feasibility: אינו נכנס — ההליכה נעצרת
+    // feasibility לפני cost: הקו חייב להיכנס גם אחרי שריון ההערות שהוא
+    // עצמו גורם (§9.3#5 — "רק אחר כך נקבע שטח הגוף הפנוי")
+    if (notesCtx !== null && line.footnoteRefs.length > 0) {
+      // הכל או כלום (ADR-005 §6): הערכת הצריבה של כל ההפניות של הקו
+      let probeGrow = notesGrowTotal;
+      const probePlaced: string[] = [];
+      const probeSplits: { continuationId: string; spec: NoteBodySpec }[] = [];
+      let deferred: string[] = [];
+      for (const ref of line.footnoteRefs) {
+        const spec = notesCtx.bodies.get(ref);
+        if (spec === undefined) {
+          throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `missing note body ${ref}` }, 'הפניית הערה בלי גוף מדוד — הקלט חייב לכלול את כל גופי ההערות');
+        }
+        const sep = probePlaced.length === 0 && !separatorBurned ? notesCtx.policy.separatorHeightLu : 0;
+        // המרחב המשותף (§9.3#5): ההערה + הקו שנושא אותה חייבים להיכנס
+        // יחד — הזמין להערה = מינימום (תקציד ההערות, מקום הטור אחרי הקו).
+        // בפיצול זה מבטיח שהחלק הראשון + הקו אכן נכנסים לאותו עמוד.
+        const availForNote = Math.max(0, Math.min(
+          notesCtx.notesRemainingLu - probeGrow - sep,
+          remainingLu - used - line.heightLu,
+        ));
+        const outcome = reserveNote(spec, availForNote, notesCtx.emptyBudgetLu, notesCtx.policy);
+        if (outcome.kind === 'fits' || outcome.kind === 'split') {
+          probePlaced.push(ref);
+          probeGrow += sep + outcome.placedHeightLu;
+          if (outcome.kind === 'split') {
+            probeSplits.push({ continuationId: outcome.continuationId, spec: splitNoteBodySpec(spec, outcome.placedLines) });
+          }
+        } else {
+          deferred.push(ref); // defer או fail — הקו כולו נדחה (דחיית עוגן)
+        }
+      }
+      if (deferred.length > 0 || probePlaced.length === 0) {
+        // דחיית עוגן: ההליכה נעצרת לפני הקו — הגבול האחרון הוא לפניו
+        break;
+      }
+      // הצבת ההערות של הקו בפועל — מצטרפות לגוש ההערות של ההליכה
+      if (probePlaced.length > 0 && !separatorBurned && notesPlacedIds.length === 0 && probeGrow > notesGrowTotal) {
+        separatorBurned = true; // ההפרדה נצרבה ב-probe דרך sep
+      }
+      notesGrowTotal = probeGrow;
+      notesPlacedIds = [...notesPlacedIds, ...probePlaced];
+      for (const s of probeSplits) noteSplits.push(s);
+      notesPlacedHeight = notesGrowTotal;
+    }
+    if (used + line.heightLu + notesGrowTotal > remainingLu) break; // feasibility: הקו + ההערות אינם נכנסים יחד
     const atomic = isAtomicBlock(block, policy);
     // הצבת הקו
     used += line.heightLu;
@@ -329,6 +462,10 @@ function buildBoundaries(
         bracketOpens: [...opens],
         bracketCloses: [...closes],
         lineCount: count,
+        notesPlacedIds: [...notesPlacedIds],
+        notesPlacedHeightLu: notesPlacedHeight,
+        noteSplits: [...noteSplits],
+        deferredRefs: [],
       });
       lastAddedBoundaryLineCount = count;
     }
@@ -338,7 +475,10 @@ function buildBoundaries(
   // בלוק אטום שאינו נכנס — אין מועמד כלל (§10.3 — הכרעת ADR-005 בשלב 55)
   if (out.length === 0 && used === 0 && lastAddedBoundaryLineCount < 0) {
     const at = lineAt(map, pos);
-    if (at !== null && !isAtomicBlock(at.block, policy)) {
+    if (at !== null && !isAtomicBlock(at.block, policy)
+      && (notesCtx === null || at.line.footnoteRefs.length === 0)) {
+      // הערות על קו חירום: החירום שמור לקו גוף בלבד — קו עם הפניית הערה
+      // שאינו נכנס אינו מקבל חירום (ההערה תגלוש בשקט) — דחיית עוגן (ADR-005)
       const { line } = at;
       const nextPos = nextPosition(map, pos);
       const atEnd = nextPos.blockIndex >= map.blocks.length;
@@ -354,6 +494,10 @@ function buildBoundaries(
         bracketOpens: [...(line.bracketOpens ?? [])],
         bracketCloses: [...(line.bracketCloses ?? [])],
         lineCount: 1,
+        notesPlacedIds: [...notesPlacedIds],
+        notesPlacedHeightLu: notesPlacedHeight,
+        noteSplits: [...noteSplits],
+        deferredRefs: [],
       });
     }
   }
@@ -383,6 +527,29 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
   const cache = new Map<string, readonly PageExpansion[]>();
   let feasibilityRejections = 0;
   let expansionsGenerated = 0;
+  // הקשר ההערות (שלב 53; ADR-005) — גופי הערות + מדיניות; המחולל
+  // מרחיב את המפה בהמשכים שנוצרים בפיצולים (מזהה ‎{noteId}#cont‎)
+  const noteBodies = new Map<string, NoteBodySpec>(input.noteBodies ?? []);
+  const notePolicy = resolveNotePolicy(input.notePolicy);
+  const notesEnabled = (input.noteBodies ?? new Map()).size > 0 || notePolicy.allowLongNoteSplit || notePolicy.separatorHeightLu > 0;
+  for (const [, spec] of noteBodies) {
+    const bIssues = noteBodyIssues(spec);
+    if (bIssues.length > 0) {
+      throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `note body ${spec.noteId}: ${bIssues.join(';')}` }, `מפרט גוף הערה שגוי: ${spec.noteId}`);
+    }
+  }
+  if (notesEnabled) {
+    // כל הפניית הערה בקווי הזרימה חייבת גוף מדוד — אין הצבה של הפניה בלתי-ידועה
+    for (const blk of input.blocks) {
+      for (const line of blk.lines) {
+        for (const ref of line.footnoteRefs) {
+          if (!noteBodies.has(ref)) {
+            throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `missing note body ${ref}` }, 'הפניית הערה בלי גוף מדוד — הקלט חייב לכלול את כל גופי ההערות');
+          }
+        }
+      }
+    }
+  }
 
   /** page opener (H0/H1; §10.1) — סוגר אזור עימוד; forcePageTemplate ב-M7. */
   const isPageOpener = (blockIndex: number): boolean => {
@@ -398,7 +565,27 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     if (remaining === undefined) {
       throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'candidates', reason: `missing region ${columnRegion}` }, 'אזור הטור של המצב הנוכחי חסר');
     }
-    const boundaries = buildBoundaries(map, state, remaining, policy);
+    // הקשר שריון ההערות (§9.3#5): אזור ההערות צורב מהמקום הפנוי לגוף של
+    // שני הטורים כאחד — המרחב האפקטיבי = נותר הטור − ההערות שנצרבו בעמוד
+    const notesRegionId = `page:${state.physicalPageIndex}:notes`;
+    const template = input.templates.for(input.pageKind, state.physicalPageIndex);
+    const emptyNotesBudget = template.footnoteAnchor !== undefined ? template.footnoteAnchor.rect.height : 0;
+    let notesCtx: NotesWalkContext | null = null;
+    let effectiveRemaining = remaining;
+    if (notesEnabled) {
+      const notesRemaining = state.remainingByRegion[notesRegionId] ?? emptyNotesBudget;
+      const notesUsedOnPage = Math.max(0, emptyNotesBudget - notesRemaining);
+      effectiveRemaining = asLu(Math.max(0, remaining - notesUsedOnPage));
+      notesCtx = {
+        policy: notePolicy,
+        bodies: noteBodies,
+        emptyBudgetLu: emptyNotesBudget,
+        notesRemainingLu: notesRemaining,
+        notesAlreadyOnPage: notesUsedOnPage > 0,
+        pendingAtStart: state.pendingFootnotes,
+      };
+    }
+    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx);
     const out: PageExpansion[] = [];
     for (const boundary of boundaries) {
       let s = state;
@@ -414,8 +601,29 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         const step = consumeRegion(s, columnRegion, consumeAmount);
         transitions.push(step.transition);
         s = step.state;
+        // שריון ההערות (ADR-005): הצריבה בתוך ההרחבה — לא post-pass.
+        // ההפניות ממתינות (pend) ואז מוצבות בגוש ההערות של העמוד;
+        // ההמשכים מפיצולים נשארים ממתינים לעמוד הבא.
+        if (notesCtx !== null && boundary.notesPlacedHeightLu > 0) {
+          const notesStep = consumeRegion(s, notesRegionId, boundary.notesPlacedHeightLu);
+          transitions.push(notesStep.transition);
+          s = notesStep.state;
+        }
         for (const ref of boundary.footnoteRefs) {
           const p = pendFootnote(s, ref);
+          transitions.push(p.transition);
+          s = p.state;
+        }
+        if (notesCtx !== null && boundary.notesPlacedIds.length > 0) {
+          const placed = boundary.notesPlacedIds;
+          const pl = placeFootnotes(s, placed);
+          transitions.push(pl.transition);
+          s = pl.state;
+        }
+        for (const split of boundary.noteSplits) {
+          // ההמשך נכנס למפת הגופים (להרחבות הבאות) וממתין לעמוד הבא
+          noteBodies.set(split.continuationId, split.spec);
+          const p = pendFootnote(s, split.continuationId);
           transitions.push(p.transition);
           s = p.state;
         }
@@ -454,19 +662,25 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         }
         if (!closesRegion && isPageOpener(boundary.end.blockIndex)) closesRegion = true;
         // וקטור איכות אינקרמנטלי (ADR-004): רכיב 1 (fallbackSeverity) —
-        // חירום HIGH=2; רכיב 8 (columnImbalance) — תת-מילוי הטור באלפי-LU;
-        // רכיב 9 (pageCountDebt) — עמוד שנפתח בהרחבה זו.
+        // חירום HIGH=2, פיצול הערה MEDIUM=1 לפיצול; רכיב 3 (noteDisplacement)
+        // — המשך מוסר מעוגנו; רכיב 8 (columnImbalance) — תת-מילוי הטור
+        // באלפי-LU (מהמרחב האפקטיבי); רכיב 9 (pageCountDebt) — עמוד שנפתח.
         const v = new Array<number>(9).fill(0);
-        v[0] = boundary.emergency ? 2 : 0;
-        v[7] = Math.min(1024, Math.floor(Math.max(0, remaining - boundary.heightLu) / 1000));
+        v[0] = (boundary.emergency ? 2 : 0) + boundary.noteSplits.length;
+        v[2] = boundary.noteSplits.length;
+        v[7] = Math.min(1024, Math.floor(Math.max(0, effectiveRemaining - boundary.heightLu) / 1000));
         v[8] = closesRegion ? 1 : 0;
         out.push({
-          candidateId: `pg:${state.physicalPageIndex}:${state.columnIndex}→${boundary.cursorBlockId}@${boundary.cursorFragment}${boundary.emergency ? ':EMERGENCY' : ''}`,
+          candidateId: `pg:${state.physicalPageIndex}:${state.columnIndex}→${boundary.cursorBlockId}@${boundary.cursorFragment}${boundary.emergency ? ':EMERGENCY' : ''}${boundary.noteSplits.length > 0 ? ':SPLIT' : ''}`,
           transitions,
           toState: s,
           quality: Object.freeze(v) as PageQualityVector,
           closesRegion,
-          ...(boundary.emergency ? { fallbackCode: 'EMERGENCY_LINE' as const } : {}),
+          // קוד fallback יחיד להרחבה: חירום גובר (הם מוכללים הדדית — קו חירום
+          // אינו נושא הערות; אם אי-פעם יתנגשו, החירום החמור יותר נרשם)
+          ...(boundary.emergency
+            ? { fallbackCode: 'EMERGENCY_LINE' as const }
+            : (boundary.noteSplits.length > 0 ? { fallbackCode: 'LONG_NOTE_SPLIT' as const } : {})),
         });
       } catch {
         // מעבר לא חוקי (כפילות pend, סוגריים לא-LIFO וכו') — feasibility
