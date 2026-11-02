@@ -45,8 +45,14 @@ jobs:
         run: node scripts/migration/verify-dependency-rules.mjs
 
       - name: בדיקות יחידה של החבילות (יחידות, גיבוב, spans, atoms, inline/blocks, פרסר, Unicode, סוגריים)
+        # סבב י"ג (תיקון אי-היציבות מסבב ט'): הסוויטה רצה פעם אחת כאן — כולל נעילת
+        # המונה המדויק; המאמתים מדלגים על ריצות הבת הכפולות (TORA_SKIP_TEST_REGRESSION)
+        # שקרסו את ה-job מלחץ משאבים (26 ריצות מלאות ברצף).
+        env:
+          TORA_SKIP_TEST_REGRESSION: "1"
         run: |
-          npm run test:packages
+          npm run test:packages > /tmp/testout.log 2>&1 || { cat /tmp/testout.log; exit 1; }
+          grep -qE "Tests[[:space:]]+615[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 615 בדיקות"; exit 1; }
           node scripts/migration/verify-units.mjs
           node scripts/migration/verify-canonical-hash.mjs
           node scripts/migration/verify-error-catalog.mjs
@@ -80,6 +86,8 @@ jobs:
           node scripts/migration/verify-engine-flag.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
+        env:
+          TORA_SKIP_TEST_REGRESSION: "1"
         run: |
           node scripts/migration/verify-source-manifest.mjs
           node scripts/migration/verify-transfer-inventory.mjs
@@ -95,6 +103,8 @@ jobs:
           retention-days: 30
 
       - name: שלד workspaces + מוסכנות עבודה (כולל הקוד הישן לא נערך)
+        env:
+          TORA_SKIP_TEST_REGRESSION: "1"
         run: |
           node scripts/migration/verify-workspaces.mjs
           node scripts/migration/verify-work-conventions.mjs
