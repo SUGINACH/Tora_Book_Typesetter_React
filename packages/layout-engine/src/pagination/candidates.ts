@@ -166,6 +166,8 @@ export interface CandidateGeneratorInput {
       readonly ornamentTopEm: number;
       readonly ornamentBottomEm: number;
     };
+    /** עיטור צד של מחסום רוחבי (§10.1 H3; שלב 62) — יחס-em לקו הראשון. */
+    readonly barrierOrnamentEm?: number;
   };
 }
 
@@ -251,6 +253,12 @@ export function candidateInputIssues(input: CandidateGeneratorInput): string[] {
       } else if (b.startOnRecto === true && b.flowRole !== 'page-opener') {
         // כפיית recto תקפה לפותחי-עמוד בלבד (§10.1 parity)
         issues.push(`headingBehaviorOf(${level}).startOnRecto:not-opener`);
+      }
+      if (b.barrierOrnamentEm !== undefined
+        && (typeof b.barrierOrnamentEm !== 'number' || !Number.isFinite(b.barrierOrnamentEm) || b.barrierOrnamentEm < 0 || b.barrierOrnamentEm > 100)) {
+        issues.push(`headingBehaviorOf(${level}).barrierOrnamentEm`);
+      } else if (b.barrierOrnamentEm !== undefined && b.barrierOrnamentEm > 0 && b.flowRole !== 'full-width-barrier') {
+        issues.push(`headingBehaviorOf(${level}).barrierOrnamentEm:not-barrier`);
       }
       const sp = b.openerSpacing as { spaceBeforePct?: unknown; ornamentTopEm?: unknown; ornamentBottomEm?: unknown } | undefined;
       if (sp !== undefined) {
@@ -597,7 +605,12 @@ function buildBoundaries(
     // ה-H3 אינה פותחת עמוד מעצמה (§10.1).
     if (block.role === 'heading' && block.headingLevel !== undefined
       && headingBehaviorOf(block.headingLevel).flowRole === 'full-width-barrier') {
-      const h3Height = block.lines.reduce((n, l) => n + l.heightLu, 0);
+      // גובה הפס (§11.2; ADR-006; שלב 62): מקסימום(קווי הכותרת, עיטור צד
+      // נמדד — יחס-em לקו הראשון); העיטור תופס בדיוק את המקום שנמדד לו
+      const textH = block.lines.reduce((n, l) => n + l.heightLu, 0);
+      const ornEm = headingBehaviorOf(block.headingLevel).barrierOrnamentEm ?? 0;
+      const ornH = ornEm > 0 ? Math.round(ornEm * (block.lines[0]?.heightLu ?? 0)) : 0;
+      const h3Height = Math.max(textH, ornH);
       // סוף ה-H3 — אחרי כל קוויה (אטומית)
       const endPos: FlowPosition = { blockIndex: pos.blockIndex + 1, lineIndex: 0 };
       const atEnd = endPos.blockIndex >= map.blocks.length;

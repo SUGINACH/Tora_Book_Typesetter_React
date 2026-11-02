@@ -47,6 +47,12 @@ export interface HeadingFlowBehavior {
     /** dim-h2-btm-h — יחס לגובה הקו האחרון של הכותרת. */
     readonly ornamentBottomEm: number;
   };
+  /**
+   * עיטור צד של מחסום רוחבי (§10.1 H3; §11.2; שלב 62): יחס-em לקו הכותרת
+   * הראשון; גובה הפס = מקסימום(גובה הקווים, העיטור הנמדד). 0/undefined —
+   * אין עיטור (ברירת המחדל הנעולה: h3-ornament-l/r='none').
+   */
+  readonly barrierOrnamentEm?: number;
 }
 
 /**

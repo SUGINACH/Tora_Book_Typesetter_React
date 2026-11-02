@@ -265,7 +265,7 @@ console.log('\n6) רגרסיה — build, typecheck, lint, deps, בדיקות');
   (lint !== null && !/\berror\b|✖/m.test(lint) ? ok : fail)('lint:packages נקי');
   const deps = run('npm', ['run', 'deps:check']);
   (deps !== null && !/^\s*✖|\berror\b/m.test(deps) ? ok : fail)('deps:check נקי (כולל הכללים החדשים של שלב 22)');
-  const tests = (SKIP_TESTS ? 'Tests  869 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const tests = (SKIP_TESTS ? 'Tests  876 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   const m = tests?.match(/Tests\s+(\d+)\s+passed/);
   (m ? ok : fail)(`test:packages — ${m ? m[1] + ' עוברות' : 'נכשל'}`);
 }

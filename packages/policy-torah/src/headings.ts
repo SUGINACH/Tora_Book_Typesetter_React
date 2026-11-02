@@ -72,6 +72,12 @@ export interface HeadingBehavior {
     readonly ornamentBottomEm: number;
   };
   /**
+   * עיטור צד של מחסום רוחבי (§10.1 H3; ADR-006; שלב 62): יחס-em לקו
+   * הכותרת הראשון; גובה הפס = מקסימום(קווים, עיטור). 0 כשאין עיטור
+   * (h3-ornament-l/r='none' — ברירת המחדל הנעולה).
+   */
+  readonly barrierOrnamentEm?: number;
+  /**
    * מספר קווי ליווי מינימום אחרי הכותרת באותו טור (§10.1: ברירת מחדל 2
    * ל־H2+; כותרת תלויה אינה "קנס קטן" — מועמד שבו הכותרת עוברת עם
    * הליווי מקבל עדיפות).
@@ -89,7 +95,8 @@ export function headingBehaviorId(b: HeadingBehavior): string {
   return `heading:v1|L${b.level}|${b.flowRole}|esc${b.escortLines}|f${b.forcePageBreak ? 1 : 0}`
     + (b.forcePageTemplate !== undefined ? `|t${b.forcePageTemplate}` : '')
     + (b.startOnRecto === true ? '|r1' : '')
-    + (b.openerSpacing !== undefined ? `|s${b.openerSpacing.spaceBeforePct}+${b.openerSpacing.ornamentTopEm}+${b.openerSpacing.ornamentBottomEm}` : '');
+    + (b.openerSpacing !== undefined ? `|s${b.openerSpacing.spaceBeforePct}+${b.openerSpacing.ornamentTopEm}+${b.openerSpacing.ornamentBottomEm}` : '')
+    + (b.barrierOrnamentEm !== undefined && b.barrierOrnamentEm > 0 ? `|b${b.barrierOrnamentEm}` : '');
 }
 
 /** ברירות המחדל של legacy לכל רמה (המרשם המלא ב־registry.ts). */
@@ -198,6 +205,10 @@ export function headingBehaviorIssues(b: unknown): string[] {
   if (v.startOnRecto !== undefined) {
     if (typeof v.startOnRecto !== 'boolean') issues.push('startOnRecto');
     else if (v.flowRole !== 'page-opener') issues.push('startOnRecto:not-opener');
+  }
+  if (v.barrierOrnamentEm !== undefined) {
+    if (typeof v.barrierOrnamentEm !== 'number' || !Number.isFinite(v.barrierOrnamentEm) || v.barrierOrnamentEm < 0 || v.barrierOrnamentEm > 100) issues.push('barrierOrnamentEm');
+    else if (v.barrierOrnamentEm > 0 && v.flowRole !== 'full-width-barrier') issues.push('barrierOrnamentEm:not-barrier');
   }
   if (v.openerSpacing !== undefined) {
     const sp = v.openerSpacing as Record<string, unknown>;

@@ -120,8 +120,8 @@ for (const key of Object.keys(cliMod.CLI_ERROR_CATALOG)) {
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  869 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+869\s+passed/m.test(testOut) ? ok : fail)('test:packages — 869/869 (…+ 10 e2e + 2 דגל שלב 40)');
+const testOut = (SKIP_TESTS ? 'Tests  876 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+876\s+passed/m.test(testOut) ? ok : fail)('test:packages — 876/876 (…+ 10 e2e + 2 דגל שלב 40)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

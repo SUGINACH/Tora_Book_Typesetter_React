@@ -107,6 +107,14 @@ export function createTorahPolicy(
     const pct = parsePctDimension(values['h2-top-distance'], 0.22);
     const topEm = parseEmDimension(values['dim-h2-top-h'], 1.25);
     const btmEm = parseEmDimension(values['dim-h2-btm-h'], 1.25);
+    // H3 — עיטורי צד של המחסום הרוחבי (§10.1 H3; ADR-006; שלב 62): כשאחד
+    // מעיטורי הצד פעיל (h3-ornament-l/r ≠ none), גובה הפס כולל את העיטור
+    // הנמדד (dim-h3-side-h — יחס-em לקו הכותרת הראשון; המנוע ממדד ל-LU)
+    const ornL = String(values['h3-ornament-l'] ?? 'none');
+    const ornR = String(values['h3-ornament-r'] ?? 'none');
+    const h3OrnEm = ornL !== 'none' || ornR !== 'none' ? parseEmDimension(values['dim-h3-side-h'], 1) : 0;
+    const h3Base = behaviors.get(3)!;
+    behaviors.set(3, Object.freeze({ ...h3Base, level: 3, barrierOrnamentEm: h3OrnEm }));
     const h2Base = behaviors.get(2)!;
     behaviors.set(2, Object.freeze({
       ...h2Base,
