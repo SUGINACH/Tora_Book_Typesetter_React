@@ -24,7 +24,7 @@
  *      נושאת fallbackCode SEARCH_BUDGET_EXHAUSTED — לא הצלחה שקטה. אין
  *      מועמד חוקי — חריגה מקוטלגת מפורשת.
  */
-import { type DecisionLedgerBuilder, type SearchBudget, sha256Hex } from '@tora/layout-api';
+import { type DecisionLedgerBuilder, type FallbackCode, type SearchBudget, sha256Hex } from '@tora/layout-api';
 import { LayoutEngineError } from '../errors.js';
 import type { PaginationState, PaginationTransition } from './state.js';
 
@@ -55,12 +55,18 @@ export function comparePageQuality(a: PageQualityVector, b: PageQualityVector): 
   return 0;
 }
 
-/** סקלר תצוגה לפנקס בלבד (ADR-004: ההשוואה האמיתית היא הווקטור). */
+/**
+ * סקלר תצוגה לפנקס בלבד (ADR-004: ההשוואה האמיתית היא הווקטור).
+ * רווי ב־MAX_SAFE_INTEGER — סקלר זה נועד לתצוגה/סדר בלבד ואינו משתתף
+ * בהשוואת ההכרעות (חיבור מוכפלים בסקאלה עלול לחרוג מהטווח הבטוח).
+ */
 export function pageQualityDisplayScalar(q: PageQualityVector): number {
   let s = 0;
   let scale = 1;
+  const MAX = Number.MAX_SAFE_INTEGER;
   for (let i = PAGE_QUALITY_LENGTH - 1; i >= 0; i--) {
     s += Math.max(0, Math.min(1024, q[i]!)) * scale;
+    if (s > MAX) return MAX;
     scale *= 1025;
   }
   return s;
@@ -91,6 +97,8 @@ export interface PageExpansion {
   readonly toState: PaginationState;
   /** האיכות האינקרמנטלית של הרחבה זו (מצטברת בצומת הבן). */
   readonly quality: PageQualityVector;
+  /** קוד fallback כשההרחבה היא חירום מתועד (למשל EMERGENCY_LINE לקו גולש בטור ריק; שלב 52). */
+  readonly fallbackCode?: FallbackCode;
   /**
    * אזור העימוד נסגר בהרחבה זו (H0/H1/H2 או barrier מוגדר; §9.2) —
    * המצב נישא לאזור הבא כמו שהוא; הסגירה נרשמת בפנקס.
@@ -102,10 +110,14 @@ export interface PageExpansion {
  * מקור מועמדי העמודים — מוזרק לחיפוש. חוזה: **טהור ודטרמיניסטי** —
  * אותו מצב ⇐ אותם מועמדים באותו סדר, תמיד; מועמד לא חוקי כלל אינו
  * מוחזר (הפסילה באחריות המקור, שלב 52 — "אין עמוד זול שאינו חוקי");
- * סוף מסמך = מערך ריק מכל צומת שהתוכן בו הסתיים.
+ * סוף מסמך = מערך ריק **מצב שהוא קץ המסמך** — צומת ריק-הרחבות שאינו
+ * קץ הוא **תקוע** (אין מועמד חוקי; §9.2) ויסומן כך דרך isDocumentEnd;
+ * ברירת המחדל (היעדר המתודה): ריק = קץ — תאים למקורות בדיקה פשוטים.
  */
 export interface PageCandidateSource {
   expansions(state: PaginationState): readonly PageExpansion[];
+  /** האם המצב מייצג קץ מסמך? מימוש המחולל (שלב 52): סמן אחרי הקו האחרון. */
+  isDocumentEnd?(state: PaginationState): boolean;
 }
 
 // ─────────────────────────── תוצאה ───────────────────────────
@@ -206,6 +218,7 @@ export function searchPages(
     { state: initial, quality: ZERO_PAGE_QUALITY, path: [], creationIndex: creationSeq++ },
   ];
   const finished: SearchNode[] = [];
+  let stuckCount = 0;
   transposition.set(initial.stateHash, { quality: ZERO_PAGE_QUALITY, candidateId: '@initial' });
 
   const budgetOf = (exhaustedFlag: boolean) => ({ generated, pruned, dominated, exhausted: exhaustedFlag });
@@ -249,8 +262,22 @@ export function searchPages(
       const exps = source.expansions(node.state);
       generated += exps.length;
       if (exps.length === 0) {
-        // קצה המסמך — הצומת עובר לסופיים ונשאר מועמד לבחירה הסופית
-        finished.push(node);
+        // ריק-הרחבות: קץ מסמך ⇒ סופי; אחרת — תקוע (אין מועמד חוקי; §9.2)
+        const isEnd = source.isDocumentEnd !== undefined ? source.isDocumentEnd(node.state) : true;
+        if (isEnd) {
+          finished.push(node);
+        } else {
+          stuckCount += 1;
+          ledger.append({
+            stage: 'page-break',
+            scopeId: `search:stuck:${node.state.stateHash.slice(0, 12)}`,
+            sourceSpans: [],
+            stateHash: node.state.stateHash,
+            candidates: [],
+            selectedCandidateId: 'stuck',
+            rejected: [],
+          });
+        }
         continue;
       }
       if (expanded >= budget.maxExpandedStates) break;
@@ -297,7 +324,8 @@ export function searchPages(
           path: [...node.path, exp],
           creationIndex: creationSeq++,
         });
-        // רשומת קבלה — "ledger לכל expansion" (§9.2); סגירת אזור מסומנת
+        // רשומת קבלה — "ledger לכל expansion" (§9.2); סגירת אזור מסומנת;
+        // חירום נושא את קוד ה-fallback שלו (שלב 52)
         ledger.append({
           stage: 'page-break',
           scopeId: exp.closesRegion ? `search:region:${exp.toState.stateHash.slice(0, 12)}` : `search:exp:${exp.toState.stateHash.slice(0, 12)}`,
@@ -306,6 +334,7 @@ export function searchPages(
           candidates: [{ id: exp.candidateId, cost: pageQualityDisplayScalar(childQuality) }],
           selectedCandidateId: exp.candidateId,
           rejected: [],
+          ...(exp.fallbackCode !== undefined ? { fallbackCode: exp.fallbackCode } : {}),
         });
       }
     }
@@ -335,8 +364,9 @@ export function searchPages(
   const candidates = [...finished].sort(compareSearchNodes);
   const winner = candidates[0];
   if (winner === undefined) {
-    // מקור שאינו מסתיים לעולם (מעגל) — כשל מפורש; לא תוצאה שקטה
-    throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'page-search', reason: 'no-terminal-state' }, 'מקור המועמדים אינו מסתיים — אין מצב סופי חוקי (§9.2)');
+    // אף מסלול לא הגיע לקץ: מקור שאינו מסתיים (מעגל) או מצבים תקועים —
+    // כשל מפורש; לא תוצאה שקטה (§9.2)
+    throw new LayoutEngineError('errors.engine.PAGINATION_STATE_INVALID', { action: 'page-search', reason: stuckCount > 0 ? 'no-legal-candidate' : 'no-terminal-state' }, 'מקור המועמדים אינו מסתיים או תקוע — אין מצב סופי חוקי (§9.2)');
   }
   return {
     status: 'complete',
