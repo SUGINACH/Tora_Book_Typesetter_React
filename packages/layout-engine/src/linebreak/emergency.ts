@@ -99,8 +99,10 @@ export function createLevel2Policy(index: LineCandidateIndex): FeasibilityPolicy
 
 /**
  * שבירת פסקה דרך הסולם: מנסים 0 ← 1 ← 2 בסדר קבוע; רמה 3 (כשל מפורש)
- * רק כשהמדיניות אוסרת גלישה. טהור ודטרמיניסטי — אותם קלטים ⇐ אותה רמה
- * ואותם קודי fallback.
+ * כשהמדיניות אוסרת גלישה **או** שגם רמה 2 לא מצאה מסלול (סוללת שלב 46:
+ * בלי בדיקה זו הוחזרה תוצאה ריקה בשקט — פסקה שלמה הייתה נעלמת מהפריסה;
+ * §8.2: אין כשל שקט). טהור ודטרמיניסטי — אותם קלטים ⇐ אותה רמה ואותם
+ * קודי fallback.
  */
 export function breakParagraphWithLadder(
   blockId: string,
@@ -114,6 +116,19 @@ export function breakParagraphWithLadder(
   const rules = options.rules ?? DEFAULT_PARAGRAPH_END_RULES;
   const model = createQualityCostModel(columnWidthLu, rules);
   const failedLevels: EmergencyLevel[] = [];
+
+  // פסקה ריקה (אין טוקנים כלל — למשל בלוק ריק או סמן בלבד): אין שורות
+  // ואין הסלמה — תוצאת רמה 0 ריקה (סוללת שלב 46; בלי החזרה מוקדמת זו
+  // הייתה מטפסת את כל הסולם לחינם ואף להיכשל בו ברמה 3).
+  if (index.tokenCount === 0) {
+    return {
+      level: 0,
+      dp: { lines: [], best: model.start(), rejections: [], dominated: [], budget: { generated: 0, pruned: 0, exhausted: false } },
+      perLineFallback: new Map(),
+      emergencyRecords: [],
+      lastLineAlign: rules.lastLineAlign,
+    };
+  }
 
   const level0 = breakParagraphDP(index, model, createLevel0Policy(), columnWidthLu, budget);
   if (level0.best !== null) {
@@ -137,6 +152,17 @@ export function breakParagraphWithLadder(
   }
 
   const level2 = breakParagraphDP(index, model, createLevel2Policy(index), columnWidthLu, budget);
+  if (level2.best === null) {
+    // רמה 3 — גם לגלישה מתועדת אין מסלול (למשל מיצוי תקציב חריג): כשל
+    // מפורש ומקוטלג, לא תוצאה ריקה בשקט (סוללת שלב 46; §8.2, §14).
+    // פרטי התקציב (generated/pruned/exhausted) נותרים ברשומות ה־DP
+    // שנאספו עד כה — לא בשגיאה (הקטלוג נעול ל־blockId+level).
+    throw new LayoutEngineError(
+      'errors.engine.NO_LEGAL_LINE_BREAK',
+      { blockId, level: 2 },
+      'אין מסלול שבירה חוקי גם ברמת החירום העליונה',
+    );
+  }
   return finish(2, level2, blockId, bt, columnWidthLu, failedLevels, rules.lastLineAlign);
 }
 

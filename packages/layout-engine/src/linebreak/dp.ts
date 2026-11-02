@@ -248,10 +248,28 @@ export function breakParagraphDP<Q>(
     }
 
     // אלומה: הצמתים הפעילים מוגבלים לטובים ביותר לפי המודל (ואז מזהה) —
-    // גזימה נרשמת כמיצוי תקציב (§9.2: הבחירה הוכרחה)
+    // גזימה נרשמת כמיצוי תקציב (§9.2: הבחירה הוכרחה).
+    //
+    // הגנת חזית (סוללת שלב 46): צומת החזית — הפעיל עם startTok הגדול ביותר
+    // (תיקו לפי מזהה יצירה) — אינו נגזז לעולם. בתרחישי חירום שבהם כל קו
+    // חוקי הוא חד־מילולי, צומת החזית הוא היחיד שיכול לפתוח את השורה הבאה
+    // (קו מכל צומת מוקדם יותר הוא רב־מילילי ואינו חוקי); סדר האיכות המצטברת
+    // מקרב את החזית לגזירה ראשונה דווקא בגלל שהיא "הכי הרבה שורות עד כה" —
+    // בלי ההגנה נתגלה (שלב 46) מסמך שלם שחוזר עם אפס קווים למרות שקיים
+    // מסלול חוקי מלא. רוחב האלומה האפקטיבי ≤ maxBeamWidth (החזית תופסת
+    // מקום אחד מתוכו).
     if (active.length > budget.maxBeamWidth) {
       const sorted = active.slice().sort((a, b) => compareNodes(model, a, b, seqOf));
-      const removed = sorted.slice(budget.maxBeamWidth);
+      let frontier: DpNode<Q> = sorted[0]!;
+      for (const n of sorted) {
+        if (n.startTok > frontier.startTok || (n.startTok === frontier.startTok && n.id > frontier.id)) frontier = n;
+      }
+      const keep = sorted.slice(0, budget.maxBeamWidth);
+      if (!keep.includes(frontier)) {
+        keep.pop();
+        keep.push(frontier);
+      }
+      const removed = sorted.filter((n) => !keep.includes(n));
       for (const r of removed) {
         const i = active.indexOf(r);
         if (i >= 0) active.splice(i, 1);

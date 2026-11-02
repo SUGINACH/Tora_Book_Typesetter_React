@@ -40,11 +40,23 @@ export function justifyBadness(widthLu: number, stretchLu: number, shrinkLu: num
 
 function scaledSquare(num: number, den: number): number {
   // תקרה מוקדמת מדויקת: SCALE·num²/den² ≥ MAX ⇔ num ≥ 2·den (MAX/SCALE = 4) —
-  // מונע בניית ריבוע ענק במקרי חירום לפני ה-min. העיגול מרוכז ב־units.ts
-  // (ADR-001): roundDiv בשלמים בלבד; חריגה מהטווח הבטוח נזרקת כ־UnitsError
-  // מקוטלג — אין עיגול שקט של float חורג (num < 2·den ו־den < ~474k ⇒ בטוח).
+  // מונע בניית ריבוע ענק במקרי חירום לפני ה-min.
   if (num >= 2 * den) return MAX_LINE_BADNESS;
-  return roundDiv(BADNESS_SCALE * num * num, den * den);
+  // הערת הבטיחות המקורית ("den < ~474k ⇒ בטוח") הייתה שגויה — ל־den (מתיחה/כיווץ
+  // מצטברים של קווי חירום ארוכים) אין כל חסם כזה, והמכפלה SCALE·num² חרגה מ־2⁵³
+  // (נתגלה בסוללת שלב 46: UNSAFE_INTEGER). המסלול המהיר נשמר לטווח הבטוח;
+  // מעבר לו — חישוב שלם מלא (BigInt) עם **אותה סמנטיקת roundDiv בדיוק**
+  // (עיגול חצי-כלפי-∞ ⇔ floor((2n+d)/(2d)) לשלמים חיוביים): התוצאה זהה
+  // מתמטית, דטרמיניסטית, ואינה זורקת. העיגול המרוכז ב־units.ts (ADR-001)
+  // נשמר במסלול המהיר; המסלול המדויק משקף אותה הגדרה על מספרים גדולים.
+  const product = BADNESS_SCALE * num * num;
+  const denSq = den * den;
+  if (Number.isSafeInteger(product) && Number.isSafeInteger(denSq)) {
+    return roundDiv(product, denSq);
+  }
+  const bigN = BigInt(BADNESS_SCALE) * BigInt(num) * BigInt(num);
+  const bigD = BigInt(den) * BigInt(den);
+  return Number((2n * bigN + bigD) / (2n * bigD));
 }
 
 /** עלות שורה בודדת (שלם): badness + עונש מקף. */
