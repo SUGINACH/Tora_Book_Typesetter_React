@@ -40,8 +40,8 @@ export const TORAH_RULE_REGISTRY: readonly TorahRuleEntry[] = Object.freeze([
   // ── הערות (§10.3; ADR-005) ──
   { ruleId: 'notes.reservation', version: 1, hook: 'note-reservation', settingsKeys: ['fn-layout-mode', 'fn-columns', 'fn-reset-mode'], description: 'שריון הערות שוליים בתוך החיפוש (ADR-005)' },
   // ── כללים עדינים (§10.2; שלב 64) ──
-  { ruleId: 'first-word.window', version: 1, hook: 'first-word', settingsKeys: ['first-word-style', 'font-first-word', 'size-first-word'], description: 'first-word-window — sunken/inline/bold/none כמדיניות מדידה' },
-  { ruleId: 'dibbur.hamatchil', version: 1, hook: 'dibbur', settingsKeys: [], description: 'דיבור המתחיל — זיהוי span סמנטי' },
+  { ruleId: 'first-word.window', version: 2, hook: 'first-word', settingsKeys: ['drop-word-mode', 'drop-word-count', 'drop-word-min-lines', 'font-first-word', 'size-first-word'], description: 'first-word-window — sunken/inline/bold/none כמדיניות מדידה (שלב 64); אין החלה על continuation' },
+  { ruleId: 'dibbur.hamatchil', version: 2, hook: 'dibbur', settingsKeys: ['auto-dh'], description: 'דיבור המתחיל — זיהוי span סמנטי (המפרידים ומגבלת האורך במדיניות, לא ברנדרר; שלב 64)' },
   { ruleId: 'drop.word', version: 1, hook: 'drop-word', settingsKeys: ['drop-word-mode', 'drop-word-count', 'drop-word-min-lines'], description: 'drop-word בסוף פרק — חלופת שבירה, לא מחיקת רווחים' },
   // ── סוגריים (§10.4; שלב 65) ──
   { ruleId: 'brackets.cross-page', version: 1, hook: 'bracket-display', settingsKeys: [], description: 'סוגריים חוצי עמוד — המחסנית במצב; אין protectParens' },

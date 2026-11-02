@@ -10,3 +10,4 @@ export const PACKAGE_NAME = '@tora/policy-torah' as const;
 export * from './headings.js';
 export * from './registry.js';
 export * from './policy.js';
+export * from './firstword.js';

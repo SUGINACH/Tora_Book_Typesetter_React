@@ -7,6 +7,7 @@
  */
 import type { EffectiveSettings, LayoutPolicy } from '@tora/layout-api';
 import { LEGACY_HEADING_DEFAULTS, legacyHeadingBehaviorOf, parsePctDimension, parseEmDimension, type HeadingBehavior } from './headings.js';
+import { firstWordPolicyOf } from './firstword.js';
 import { TORAH_RULE_REGISTRY, headingBehaviorIds, torahRegistrySignature } from './registry.js';
 
 /** גרסת המדיניות — עולה כשסמנטיקת כלל משתנה (rollback משווה). */
@@ -46,6 +47,10 @@ export interface TorahPolicy {
   readonly rulesSignature: string;
   /** מזהי ההתנהגויות — נעילת policy/config hash (שער M6/M7). */
   readonly headingIds: string;
+  /** מדיניות מילה-ראשונה (§10.2; שלב 64) — מדיניות מדידה, לא עיטוף מאוחר. */
+  readonly firstWord: import('./firstword.js').FirstWordPolicy;
+  /** דיבור-המתחיל מופעל (auto-dh; §10.2; שלב 64). */
+  readonly dibburEnabled: boolean;
 }
 
 function readBool(settings: EffectiveSettings, key: string, fallback: boolean): boolean {
@@ -191,6 +196,8 @@ export function createTorahPolicy(
     headingBehaviorOf,
     rulesSignature: torahRegistrySignature(),
     headingIds: headingBehaviorIds(),
+    firstWord: firstWordPolicyOf(settings),
+    dibburEnabled: settings.values['auto-dh'] === true,
   });
 }
 
@@ -210,6 +217,8 @@ export function createMinimalPolicy(settings: EffectiveSettings): TorahPolicy {
     ...full,
     policyId: 'tora-minimal-v1' as const,
     pagination: Object.freeze({ ...full.pagination, headingEscortLines: 0 }),
+    firstWord: Object.freeze({ ...full.firstWord, mode: 'none' as const }),
+    dibburEnabled: false,
   });
 }
 
