@@ -40,6 +40,8 @@ console.log('1) מבחן ה-E2E הארכיטקטוני (tests/e2e-skeleton)');
 const e2eOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/e2e-skeleton/e2e-skeleton.test.ts']);
 (e2eOut !== null && /Tests\s+10\s+passed/.test(e2eOut) ? ok : fail)('tests/e2e-skeleton — 10/10 (CLI×3 + Node trace/cold-warm + Worker + HTML + audit + preview + שחזור)');
 
+(runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('typecheck שורש (src+tests) — PASS (vitest אינו בודק טיפוסים)');
+
 console.log('\n2) Artifacts לפרסום — ריצת ייחוס ל-artifacts/e2e-reference/');
 const BIN = join(repoRoot, 'packages', 'cli', 'dist', 'main.js');
 const FIXTURE = join(repoRoot, 'packages', 'cli', 'test', 'fixtures', 'reference-source.txt');

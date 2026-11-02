@@ -19,9 +19,10 @@
  * ה-visual audit העתידית). הספק: HarfBuzz/WASM האמיתי בכל הרגליים.
  */
 import { afterAll, describe, expect, test } from 'vitest';
-import { WorkerClient, WorkerJobCancelled } from '../../src/worker-host/worker-client.js';
+import { WorkerClient, WorkerJobCancelled, type WorkerLike } from '../../src/worker-host/worker-client.js';
 import { createEngineHandler } from '../../src/worker-host/engine-worker.js';
 import { projectLayout } from '../../src/renderers/preview-model.js';
+import type { FontManifestRecord, MeasurementProvider, TypesetRequest } from '@tora/layout-api';
 import { spawnSync } from 'node:child_process';
 import { cp, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -49,15 +50,16 @@ const mh = await import('@tora/measurement-harfbuzz');
 const manifestPath = join(repoRoot, 'assets', 'fonts', 'manifest.json');
 const manifestBytes = await readFile(manifestPath);
 const manifest = ma.assertFontManifest(JSON.parse(manifestBytes.toString('utf8')));
-const guttman = manifest.find((r) => r.file === 'Guttman-Rashi-Normal.woff2');
-if (guttman === undefined) throw new Error('Guttman-Rashi-Normal not in manifest');
+const guttmanFound = manifest.find((r) => r.file === 'Guttman-Rashi-Normal.woff2');
+if (guttmanFound === undefined) throw new Error('Guttman-Rashi-Normal not in manifest');
+const guttman: FontManifestRecord = guttmanFound;
 const guttmanBytes = new Uint8Array(await readFile(join(repoRoot, 'assets', 'fonts', guttman.file)));
 const guttmanKey = ma.verifyFontBytes(guttman, guttmanBytes);
 const fontsManifestSha256 = ma.sha256Bytes(new TextEncoder().encode(manifestBytes.toString('utf8')));
 
 /** ספק HarfBuzz אמיתי מהנעילות (אותו bytes; ADR-003). */
-async function buildProvider(): Promise<ma.MeasurementProvider> {
-  const hbMod = await import('harfbuzzjs');
+async function buildProvider(): Promise<MeasurementProvider> {
+  const hbMod = (await import('harfbuzzjs')) as unknown as { default?: unknown };
   const hb = (hbMod.default ?? hbMod) as never;
   const wawoff2Mod = (await import('wawoff2')) as { default?: unknown; decompress: (b: Uint8Array) => Promise<Uint8Array> };
   const wawoff2 = (wawoff2Mod.default ?? wawoff2Mod) as { decompress: (b: Uint8Array) => Promise<Uint8Array> };
@@ -95,7 +97,7 @@ async function buildRequest(trace: 'off' | 'decisions') {
       budget: la.DEFAULT_SEARCH_BUDGET,
       sourceSha256: ma.sha256Bytes(new TextEncoder().encode(source)),
       parserVersion: 'content-model@0.1.0',
-    } as la.TypesetRequest,
+    } as TypesetRequest,
     source,
   };
 }
@@ -176,9 +178,9 @@ describe('שלב 39: שלד מהלך קצה־לקצה — CLI ← IR ← audit �
       typeset: engine.typeset,
     });
     const port = { post: (m: unknown) => queueMicrotask(() => clientHandlerRef.h?.(m)) };
-    const channel = {
-      postMessage: (msg: unknown) => { void handler(msg, port); },
-      onMessage: (h: (msg: unknown) => void) => { clientHandlerRef.h = h; },
+    const channel: WorkerLike = {
+      postMessage: (msg) => { void handler(msg, port); },
+      onMessage: (h) => { clientHandlerRef.h = h as (msg: unknown) => void; },
     };
     const client = new WorkerClient(channel);
     const { request } = await buildRequest('off');
@@ -271,7 +273,7 @@ describe('שלב 39: שלד מהלך קצה־לקצה — CLI ← IR ← audit �
       budget: la.DEFAULT_SEARCH_BUDGET,
       sourceSha256: req.sourceSha256,
       parserVersion: req.parserVersion,
-    } as la.TypesetRequest;
+    } as TypesetRequest;
     const provider = await buildProvider();
     const out = engine.typeset(request, provider, { policyId: 'torah-v1' });
     expect(out.manifest.layoutHash).toBe(H1);
