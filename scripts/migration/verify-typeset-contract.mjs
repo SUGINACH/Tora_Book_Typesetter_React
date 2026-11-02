@@ -77,7 +77,7 @@ try { api.assertTypesetRequest(badTrace); } catch (e) { reqThrew = String(e?.cat
 
 console.log('\n3) RunManifest');
 const m = api.makeRunManifest({
-  engineVersion: '0.1.0', codeSha: 'dev', sourceSha256: 's'.repeat(64),
+  engineVersion: '0.1.0', codeSha: 'dev', engine: 'next', sourceSha256: 's'.repeat(64),
   effectiveSettings: BASE.settings, fontsManifestSha256: 'f'.repeat(64), assetsManifestSha256: '0'.repeat(64),
   parserVersion: '1', environmentHash: 'e'.repeat(64), layout: { pages: [] },
 });
@@ -85,7 +85,7 @@ const HEX = /^[0-9a-f]{64}$/;
 (['inputHash', 'configHash', 'layoutHash', 'environmentHash'].every((k) => HEX.test(m[k])) ? ok : fail)('כל ההאשים HEX64');
 (Object.isFrozen(m) ? ok : fail)('manifest קפוא');
 const s2 = api.makeRunManifest({
-  engineVersion: '0.1.0', codeSha: 'dev', sourceSha256: 's'.repeat(64),
+  engineVersion: '0.1.0', codeSha: 'dev', engine: 'next', sourceSha256: 's'.repeat(64),
   effectiveSettings: { ...BASE.settings, values: {} }, fontsManifestSha256: 'f'.repeat(64), assetsManifestSha256: '0'.repeat(64),
   parserVersion: '1', environmentHash: 'e'.repeat(64), layout: { pages: [] },
 });

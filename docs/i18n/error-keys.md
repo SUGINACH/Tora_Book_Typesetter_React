@@ -227,6 +227,7 @@
 | `errors.cli.REPEAT_MISMATCH` | run, expected, actual | fatal | ריצה {run} נתנה hash שונה ({actual} ≠ {expected}) — לא דטרמיניסטי |
 | `errors.cli.OUTPUT_WRITE_FAILED` | path, reason | fatal | כתיבת פלט נכשלה: {path} — {reason} |
 | `errors.cli.AUDIT_FINDINGS` | high | error | הביקורת מצאה {high} ממצאי HIGH — הפריסה אינה עוברת שער (יציאה 7) |
+| `errors.cli.ENGINE_LEGACY_LOCKED` | baseline | fatal | הרץ ה-legacy נעול לבייסליין הקפוא ({baseline}) — אין מסלול צד; differential בשלב 48 (יציאה 2) |
 
 ## worker-host — פרוטוקול ה-Worker (שלב 35, פרק ה)
 

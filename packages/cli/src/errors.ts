@@ -29,6 +29,7 @@ export const CLI_ERROR_CATALOG: Readonly<Record<string, CliErrorEntry>> = Object
   'errors.cli.REPEAT_MISMATCH': { i18nKey: 'errors.cli.REPEAT_MISMATCH', params: ['run', 'expected', 'actual'], severity: 'fatal' },
   'errors.cli.OUTPUT_WRITE_FAILED': { i18nKey: 'errors.cli.OUTPUT_WRITE_FAILED', params: ['path', 'reason'], severity: 'fatal' },
   'errors.cli.AUDIT_FINDINGS': { i18nKey: 'errors.cli.AUDIT_FINDINGS', params: ['high'], severity: 'error' },
+  'errors.cli.ENGINE_LEGACY_LOCKED': { i18nKey: 'errors.cli.ENGINE_LEGACY_LOCKED', params: ['baseline'], severity: 'fatal' },
 });
 
 export function isRegisteredCliErrorKey(key: string): boolean {

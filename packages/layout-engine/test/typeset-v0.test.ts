@@ -147,6 +147,14 @@ describe('שלב 33: מנוע v0 — דטרמיניזם', () => {
     expect(out.manifest.layoutHash).toBe(plain.manifest.layoutHash);
   });
 
+  test('שלב 40: דגל מנוע — כל מניפסט נושא engine=next (חוזה §18-M4)', () => {
+    const out = typeset(makeRequest(), provider, POLICY);
+    expect(out.manifest.engine).toBe('next');
+    // הדגל אינו משנה את הפריסה — אותו hash בלי קשר לשאלה מי קורא
+    const again = typeset(makeRequest(), provider, POLICY);
+    expect(again.manifest.layoutHash).toBe(out.manifest.layoutHash);
+  });
+
   test('manifest מלא: engineVersion, codeSha=dev, environmentHash מהספק', () => {
     const out = typeset(makeRequest(), provider, POLICY);
     expect(out.manifest.engineVersion).toBe(ENGINE_VERSION);

@@ -26,7 +26,7 @@ import { renderHtml } from '@tora/render-html';
 import { auditLayout, type LayoutAuditReport } from '@tora/audit-core';
 import { type CliArgs } from './args.js';
 import { CliError } from './errors.js';
-import { EXIT_AUDIT, EXIT_ENGINE, EXIT_INPUT, EXIT_OUTPUT, EXIT_SUCCESS } from './exit-codes.js';
+import { EXIT_AUDIT, EXIT_ENGINE, EXIT_INPUT, EXIT_OUTPUT, EXIT_SUCCESS, EXIT_USAGE } from './exit-codes.js';
 import { installNetworkDeny } from './offline-guard.js';
 import {
   displayFamilyOf,
@@ -50,6 +50,8 @@ export interface RunReport {
   readonly repeats: number;
   readonly deterministic: boolean;
   readonly trace: string;
+  /** המנוע שהריץ (שלב 40) — תמיד 'next' בריצות אמת; נרשם גם ב-RunManifest. */
+  readonly engine: 'legacy' | 'next';
   /** סיכום הביקורת (שלב 38): ok ⟺ אפס HIGH. */
   readonly audit: { readonly ok: boolean; readonly high: number; readonly medium: number; readonly low: number };
 }
@@ -79,6 +81,15 @@ export async function runCli(
 ): Promise<RunOutcome> {
   const guard = installNetworkDeny();
   progressLine('offline guard installed (network denied from start)');
+
+  // שלב 40 (§18-M4): דגל מנוע מפורש — אין fallback אוטומטי ואין מסלול צד.
+  // legacy = הרץ הנעול של הבייסליין (docs/migration/baseline) — ריצות חיות
+  // שלו דרך צריך ה-differential (שלב 48+); בקשה כזו נדחית בקול רם ובקטלוג.
+  if (args.engine === 'legacy') {
+    throw new CliError(EXIT_USAGE, 'errors.cli.ENGINE_LEGACY_LOCKED', {
+      baseline: 'docs/migration/baseline',
+    }, 'הרץ ה-legacy נעול לבייסליין הקפוא — ריצות differential מגיעות בשלב 48; אין מסלול צד ואין fallback שקט ל-next');
+  }
 
   // ── קלט ──
   const registry = await loadRegistry();
@@ -158,6 +169,7 @@ export async function runCli(
     repeats: args.repeat,
     deterministic: true,
     trace: args.trace,
+    engine: result.manifest.engine,
     audit: { ok: audit.ok, high: audit.counts.HIGH, medium: audit.counts.MEDIUM, low: audit.counts.LOW },
   };
   const files: Array<[string, string]> = [

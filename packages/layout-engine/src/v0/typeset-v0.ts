@@ -722,6 +722,9 @@ export function typeset(
   const manifest = makeRunManifest({
     engineVersion: ENGINE_VERSION,
     codeSha: CODE_SHA,
+    // שלב 40: חבילה זו היא המנוע 'next'; legacy הוא הרץ הנעול של הבייסליין
+    // (docs/migration/baseline) ואינו חלק מחבילות הליבה — אין מסלול צד.
+    engine: 'next',
     sourceSha256: request.sourceSha256,
     effectiveSettings: request.settings,
     fontsManifestSha256: request.assets.fontsManifestSha256,

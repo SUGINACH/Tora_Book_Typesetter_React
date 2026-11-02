@@ -187,4 +187,22 @@ describe('שלב 34: שגיאות ממוקמות וקודי יציאה', () => {
     expect(parseCliArgs(['--input']).ok).toBe(false);
     expect(parseCliArgs(['--input', 'a', '--out', 'b', '--repeat', '0']).ok).toBe(false);
   });
+
+  test('שלב 40: דגל מנוע — legacy נעול (אין מסלול צד); bogus נדחה; ברירת מחדל next', async () => {
+    // legacy ⇒ דחייה מקוטלגת לפני כל ריצה — המנוע כלל לא מופעל, אין artifacts
+    const c = current as Case;
+    await expect(runCli(args({ engine: 'legacy' }))).rejects.toMatchObject({
+      exitCode: EXIT_USAGE,
+      catalogKey: 'errors.cli.ENGINE_LEGACY_LOCKED',
+      params: { baseline: 'docs/migration/baseline' },
+    });
+    // ערך לא חוקי ⇒ שגיאת שימוש
+    expect(parseCliArgs(['--input', 'a', '--out', 'b', '--engine', 'bogus']).ok).toBe(false);
+    // ברירת מחדל next — רץ ומניפסט נושא את הדגל
+    const outcome = await runCli(args({ engine: 'next' }));
+    expect(outcome.exitCode).toBe(EXIT_SUCCESS);
+    expect((outcome.report as { engine: string }).engine).toBe('next');
+    const manifest = JSON.parse(await readFile(join(c.out, 'manifest.json'), 'utf8'));
+    expect(manifest.engine).toBe('next');
+  });
 });

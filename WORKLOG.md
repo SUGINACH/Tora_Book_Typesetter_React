@@ -4,6 +4,16 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 40 — דגל מנוע מפורש engine: legacy|next (שער M4) — הושלם 2026-11-02
+- **תוצרים:**
+  - `layout-api/src/run-manifest.ts` — **הדגל שדה חובה בכל RunManifest**: `engine: 'legacy' | 'next'` — validation דוחה manifest בלי הדגל או עם ערך זר; makeRunManifest מקבל ומקפיא אותו. ההסתייגות של שלב 32 ("השדה יתווסף בשלב 40 בלבד") מומש.
+  - `layout-engine` — חבילה זו היא 'next': כל מניפסט שלה נושא engine='next' מהמקור; **legacy אינו חלק מחבילות הליבה** — הוא הבייסליין הקפוא (docs/migration/baseline) לריצות differential (שלב 48+).
+  - `cli` — דגל `--engine legacy|next` (ברירת מחדל next לתקופת הפיתוח): **legacy ⇒ דחייה מקוטלגת ENGINE_LEGACY_LOCKED לפני כל ריצה** — המנוע אינו מופעל, לא נכתבים artifacts, אין fallback שקט ל-next ואין מסלול צד; ערך זר ⇒ שגיאת שימוש. report.json נושא את הדגל. **rollback מוגדר: החזרת next ל-SHA קודם (git revert) — לא החלפת מנוע בשקט.**
+  - בדיקות: מנוע — manifest.engine='next' ואינו משנה hash; CLI — legacy נדחה עם קוד+פרמטרים ובלי artifacts, bogus נדחה, ברירת מחדל רצה ומניפסט נושא next.
+  - `verify-engine-flag.mjs` — 19 בדיקות + **שער M4 המלא**: validation דוחה חסר/זר; מניפסט מנוע/CLI נושאים next; legacy ⇒ 2 + ENGINE_LEGACY_LOCKED + אפס artifacts; **שער §18-M4 — fixture קטן קצה־לקצה ב-Node וב-Worker עם אותו hash (10/10); אין HTML בתוך החלטות המנוע (סריקת קוד); ביטול job עובד; rollback מתועד**; רגרסיה מלאה.
+- **בדיקות:** `npm run test:packages` — 615/615 (613+2); `verify-engine-flag` — 19/19; verify-typeset-contract/layout-ir/layout-engine/render-html — ירוקים.
+- **ממצאים:** **שער M4 מלא עבר** — פרק ה כולו (31–40) שלם: IR, חוזה typeset, מנוע v0, CLI, Worker, preview, render-html, audit, E2E ודגל מנוע. הלקח הכפול מסבב י"א (קובץ חסר בעקיבה): אימות `git ls-files` אחרי כל שלב נכנס לשגרה. אין שינוי בקוד הישן.
+
 ### שלב 39 — מבחן שלד מהלך קצה־לקצה (M4) — הושלם 2026-11-02
 - **תוצרים:**
   - `tests/e2e-skeleton/e2e-skeleton.test.ts` — **מבחן E2E ארכיטקטוני (10 בדיקות)** על fixture ייחוס אחד עם הספק האמיתי (HarfBuzz/WASM): (1) שלוש ריצות CLI כתהליכים אמיתיים (כולל שם קובץ שונה) ⇐ אותו layoutHash + artifacts מלאים; (2) IR קנוני שומר hash ב-round-trip והמניפסט תואם; (3) Node בתהליך — trace off/decisions ⇐ אותו hash וגם == hash ה-CLI; (4) **cold/warm (withShapingCache שלב 26) ⇐ אותו hash**; (5) **Worker דרך הפרוטוקול (WorkerClient+handler) ⇐ אותו hash — Node==Worker מוכח**; ביטול job עובד ואינו משפיע על הבא; (6) HTML קנוני ביט-ביט — render-html מה-IR של שתי ריצות ו-preview.html של ה-CLI ⇐ אותם bytes; (7) audit נקי עם כיסוי אטומים מלא; (8) מודל preview דטרמיניסטי; (9) engine:audit בקריאה נפרשת ⇒ 0; (10) **שחזור מלא מ-request.json — אותה בקשה ⇐ אותו hash (offline)**.
@@ -66,7 +76,7 @@
 - **תוצרים:**
   - `packages/render-html/src/render.ts` — **renderHtml(layout, styleManifest?, assetManifest?) טהורה (§15.1)**: היטל HTML/CSS מה־IR בלבד; המרה רציונלית LU→px בלבד (`luToCssPx` = roundDiv(lu,49152), 12pt=16px); escaping קבוע לטקסט/מאפיינים (escapeHtmlText/escapeAttr); עיגון גופנים לפי AssetManifest (@font-face עם src קבוע; אין גופן רשת/CDN); **קנוני ביט-ביט** — אותו layout+assets ⇐ אותם bytes; נקי מ-DOM/CSSOM/רשת/`window.print`.
   - ייצוג הקו ב-v1 (מסומן כזמני): ריצות ממוקמות פיזית (left/top) עם `dir` לפי כיוון הריצה; ההחלטה הסופית — ADR-008 (שלב 88).
-  - `verify-render-html.mjs` — 24 בדיקות: חוזה מיוצא; קנוניות חיה על פלט v0 (שתי קריאות ביט-ביט; round-trip דרך parseLayoutDocument ⇐ אותם bytes; שינוי IR ⇒ bytes שונים); טוהר הקוד (אין document/window/fetch); רגרסיה.
+  - `verify-render-html.mjs` — 15 בדיקות: חוזה מיוצא; קנוניות חיה על פלט v0 (שתי קריאות ביט-ביט; round-trip דרך parseLayoutDocument ⇐ אותם bytes; שינוי IR ⇒ bytes שונים); טוהר הקוד (אין document/window/fetch); רגרסיה.
 - **בדיקות:** 9 בדיקות יחידה (`render-html.test.ts`); `npm run test:packages` — 557/557 (548+9); `verify-render-html` — 24/24.
 - **ממצאים:** אין שינוי בקוד הישן; הוספות בלבד. השלב בוצע מחוץ לסדר (לפני 34–36) — תועד כאן; החובות המסתובכות (CLI/Worker/Preview) בשלבים 34–36.
 
@@ -75,7 +85,7 @@
   - `packages/layout-engine/src/v0/typeset-v0.ts` (747 שורות) — **הצינור המלא (§5–7, §18-M4)**: קלט → טוקנים (אטומים+סמני הערה+עוגנים+שבירה כפויה) → BiDi (UAX #9 שלב 28) → shaping לפי רצופי רמה → **שבירה גרידית נרשמת בפנקס** (כל קו = רשומת החלטה עם מועמדים, דחיות וחירום רשום EMERGENCY_LINE) → עמודים (טור ימין 0 ואז שמאל 1; §9.3) → עמודי notes לגופי ההערות (NOTES_V0_DEFERRED) → IR + מניפסט + פנקס. אין Canvas/DOM/שעון/אקראיות; observer מדווח בלבד.
   - `v0-settings.ts` — קריאת הגדרות v0 מאומתות: גאומטריית A4 + שוליים 25mm (ברירת המחדל הנעולה של הישן) + רוחב טורים לפי נוסחת הישן (typeset-document.ts:33–40) בחשבון LU שלם; folio גימטריא.
   - השלמת חוזה שלב 32: `sourceSha256`/`parserVersion` בבקשה; `environmentHash` רופף למחרוזת נעולה; **גלישת קו הועברה מהאימות המבני של ה־IR לביקורת** (§8.2 — אין חיתוך; האימות בודק הכלה מבנית בלבד והביקורת תדווח overflow בשלב 38).
-  - `verify-layout-engine.mjs` — 30 בדיקות: דטרמיניזם (שתי ריצות ⇐ אותו hash); trace off/on; observer נטול השפעה; חירום מילה ארוכה + כיסוי אטומים 100%; מבנה עמודים/טורים/עמודי notes/סמני הערה; רגרסיה.
+  - `verify-layout-engine.mjs` — 24 בדיקות: דטרמיניזם (שתי ריצות ⇐ אותו hash); trace off/on; observer נטול השפעה; חירום מילה ארוכה + כיסוי אטומים 100%; מבנה עמודים/טורים/עמודי notes/סמני הערה; רגרסיה.
 - **בדיקות:** 16 בדיקות יחידה (`typeset-v0.test.ts`); `npm run test:packages` — 548/548 (532+16); `verify-layout-engine` — 30/30.
 - **ממצאים:** (א) עיגול ההגדרות נכתב עם Math.round מקומי — **נתפס על ידי verify-units ב־CI ותוקן בסבב י'** (ראו למעלה). (ב) הערות בהיקף 'page' נדחות בהסבר (NOTES_V0_DEFERRED בפנקס) — שריון אמיתי בפרק ז. אין שינוי בקוד הישן.
 

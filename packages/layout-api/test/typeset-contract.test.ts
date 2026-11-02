@@ -109,6 +109,7 @@ describe('שלב 32: RunManifest', () => {
     const m = makeRunManifest({
       engineVersion: '0.1.0',
       codeSha: 'dev',
+      engine: 'next',
       sourceSha256: 's'.repeat(64),
       effectiveSettings: SETTINGS,
       fontsManifestSha256: 'f'.repeat(64),
@@ -127,7 +128,7 @@ describe('שלב 32: RunManifest', () => {
     const a = { ...SETTINGS, values: { 'size-body': 12, 'font-body': "'Guttman Rashi'" } };
     const b = { ...SETTINGS, values: { 'font-body': "'Guttman Rashi'", 'size-body': 12 } };
     const mk = (settings: unknown) => makeRunManifest({
-      engineVersion: '0.1.0', codeSha: 'dev', sourceSha256: 's'.repeat(64), effectiveSettings: settings,
+      engineVersion: '0.1.0', codeSha: 'dev', engine: 'next', sourceSha256: 's'.repeat(64), effectiveSettings: settings,
       fontsManifestSha256: 'f'.repeat(64), assetsManifestSha256: '0'.repeat(64), parserVersion: '1',
       environmentHash: 'e'.repeat(64), layout: { pages: [] },
     });

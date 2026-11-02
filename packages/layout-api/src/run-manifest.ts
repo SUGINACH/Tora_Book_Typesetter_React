@@ -5,8 +5,8 @@
  * "artifacts כוללים input/config/font/asset hashes, engine SHA, layout hash").
  * codeSha מוזן ב-build metadata; בפיתוח — 'dev' מפורש (§12).
  *
- * שלב 40 יוסיף את הדגל engine: legacy|next כשדה חובה; עד אז השדה
- * מסומן כתוספת של שלב 40 (אין לסמן שלב לפי תקווה — כלל 5 באפיון §23).
+ * שלב 40 (פרק ה): הדגל engine: legacy|next הוא שדה חובה בכל מניפסט —
+ * rollback מבוקר בלי ערבוב מנועים (§18-M4, §23).
  */
 import { LayoutApiError } from './errors.js';
 import { configHash as configHashOf, inputHash as inputHashOf, type InputHashComponents } from './canonical-hash.js';
@@ -17,6 +17,13 @@ export interface RunManifest {
   readonly engineVersion: string;
   /** SHA של קוד המנוע; 'dev' בפיתוח (§12). */
   readonly codeSha: string;
+  /**
+   * המנוע שהפיק את הפריסה (שלב 40; §18-M4, §23): 'next' — המנוע החדש;
+   * 'legacy' — הרץ הנעול של הבייסליין (לא חלק מחבילות הליבה; differential
+   * בלבד). אין fallback אוטומטי בין השניים; rollback = החזרת next ל-SHA
+   * קודם, לא החלפת מנוע בשקט.
+   */
+  readonly engine: 'legacy' | 'next';
   readonly inputHash: string;
   readonly configHash: string;
   readonly fontsManifestSha256: string;
@@ -34,6 +41,7 @@ export function runManifestIssues(m: unknown): string[] {
   if (v.schemaVersion !== 1) issues.push('schemaVersion');
   if (typeof v.engineVersion !== 'string' || v.engineVersion.length === 0 || v.engineVersion.length > 64) issues.push('engineVersion');
   if (typeof v.codeSha !== 'string' || v.codeSha.length === 0 || v.codeSha.length > 80) issues.push('codeSha');
+  if (v.engine !== 'legacy' && v.engine !== 'next') issues.push('engine');
   for (const k of ['inputHash', 'configHash', 'fontsManifestSha256', 'assetsManifestSha256', 'layoutHash'] as const) {
     if (typeof v[k] !== 'string' || !HEX64.test(v[k] as string)) issues.push(k);
   }
@@ -51,6 +59,8 @@ export function isRunManifest(m: unknown): m is RunManifest {
 export interface RunManifestInput {
   readonly engineVersion: string;
   readonly codeSha: string;
+  /** המנוע שהפיק את הפריסה (שלב 40) — 'next' לחבילת layout-engine. */
+  readonly engine: 'legacy' | 'next';
   readonly sourceSha256: string;
   readonly effectiveSettings: unknown;
   readonly fontsManifestSha256: string;
@@ -76,6 +86,7 @@ export function makeRunManifest(input: RunManifestInput): RunManifest {
     schemaVersion: 1,
     engineVersion: input.engineVersion,
     codeSha: input.codeSha,
+    engine: input.engine,
     inputHash: ih,
     configHash: cfg,
     fontsManifestSha256: input.fontsManifestSha256,

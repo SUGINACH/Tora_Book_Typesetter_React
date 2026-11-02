@@ -20,6 +20,8 @@ export interface CliArgs {
   /** מצב audit עצמאי (§12: ביקורת בקריאה נפרשת): --layout layout.json. */
   readonly layout?: string;
   readonly request?: string;
+  /** דגל מנוע מפורש (שלב 40; §18-M4): legacy|next; ברירת מחדל next. */
+  readonly engine: 'legacy' | 'next';
 }
 
 export type ArgsResult =
@@ -44,6 +46,7 @@ export const USAGE = `@tora/cli — Node 22 reference runner (שלב 34; אפי�
   --fonts-dir <path>    ספריית קובצי הגופנים (ברירת מחדל: ספריית המניפסט)
   --body-font <id|file> גופן הגוף לפי fontId או שם קובץ (ברירת מחדל: ${DEFAULT_BODY_FONT})
   --trace <level>       off | summary | decisions | full (ברירת מחדל: off)
+  --engine <name>       legacy | next (ברירת מחדל: next; לריצות reference בלבד — שלב 40)
   --repeat <n>          מספר ריצות לאימות דטרמיניזם (ברירת מחדל: 1; חייב להיות זהה)
   --html                יצירת preview.html נוסף דרך render-html
   --layout <path>       מצב ביקורת: audit של layout.json קיים (עם request.json לצדו)
@@ -110,7 +113,11 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
     return { ok: false, error: `--repeat שגוי: ${repeatRaw} (חוקי: שלם 1..100)`, hint: USAGE };
   }
 
-  const known = new Set(['input', 'out', 'settings', 'preset', 'fonts-manifest', 'fonts-dir', 'body-font', 'trace', 'repeat', 'layout', 'request']);
+  const engineRaw = raw.get('engine') ?? 'next';
+  if (engineRaw !== 'legacy' && engineRaw !== 'next') {
+    return { ok: false, error: `--engine שגוי: ${engineRaw} (חוקי: legacy|next)`, hint: USAGE };
+  }
+  const known = new Set(['input', 'out', 'settings', 'preset', 'fonts-manifest', 'fonts-dir', 'body-font', 'trace', 'repeat', 'layout', 'request', 'engine']);
   for (const k of raw.keys()) {
     if (!known.has(k)) return { ok: false, error: `דגל לא מוכר: --${k}`, hint: USAGE };
   }
@@ -131,6 +138,7 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
       trace: traceRaw as TraceLevel,
       repeat,
       html: flags.has('html'),
+      engine: engineRaw as 'legacy' | 'next',
       ...(layout !== undefined ? { layout } : {}),
       ...(raw.get('request') !== undefined ? { request: raw.get('request') } : {}),
     },
@@ -144,6 +152,6 @@ function dirnameOf(p: string): string {
 
 function nullArgs(): CliArgs {
   return {
-    input: '', out: '', fontsManifest: '', fontsDir: '', bodyFont: '', trace: 'off', repeat: 1, html: false,
+    input: '', out: '', fontsManifest: '', fontsDir: '', bodyFont: '', trace: 'off', repeat: 1, html: false, engine: 'next',
   };
 }

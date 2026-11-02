@@ -77,6 +77,7 @@ jobs:
           node scripts/migration/verify-preview.mjs
           node scripts/migration/verify-layout-audit.mjs
           node scripts/migration/verify-e2e-skeleton.mjs
+          node scripts/migration/verify-engine-flag.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         run: |
