@@ -222,16 +222,23 @@ describe('שלב 33: מבנה הפלט', () => {
     }
   });
 
-  test('ריצות ממוקמות: שורה רגילה בגבולות; שורת חירום גולשת (מדווח בביקורת)', () => {
+  test('ריצות ממוקמות: שורה רגילה בגבולות; קו חירום מתועד (גולש או רפוי — שלב 47)', () => {
     const out = typeset(makeRequest(), provider, POLICY);
     let emergencySeen = false;
+    let overflowSeen = false;
     for (const page of out.layout.pages) {
       for (const item of page.items) {
         if (item.kind !== 'line') continue;
         for (const run of item.runs) {
           if (item.breakReason === 'emergency') {
-            expect(run.startLu + run.widthLu).toBeGreaterThan(item.rect.width);
+            // שלב 47: 'emergency' = fallback מתועד — EMERGENCY_LINE (גלישת
+            // מקטע בלתי-בר-שבירה; עדיין גולש) או EMERGENCY_STRETCH (קו רפוי
+            // שהותאם עד גבול המתיחה — אינו גולש). הגלישה בפועל מדווחת
+            // על ידי הביקורת (LINE_RUN_OVERFLOW, HIGH) — לא מוסתרת כאן.
             emergencySeen = true;
+            if ((run.startLu as number) + (run.widthLu as number) > (item.rect.width as number) + 1) {
+              overflowSeen = true;
+            }
           } else {
             expect(run.startLu + run.widthLu).toBeLessThanOrEqual(item.rect.width + 1);
           }
@@ -241,6 +248,8 @@ describe('שלב 33: מבנה הפלט', () => {
       }
     }
     expect(emergencySeen).toBe(true);
+    // המילה הארוכה במקור מייצרת לפחות קו חירום גולש אחד (EMERGENCY_LINE)
+    expect(overflowSeen).toBe(true);
   });
 
   test('serialize→parse של הפלט שומר hash (§17.2#9)', () => {

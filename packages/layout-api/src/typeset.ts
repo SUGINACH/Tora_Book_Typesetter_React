@@ -47,8 +47,13 @@ export interface SearchBudget {
 }
 
 export const DEFAULT_SEARCH_BUDGET: SearchBudget = Object.freeze({
-  maxCandidatesPerState: 64,
-  maxBeamWidth: 8,
+  // שלב 47 (M5): ה־DP הגלובלי צריך אלומה רחבה משמעותית מההליכון הגרידי של v0 —
+  // באלומה 8 (ברירת המחדל המקורית של השלד) פסקאות ייחוס רגילות מוחות את שרשרת
+  // המסלול (ממצא שלב 45) והתוצאה מתדרדרת לקווי חירום. 512/64 הוא התקציב שבו
+  // פסקאות הייחוס מוצאות מסלול level-0 מלא; השלמות מובטחת בנפרד על ידי הגנת
+  // החזית (שלב 46) גם בתקציבים דוקים, ומיצוי נרשם תמיד (§9.2).
+  maxCandidatesPerState: 512,
+  maxBeamWidth: 64,
   maxExpandedStates: 200_000,
   maxOuterIterations: 8,
 });

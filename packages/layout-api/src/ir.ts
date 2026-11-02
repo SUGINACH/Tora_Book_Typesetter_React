@@ -128,6 +128,9 @@ export interface LineFragment {
   readonly sourceSpans: readonly SourceSpan[];
   readonly breakReason: BreakReason;
   readonly continuation: ContinuationKind;
+  /** יישור קו סיום הפסקה (body-last-line-align, נספח ג) — מופיע בקו האחרון
+   * של פסקה בלבד; ממומש גם גאומטרית בהצבה (שלב 45 חיבור 47). */
+  readonly lastLineAlign?: 'center' | 'right';
 }
 
 // ─────────────────────────── פריטים ממוקמים אחרים ───────────────────────────
@@ -205,6 +208,14 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 
 function isSafeNonNegativeInt(v: unknown): boolean {
   return typeof v === 'number' && Number.isSafeInteger(v) && v >= 0;
+}
+
+/** ריצה שכל גליפיה בקידום אפס — רווחים עוקבים בסוף קו (שלב 47; מודל שלב 41). */
+function isAllZeroAdvanceRun(sv: Record<string, unknown>): boolean {
+  const glyphs = sv.glyphs;
+  if (!Array.isArray(glyphs) || glyphs.length === 0) return false;
+  return glyphs.every((g) => typeof g === 'object' && g !== null
+    && (g as Record<string, unknown>).advanceLu === 0);
 }
 
 function isSafePositiveInt(v: unknown): boolean {
@@ -319,6 +330,9 @@ export function layoutDocumentIssues(doc: unknown): string[] {
         const line = it as unknown as LineFragment;
         if (!(BREAK_REASONS as readonly string[]).includes(line.breakReason)) issues.push(`${il}.breakReason`);
         if (!(CONTINUATION_KINDS as readonly string[]).includes(line.continuation)) issues.push(`${il}.continuation`);
+        if (line.lastLineAlign !== undefined && line.lastLineAlign !== 'center' && line.lastLineAlign !== 'right') {
+          issues.push(`${il}.lastLineAlign`);
+        }
         if (!isSafeNonNegativeInt(line.fragmentIndex)) issues.push(`${il}.fragmentIndex`);
         if (!isSafeNonNegativeInt(line.lineIndex)) issues.push(`${il}.lineIndex`);
         if (typeof line.blockId !== 'string' || line.blockId.length === 0) issues.push(`${il}.blockId`);
@@ -337,7 +351,11 @@ export function layoutDocumentIssues(doc: unknown): string[] {
           if (!isPlainObject(sv) || sv.kind !== 'run') { issues.push(`${sl}:not-a-run`); continue; }
           if (typeof sv.id !== 'string' || !ID_RE.test(sv.id)) issues.push(`${sl}.id`);
           if (!isSafeNonNegativeInt(sv.startLu)) { issues.push(`${sl}.startLu`); continue; }
-          if (!isSafeNonNegativeInt(sv.widthLu) || (sv.widthLu as number) <= 0) issues.push(`${sl}.widthLu`);
+          // שלב 47 (M5): רוחב 0 חוקי לריצת רווחים עוקבים בסוף קו — הרווחים
+          // מחוץ לרוחב הקו (מודל שלב 41) ומקבלים קידום אפס; האטומים נשמרים
+          // (אין מחיקה). כל ריצה אחרת חייבת רוחב חיובי.
+          if (!isSafeNonNegativeInt(sv.widthLu) || (sv.widthLu as number) < 0
+            || ((sv.widthLu as number) === 0 && !isAllZeroAdvanceRun(sv))) issues.push(`${sl}.widthLu`);
           if (typeof sv.text !== 'string' || sv.text.length === 0) issues.push(`${sl}.text`);
           if (typeof sv.requestHash !== 'string' || !HEX64_RE.test(sv.requestHash)) issues.push(`${sl}.requestHash`);
           if (sv.direction !== 'rtl' && sv.direction !== 'ltr') issues.push(`${sl}.direction`);

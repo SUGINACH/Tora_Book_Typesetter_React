@@ -1,16 +1,19 @@
 /**
- * typeset-v0.ts — מנוע v0 דטרמיניסטי (שלב 33; §5–7, §18-M4).
+ * typeset-v0.ts — מנוע v0 דטרמיניסטי (שלב 33; §5–7, §18-M4; שלב 47 — פרק ו).
  *
  * שלד מהלך מסומן: "מותר אלגוריתם פשוט כל עוד הוא דטרמיניסטי ומסומן".
  * הצינור: קלט → טוקנים (אטומים + סמני הערה + עוגנים + שבירה כפויה)
- * → BiDi (UAX #9, שלב 28) → shaping לפי רצופי רמה → שבירה גרידית
- * נרשמת בפנקס (כל קו = רשומת החלטה עם מועמדים, דחיות וחירום רשום)
- * → עמודים (טור ימין 0 ואז שמאל 1; §9.3) → עמודי notes לגופי ההערות
- * (NOTES_V0_DEFERRED) → IR + מניפסט + פנקס.
+ * → BiDi (UAX #9, שלב 28) → shaping לפי רצופי רמה → **שבירת שורות גלובלית
+ * (שלב 47: ה־DP של פרק ו — הדרך היחידה; החמדני הוסר ממסלול next ונותר
+ * פיקסטורת השוואה מסומנת בלבד)** → עמודים (טור ימין 0 ואז שמאל 1; §9.3)
+ * → עמודי notes לגופי ההערות (NOTES_V0_DEFERRED) → IR + מניפסט + פנקס.
+ *
+ * כל דחייה וניצחון של השבירה נרשמים בפנקס (§8.2): רשומת :path לכל פסקה
+ * (הרמה שנבחרה מהסולם והרמות שנפסלו), רשומות חירום לכל הסלמה, ורשומת
+ * line-break לכל קו עם המועמדים שהוערכו, הדחויים, התקציב וקודי fallback.
  *
  * מה אין כאן (במפורש): Canvas/DOM, שעון, אקראיות; fallback רק עם קוד
- * ופנקס. ההחלטות הקבועות של v0 מתועדות בפנקס עצמו ובקוד; האלגוריתם
- * הגלובלי מגיע בפרק ו (M5) והשריון האמיתי של הערות — בפרק ז (M6).
+ * ופנקס. השריון האמיתי של הערות — בפרק ז (M6).
  */
 import {
   type AnyProvider,
@@ -18,6 +21,7 @@ import {
   asLu,
   assertTypesetRequest,
   canonicalJson,
+  type AppendDecision,
   type ContentBlock,
   type DecisionLedgerBuilder,
   DecisionLedgerBuilder as LedgerCtor,
@@ -58,12 +62,18 @@ import {
   coalesceSpans,
 } from '../linebreak/tokens.js';
 import { shapeParagraph, type ShapedParagraph } from '../linebreak/shaping.js';
+import { isTrimmableSpaceText, LineCandidateIndex } from '../linebreak/candidates.js';
+import { breakParagraphWithLadder, type LadderResult } from '../linebreak/emergency.js';
+import { dpLedgerEntries } from '../linebreak/ledger-adapter.js';
+import { qualityDisplayScalar } from '../linebreak/quality.js';
+import { readParagraphEndRules, type ParagraphEndRules } from '../linebreak/paragraph-end.js';
+import type { DpBudget } from '../linebreak/dp.js';
 
 export const ENGINE_VERSION = '0.1.0' as const;
-export const ENGINE_ALGORITHM = 'v0-greedy-walking-skeleton' as const;
+export const ENGINE_ALGORITHM = 'global-dp-paragraph-ladder-v1' as const;
 export const CODE_SHA = 'dev' as const;
 
-// ─────────────────────────── שבירה גרידית עם פנקס ───────────────────────────
+// ─────────────────────────── שבירה גלובלית — הדרך היחידה של next (שלב 47) ───────────────────────────
 
 interface LineSpec {
   readonly blockId: string;
@@ -73,116 +83,193 @@ interface LineSpec {
   readonly continuation: ContinuationKind;
   readonly widthLu: number;
   readonly sourceSpans: readonly SourceSpan[];
+  /** קו סיום הפסקה — נושא את יישור body-last-line-align (נספח ג; שלב 45←47). */
+  readonly isParagraphLast: boolean;
+  readonly lastLineAlign: 'center' | 'right' | null;
+  /** מצב ההצדקה שבחר ה־DP (§8.2): justify מותאם בהצבה על רווחי המילים. */
+  readonly justification: 'justify' | 'natural' | 'last';
+  /** מספר הרווחים הנספרים (פר-תו; ADR-004) — יעד חלוקת ההתאמה. */
+  readonly spaceCount: number;
 }
 
+/** תוכנית ההצבה של קו — ההחלטות שה־DP קיבל, ממומשות גאומטרית (שלב 47). */
+interface PlacementPlan {
+  /** הזחת יישור קו סיום (body-last-line-align). */
+  readonly shiftLu: number;
+  /** התאמת הצדקה פר-אטום (סכום ההתאמות של כל התווים שלו) — רווחים בלבד. */
+  readonly atomAdjust: ReadonlyMap<number, number>;
+  /** התאמה פר-גליף לאטומים שהותאמו (חלוקה שלמה בתוך האטום). */
+  readonly glyphAdjust: ReadonlyMap<number, readonly number[]>;
+  /** אטומי רווחים עוקבים בסוף הקו — קידום אפס (מחוץ לרוחב; האטומים נשמרים). */
+  readonly trailingZero: ReadonlySet<number>;
+}
 
-function breakBlockGreedy(
+const NO_PLAN: PlacementPlan = Object.freeze({
+  shiftLu: 0,
+  atomAdjust: new Map<number, number>(),
+  glyphAdjust: new Map<number, readonly number[]>(),
+  trailingZero: new Set<number>(),
+});
+
+/**
+ * בניית תוכנית ההצבה של קו (§8.2: "רווחי מילים בלבד"; ADR-004 קוונטיזציה
+ * פר-רווח): רווחים עוקבים בסוף הקו מקבלים קידום אפס (הם מחוץ ל־widthLu
+ * משלב 41 — האטומים נשמרים, לא נמחקים); שורת justify מותאמת לרוחב הטור
+ * בדיוק על ידי חלוקת ההפרש על הרווחים הנספרים — מתיחה כשהקו רפוי,
+ * כיווץ כשהוא צפוף (עד גבולות הסבילות שהמדיניות אישרה); קו סיום הפסקה
+ * מוזז ליישורו (center/right) בלי מתיחה. הכל בשלמים — חלוקה מרוכזת
+ * דרך roundDiv עם שארית לראשונים (סדר קבוע; דטרמיניזם מלא).
+ *
+ * אין מועמד חוקי להתאמה (justify בלי רווחים כלל)? הקו נותר ברוחבו
+ * הטבעי — גלישה כזו נושאת EMERGENCY_LINE מתועד (הביקורת רואה אותה).
+ */
+function placementPlanOf(
+  line: LineSpec,
+  atoms: readonly TextAtom[],
+  colWidth: number,
+): PlacementPlan {
+  // 1) זיהוי הרווחים העוקבים בסוף הקו (אחרי התא האחרון שאיננו רווח)
+  let lastContentIdx = -1;
+  for (let i = line.cells.length - 1; i >= 0; i--) {
+    const cell = line.cells[i]!;
+    if (cell.kind !== 'atom' || !isTrimmableSpaceText(atoms[cell.pIdx]!.text)) {
+      lastContentIdx = i;
+      break;
+    }
+  }
+  const trailingZero = new Set<number>();
+  for (let i = lastContentIdx + 1; i < line.cells.length; i++) {
+    const cell = line.cells[i]!;
+    if (cell.kind === 'atom') trailingZero.add(cell.pIdx);
+  }
+
+  // 2) הזחת יישור קו סיום הפסקה (רק קו last; קו גולש אינו מוזז)
+  let shiftLu = 0;
+  if (line.isParagraphLast && line.lastLineAlign !== null && line.widthLu < colWidth) {
+    shiftLu = line.lastLineAlign === 'right'
+      ? colWidth - line.widthLu
+      : roundDiv(colWidth - line.widthLu, 2);
+  }
+  if (line.justification !== 'justify' || line.spaceCount <= 0) {
+    return shiftLu === 0 && trailingZero.size === 0
+      ? NO_PLAN
+      : { shiftLu, atomAdjust: new Map(), glyphAdjust: new Map(), trailingZero };
+  }
+
+  // 3) התאמת ההצדקה: הפרש הטור מחולק על הרווחים הנספרים (פר-תו), עם
+  //    שארית שלמה לרווחים הראשונים בסדר הטוקנים; בתוך אטום רווחים בן k
+  //    תווים — ההתאמה של האטום מתחלקת על k באותה שיטה (פר-גליף).
+  const delta = colWidth - line.widthLu;
+  const perSpace = roundDiv(delta, line.spaceCount);
+  const remainder = delta - perSpace * line.spaceCount;
+  const atomAdjust = new Map<number, number>();
+  const glyphAdjust = new Map<number, readonly number[]>();
+  let spaceSeq = 0;
+  for (let i = 0; i <= lastContentIdx; i++) {
+    const cell = line.cells[i]!;
+    if (cell.kind !== 'atom') continue;
+    if (!isTrimmableSpaceText(atoms[cell.pIdx]!.text)) continue;
+    const k = atoms[cell.pIdx]!.text.length;
+    const glyphAdjs: number[] = [];
+    let atomTotal = 0;
+    for (let j = 0; j < k; j++) {
+      const adj = perSpace + (Math.abs(remainder) > spaceSeq ? Math.sign(remainder) : 0);
+      glyphAdjs.push(adj);
+      atomTotal += adj;
+      spaceSeq += 1;
+    }
+    atomAdjust.set(cell.pIdx, atomTotal);
+    glyphAdjust.set(cell.pIdx, glyphAdjs);
+  }
+  return { shiftLu, atomAdjust, glyphAdjust, trailingZero };
+}
+
+interface BlockBreakResult {
+  readonly lines: readonly LineSpec[];
+  /** רשומות הפנקס של הפסקה בסדר קבוע: path ← חירום ← line-break לכל קו. */
+  readonly records: readonly AppendDecision[];
+}
+
+/**
+ * שבירת פסקה אחת דרך הסולם הגלובלי (שלבים 42–45) — ה־DP הוא האלגוריתם
+ * היחיד במסלול next משלב זה (§18-M5#3: הסרת ה־greedy; אין שני אלגוריתמים
+ * מתחרים בשקט). המילוי החמדני נותר ב־greedy.ts כפיקסטורת השוואה מסומנת
+ * לבדיקות differential בלבד (שלב 48).
+ */
+function breakBlockGlobal(
   bt: BlockTokens,
   shaped: ShapedParagraph,
   columnWidth: number,
   markerWidth: (label: string, bodyPrefix: boolean) => number,
-  ledger: DecisionLedgerBuilder,
-): readonly LineSpec[] {
-  const { tokens, atoms } = bt;
+  budget: DpBudget,
+  rules: ParagraphEndRules,
+): BlockBreakResult {
+  const index = new LineCandidateIndex(bt, shaped, markerWidth);
+  const ladder = breakParagraphWithLadder(bt.blockId, bt, index, columnWidth, budget, { rules });
   const lines: LineSpec[] = [];
-  if (tokens.length === 0) return lines;
-
-  // הזדמנויות שבירה: לפי האטומים (breakBefore; הספק עם UAX #14 מלא נכנס ב-M5 עם hooks)
-  const opportunitySet = new Set<number>();
-  for (let i = 1; i < atoms.length; i++) {
-    if (atoms[i]!.breakBefore !== 'forbidden') opportunitySet.add(i);
-  }
-  type End = { tokEnd: number; atomEnd: number; forced: boolean };
-  const ends: End[] = [];
-  {
-    const tokIndexOfAtom = (pIdx: number): number => {
-      for (let t = 0; t < tokens.length; t++) {
-        const tok = tokens[t]!;
-        if (tok.kind === 'atom' && tok.pIdx === pIdx) return t;
-      }
-      return tokens.length;
-    };
-    for (const pIdx of [...opportunitySet].sort((a, b) => a - b)) {
-      ends.push({ tokEnd: tokIndexOfAtom(pIdx), atomEnd: pIdx, forced: false });
-    }
-    for (let t = 0; t < tokens.length; t++) {
-      if (tokens[t]!.kind === 'forced') ends.push({ tokEnd: t, atomEnd: -1, forced: true });
-    }
-    ends.push({ tokEnd: tokens.length, atomEnd: atoms.length, forced: false });
-    ends.sort((a, b) => a.tokEnd - b.tokEnd || a.atomEnd - b.atomEnd);
-  }
-
-  const cellWidth = (cell: Cell): number => {
-    if (cell.kind === 'atom') return shaped.advances[cell.pIdx] ?? 0;
-    if (cell.kind === 'marker') return markerWidth(cell.label, cell.bodyPrefix);
-    return 0;
-  };
-  const widthOf = (from: number, to: number): number => {
-    let w = 0;
-    for (let t = from; t < to; t++) {
-      const tok = tokens[t]!;
-      if (tok.kind === 'forced') continue;
-      w += cellWidth(tok);
-    }
-    return w;
-  };
-
-  let t0 = 0;
-  while (t0 < tokens.length) {
-    const firstForced = ends.find((e) => e.forced && e.tokEnd > t0)?.tokEnd ?? Number.MAX_SAFE_INTEGER;
-    const cap = Math.min(firstForced, tokens.length);
-    const candidates = ends.filter((e) => e.tokEnd > t0 && e.tokEnd <= cap);
-    if (candidates.length === 0) {
-      // אין אפשרות סגירה — קפיצה מעבר ל-forced הקרוב
-      t0 = Math.min(firstForced, tokens.length) + 1;
-      continue;
-    }
-    const fitting = candidates.filter((e) => widthOf(t0, e.tokEnd) <= columnWidth);
-    const emergency = fitting.length === 0;
-    const chosen = emergency ? candidates[0]! : fitting[fitting.length - 1]!;
-
+  ladder.dp.lines.forEach((line, i) => {
     const cells: Cell[] = [];
-    for (let t = t0; t < chosen.tokEnd; t++) {
-      const tok = tokens[t]!;
+    for (let t = line.startTok; t < line.endTok; t++) {
+      const tok = bt.tokens[t]!;
       if (tok.kind !== 'forced') cells.push(tok);
     }
-    const isBlockLast = chosen.tokEnd >= tokens.length;
-    const reason: LineSpec['breakReason'] = emergency ? 'emergency' : chosen.forced ? 'required' : isBlockLast ? 'paragraph-end' : 'fit';
-    if (cells.length > 0) {
-      const isFirst = lines.length === 0;
-      const continuation: ContinuationKind = isFirst && isBlockLast ? 'whole' : isFirst ? 'start' : isBlockLast ? 'end' : 'middle';
-      lines.push({
-        blockId: bt.blockId,
-        fragmentIndex: lines.length,
-        cells,
-        breakReason: reason,
-        continuation,
-        widthLu: widthOf(t0, chosen.tokEnd),
-        sourceSpans: coalesceSpans(cells, atoms),
-      });
-      const stateHash = sha256Hex(canonicalJson({
-        b: bt.blockId, f: lines.length - 1, r: reason, w: widthOf(t0, chosen.tokEnd),
-        s: cells.find((c) => c.kind === 'atom') && (cells.find((c) => c.kind === 'atom') as { pIdx: number }).pIdx !== undefined
-          ? atoms[(cells.find((c) => c.kind === 'atom') as { pIdx: number }).pIdx]!.id : null,
-        e: (() => { const last = [...cells].reverse().find((c) => c.kind === 'atom') as { pIdx: number } | undefined; return last ? atoms[last.pIdx]!.id : null; })(),
-      }));
-      ledger.append({
-        stage: 'line-break',
-        scopeId: `${bt.blockId}#f${lines.length - 1}`,
-        sourceSpans: coalesceSpans(cells, atoms),
-        stateHash,
-        candidates: candidates.map((e) => ({ id: `end:${e.atomEnd}`, cost: Math.max(0, columnWidth - widthOf(t0, e.tokEnd)) })),
-        selectedCandidateId: `end:${chosen.atomEnd}`,
-        rejected: candidates
-          .filter((e) => e !== chosen)
-          .map((e) => ({ candidateId: `end:${e.atomEnd}`, reason: widthOf(t0, e.tokEnd) > columnWidth ? 'overflow' : 'underfill-greedy-v0' })),
-        ...(emergency ? { fallbackCode: 'EMERGENCY_LINE' as const } : {}),
-        budget: { generated: candidates.length, pruned: 0, exhausted: false },
-      });
-    }
-    t0 = chosen.tokEnd + (chosen.forced ? 1 : 0);
+    if (cells.length === 0) return; // מקטע ריק בין כפיות רצופות — אין קו
+    const isParagraphLast = line.breakPoint.kind === 'end';
+    const fallback = ladder.perLineFallback.get(i);
+    const reason: LineSpec['breakReason'] = fallback !== undefined
+      ? 'emergency'
+      : isParagraphLast ? 'paragraph-end'
+        : line.breakPoint.kind === 'opportunity' ? 'fit' : 'required';
+    const isFirst = lines.length === 0;
+    const continuation: ContinuationKind = isFirst && isParagraphLast ? 'whole' : isFirst ? 'start' : isParagraphLast ? 'end' : 'middle';
+    lines.push({
+      blockId: bt.blockId,
+      fragmentIndex: lines.length,
+      cells,
+      breakReason: reason,
+      continuation,
+      widthLu: line.candidate.metrics.widthLu,
+      sourceSpans: coalesceSpans(cells, bt.atoms),
+      isParagraphLast,
+      lastLineAlign: isParagraphLast ? ladder.lastLineAlign : null,
+      justification: line.justification,
+      spaceCount: line.candidate.metrics.spaceCount,
+    });
+  });
+  return {
+    lines,
+    records: [
+      pathRecord(bt.blockId, ladder),
+      ...ladder.emergencyRecords,
+      ...dpLedgerEntries(bt.blockId, bt, ladder.dp, columnWidth, ladder.perLineFallback),
+    ],
+  };
+}
+
+/**
+ * רשומת ה־:path — הסיבה לבחירת המסלול הסופי של הפסקה (§18-M5#4): הרמה
+ * שנבחרה מהסולם, הרמות שנוסו ונפסלו, והתקציב שהוציא ה־DP. גם לפסקה
+ * שקטה ברמה 0 יש רשומה — "אין שני אלגוריתמים מתחרים בשקט".
+ */
+function pathRecord(blockId: string, ladder: LadderResult): AppendDecision {
+  const failed: { candidateId: string; reason: string }[] = [];
+  for (let level = 0; level < ladder.level; level++) {
+    failed.push({ candidateId: `level:${level}`, reason: 'no-legal-path-at-level' });
   }
-  return lines;
+  return {
+    stage: 'line-break',
+    scopeId: `${blockId}:path`,
+    sourceSpans: [],
+    stateHash: sha256Hex(canonicalJson({
+      b: blockId, alg: 'global-dp', level: ladder.level,
+      lines: ladder.dp.lines.map((l) => l.endTok),
+      exhausted: ladder.dp.budget.exhausted,
+    })),
+    candidates: [{ id: `level:${ladder.level}`, cost: ladder.dp.best !== null ? qualityDisplayScalar(ladder.dp.best) : 0 }],
+    selectedCandidateId: `level:${ladder.level}`,
+    rejected: failed,
+    budget: { generated: ladder.dp.budget.generated, pruned: ladder.dp.budget.pruned, exhausted: ladder.dp.budget.exhausted },
+  };
 }
 
 // ─────────────────────────── הצבה חזותית ───────────────────────────
@@ -202,6 +289,7 @@ function placeLineVisually(
   font: FontFaceKey,
   fontSizeLu: LayoutUnit,
   markerInfoOf: (label: string, bodyPrefix: boolean) => MarkerInfo,
+  plan: PlacementPlan,
 ): PlacedLineContent {
   const inLine = new Set<number>();
   for (const cell of line.cells) if (cell.kind === 'atom') inLine.add(cell.pIdx);
@@ -235,6 +323,9 @@ function placeLineVisually(
   // הצבה לפי מקטעים חזותיים: אותו רצף בי-די יכול להופיע בשני מקטעים נפרדים
   // באותו קו (הטמעה כמו עברית-מספרים-עברית); כל מקטע רציף = PositionedRun
   // משלו — אחרת ייווצר כפילות אטומים (נתגלה בבדיקות הכיסוי של שלב 33).
+  // שלב 47: plan (placementPlanOf) מממש את החלטות ה־DP גאומטרית —
+  // הצדקת רווחים (מתיחה/כיווץ), אפסון רווחים עוקבים והזחת יישור קו סיום.
+  const { shiftLu, atomAdjust, glyphAdjust, trailingZero } = plan;
   interface OpenRun { runIdx: number; startLu: number; widthLu: number; atoms: TextAtom[] }
   let open: OpenRun | null = null;
   const flush = (): void => {
@@ -243,25 +334,36 @@ function placeLineVisually(
     const segmentAtoms = open.atoms;
     if (segmentAtoms.length > 0) {
       const memberSet = new Set<string>(segmentAtoms.map((a) => a.id as string));
+      // התאמת הגליפים של האטומים שהותאמו — מונה סידורי פר-אטום (סדר קבוע)
+      const glyphOrdinal = new Map<number, number>();
+      const outGlyphs: PositionedRun['glyphs'][number][] = [];
+      for (const g of rr.shaped.glyphs) {
+        const ai = rr.run.startAtom + g.clusterAtomIndex;
+        const atomId = atoms[ai]!.id;
+        if (!memberSet.has(atomId as string)) continue;
+        const ord = glyphOrdinal.get(ai) ?? 0;
+        glyphOrdinal.set(ai, ord + 1);
+        const adjs = glyphAdjust.get(ai);
+        const adj = adjs !== undefined && ord < adjs.length ? adjs[ord]! : 0;
+        outGlyphs.push({
+          glyphId: g.glyphId,
+          atomId,
+          clusterAtomIndex: g.clusterAtomIndex,
+          advanceLu: asLu(trailingZero.has(ai) ? 0 : (g.advanceLu as number) + adj),
+          xOffsetLu: g.xOffsetLu,
+          yOffsetLu: g.yOffsetLu,
+        });
+      }
       runs.push({
         kind: 'run',
         id: `run:${line.blockId}#f${line.fragmentIndex}:r${runs.length}`,
         font,
         fontSizeLu,
         direction: rr.run.direction,
-        startLu: asLu(open.startLu),
+        startLu: asLu(open.startLu + shiftLu),
         widthLu: asLu(open.widthLu),
         text: segmentAtoms.map((a) => a.text).join(''),
-        glyphs: rr.shaped.glyphs
-          .map((g) => ({
-            glyphId: g.glyphId,
-            atomId: atoms[rr.run.startAtom + g.clusterAtomIndex]!.id,
-            clusterAtomIndex: g.clusterAtomIndex,
-            advanceLu: g.advanceLu,
-            xOffsetLu: g.xOffsetLu,
-            yOffsetLu: g.yOffsetLu,
-          }))
-          .filter((g) => memberSet.has(g.atomId as string)),
+        glyphs: outGlyphs,
         atomIds: segmentAtoms.map((a) => a.id),
         requestHash: rr.shaped.requestHash,
       });
@@ -272,7 +374,10 @@ function placeLineVisually(
     const cell = s.cell;
     if (cell.kind === 'atom') {
       const ri = shaped.runOfAtom[cell.pIdx] ?? -1;
-      const w = shaped.advances[cell.pIdx] ?? 0;
+      // שלב 47: רווחים עוקבים בסוף הקו — קידום אפס; רווחי justify — מותאמים
+      const w = trailingZero.has(cell.pIdx)
+        ? 0
+        : (shaped.advances[cell.pIdx] ?? 0) + (atomAdjust.get(cell.pIdx) ?? 0);
       if (open !== null && open.runIdx !== ri) flush();
       if (ri >= 0) {
         if (open === null) open = { runIdx: ri, startLu: x, widthLu: 0, atoms: [] };
@@ -283,11 +388,11 @@ function placeLineVisually(
     } else if (cell.kind === 'marker') {
       flush();
       const info = markerInfoOf(cell.label, cell.bodyPrefix);
-      markers.push({ noteId: cell.noteId, label: cell.label, source: cell.source, bodyPrefix: cell.bodyPrefix, xLu: x, info });
+      markers.push({ noteId: cell.noteId, label: cell.label, source: cell.source, bodyPrefix: cell.bodyPrefix, xLu: x + shiftLu, info });
       x += info.widthLu;
     } else {
       flush();
-      anchors.push({ anchorId: cell.anchorId, source: cell.source, xLu: x });
+      anchors.push({ anchorId: cell.anchorId, source: cell.source, xLu: x + shiftLu });
     }
   }
   flush();
@@ -377,7 +482,10 @@ class PageMachine {
       sourceSpans: line.sourceSpans,
       breakReason: line.breakReason,
       continuation: line.continuation,
-    });
+      // שלב 47 (שלב 45←47): יישור קו סיום הפסקה נישא גם ל־IR — ההצבה
+      // ממששת אותו גאומטרית (shiftLu) והשדה מתעד אותו לצרכני ה־IR.
+      ...(line.isParagraphLast && line.lastLineAlign !== null ? { lastLineAlign: line.lastLineAlign } : {}),
+    } as PlacedItem);
     for (const m of placed.markers) {
       const superShift = this.v0.markerSuperscript && !m.bodyPrefix ? Math.max(0, shaped.ascentLu - m.info.ascentLu) : 0;
       const mBaseline = baseline - superShift;
@@ -533,12 +641,21 @@ export function typeset(
   const machine = new PageMachine(v0, lineHeight, ledger);
   const outAnchors: PageAnchor[] = [];
 
+  // שלב 47: כללי סיום הפסקה מההגדרות האפקטיביות (נספח ג) + תקציב ה־DP
+  // מהבקשה (ברירת המחדל 512/64 — הורחב בשלב זה ל־DP הגלובלי).
+  const endRules = readParagraphEndRules((request.settings as EffectiveSettings).values as Record<string, unknown>);
+  const dpBudget: DpBudget = {
+    maxCandidatesPerState: request.budget.maxCandidatesPerState,
+    maxBeamWidth: request.budget.maxBeamWidth,
+  };
+
   for (const block of bodyBlocks) {
     const bt = tokenize(block.id as string, block.inline as InlineLike, noteLabels);
     const shaped = shapeParagraph(bt.atoms, measurement, font, v0.bodyFontSizeLu);
-    const lines = breakBlockGreedy(bt, shaped, g.columnWidth, markerWidth, ledger);
+    const { lines, records } = breakBlockGlobal(bt, shaped, g.columnWidth, markerWidth, dpBudget, endRules);
+    for (const record of records) ledger.append(record);
     for (const line of lines) {
-      const placed = placeLineVisually(line, bt.atoms, shaped, font, v0.bodyFontSizeLu, markerInfoOf);
+      const placed = placeLineVisually(line, bt.atoms, shaped, font, v0.bodyFontSizeLu, markerInfoOf, placementPlanOf(line, bt.atoms, g.columnWidth));
       machine.addBodyLine(line, placed, shaped, outAnchors);
     }
     observer?.onProgress?.('breaking', bodyBlocks.indexOf(block) + 1, bodyBlocks.length);
@@ -560,9 +677,10 @@ export function typeset(
       const src = entry.block.source ?? { documentId: doc.documentId, stream: 'footnote' as const, startUtf16: 0, endUtf16: 1 } as SourceSpan;
       const bt = tokenizeNotesBody(entry.noteId, label, src, entry.block.inline as InlineLike);
       const shaped = shapeParagraph(bt.atoms, measurement, font, v0.bodyFontSizeLu);
-      const lines = breakBlockGreedy(bt, shaped, g.mainWidth, markerWidth, ledger);
+      const { lines, records } = breakBlockGlobal(bt, shaped, g.mainWidth, markerWidth, dpBudget, endRules);
+      for (const record of records) ledger.append(record);
       for (const line of lines) {
-        const placed = placeLineVisually(line, bt.atoms, shaped, font, v0.bodyFontSizeLu, markerInfoOf);
+        const placed = placeLineVisually(line, bt.atoms, shaped, font, v0.bodyFontSizeLu, markerInfoOf, placementPlanOf(line, bt.atoms, g.mainWidth));
         machine.addNotesLine(line, placed, shaped, outAnchors);
       }
       observer?.onProgress?.('notes', noteCount);

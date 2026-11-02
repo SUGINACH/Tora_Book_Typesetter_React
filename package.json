@@ -49,7 +49,8 @@
     "engine:layout": "node packages/cli/dist/main.js",
     "engine:audit": "node packages/cli/dist/main.js",
     "engine:verify": "node scripts/migration/verify-e2e-skeleton.mjs",
-    "verify:line-battery": "node scripts/migration/verify-line-battery.mjs"
+    "verify:line-battery": "node scripts/migration/verify-line-battery.mjs",
+    "verify:next-path": "node scripts/migration/verify-next-path.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
