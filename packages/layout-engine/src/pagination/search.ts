@@ -104,6 +104,12 @@ export interface PageExpansion {
    * המצב נישא לאזור הבא כמו שהוא; הסגירה נרשמת בפנקס.
    */
   readonly closesRegion: boolean;
+  /**
+   * סוגריים שנפתחו בקו האחרון של הגבול ונותרו פתוחות כשההרחבה סגרה את
+   * העמוד (שלב 65; §10.4) — הפותח "נשאר בסוף העמוד"; זרע לטרנספורמציית
+   * התצוגה של המדיניות (דיכוי/סימן המשך) — אין protectParens.
+   */
+  readonly bracketPageEndOpens?: readonly { readonly pairId: string; readonly kind: 'round' | 'square' }[];
 }
 
 /**

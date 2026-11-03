@@ -11,3 +11,4 @@ export * from './headings.js';
 export * from './registry.js';
 export * from './policy.js';
 export * from './firstword.js';
+export * from './brackets.js';

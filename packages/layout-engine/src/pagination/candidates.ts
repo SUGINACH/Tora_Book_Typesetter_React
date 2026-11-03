@@ -371,6 +371,9 @@ interface BoundaryCandidate {
    * הכותרת — בחיפוש, דרך עלות הרווחים (איזון לפני הכותרת).
    */
   readonly h3Barrier?: { readonly heightLu: number };
+  /** ── סוגריים (שלב 65; §10.4) ── */
+  /** פתיחות סוגריים בקו האחרון של הגבול — הפותח "נשאר בסוף העמוד" כשהגבול סוגר עמוד. */
+  readonly lastLineBracketOpens?: readonly { readonly pairId: string; readonly kind: 'round' | 'square' }[];
   /** ── פותח עמוד (שלב 59; §10.1 H0 — forcePageTemplate) ──
    * הגבול מסתיים בכותרת פותחת-עמוד: ההרחבה פותחת עמוד חדש בתבנית
    * הנדרשת (forcePageTemplate של הרמה; ברירת מחדל — סוג הזרימה) והכותרת
@@ -714,6 +717,7 @@ function buildBoundaries(
       }
       if (deferLine) break; // ההליכה נעצרת לפני הקו — העוגן עובר עמוד
     }
+    let lastLineBracketOpens: readonly { readonly pairId: string; readonly kind: 'round' | 'square' }[] = (line.bracketOpens ?? []) as { pairId: string; kind: 'round' | 'square' }[];
     const atomic = isAtomicBlock(block, policy);
     // הצבת הקו
     used += line.heightLu;
@@ -781,6 +785,7 @@ function buildBoundaries(
         sidenotesPlacedHeightLu: sidenotesPlacedHeight,
         sidenotesDisplaced: [...sidenotesDisplaced],
         ...(openerAfterBoundary !== undefined ? { pageOpener: { level: openerAfterBoundary } } : {}),
+        ...(lastLineBracketOpens.length > 0 ? { lastLineBracketOpens: [...lastLineBracketOpens] } : {}),
       });
       lastAddedBoundaryLineCount = count;
     }
@@ -1224,12 +1229,19 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         v[2] = boundary.noteSplits.length + boundary.sidenotesDisplaced.length;
         v[7] = Math.min(1024, Math.floor((Math.max(0, effectiveRemaining - boundary.heightLu) + h3GapLu) / 1000));
         v[8] = closesRegion ? 1 : 0;
+        // סוגר פותח שנשאר בסוף עמוד (שלב 65; §10.4): הקו האחרון של הגבול פתח
+        // סוגריים, הגבול סוגר את העמוד, והזוג עדיין פתוח — זרע לטרנספורמציית
+        // התצוגה (ההכרעה במדיניות; אין protectParens)
+        const pageEndOpens = closesRegion && boundary.lastLineBracketOpens !== undefined && boundary.lastLineBracketOpens.length > 0
+          ? boundary.lastLineBracketOpens.filter((o) => s.openBracketStack.some((b) => b.pairId === o.pairId))
+          : [];
         out.push({
           candidateId: `pg:${state.physicalPageIndex}:${state.columnIndex}→${boundary.cursorBlockId}@${boundary.cursorFragment}${boundary.emergency ? ':EMERGENCY' : ''}${boundary.noteSplits.length > 0 ? ':SPLIT' : ''}${boundary.h3Barrier !== undefined ? ':H3' : ''}${boundary.pageOpener !== undefined ? ':OPEN' : ''}`,
           transitions,
           toState: s,
           quality: Object.freeze(v) as PageQualityVector,
           closesRegion,
+          ...(pageEndOpens.length > 0 ? { bracketPageEndOpens: pageEndOpens } : {}),
           // קוד fallback יחיד להרחבה: חירום גובר (הם מוכללים הדדית — קו חירום
           // אינו נושא הערות; אם אי-פעם יתנגשו, החירום החמור יותר נרשם)
           ...(boundary.emergency
@@ -1423,4 +1435,58 @@ export function hangingHeadingsOf(
   }
   return hanging;
 }
+
+// ─────────────────── סוגריים חוצי עמוד (שלב 65; §10.4) ───────────────────
+
+/** חציית סוגריים במסלול — זרע לטרנספורמציות התצוגה (ההכרעה במדיניות). */
+export interface EngineBracketPageCrossing {
+  readonly pairId: string;
+  readonly kind: 'round' | 'square';
+  readonly physicalPageIndex: number;
+  readonly candidateId: string;
+  /** הזוג נותר פתוח בקץ המסמך — בעיית קלט (§10.4: מדווח, לא מתוקן בשקט). */
+  readonly atDocumentEnd: boolean;
+}
+
+/**
+ * זיהוי חציות סוגריים במסלול שעבר (שלב 65; §10.4): זוג שנפתח בהרחבה שסוגרת
+ * עמוד (פתחה את העמוד הבא) וטרם נסגר — הסוגר הפותח נשאר בסוף העמוד; וכן
+ * זוגות שנותרו פתוחים בקץ המסמך (דיווח קלט). טהורה ודטרמיניסטית — הזרע
+ * ל־TransformRecord-ים של מדיניות התצוגה (bracketTransformFor ב-policy).
+ */
+export function bracketPageCrossingsOf(
+  initial: PaginationState,
+  path: readonly PageExpansion[],
+): readonly EngineBracketPageCrossing[] {
+  const out: EngineBracketPageCrossing[] = [];
+  let prev = initial;
+  for (const exp of path) {
+    if (exp.bracketPageEndOpens !== undefined && exp.bracketPageEndOpens.length > 0) {
+      for (const o of exp.bracketPageEndOpens) {
+        out.push({
+          pairId: o.pairId,
+          kind: o.kind,
+          physicalPageIndex: prev.physicalPageIndex,
+          candidateId: exp.candidateId,
+          atDocumentEnd: false,
+        });
+      }
+    }
+    prev = exp.toState;
+  }
+  // קץ המסמך: מחסנית לא-ריקה — בעיית קלט מדווחת (לא מתוקנת בשקט)
+  const last = prev;
+  const lastExp = path.length > 0 ? path[path.length - 1]! : undefined;
+  for (const entry of last.openBracketStack) {
+    out.push({
+      pairId: entry.pairId,
+      kind: entry.bracketKind,
+      physicalPageIndex: last.physicalPageIndex,
+      candidateId: lastExp !== undefined ? lastExp.candidateId : '@initial',
+      atDocumentEnd: true,
+    });
+  }
+  return out;
+}
+
 

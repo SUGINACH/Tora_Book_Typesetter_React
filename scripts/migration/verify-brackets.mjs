@@ -212,6 +212,8 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
         if (rel === 'packages/layout-engine/src/pagination/state.ts') continue; // שלב 49 (§9.1): המצב נושא openBracketStack — שם שדה מחייב מהאפיון; אין כאן זיווג: מזהי הזוגות מגיעים מעץ הסוגריים של הפרסר (§10.4), ה־LIFO מאומת בבדיקות השלב
         if (rel === 'packages/layout-engine/src/pagination/candidates.ts') continue; // שלב 53 (§10.4): המחולל מזרים אירועי סוגריים (bracketOpens/bracketCloses) מעץ הפרסר למצב דרך המעברים bracketOpen/bracketClose — נשיאת אירועים, לא זיווג; אזכורי protectParens בקובץ הם תיעוד היעדרו ("אין protectParens")
         if (rel === 'packages/policy-torah/src/registry.ts') continue; // שלב 58 (מרשם הכללים): מטא-דאטה טהורה של כללים (ruleId+hook+settingsKeys) — אין כאן שום לוגיקת זיווג; אזכור protectParens הוא מחרוזת תיאור של הכלל brackets.cross-page המתעדת את היעדרו (§10.4: "אין צורך ב-protectParens()")
+        if (rel === 'packages/layout-engine/src/pagination/search.ts') continue; // שלב 65 (§10.4): PageExpansion.bracketPageEndOpens — נשיאת זרעי חציות-העמוד (פותח בקו האחרון) לטרנספורמציית התצוגה; אין כאן זיווג — מזהי הזוגות מגיעים מעץ הפרסר; אזכור protectParens מתעד את היעדרו
+        if (rel === 'packages/policy-torah/src/brackets.ts') continue; // שלב 65 (§10.4): מדיניות תצוגת סוגריים חוצי-עמוד — טהורה, צורכת pairIds מעץ הפרסר ובונה TransformRecord-ים עם סיבה ומקור; אין כאן זיווג; אזכורי protectParens מתעדים את היעדרו
         const src = readFileSync(p, 'utf8');
         if (/findMatching|matchBracket|bracketDepth|openBracket|hasOpenBracket|protectParens/.test(src)) {
           offenders.push(rel);
@@ -226,7 +228,7 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
 // ─────────────────────────── 6. רגרסיה ───────────────────────────
 console.log('\n6) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  894 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  899 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   ((x => x !== null && !/error TS/.test(x))(run('npm', ['run', 'build:packages'])) ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');
