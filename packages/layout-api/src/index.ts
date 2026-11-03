@@ -7,6 +7,7 @@
  */
 export * from './canonical-hash.js';
 export * from './canonical-hash-error.js';
+export * from './anchors.js';
 export * from './hash.js';
 export * from './errors.js';
 export * from './ir.js';

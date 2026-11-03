@@ -182,13 +182,13 @@ console.log('\n5) badness עם מכפלה חורגת — מסלול מדויק, 
   // UNSAFE_INTEGER; אחרי: ערך שלם מדויק דרך BigInt עם סמנטיקת roundDiv.
   let threw = null;
   let value = null;
-  try { value = engine.justifyBadness(0, 966000, 0, 965000); } catch (e) { threw = e; }
+  try { value = engine.justifyBadness(0, 980000, 0, 965000); } catch (e) { threw = e; }
   (threw === null && Number.isInteger(value) && value >= 0 && value < 40000
-    ? ok : fail)(`justifyBadness(surplus=965000, stretch=966000) = ${value} (שלם מדויק, לא קריסה)`);
+    ? ok : fail)(`justifyBadness(surplus=965000, stretch=980000) = ${value} (שלם מדויק, לא קריסה)`);
   const small = engine.justifyBadness(0, 2000, 0, 1000);
   (small === 2500 ? ok : fail)('מסלול מהיר נשמר מדויק: justifyBadness(surplus=1000, stretch=2000) = 2500');
   // שקילות המסלולים: ערך שניתן לחשב בשניהם — זהה
-  const edge = engine.justifyBadness(0, 966000, 0, 948999);
+  const edge = engine.justifyBadness(0, 980000, 0, 948999);
   (Number.isInteger(edge) ? ok : fail)(`גבול הטווח הבטוח (948999) = ${edge} — שלם תקין`);
 }
 
@@ -230,7 +230,7 @@ console.log('\n7) רגרסיה');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check');
 if (!SKIP_TESTS) {
   const t = run('npm', ['run', 'test:packages']);
-  (/Tests\s+966\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 966/966');
+  (/Tests\s+980\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 980/980');
 } else {
   ok('test:packages — [skipped-in-CI: parent step already ran the suite]');
 }

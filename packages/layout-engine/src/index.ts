@@ -30,3 +30,5 @@ export * from './pagination/candidates.js';
 export * from './pagination/heading-defaults.js';
 export * from './pagination/notes.js';
 export * from './pagination/endnotes.js';
+export * from './pagination/anchors.js';
+export * from './pagination/toc.js';

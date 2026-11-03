@@ -179,7 +179,7 @@ const mkSettings = (values) => ({ schemaVersion: 1, enginePolicyId: 'torah-v1', 
       out = ''; // grep יוצא 1 כשאין התאמות — בדיוק המצב הרצוי
     }
     // שורות קוד בלבד — אזכור בתוך הערה/תיעוד אינו שימוש (ב-units.ts מתועד "אין pxPerMm")
-    const codeLines = out.split('\n').filter((l) => l.trim().length > 0 && !l.includes(': *') && !l.includes('://'));
+    const codeLines = out.split('\n').filter((l) => l.trim().length > 0 && !/:\s*\*/.test(l) && !/^\s*(\*|\/\/)/.test(l));
     if (codeLines.length > 0) coreHits.push(pkg);
   }
   (coreHits.length === 0 ? ok : fail)(`המרת px חיה ב-policy-torah בלבד — אפס pxPerMm/CSS_PX_MM בליבה (ADR-001 §5)${coreHits.length ? ' — נמצא ב: ' + coreHits.join(', ') : ''}`);

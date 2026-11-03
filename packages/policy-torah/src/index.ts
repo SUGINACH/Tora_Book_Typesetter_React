@@ -15,3 +15,4 @@ export * from './brackets.js';
 export * from './balance.js';
 export * from './folio.js';
 export * from './ornaments.js';
+export * from './toc.js';
