@@ -168,6 +168,16 @@
 | `errors.notes.INVALID_ORDINAL` | ordinal | error | מספר סידורי של הערה חייב להיות שלם חיובי (קיבל {ordinal}) |
 | `errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT` | scope | error | מספור בהיקף page דורש הקשר עמודים (החלטות העימוד) — אין לנחש |
 
+### content-model · assets — מניפסטי נכסים חזותיים v2 (שלב 68)
+
+מקור: `CONTENT_MODEL_ERROR_CATALOG` ב־`packages/content-model/src/errors.ts`; מוצאן ב־`assets.ts` (מודול טהור — שערים ועיטורים; M8).
+
+| מפתח | פרמטרים | חומרה | תבנית עברית ראשונית |
+|---|---|---|---|
+| `errors.assets.TEXTBOX_OUT_OF_PAGE` | reason | error | תיבת הטקסט של השער חורגת מהעמוד: {reason} — אין תיבה מתחת למקור העמוד; ערכים חורגים נרשמים נאמנה, אך שליליים אסורים |
+| `errors.assets.INVALID_ASSET_ID_INPUT` | reason | error | קלט שגוי לגזירת מזהה נכס קנוני: {reason} |
+| `errors.assets.MANIFEST_INVALID` | reason | fatal | מניפסט הנכסים אינו תקין: {reason} |
+
 ### audit-core · Text Audit v1 (שלב 21, שער M2)
 
 מקור: `AUDIT_CORE_ERROR_CATALOG` ב־`packages/audit-core/src/text-audit.ts` (שגיאות זריקה) + `TEXT_AUDIT_FINDING_CODES` (ממצאי דוח — לא נזרקים; messageKey = קוד הממצא).
@@ -223,6 +233,7 @@
 | `errors.cli.REGISTRY_UNREADABLE` | path, reason | fatal | קריאת מרשם ההגדרות נכשלה: {path} — {reason} |
 | `errors.cli.FONTS_MANIFEST_UNREADABLE` | path, reason | fatal | קריאת מניפסט הגופנים נכשלה: {path} — {reason} |
 | `errors.cli.FONTS_MANIFEST_INVALID` | path, reason | fatal | מניפסט הגופנים שגוי: {path} — {reason} |
+| `errors.cli.ASSETS_MANIFEST_INVALID` | path, reason | fatal | מניפסט נכסים חזותיים (שערים/עיטורים) שגוי: {path} — {reason} (שלב 68; יציאה 3) |
 | `errors.cli.FONT_NOT_FOUND` | spec | fatal | גופן לא נמצא במניפסט: {spec} |
 | `errors.cli.FONT_LOAD_FAILED` | file, reason | fatal | טעינת גופן נכשלה: {file} — {reason} |
 | `errors.cli.PROVIDER_FAILED` | reason | fatal | בניית ספק המדידה נכשלה: {reason} |

@@ -46,7 +46,7 @@ const REQUIRED_EXPORTS = [
 for (const name of REQUIRED_EXPORTS) {
   (name in cm ? ok : fail)(`ייצוא: ${name}`);
 }
-(cm.contentModelErrorCatalogSize() === 82 ? ok : fail)(`קטלוג content-model: ${cm.contentModelErrorCatalogSize()} קודים (בדיוק 82: 8 span + 19 atom + 5 inline + 12 block + 14 document + 15 parser + 3 unicode + 3 brackets + 3 notes — עודכן בשלבים 18–20)`);
+(cm.contentModelErrorCatalogSize() === 85 ? ok : fail)(`קטלוג content-model: ${cm.contentModelErrorCatalogSize()} קודים (בדיוק 85: 8 span + 19 atom + 5 inline + 12 block + 14 document + 15 parser + 3 unicode + 3 brackets + 3 notes + 3 assets שלב 68)`);
 
 // ---------- 2. זמן ריצה ----------
 console.log('\n2) זמן ריצה: inline, בלוקים, מסמך ו־round-trip');

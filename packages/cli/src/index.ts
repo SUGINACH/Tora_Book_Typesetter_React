@@ -11,5 +11,5 @@ export * from './args.js';
 export * from './errors.js';
 export * from './exit-codes.js';
 export { runAuditCli, runCli, PARSER_VERSION, type AuditOutcome, type RunReport, type RunOutcome } from './runner.js';
-export { CLI_DOCUMENT_ID } from './inputs.js';
+export { CLI_DOCUMENT_ID, loadVisualAssets, type VisualAssets } from './inputs.js';
 export { installNetworkDeny, type NetworkGuard } from './offline-guard.js';

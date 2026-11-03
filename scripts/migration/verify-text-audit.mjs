@@ -58,7 +58,7 @@ console.log('1) ממשק ה־API והקטלוגים');
     ? ok : fail)(`11 קודי ממצא רשומים (נמצאו ${Array.isArray(ac.TEXT_AUDIT_FINDING_CODES) ? ac.TEXT_AUDIT_FINDING_CODES.length : 0})`);
   (ac.isRegisteredAuditErrorKey('errors.audit.INVALID_INPUT') && ac.auditErrorCatalogSize() === 2
     ? ok : fail)('קטלוג audit-core: 2 קודי שגיאה רשומים');
-  (cm.contentModelErrorCatalogSize() === 82 ? ok : fail)(`קטלוג content-model: 82 קודים (נמצאו ${cm.contentModelErrorCatalogSize()})`);
+  (cm.contentModelErrorCatalogSize() === 85 ? ok : fail)(`קטלוג content-model: 85 קודים — 82 קודמים + 3 assets שלב 68 (נמצאו ${cm.contentModelErrorCatalogSize()})`);
 }
 
 // ─────────────────────────── 2. הוכחה על הקורפוס ───────────────────────────
@@ -193,7 +193,7 @@ console.log('\n4) שעד M2 מלא — §18-M2');
 // ─────────────────────────── 5. רגרסיה מלאה ───────────────────────────
 console.log('\n5) רגרסיה מלאה — כל מאמתי הפרק + מערכת הבדיקות');
 {
-  const t = (SKIP_TESTS ? 'Tests  914 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  949 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   (run('npm', ['run', 'build:packages']) !== null ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');

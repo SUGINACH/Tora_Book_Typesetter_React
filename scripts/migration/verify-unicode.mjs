@@ -78,7 +78,7 @@ console.log('\n2) ממשק ה־API וקטלוג השגיאות');
   for (const key of ['errors.unicode.INVALID_FORM', 'errors.unicode.INVALID_TEXT', 'errors.unicode.MAPPING_MISMATCH']) {
     (cm.isRegisteredContentModelErrorKey(key) ? ok : fail)(`${key} רשום בקטלוג`);
   }
-  (cm.contentModelErrorCatalogSize() === 82 ? ok : fail)(`קטלוג content-model: 82 קודים — 76 שלב 18 + 3 brackets + 3 notes (נמצאו ${cm.contentModelErrorCatalogSize()})`);
+  (cm.contentModelErrorCatalogSize() === 85 ? ok : fail)(`קטלוג content-model: 85 קודים — 76 שלב 18 + 3 brackets + 3 notes + 3 assets שלב 68 (נמצאו ${cm.contentModelErrorCatalogSize()})`);
   (cm.UNICODE_POLICY_VERSION === 'unicode-policy:v1' ? ok : fail)('UNICODE_POLICY_VERSION = unicode-policy:v1');
 }
 
@@ -237,7 +237,7 @@ console.log('\n6) טבלת UNICODE_FIDELITY_RULES — סגירות מול ADR-00
 // ─────────────────────────── 7. רגרסיה ───────────────────────────
 console.log('\n7) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  914 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  949 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   ((x => x !== null && !/error TS/.test(x))(run('npm', ['run', 'build:packages'])) ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');

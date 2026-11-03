@@ -14,6 +14,10 @@ export interface CliArgs {
   readonly fontsManifest: string;
   readonly fontsDir: string;
   readonly bodyFont: string;
+  /** מניפסט שערים v2 (שלב 68) — ברירת מחדל מה-repo root. */
+  readonly shaarManifest: string;
+  /** מניפסט עיטורים v2 (שלב 68) — ברירת מחדל מה-repo root. */
+  readonly ornamentsManifest: string;
   readonly trace: TraceLevel;
   readonly repeat: number;
   readonly html: boolean;
@@ -29,6 +33,8 @@ export type ArgsResult =
   | { readonly ok: false; readonly error: string; readonly hint?: string };
 
 const DEFAULT_FONTS_MANIFEST = 'assets/fonts/manifest.json';
+const DEFAULT_SHAAR_MANIFEST = 'assets/shaar/manifest.json';
+const DEFAULT_ORNAMENTS_MANIFEST = 'assets/ornaments/manifest.json';
 export const DEFAULT_BODY_FONT = 'Guttman-Rashi-Normal.woff2' as const;
 const TRACE_LEVELS: readonly TraceLevel[] = ['off', 'summary', 'decisions', 'full'];
 
@@ -44,6 +50,8 @@ export const USAGE = `@tora/cli — Node 22 reference runner (שלב 34; אפי�
   --preset <path>       שכבת פריסט (JSON; לפני שכבת המסמך)
   --fonts-manifest <p>  מניפסט גופנים (ברירת מחדל: ${DEFAULT_FONTS_MANIFEST})
   --fonts-dir <path>    ספריית קובצי הגופנים (ברירת מחדל: ספריית המניפסט)
+  --shaar-manifest <p>  מניפסט שערים v2 (ברירת מחדל: ${DEFAULT_SHAAR_MANIFEST})
+  --ornaments-manifest <p> מניפסט עיטורים v2 (ברירת מחדל: ${DEFAULT_ORNAMENTS_MANIFEST})
   --body-font <id|file> גופן הגוף לפי fontId או שם קובץ (ברירת מחדל: ${DEFAULT_BODY_FONT})
   --trace <level>       off | summary | decisions | full (ברירת מחדל: off)
   --engine <name>       legacy | next (ברירת מחדל: next; לריצות reference בלבד — שלב 40)
@@ -117,7 +125,7 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
   if (engineRaw !== 'legacy' && engineRaw !== 'next') {
     return { ok: false, error: `--engine שגוי: ${engineRaw} (חוקי: legacy|next)`, hint: USAGE };
   }
-  const known = new Set(['input', 'out', 'settings', 'preset', 'fonts-manifest', 'fonts-dir', 'body-font', 'trace', 'repeat', 'layout', 'request', 'engine']);
+  const known = new Set(['input', 'out', 'settings', 'preset', 'fonts-manifest', 'fonts-dir', 'body-font', 'shaar-manifest', 'ornaments-manifest', 'trace', 'repeat', 'layout', 'request', 'engine']);
   for (const k of raw.keys()) {
     if (!known.has(k)) return { ok: false, error: `דגל לא מוכר: --${k}`, hint: USAGE };
   }
@@ -135,6 +143,8 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
       fontsManifest,
       fontsDir,
       bodyFont: raw.get('body-font') ?? DEFAULT_BODY_FONT,
+      shaarManifest: raw.get('shaar-manifest') ?? DEFAULT_SHAAR_MANIFEST,
+      ornamentsManifest: raw.get('ornaments-manifest') ?? DEFAULT_ORNAMENTS_MANIFEST,
       trace: traceRaw as TraceLevel,
       repeat,
       html: flags.has('html'),
@@ -152,6 +162,8 @@ function dirnameOf(p: string): string {
 
 function nullArgs(): CliArgs {
   return {
-    input: '', out: '', fontsManifest: '', fontsDir: '', bodyFont: '', trace: 'off', repeat: 1, html: false, engine: 'next',
+    input: '', out: '', fontsManifest: '', fontsDir: '', bodyFont: '',
+    shaarManifest: '', ornamentsManifest: '',
+    trace: 'off', repeat: 1, html: false, engine: 'next',
   };
 }

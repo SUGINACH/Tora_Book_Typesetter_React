@@ -114,6 +114,10 @@ export const CONTENT_MODEL_ERROR_CATALOG: Readonly<Record<string, ErrorCatalogEn
   'errors.notes.INVALID_POLICY': { i18nKey: 'errors.notes.INVALID_POLICY', params: ['reason'], severity: 'error' },
   'errors.notes.INVALID_ORDINAL': { i18nKey: 'errors.notes.INVALID_ORDINAL', params: ['ordinal'], severity: 'error' },
   'errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT': { i18nKey: 'errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT', params: ['scope'], severity: 'error' },
+  // ── assets (שלב 68; מוצאן ב-assets.ts) ──
+  'errors.assets.TEXTBOX_OUT_OF_PAGE': { i18nKey: 'errors.assets.TEXTBOX_OUT_OF_PAGE', params: ['reason'], severity: 'error' },
+  'errors.assets.INVALID_ASSET_ID_INPUT': { i18nKey: 'errors.assets.INVALID_ASSET_ID_INPUT', params: ['reason'], severity: 'error' },
+  'errors.assets.MANIFEST_INVALID': { i18nKey: 'errors.assets.MANIFEST_INVALID', params: ['reason'], severity: 'fatal' },
 });
 
 /** השגיאה הבסיסית של content-model — עוברת דרך הקטלוג בזמן יצירה. */

@@ -22,6 +22,7 @@ export const CLI_ERROR_CATALOG: Readonly<Record<string, CliErrorEntry>> = Object
   'errors.cli.REGISTRY_UNREADABLE': { i18nKey: 'errors.cli.REGISTRY_UNREADABLE', params: ['path', 'reason'], severity: 'fatal' },
   'errors.cli.FONTS_MANIFEST_UNREADABLE': { i18nKey: 'errors.cli.FONTS_MANIFEST_UNREADABLE', params: ['path', 'reason'], severity: 'fatal' },
   'errors.cli.FONTS_MANIFEST_INVALID': { i18nKey: 'errors.cli.FONTS_MANIFEST_INVALID', params: ['path', 'reason'], severity: 'fatal' },
+  'errors.cli.ASSETS_MANIFEST_INVALID': { i18nKey: 'errors.cli.ASSETS_MANIFEST_INVALID', params: ['path', 'reason'], severity: 'fatal' },
   'errors.cli.FONT_NOT_FOUND': { i18nKey: 'errors.cli.FONT_NOT_FOUND', params: ['spec'], severity: 'fatal' },
   'errors.cli.FONT_LOAD_FAILED': { i18nKey: 'errors.cli.FONT_LOAD_FAILED', params: ['file', 'reason'], severity: 'fatal' },
   'errors.cli.PROVIDER_FAILED': { i18nKey: 'errors.cli.PROVIDER_FAILED', params: ['reason'], severity: 'fatal' },

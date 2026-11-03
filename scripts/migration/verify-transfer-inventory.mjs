@@ -8,19 +8,22 @@
  *      לכל פריט hash בן 64 hex.
  *   2. assets/fonts/manifest.json: כל קובץ קיים ו־sha256 שלו תואם בחישוב מחדש;
  *      לכל גופן רישיון או החלטה מתועדת (selfhost → קובץ רישיון קיים; bundled/guttman → החלטה במלאי).
- *   3. assets/ornaments/manifest.json + assets/shaar/manifest.json: קבצים תואמים,
- *      כל עיצוב מאומת מול ה־SVG בפועל, ספירות תואמות, כפילויות מתועדות.
+ *   3. assets/ornaments/manifest.json + assets/shaar/manifest.json (v2 — שלב 68):
+ *      קבצים תואמים, כל עיצוב מאומת מול המקור (legacyId, name, svgSha256, viewBox
+ *      — דרך parseViewBox של המודל; תיבת טקסט רק לשערים), ספירות תואמות,
+ *      כפילויות legacy מטופלות במזהים הקנוניים (D-004; המאמת הייעודי — verify-assets).
  *   4. עקביות בין-מסמכים: commit המקור במניפסטים === הבייסליין הנעול ב־source-manifest.json.
  *   5. בדיקה צולבת: hash המסמך הקנוני תואם לתיעוד המקורי ב־PROVENANCE.md של Orange.
  *   6. (כשזמינה מראה מקומית) אימות ה־hash של כל הפריטים הדחויים מול קובצי Orange בפועל.
  *
  * יציאה: 0 = הכל ירוק; 1 = כשל.
- * תלויות: אפס (Node 22).
+ * תלויות: Node 22 + ה-dist הבנוי של @tora/content-model (כמו שאר מאמתי החבילות).
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseViewBox } from '@tora/content-model';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const M = (rel) => join(repoRoot, rel);
@@ -95,12 +98,13 @@ for (const group of ['metadata', 'selfhostOther']) {
 const fontsOnDisk = fm.fonts.length + (fm.metadata?.length ?? 0) + (fm.selfhostOther?.length ?? 0);
 ok(`סה"כ פריטי מניפסט הגופנים: ${fontsOnDisk}`);
 
-// ---------- 3. manifests עיטורים ושערים ----------
-console.log('\n3) assets/ornaments + assets/shaar');
+// ---------- 3. manifests עיטורים ושערים (v2 — שלב 68) ----------
+console.log('\n3) assets/ornaments + assets/shaar (v2)');
 for (const [rel, dir] of [
   ['assets/ornaments/manifest.json', 'assets/ornaments'],
   ['assets/shaar/manifest.json', 'assets/shaar'],
 ]) {
+  const isShaar = dir.endsWith('shaar');
   const m = json(rel);
   for (const e of m.files ?? []) {
     const p = M(join(dir, e.file));
@@ -108,17 +112,22 @@ for (const [rel, dir] of [
     if (sha256File(p) !== e.sha256) { fail(`sha256 לא תואם: ${dir}/${e.file}`); continue; }
     const data = JSON.parse(readFileSync(p, 'utf8'));
     if (data.length !== e.count) { fail(`ספירה לא תואמת: ${e.file} (${data.length} ≠ ${e.count})`); continue; }
-    // אימות כל עיצוב מול ה־SVG בפועל
+    // אימות כל עיצוב מול המקור — legacyId (המזהה הקנוני נבדק ב-verify-assets),
+    // שם, גיבוב SVG, viewBox (דרך המודל — מקור אמת אחד) ותיבת טקסט לשערים בלבד.
     let designsOk = true;
     for (let i = 0; i < data.length; i++) {
       const d = data[i];
       const rec = m.designs.find((x) => x.file === e.file && x.index === i);
-      if (!rec || rec.id !== d.id || rec.name !== d.name) { designsOk = false; fail(`עיצוב לא תואם: ${e.file}[${i}]`); break; }
+      if (!rec || rec.legacyId !== d.id || rec.name !== d.name) { designsOk = false; fail(`עיצוב לא תואם: ${e.file}[${i}]`); break; }
       const svgHash = createHash('sha256').update(d.svg, 'utf8').digest('hex');
       if (svgHash !== rec.svgSha256) { designsOk = false; fail(`svgSha256 לא תואם: ${e.file}[${i}]`); break; }
-      if (rec.hasBox !== ('box' in d)) { designsOk = false; fail(`hasBox לא תואם: ${e.file}[${i}]`); break; }
+      const vb = parseViewBox(d.svg);
+      if (vb === null || vb.width !== rec.viewBox.width || vb.height !== rec.viewBox.height) { designsOk = false; fail(`viewBox לא תואם: ${e.file}[${i}]`); break; }
+      if (isShaar) {
+        if ((rec.textBox !== null && rec.textBox !== undefined) !== ('box' in d)) { designsOk = false; fail(`hasTextBox לא תואם: ${e.file}[${i}]`); break; }
+      } else if ('textBox' in rec) { designsOk = false; fail(`לעיטורים אין תיבת טקסט: ${e.file}[${i}]`); break; }
     }
-    if (designsOk) ok(`${e.file}: ${e.count} עיצובים אומתו במלואם${e.duplicateIds ? ` (כפילויות מתועדות: ${Object.keys(e.duplicateIds).length})` : ''}`);
+    if (designsOk) ok(`${e.file}: ${e.count} עיצובים אומתו במלואם (v2: legacyId+svg+viewBox${isShaar ? '+textBox' : ''})`);
   }
   const total = (m.files ?? []).reduce((s, e) => s + e.count, 0);
   ok(`${rel}: ${total} עיצובים בסך הכול`);
@@ -141,8 +150,17 @@ for (const it of ornCat?.items ?? []) {
   const entry = (manifest.files ?? []).find((e) => e.file === it.file);
   if (!entry) fail(`פריט המלאי ${it.file} לא נמצא במניפסט ${it.manifest}`);
   else if (entry.sha256 !== it.sha256) fail(`hash במלאי אינו תואם את המניפסט: ${it.file}`);
-  else if (entry.count !== it.count) fail(`ספירה במלאי אינה תואמת את המניפסט: ${it.file}`);
-  else ok(`צליבוב מלאי↔מניפסט: ${it.file} (${it.count} עיצובים)`);
+  else if (it.count !== undefined && entry.count !== it.count) fail(`ספירה במלאי אינה תואמת את המניפסט: ${it.file}`);
+  else ok(`צליבוב מלאי↔מניפסט: ${it.file} (${entry.count} עיצובים)`);
+}
+// note_rules.json (קטגוריית note-rules) ↔ מניפסט העיטורים — count אופציונלי בפריט
+const noteRulesItem = (inv.categories ?? []).find((c) => c.id === 'note-rules')?.items?.find((i) => i.path === 'note_rules.json');
+if (noteRulesItem !== undefined) {
+  const ornManifest = json('assets/ornaments/manifest.json');
+  const nrEntry = (ornManifest.files ?? []).find((e) => e.file === 'note_rules.json');
+  if (!nrEntry) fail('פריט המלאי note_rules.json לא נמצא במניפסט העיטורים');
+  else if (nrEntry.sha256 !== noteRulesItem.sha256) fail('hash במלאי אינו תואם את המניפסט: note_rules.json');
+  else ok(`צליבוב מלאי↔מניפסט: note_rules.json (${nrEntry.count} עיצובים)`);
 }
 
 // ---------- 5. בדיקה צולבת מול PROVENANCE ----------

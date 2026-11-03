@@ -32,6 +32,7 @@ import {
   displayFamilyOf,
   loadEffectiveSettings,
   loadRegistry,
+  loadVisualAssets,
   parseDocumentFile,
   setupFonts,
 } from './inputs.js';
@@ -107,13 +108,19 @@ export async function runCli(
   const fonts = await setupFonts(args.fontsManifest, args.fontsDir, args.bodyFont);
   progressLine(`fonts: ${fonts.bodyRecord.file}`);
 
+  // נכסים חזותיים v2 (שלב 68) — שני המניפסטים מאומתים דרך המודל, והזהות
+  // הנעולה נכנסת ל-ResolvedAssetManifest ול-request.json (משפיעה על inputHash
+  // בלבד; layoutHash אינו תלוי בה — §6.7).
+  const visual = await loadVisualAssets(args.shaarManifest, args.ornamentsManifest);
+  progressLine(`visual assets: shaar=${visual.shaarManifest.designs.length}, ornaments=${visual.ornamentsManifest.designs.length}, identity=${visual.assetsManifestSha256.slice(0, 16)}…`);
+
   const sourceSha256 = sha256OfText(sourceText);
 
   // ── typeset (repeat ריצות — כולן חייבות אותו hash) ──
   const request: TypesetRequest = {
     document: { ...parsed.doc, transforms: parsed.transforms },
     settings,
-    assets: fonts.assets,
+    assets: { ...fonts.assets, assetsManifestSha256: visual.assetsManifestSha256 },
     trace: args.trace,
     budget: DEFAULT_SEARCH_BUDGET,
     sourceSha256,
@@ -186,7 +193,7 @@ export async function runCli(
         bodyFontFile: fonts.bodyRecord.file,
         bodyFontId: fonts.bodyRecord.fontId,
         fontsManifestSha256: fonts.manifestSha256,
-        assetsManifestSha256: '0'.repeat(64),
+        assetsManifestSha256: visual.assetsManifestSha256,
       },
       trace: args.trace,
     })],

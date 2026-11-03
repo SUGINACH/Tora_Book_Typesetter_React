@@ -6,7 +6,9 @@
  * ה־documentId מופיע בזהויות ה־SourceSpan שב־IR.
  */
 import { readFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   assertFontManifest,
   type FontManifestRecord,
@@ -16,6 +18,15 @@ import {
   sha256Bytes,
 } from '@tora/measurement-api';
 import { createHarfbuzzProvider } from '@tora/measurement-harfbuzz';
+import {
+  assetsIdentity,
+  ornamentsManifestIssues,
+  parseOrnamentsManifest,
+  parseShaarManifest,
+  type OrnamentsManifest,
+  shaarManifestIssues,
+  type ShaarManifest,
+} from '@tora/content-model';
 import { parseSourceText, type ParseResult } from '@tora/content-model';
 import {
   buildEffectiveSettings,
@@ -23,7 +34,7 @@ import {
   type EffectiveSettings,
   type SettingRegistry,
 } from '@tora/settings-schema';
-import type { ResolvedAssetManifest } from '@tora/layout-api';
+import { canonicalJson, type ResolvedAssetManifest } from '@tora/layout-api';
 import { createRequire } from 'node:module';
 import { CliError } from './errors.js';
 import { EXIT_FONT, EXIT_INPUT } from './exit-codes.js';
@@ -72,6 +83,13 @@ function resolveRegistryPath(): string {
     // נפילה לפריסת המונורפו (החבילות זו לצד זו) — מתועד; הריצה מה־repo root
     return resolve('packages', 'settings-schema', 'registry.json');
   }
+}
+
+/** נתיב ברירת מחדל של נכס חזותי — כמו resolveRegistryPath: קודם כמו שהוא
+ * (יחסית ל־cwd), ואם אינו קיים — מה-repo root (עמיד להרצה מספריות אחרות). */
+function resolveOrDefaultAssetPath(p: string): string {
+  if (existsSync(p)) return p;
+  return resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', p);
 }
 
 /** שכבות הגדרות: [] בסיס ← [פריסט] ← [מסמך] — כל שכבה דרך צינור הייבוא (שלב 30). */
@@ -207,4 +225,65 @@ async function buildProvider(fonts: readonly LoadedFont[]): Promise<MeasurementP
 
 function sha256HexOf(text: string): string {
   return sha256Bytes(new TextEncoder().encode(text));
+}
+
+/** נכסים חזותיים טעונים ומאומתים (שלב 68) — המניפסטים v2 + זהותם הנעולה. */
+export interface VisualAssets {
+  readonly shaarManifest: ShaarManifest;
+  readonly ornamentsManifest: OrnamentsManifest;
+  /** sha256(canonicalJson(assetsIdentity(·))) — נכנס ל-ResolvedAssetManifest ול-request.json. */
+  readonly assetsManifestSha256: string;
+}
+
+async function readAssetsJson(path: string): Promise<unknown> {
+  let text: string;
+  try {
+    text = await readFile(path, 'utf8');
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.ASSETS_MANIFEST_INVALID', { path, reason: errReason(e) }, `קריאה נכשלה: ${path}`);
+  }
+  try {
+    return JSON.parse(text) as unknown;
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.ASSETS_MANIFEST_INVALID', { path, reason: `JSON: ${errReason(e)}` }, `JSON שגוי: ${path}`);
+  }
+}
+
+/**
+ * טעינת ואימות מניפסטי הנכסים החזותיים v2 (שלב 68): פרסור מבני + בעיות
+ * סמנטיות חייבות להיות ריקות; הזהות נגזרת דרך המודל (מקור אמת אחד).
+ * כל כשל ⇒ errors.cli.ASSETS_MANIFEST_INVALID (exit 3) עם נתיב וסיבה.
+ */
+export async function loadVisualAssets(
+  shaarManifestPath: string,
+  ornamentsManifestPath: string,
+): Promise<VisualAssets> {
+  const shaarPath = resolveOrDefaultAssetPath(shaarManifestPath);
+  const ornamentsPath = resolveOrDefaultAssetPath(ornamentsManifestPath);
+  const shaarRaw = await readAssetsJson(shaarPath);
+  const ornamentsRaw = await readAssetsJson(ornamentsPath);
+  let shaar: ShaarManifest;
+  let ornaments: OrnamentsManifest;
+  try {
+    shaar = parseShaarManifest(shaarRaw);
+    const issues = shaarManifestIssues(shaar);
+    if (issues.length > 0) throw new Error(issues.join('; '));
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.ASSETS_MANIFEST_INVALID', {
+      path: shaarPath, reason: errReason(e),
+    }, `מניפסט שערים שגוי: ${shaarPath}`);
+  }
+  try {
+    ornaments = parseOrnamentsManifest(ornamentsRaw);
+    const issues = ornamentsManifestIssues(ornaments);
+    if (issues.length > 0) throw new Error(issues.join('; '));
+  } catch (e) {
+    throw new CliError(EXIT_INPUT, 'errors.cli.ASSETS_MANIFEST_INVALID', {
+      path: ornamentsPath, reason: errReason(e),
+    }, `מניפסט עיטורים שגוי: ${ornamentsPath}`);
+  }
+  const assetsManifestSha256 = sha256HexOf(canonicalJson(
+    assetsIdentity(shaar, ornaments) as unknown as Record<string, unknown>,
+  ));
+  return { shaarManifest: shaar, ornamentsManifest: ornaments, assetsManifestSha256 };
 }

@@ -204,6 +204,46 @@ export {
   toGematriaLabel,
 } from './notes.js';
 
+// ── שלב 68: מניפסטי נכסים חזותיים v2 — שערים ועיטורים (M8; §7, §13) ──
+export type {
+  AssetViewBox,
+  AssetsFileEntry,
+  AssetsIdentity,
+  AssetsLicenseRef,
+  AssetsSourceRef,
+  BoxAnchor,
+  BoxAnchors,
+  BuiltinRoleSlot,
+  OrnamentDesignRecord,
+  OrnamentsManifest,
+  PageFractions,
+  ShaarDesignRecord,
+  ShaarManifest,
+  ShaarPercentBox,
+  TextBoxMm,
+} from './assets.js';
+export {
+  ASSETS_MANIFEST_SCHEMA_VERSION,
+  BUILTIN_DRAWINGS,
+  BUILTIN_ROLE_SLOTS,
+  ORNAMENT_FILE_ROLES,
+  SHAAR_FILE_KINDS,
+  SHAAR_KINDS,
+  SHAAR_PHYSICAL_PAGE_MM,
+  assetsIdentity,
+  legacyPercentBoxOf,
+  ornamentAssetId,
+  ornamentsManifestIssues,
+  pageFractionsToMm,
+  parseOrnamentsManifest,
+  parseShaarManifest,
+  parseViewBox,
+  shaarAssetId,
+  shaarManifestIssues,
+  textBoxAnchorsOf,
+  textBoxToPageFractions,
+} from './assets.js';
+
 // ── קטלוג שגיאות מקומי (אותו דפוס שלב 12; content-model חסר תלויות) ──
 export type { ErrorCatalogEntry, ErrorParamValue, ErrorParams } from './errors.js';
 export {

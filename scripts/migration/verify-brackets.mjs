@@ -61,7 +61,7 @@ console.log('1) ממשק ה־API וקטלוג השגיאות');
   for (const key of ['errors.bracket.ID_DERIVATION_TOO_LONG', 'errors.parser.WARN_UNCLOSED_BRACKET', 'errors.parser.WARN_STRAY_CLOSE_BRACKET']) {
     (cm.isRegisteredContentModelErrorKey(key) ? ok : fail)(`${key} רשום בקטלוג`);
   }
-  (cm.contentModelErrorCatalogSize() === 82 ? ok : fail)(`קטלוג content-model: 82 קודים — 79 שלב 19 + 3 notes שלב 20 (נמצאו ${cm.contentModelErrorCatalogSize()})`);
+  (cm.contentModelErrorCatalogSize() === 85 ? ok : fail)(`קטלוג content-model: 85 קודים — 79 שלב 19 + 3 notes שלב 20 + 3 assets שלב 68 (נמצאו ${cm.contentModelErrorCatalogSize()})`);
 }
 
 // ─────────────────────────── 2. differential מול הישן ───────────────────────────
@@ -228,7 +228,7 @@ console.log('\n5) שעד: כל פתיחה/סגירה ממופית או מדוו�
 // ─────────────────────────── 6. רגרסיה ───────────────────────────
 console.log('\n6) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  914 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  949 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   ((x => x !== null && !/error TS/.test(x))(run('npm', ['run', 'build:packages'])) ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');

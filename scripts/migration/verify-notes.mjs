@@ -65,7 +65,7 @@ console.log('1) ממשק ה־API וקטלוג השגיאות');
   for (const key of ['errors.notes.INVALID_POLICY', 'errors.notes.INVALID_ORDINAL', 'errors.notes.PAGE_SCOPE_REQUIRES_CONTEXT']) {
     (cm.isRegisteredContentModelErrorKey(key) ? ok : fail)(`${key} רשום בקטלוג`);
   }
-  (cm.contentModelErrorCatalogSize() === 82 ? ok : fail)(`קטלוג content-model: 82 קודים (נמצאו ${cm.contentModelErrorCatalogSize()})`);
+  (cm.contentModelErrorCatalogSize() === 85 ? ok : fail)(`קטלוג content-model: 85 קודים — 82 קודמים + 3 assets שלב 68 (נמצאו ${cm.contentModelErrorCatalogSize()})`);
 }
 
 // ─────────────────────────── 2. parity גימטריא מול הישן ───────────────────────────
@@ -226,7 +226,7 @@ console.log('\n4) שעד: אין מספור בזמן רינדור; אין קיש
 // ─────────────────────────── 5. רגרסיה ───────────────────────────
 console.log('\n5) רגרסיה מלאה');
 {
-  const t = (SKIP_TESTS ? 'Tests  914 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const t = (SKIP_TESTS ? 'Tests  949 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   (t !== null && !/failed\b/.test(String(t).split('Test Files').pop() ?? '') ? ok : fail)('test:packages — כל הבדיקות ירוקות');
   (run('npm', ['run', 'build:packages']) !== null ? ok : fail)('build:packages — PASS');
   (run('npm', ['run', 'typecheck:packages', '--', '--force']) !== null ? ok : fail)('typecheck:packages --force — PASS');

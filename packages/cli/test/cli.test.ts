@@ -206,3 +206,45 @@ describe('שלב 34: שגיאות ממוקמות וקודי יציאה', () => {
     expect(manifest.engine).toBe('next');
   });
 });
+
+describe('שלב 68: נכסים חזותיים v2 ב-CLI — מניפסטים, זהות נעולה ושגיאות ממוקמות', () => {
+  test('דגלי המניפסטים: ברירות מחדל, ערכים מפורשים ודחיית שמות בלתי-מוכרים', () => {
+    const base = parseCliArgs(['--input', 'a', '--out', 'b']);
+    if (!base.ok) throw new Error('base args should parse');
+    expect(base.args.shaarManifest).toBe('assets/shaar/manifest.json');
+    expect(base.args.ornamentsManifest).toBe('assets/ornaments/manifest.json');
+    const explicit = parseCliArgs(['--input', 'a', '--out', 'b', '--shaar-manifest', 'x.json', '--ornaments-manifest', 'y.json']);
+    if (!explicit.ok) throw new Error('explicit args should parse');
+    expect(explicit.args.shaarManifest).toBe('x.json');
+    expect(explicit.args.ornamentsManifest).toBe('y.json');
+    expect(parseCliArgs(['--input', 'a', '--out', 'b', '--shaar', 'x']).ok).toBe(false);
+  });
+
+  test('request.json נושא assetsManifestSha256 אמיתי ודטרמיניסטי; layoutHash אינו מושפע (§6.7)', async () => {
+    const c = current as Case;
+    const outA = join(c.tmp, 'a');
+    const outB = join(c.tmp, 'b');
+    const a = await runCli(args({ out: outA }));
+    const b = await runCli(args({ out: outB }));
+    expect(a.exitCode).toBe(EXIT_SUCCESS);
+    expect(b.exitCode).toBe(EXIT_SUCCESS);
+    const reqA = JSON.parse(await readFile(join(outA, 'request.json'), 'utf8')) as { assets: { assetsManifestSha256: string } };
+    const reqB = JSON.parse(await readFile(join(outB, 'request.json'), 'utf8')) as { assets: { assetsManifestSha256: string } };
+    expect(reqA.assets.assetsManifestSha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(reqA.assets.assetsManifestSha256).not.toBe('0'.repeat(64));
+    expect(reqA.assets.assetsManifestSha256).toBe(reqB.assets.assetsManifestSha256);
+    // הזהות אינה נכנסת ל-layoutHash — שתי הריצות זהות גם בעמודים וגם ב-hash
+    expect((a.report as { layoutHash: string }).layoutHash).toBe((b.report as { layoutHash: string }).layoutHash);
+  }, 180_000);
+
+  test('מניפסט שערים מושחת ⇒ exit 3 + errors.cli.ASSETS_MANIFEST_INVALID עם נתיב וסיבה', async () => {
+    const c = current as Case;
+    const bad = join(c.tmp, 'bad-shaar-manifest.json');
+    await writeFile(bad, JSON.stringify({ schemaVersion: 1, kind: 'shaar' }), 'utf8');
+    await expect(runCli(args({ 'shaar-manifest': bad }))).rejects.toMatchObject({
+      exitCode: EXIT_INPUT,
+      catalogKey: 'errors.cli.ASSETS_MANIFEST_INVALID',
+      params: { path: bad },
+    });
+  });
+});
