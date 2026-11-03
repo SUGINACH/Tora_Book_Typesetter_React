@@ -46,7 +46,7 @@ export const TORAH_RULE_REGISTRY: readonly TorahRuleEntry[] = Object.freeze([
   // ── סוגריים (§10.4; שלב 65) ──
   { ruleId: 'brackets.cross-page', version: 1, hook: 'bracket-display', settingsKeys: [], description: 'סוגריים חוצי עמוד — המחסנית במצב; אין protectParens' },
   // ── איזון (§10.5; שלב 66) ──
-  { ruleId: 'balance.chapter-end', version: 1, hook: 'chapter-balance', settingsKeys: [], description: 'איזון סוף פרק בשלוש רמות' },
+  { ruleId: 'balance.chapter-end', version: 2, hook: 'chapter-balance', settingsKeys: ['drop-word-mode', 'section-divider-style'], description: 'איזון סוף פרק בשלוש רמות (§10.5; שלב 66) — המדד גובה regions בפועל; רמה 1 דרך עלות אי-איזון ברכיב 8' },
   // ── מסגרת (§11; שלב 67) ──
   { ruleId: 'headers.running', version: 1, hook: 'running-header', settingsKeys: ['hdr-distinct-even-odd', 'hdr-l-type', 'hdr-c-type', 'hdr-r-type', 'hdr-h1-title-mode', 'hdr-title-split'], description: 'כותרות רצות recto/verso לפי scopes' },
   { ruleId: 'folio.numbering', version: 1, hook: 'folio', settingsKeys: ['page-num-format', 'page-num-initial-value', 'page-num-position'], description: 'פוליו — גימטריה/מספרים, מספר התחלתי' },

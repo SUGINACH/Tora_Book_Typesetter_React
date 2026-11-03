@@ -172,7 +172,7 @@ console.log('\n8) רגרסיה');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check');
 if (!SKIP_TESTS) {
   const t = run('npm', ['run', 'test:packages']);
-  (/Tests\s+899\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 899/899');
+  (/Tests\s+904\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 904/904');
 } else {
   ok('test:packages — [skipped-in-CI: parent step already ran the suite]');
 }

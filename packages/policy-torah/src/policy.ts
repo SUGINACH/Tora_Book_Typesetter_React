@@ -8,6 +8,7 @@
 import type { EffectiveSettings, LayoutPolicy } from '@tora/layout-api';
 import { LEGACY_HEADING_DEFAULTS, legacyHeadingBehaviorOf, parsePctDimension, parseEmDimension, type HeadingBehavior } from './headings.js';
 import { firstWordPolicyOf } from './firstword.js';
+import { chapterBalancePolicyOf } from './balance.js';
 import { TORAH_RULE_REGISTRY, headingBehaviorIds, torahRegistrySignature } from './registry.js';
 
 /** גרסת המדיניות — עולה כשסמנטיקת כלל משתנה (rollback משווה). */
@@ -51,6 +52,8 @@ export interface TorahPolicy {
   readonly firstWord: import('./firstword.js').FirstWordPolicy;
   /** דיבור-המתחיל מופעל (auto-dh; §10.2; שלב 64). */
   readonly dibburEnabled: boolean;
+  /** איזון סוף פרק בשלוש רמות (§10.5; שלב 66). */
+  readonly chapterBalance: import('./balance.js').ChapterBalancePolicy;
 }
 
 function readBool(settings: EffectiveSettings, key: string, fallback: boolean): boolean {
@@ -198,6 +201,7 @@ export function createTorahPolicy(
     headingIds: headingBehaviorIds(),
     firstWord: firstWordPolicyOf(settings),
     dibburEnabled: settings.values['auto-dh'] === true,
+    chapterBalance: chapterBalancePolicyOf(settings),
   });
 }
 

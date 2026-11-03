@@ -152,6 +152,19 @@ export interface CandidateGeneratorInput {
    * inline, H7 sidenote-stream. הזרקה מ-policy-torah מחליפה את המספרים
    * הקשיחים; אין עריכת מנוע לכותרת חדשה.
    */
+  /**
+   * איזון סוף פרק (§10.5; שלב 66) — רמה 1: העדפת פיצול מאוזן של שני הטורים
+   * בעמוד שסוגר פרק (לפני פותחת-עמוד או בקץ המסמך) — עלות אי-האיזון
+   * (|used0−used1| בגובה אמיתי של regions) נכנסת לרכיב 8. ברירת מחדל: פעיל
+   * (legacy balanceColumns בסוף כל פרק, ללא תנאי).
+   */
+  readonly balanceChapterEnd?: boolean;
+  /**
+   * גובה מדידת קו-המפריד/עיטור סוף-פרק (§10.5: "נמדדים בתוך המועמד"; שלב 66)
+   * — ביחידות LU שנמדדו מראש (הנכס עצמו — M8); נצרם מהטור בגבול סוף-הפרק.
+   * ברירת מחדל 0 (עד ש-M8 מודד את הנכסים בפועל).
+   */
+  readonly chapterEndDividerLu?: number;
   readonly headingBehaviorOf?: (level: number) => {
     readonly flowRole: 'page-opener' | 'full-width-barrier' | 'inline' | 'sidenote-stream';
     readonly forcePageBreak: boolean;
@@ -374,6 +387,8 @@ interface BoundaryCandidate {
   /** ── סוגריים (שלב 65; §10.4) ── */
   /** פתיחות סוגריים בקו האחרון של הגבול — הפותח "נשאר בסוף העמוד" כשהגבול סוגר עמוד. */
   readonly lastLineBracketOpens?: readonly { readonly pairId: string; readonly kind: 'round' | 'square' }[];
+  /** גובה קו-המפריד/עיטור סוף-פרק שנצרם בגבול זה (§10.5; שלב 66). */
+  readonly chapterEndDividerLu?: number;
   /** ── פותח עמוד (שלב 59; §10.1 H0 — forcePageTemplate) ──
    * הגבול מסתיים בכותרת פותחת-עמוד: ההרחבה פותחת עמוד חדש בתבנית
    * הנדרשת (forcePageTemplate של הרמה; ברירת מחדל — סוג הזרימה) והכותרת
@@ -437,6 +452,7 @@ function buildBoundaries(
   headingBehaviorOf: (level: number) => HeadingFlowBehavior,
   columnHeightLu: number,
   flowKind: 'body' | 'toc' | 'notes',
+  chapterEndDividerLu: number,
 ): BoundaryCandidate[] {
   const out: BoundaryCandidate[] = [];
   let pos = flowPositionOf(map, state);
@@ -765,12 +781,17 @@ function buildBoundaries(
     }
     if (legal) {
       const atEnd = nextPos.blockIndex >= map.blocks.length;
+      // קו-המפריד/עיטור סוף-פרק (§10.5; שלב 66): נמדד מראש ונצרם בתוך המועמד
+      // — בגבול שסוגר פרק (לפני פותחת-עמוד או בקץ); רק אם הוא נכנס (אחרת
+      // החיפוש יעדיף גבול מוקדם יותר שבו הוא נכנס; אין גלישה שקטה)
+      const chapterEndHere = atEnd || openerAfterBoundary !== undefined;
+      const dividerLu = chapterEndHere && used + chapterEndDividerLu <= remainingLu ? chapterEndDividerLu : 0;
       const lastBlock = map.blocks[map.blocks.length - 1]!;
       out.push({
         end: nextPos,
         cursorBlockId: atEnd ? lastBlock.blockId : map.blocks[nextPos.blockIndex]!.blockId,
         cursorFragment: atEnd ? lastBlock.lines.length : nextPos.lineIndex,
-        heightLu: used,
+        heightLu: used + dividerLu,
         emergency: false,
         footnoteRefs: [...foot],
         sidenoteRefs: [...side],
@@ -786,6 +807,7 @@ function buildBoundaries(
         sidenotesDisplaced: [...sidenotesDisplaced],
         ...(openerAfterBoundary !== undefined ? { pageOpener: { level: openerAfterBoundary } } : {}),
         ...(lastLineBracketOpens.length > 0 ? { lastLineBracketOpens: [...lastLineBracketOpens] } : {}),
+        ...(dividerLu > 0 ? { chapterEndDividerLu: dividerLu } : {}),
       });
       lastAddedBoundaryLineCount = count;
     }
@@ -1042,7 +1064,7 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
     // גובה הטור המלא של התבנית הנוכחית — לזיהוי "ראש עמוד חדש" (שלב 59:
     // פותח-עמוד מוצב רק בראש עמוד טרי; טור 0 מלא ושום דבר לא נצרב בעמוד)
     const columnHeightLu = template.regions.find((r) => r.role === 'body-column' && r.columnIndex === 0)!.rect.height;
-    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx, headingBehaviorOf, columnHeightLu, input.pageKind);
+    const boundaries = buildBoundaries(map, state, effectiveRemaining, policy, notesCtx, headingBehaviorOf, columnHeightLu, input.pageKind, input.chapterEndDividerLu ?? 0);
     const out: PageExpansion[] = [];
     for (const boundary of boundaries) {
       let s = state;
@@ -1128,6 +1150,7 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         }
         let closesRegion = false;
         let h3GapLu = 0;
+        let chapterImbalanceLu = 0;
         // ── מחסום H3 (שלב 56; §9.3#6; §10.1): הכותרת הרוחבית חוצת-טורים ──
         // ההרחבה סוגרת את שני הטורים עד תחתית הכותרת (barrierY = העמוק
         // מבין הטורים; הרווח שמעל הכותרת בטור הרדוד הוא עלות האי-איזון —
@@ -1224,10 +1247,30 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         // באלפי-LU + רווחי אי-האיזון שלפני H3; רכיב 9 — עמוד שנפתח.
         const v = new Array<number>(9).fill(0);
         v[0] = (boundary.emergency ? 2 : 0) + boundary.noteSplits.length;
+        // איזון סוף פרק (§10.5 רמה 1; שלב 66): בגבול שסוגר פרק — עלות
+        // אי-האיזון בגובה regions בפועל (|used0−used1|; לא מספר תווים ולא
+        // מחצית שורות); legacy balanceColumns. כבוי ⇒ העלות הכוללת של תת-המילוי
+        // אינה תלויה בפיצול — ולכן בלי רכיב זה אין העדפת איזון בעמוד האחרון.
+        const isChapterEnd = boundary.pageOpener !== undefined
+          || (boundary.cursorBlockId === map.blocks[map.blocks.length - 1]!.blockId && boundary.cursorFragment >= map.blocks[map.blocks.length - 1]!.lines.length);
+        if (isChapterEnd && input.balanceChapterEnd !== false) {
+          // החישוב מהמצב לפני המעברים — אחרי openPage אזורי העמוד הישן כבר
+          // אינם במצב (נתפס בבדיקות שלב 66: usedOther היה 0 תמיד)
+          const otherRegionId = `page:${state.physicalPageIndex}:col:${state.columnIndex === 0 ? 1 : 0}`;
+          const otherRemaining = state.remainingByRegion[otherRegionId];
+          const pageHeightForBalance = template.regions.find((r) => r.role === 'body-column' && r.columnIndex === 0)!.rect.height;
+          const usedOther = otherRemaining !== undefined ? Math.max(0, pageHeightForBalance - otherRemaining) : 0;
+          const usedThis = boundary.heightLu + Math.max(0, pageHeightForBalance - remaining);
+          chapterImbalanceLu = Math.abs(usedThis - usedOther);
+        }
         // רכיב 3 (noteDisplacement; ADR-004): פיצולי הערות-שוליים + הערות צד
         // עקורות מעוגנן (FIFO לעמוד הבא) — החיפוש מעדיף הצבה קרובה (§10.3)
         v[2] = boundary.noteSplits.length + boundary.sidenotesDisplaced.length;
-        v[7] = Math.min(1024, Math.floor((Math.max(0, effectiveRemaining - boundary.heightLu) + h3GapLu) / 1000));
+        // רכיב 8: תת-מילוי + רווחי אי-איזון H3 + אי-איזון סוף-פרק (שלב 66) —
+        // באלפי-LU. התקרה גבוהה (2^20): תקרת 1024 ההיסטורית רוותה כבר בשלושה
+        // קווים והשוואת מסלולים נעלמה (נתפס בשלב 66 — בלי ההבחנה אין העדפת
+        // איזון); הסקלר לתצוגה נשאר חתוך בנפרד (search.ts)
+        v[7] = Math.min(1 << 20, Math.floor((Math.max(0, effectiveRemaining - boundary.heightLu) + h3GapLu + chapterImbalanceLu) / 1000));
         v[8] = closesRegion ? 1 : 0;
         // סוגר פותח שנשאר בסוף עמוד (שלב 65; §10.4): הקו האחרון של הגבול פתח
         // סוגריים, הגבול סוגר את העמוד, והזוג עדיין פתוח — זרע לטרנספורמציית

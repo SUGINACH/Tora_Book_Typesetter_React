@@ -12,3 +12,4 @@ export * from './registry.js';
 export * from './policy.js';
 export * from './firstword.js';
 export * from './brackets.js';
+export * from './balance.js';
