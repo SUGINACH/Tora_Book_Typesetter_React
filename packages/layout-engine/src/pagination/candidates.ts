@@ -33,7 +33,7 @@
  *   5. המדיניות מוזרקת (LegalPageBreakPolicy) — הליבה אינה מכירה H2
  *      (§10); ברירות המחדל נעולות כאן ומתועדות.
  */
-import { asLu, type LayoutUnit } from '@tora/layout-api';
+import { asLu, quantizeSetting, roundDiv, type LayoutUnit } from '@tora/layout-api';
 import { LayoutEngineError } from '../errors.js';
 import {
   advanceCursor,
@@ -563,8 +563,13 @@ function buildBoundaries(
       const openerBlock = map.blocks[pos.blockIndex]!;
       const firstLineH = openerBlock.lines[pos.lineIndex]?.heightLu ?? 0;
       const lastLineH = openerBlock.lines[openerBlock.lines.length - 1]!.heightLu;
-      used += Math.round(sp.spaceBeforePct * columnHeightLu) + Math.round(sp.ornamentTopEm * firstLineH);
-      openerBottomPendingLu = Math.round(sp.ornamentBottomEm * lastLineH);
+      // תיקון CI סבב כ (ADR-001 §4 — ריכוז העיגול): העיגול דרך הפרימיטיבים של units
+      // בלבד — ההגדרה העשרונית מקוונטזת לשלם (רזולוציית 1/100; כל ערכי ה-h2
+      // ההיסטוריים דו-ספרתיים — הקוונטיזציה מדויקת עבורם) ואז חישוב שלם עם
+      // עיגול חצי-כלפי-∞ — שקול מספרית לעיגול המכפלה המקומי שקדם לתיקון.
+      used += roundDiv(quantizeSetting(sp.spaceBeforePct, 100, 'h2-top-distance') * columnHeightLu, 100)
+        + roundDiv(quantizeSetting(sp.ornamentTopEm, 100, 'dim-h2-top-h') * firstLineH, 100);
+      openerBottomPendingLu = roundDiv(quantizeSetting(sp.ornamentBottomEm, 100, 'dim-h2-btm-h') * lastLineH, 100);
     }
   }
   while (true) {
@@ -631,8 +636,49 @@ function buildBoundaries(
       // נמדד — יחס-em לקו הראשון); העיטור תופס בדיוק את המקום שנמדד לו
       const textH = block.lines.reduce((n, l) => n + l.heightLu, 0);
       const ornEm = headingBehaviorOf(block.headingLevel).barrierOrnamentEm ?? 0;
-      const ornH = ornEm > 0 ? Math.round(ornEm * (block.lines[0]?.heightLu ?? 0)) : 0;
+      // תיקון CI סבב כ: עיגול מרוכז (ADR-001 §4) — קוונטיזציית 1/100 + roundDiv
+      const ornH = ornEm > 0 ? roundDiv(quantizeSetting(ornEm, 100, 'dim-h3-side-h') * (block.lines[0]?.heightLu ?? 0), 100) : 0;
       const h3Height = Math.max(textH, ornH);
+      // תיקון CI סבב כ — רגרסיה משלב 66 (נתפסה ב-verify-h3-barrier): כשההליכה
+      // מתחילה בראש ה-H3 והפס אינו נכנס לעמוד הנוכחי — הטור האחר עמוק
+      // מדי (barrierY+הפס חורג; אותה נוסחת feasibility כמו בהרחבה) — ה-barrier
+      // נדחה שם ואף מועמד אחר אינו נוצר: המצב תקוע (§9.2) והחיפוש נכשל
+      // מפורש. לפי הכוונה המתועדת של שלב 56 ה-H3 "זורמת עמוד כמו תוכן":
+      // נוסף גבול ריק שרק סוגר אזור — הסמן נשאר בראש הכותרת (בדיוק כגבול
+      // פותח-העמוד הריק של שלב 59), ההרחבה תעבור טור/תפתח עמוד, ובראש
+      // העמוד הטרי הפס נפרש מ-barrierY=0. כותרת גבוהה מעמוד ריק — אין
+      // גבול מילוט: כשל מפורש (כבלוק אטום שאינו נכנס; §10.3, הכרעת ADR-005).
+      const col0Region = `page:${state.physicalPageIndex}:col:0`;
+      const col1Region = `page:${state.physicalPageIndex}:col:1`;
+      const rem0 = state.remainingByRegion[col0Region];
+      const rem1 = state.remainingByRegion[col1Region];
+      const used0 = rem0 !== undefined ? Math.max(0, columnHeightLu - rem0) : 0;
+      const used1 = rem1 !== undefined ? Math.max(0, columnHeightLu - rem1) : 0;
+      const bandTop = Math.max(used0, used1) + h3Height;
+      const notesUsedNow = notesCtx !== null ? notesCtx.notesUsedAtStartLu : 0;
+      const bandFitsHere = bandTop <= columnHeightLu && bandTop + notesUsedNow <= columnHeightLu;
+      if (out.length === 0 && used === 0 && !bandFitsHere && h3Height <= columnHeightLu) {
+        out.push({
+          end: pos,
+          cursorBlockId: block.blockId,
+          cursorFragment: pos.lineIndex,
+          heightLu: 0,
+          emergency: false,
+          footnoteRefs: [],
+          sidenoteRefs: [],
+          bracketOpens: [],
+          bracketCloses: [],
+          lineCount: 0,
+          notesPlacedIds: [...notesPlacedIds],
+          notesPlacedHeightLu: notesPlacedHeight,
+          noteSplits: [...noteSplits],
+          deferredRefs: [],
+          sidenotesPlacedIds: [...sidenotesPlacedIds],
+          sidenotesPlacedHeightLu: sidenotesPlacedHeight,
+          sidenotesDisplaced: [...sidenotesDisplaced],
+        });
+        lastAddedBoundaryLineCount = 0;
+      }
       // סוף ה-H3 — אחרי כל קוויה (אטומית)
       const endPos: FlowPosition = { blockIndex: pos.blockIndex + 1, lineIndex: 0 };
       const atEnd = endPos.blockIndex >= map.blocks.length;
@@ -1270,7 +1316,8 @@ export function createPageCandidateSource(input: CandidateGeneratorInput): PageC
         // באלפי-LU. התקרה גבוהה (2^20): תקרת 1024 ההיסטורית רוותה כבר בשלושה
         // קווים והשוואת מסלולים נעלמה (נתפס בשלב 66 — בלי ההבחנה אין העדפת
         // איזון); הסקלר לתצוגה נשאר חתוך בנפרד (search.ts)
-        v[7] = Math.min(1 << 20, Math.floor((Math.max(0, effectiveRemaining - boundary.heightLu) + h3GapLu + chapterImbalanceLu) / 1000));
+        // תיקון CI סבב כ: אין הזזות סיביות על קואורדינטות (ADR-001 §5) — 2^20 כליטרל
+        v[7] = Math.min(1048576, Math.floor((Math.max(0, effectiveRemaining - boundary.heightLu) + h3GapLu + chapterImbalanceLu) / 1000));
         v[8] = closesRegion ? 1 : 0;
         // סוגר פותח שנשאר בסוף עמוד (שלב 65; §10.4): הקו האחרון של הגבול פתח
         // סוגריים, הגבול סוגר את העמוד, והזוג עדיין פתוח — זרע לטרנספורמציית

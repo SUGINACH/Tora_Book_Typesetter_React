@@ -219,13 +219,15 @@ export function searchPages(
   let creationSeq = 0;
 
   // טבלת המרה: stateHash ⇒ (איכות מצטברת, מזהה המועמד שהכניס את המצב)
-  const transposition = new Map<string, { quality: PageQualityVector; candidateId: string }>();
+  // nodeCreation — מזהה היצירה של הצומת שהרשומה נכתבה עבורו (להחזרת רשומות של
+  // צמתים שנגזמו מהאלומה; תיקון CI סבב כ)
+  const transposition = new Map<string, { quality: PageQualityVector; candidateId: string; nodeCreation?: number }>();
   let frontier: SearchNode[] = [
     { state: initial, quality: ZERO_PAGE_QUALITY, path: [], creationIndex: creationSeq++ },
   ];
   const finished: SearchNode[] = [];
   let stuckCount = 0;
-  transposition.set(initial.stateHash, { quality: ZERO_PAGE_QUALITY, candidateId: '@initial' });
+  transposition.set(initial.stateHash, { quality: ZERO_PAGE_QUALITY, candidateId: '@initial', nodeCreation: 0 });
 
   const budgetOf = (exhaustedFlag: boolean) => ({ generated, pruned, dominated, exhausted: exhaustedFlag });
 
@@ -323,7 +325,8 @@ export function searchPages(
           });
           continue;
         }
-        transposition.set(exp.toState.stateHash, { quality: childQuality, candidateId: exp.candidateId });
+        const childCreation = creationSeq;
+        transposition.set(exp.toState.stateHash, { quality: childQuality, candidateId: exp.candidateId, nodeCreation: childCreation });
         next.push({
           state: exp.toState,
           quality: childQuality,
@@ -350,6 +353,19 @@ export function searchPages(
     if (next.length > budget.maxBeamWidth) {
       const cut = next.slice(budget.maxBeamWidth);
       pruned += cut.length;
+      // תיקון CI סבב כ — רוחות בטבלת ההמרה: רשומה שנכתבה בקבלת הצומת נשארת
+      // לנצח גם כשהצומת נגזם מהאלומה ומעולם לא הורחב — וכל גילוי-מחדש
+      // של אותו מצב "מודח" נגדה לנצח (נתפס ב-verify-h3-barrier: המחסום
+      // מסנכרן את שני הטורים ⇒ כל ההורים מתכנסים לאותו מצב-בן; כשזה נגזם —
+      // כל המסלולים נחסמים והחיפוש נגמר בלי מצב סופי). הרשומה מייצגת צומת
+      // שהורחב או שחי בחזית בלבד: צומת שנגזם — רשומתו נמסרת חזרה (אלא אם
+      // הוחלפה בינתיים בגילוי-מחדש טוב ממנה). הגזימה עצמה כבר נרשמת בפנקס.
+      for (const n of cut) {
+        const e = transposition.get(n.state.stateHash);
+        if (e !== undefined && e.nodeCreation === n.creationIndex) {
+          transposition.delete(n.state.stateHash);
+        }
+      }
       ledger.append({
         stage: 'page-break',
         scopeId: `search:beam:${budget.maxBeamWidth}`,

@@ -128,8 +128,11 @@ console.log('\n4) פרוס ממדים + שקילות + מרשם');
 console.log('\n5) ההחלטה בתוך ההליכה — אין post-pass (סריקת קוד)');
 {
   const cand = readFileSync(join(repoRoot, 'packages', 'layout-engine', 'src', 'pagination', 'candidates.ts'), 'utf8');
-  (cand.includes('openerBottomPendingLu') && cand.includes('spaceBeforePct * columnHeightLu') ? ok : fail)('הריווח נמדד מגובה הטור; העיטורים מקווי הכותרת — בתוך הליכת הגבולות');
-  (cand.includes('ornamentTopEm * firstLineH') && cand.includes('ornamentBottomEm * lastLineH') ? ok : fail)('העליון מהקו הראשון; התחתון מהאחרון');
+  // תיקון CI סבב כ (ADR-001 §4 — ריכוז העיגול): הביטויים נבדקים בצורתם החדשה —
+  // quantizeSetting(הגדרה, 100, מפתח) × גאומטריה בפועל, מעוגל ב-roundDiv; הכוונה
+  // לא השתנתה: הריווח מגובה הטור והעיטורים מקווי הכותרת, בתוך הליכת הגבולות.
+  (cand.includes("quantizeSetting(sp.spaceBeforePct, 100, 'h2-top-distance') * columnHeightLu") ? ok : fail)('הריווח נמדד מגובה הטור — בתוך הליכת הגבולות (דרך units; סבב כ)');
+  (cand.includes("quantizeSetting(sp.ornamentTopEm, 100, 'dim-h2-top-h') * firstLineH") && cand.includes("quantizeSetting(sp.ornamentBottomEm, 100, 'dim-h2-btm-h') * lastLineH") ? ok : fail)('העליון מהקו הראשון; התחתון מהאחרון (דרך units; סבב כ)');
   const noPostPass = !/function\s+(balance|fix|adjust|postProcess)\w*\(/.test(cand);
   (noPostPass ? ok : fail)('אין פונקציית תיקון אחרי-החלטה');
 }

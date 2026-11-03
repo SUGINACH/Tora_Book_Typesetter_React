@@ -91,6 +91,22 @@ console.log('\n3) סמוך לתחתית + ליד הערות + מרובות');
   let inv = true;
   for (const [, used] of perRegion) if (used > H) inv = false;
   (inv ? ok : fail)('אינווריאנט צריכה ≤ גובה טור לכל אזור');
+  // תיקון CI סבב כ — שתי רגרסיות משלב 66 שנתפסו כאן (ה-CI מת ב-verify-units
+  // לפני שהגיע למאמת זה, ולכן נותרו סמויות): (א) H3 בראש הליכה כשהטור האחר
+  // עמוק מדי לפס — המחולד הפיק אך את מועמד ה-barrier שנדחה בהרחבה ⇒ אפס
+  // הרחבות ⇒ מצב תקוע (§9.2) ⇒ כשל מפורש no-legal-candidate; כעת נוצר גם
+  // גבול זרימה ריק שסוגר אזור וה-H3 זורמת עמוד כמו תוכן (שלב 56; §10.1).
+  // (ב) רוחות בטבלת ההמרה של החיפוש — רשומות של צמתים שנגזמו מהאלומה ולא
+  // הורחבו חסמו גילוי-מחדש ⇒ החזית התרוקנה בלי מצב סופי (no-terminal-state).
+  {
+    const trapBlocks = [block('body|1', Array.from({ length: 20 }, () => LINE(lineH))), h3('heading|1|H3', h3H)];
+    const trapSrc = engine.createPageCandidateSource(inputFor(trapBlocks));
+    let trapRes = null;
+    let threw = null;
+    try { trapRes = engine.searchPages(initial('body|1'), trapSrc, new Ledger('decisions')); } catch (e) { threw = e; }
+    (threw === null && trapRes !== null && trapRes.status === 'complete' ? ok : fail)('H3 אחרי טור מלא בדיוק — אין כשל מפורש (גבול הזרימה; סבב כ)');
+    (trapRes !== null && trapRes.status === 'complete' && trapRes.path.some((e) => e.candidateId.includes(':H3')) ? ok : fail)('ה-H3 זורמת עמוד ומוצבת כ-barrier בעמוד הטרי (barrierY=0; סבב כ)');
+  }
 }
 
 console.log('\n4) אין post-pass — סריקת קוד');

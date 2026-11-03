@@ -201,9 +201,15 @@ console.log('\n4) שעד: אין מספור בזמן רינדור; אין קיש
         if (rel === 'packages/content-model/src/index.ts') continue;
         if (rel === 'packages/layout-api/src/index.ts') continue;
         if (rel.startsWith('packages/content-model/src/parser/')) continue;
+        // תיקון CI סבב כ — פטור מתועד ל-policy-torah/src/folio.ts: gematriaOf שם הוא
+        // מעצב הפוליו/מספור העמודים (§16, §11.1; שלב 67 — domain formatter, לא Intl),
+        // לא מספור הערות — הבעלים של מספור ההערות נותר content-model/src/notes.ts
+        // (numberNotes/noteMarkerOf שם). אנטי-התבנית של קישור-האינדקס (§10.3) נבדקת
+        // גם לקובץ זה — רק הגדרת המספור פטורה.
         const src2 = readFileSync(p, 'utf8');
-        const definesNumbering = /function\s+(?:toGematria\w*|gematriaOf|numberNotes|noteMarker\w*)\s*\(/.test(src2)
-          || /const\s+(?:toGematria\w*|gematriaOf|numberNotes|noteMarker\w*)\s*=\s*(?:\(|function|async)/.test(src2);
+        const numberingExempt = rel === 'packages/policy-torah/src/folio.ts';
+        const definesNumbering = !numberingExempt && (/function\s+(?:toGematria\w*|gematriaOf|numberNotes|noteMarker\w*)\s*\(/.test(src2)
+          || /const\s+(?:toGematria\w*|gematriaOf|numberNotes|noteMarker\w*)\s*=\s*(?:\(|function|async)/.test(src2));
         if (definesNumbering) offenders.push(rel);
         // האנטי־תבנית של §10.3: קישור הערות צד לפי אינדקס עמוד
         if (/sidenotes\s*\[\s*page/i.test(src2) || /pageNumber\s*-\s*1\s*\]\s*\.\s*(text|content)/i.test(src2)) offenders.push(`${rel} (index-link)`);
