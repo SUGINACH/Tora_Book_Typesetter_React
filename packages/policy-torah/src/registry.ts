@@ -48,9 +48,9 @@ export const TORAH_RULE_REGISTRY: readonly TorahRuleEntry[] = Object.freeze([
   // ── איזון (§10.5; שלב 66) ──
   { ruleId: 'balance.chapter-end', version: 2, hook: 'chapter-balance', settingsKeys: ['drop-word-mode', 'section-divider-style'], description: 'איזון סוף פרק בשלוש רמות (§10.5; שלב 66) — המדד גובה regions בפועל; רמה 1 דרך עלות אי-איזון ברכיב 8' },
   // ── מסגרת (§11; שלב 67) ──
-  { ruleId: 'headers.running', version: 1, hook: 'running-header', settingsKeys: ['hdr-distinct-even-odd', 'hdr-l-type', 'hdr-c-type', 'hdr-r-type', 'hdr-h1-title-mode', 'hdr-title-split'], description: 'כותרות רצות recto/verso לפי scopes' },
-  { ruleId: 'folio.numbering', version: 1, hook: 'folio', settingsKeys: ['page-num-format', 'page-num-initial-value', 'page-num-position'], description: 'פוליו — גימטריה/מספרים, מספר התחלתי' },
-  { ruleId: 'gematria.formatter', version: 1, hook: 'gematria', settingsKeys: ['page-num-format'], description: 'גימטריה כ־domain formatter דטרמיניסטי' },
+  { ruleId: 'headers.running', version: 2, hook: 'running-header', settingsKeys: ['hdr-distinct-even-odd', 'hdr-l-type', 'hdr-c-type', 'hdr-r-type', 'hdr-h1-title-mode', 'hdr-title-split', 'hdr-l-custom', 'hdr-c-custom', 'hdr-r-custom'], description: 'כותרות רצות recto/verso — נבנות מהעוגנים אחרי הפריסה; הגובה שמור בתבנית (שלב 67)' },
+  { ruleId: 'folio.numbering', version: 2, hook: 'folio', settingsKeys: ['page-num-format', 'page-num-initial-value', 'page-num-position'], description: 'פוליו — גימטריה/מספרים, מספר התחלתי, שערים לא ממוספרים, מודל פיזי/לוגי (שלב 67)' },
+  { ruleId: 'gematria.formatter', version: 2, hook: 'gematria', settingsKeys: ['page-num-format'], description: 'גימטריה כ־domain formatter דטרמיניסטי (האלגוריתם ההיסטורי; טו/טז; לא Intl; שלב 67)' },
 ]);
 
 export function torahRuleIssues(): string[] {

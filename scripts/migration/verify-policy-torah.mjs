@@ -180,7 +180,7 @@ if (SKIP_TESTS) {
 } else {
   const out = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'packages/policy-torah/test/policy-torah.test.ts']);
   const m = out.match(/Tests\s+(\d+) passed/);
-  (m !== null && Number(m[1]) === 26 ? ok : fail)(`בדיקות policy-torah: 26/26 (התקבל ${m ? m[1] : '?'})`);
+  (m !== null && Number(m[1]) === 27 ? ok : fail)(`בדיקות policy-torah: 27/27 (התקבל ${m ? m[1] : '?'})`);
 }
 
 console.log(`\n${failures === 0 ? 'PASS' : 'FAIL'}: ${checks - failures}/${checks} בדיקות`);

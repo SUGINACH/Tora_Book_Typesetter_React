@@ -1460,9 +1460,13 @@ export function hangingHeadingsOf(
         // חריג פתיחת-עמוד: הגבול נופל בראש כותרת פותחת (המועמד נושא pageOpener
         // או שהסמן נעצר בראש בלוק heading פותח) — סגירה כפויה, לא תלייה
         const nextBlk = toPos.blockIndex < blocks.length ? blocks[toPos.blockIndex]! : undefined;
+        // חריגים מבניים (נתפסו בשער M7): הצבת שער (:SHAAR — הכותרת לבדה בתיבת
+        // השער מעצם העיצוב) ומחסום H3 (:H3 — ההמשך בפס שמתחת באותו עמוד) —
+        // אינם "תלייה"; וכן גבול הנופל בראש כותרת פותחת (:OPEN — סגירה כפויה)
+        const structural = exp.candidateId.includes(':SHAAR') || exp.candidateId.includes(':H3');
         const openerBreak = nextBlk !== undefined && nextBlk.role === 'heading' && nextBlk.headingLevel !== undefined
-          && escortOf(nextBlk.headingLevel) >= 0 && (exp.candidateId.includes(':OPEN') || exp.candidateId.includes(':SHAAR') || exp.candidateId.includes(':H3'));
-        if (escortPlaced < required && !atDocEnd && !openerBreak) {
+          && escortOf(nextBlk.headingLevel) >= 0 && exp.candidateId.includes(':OPEN');
+        if (escortPlaced < required && !atDocEnd && !openerBreak && !structural) {
           hanging.push({
             blockId: blk.blockId,
             level: blk.headingLevel,
