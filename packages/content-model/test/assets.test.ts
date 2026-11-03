@@ -30,6 +30,7 @@ import {
   parseOrnamentsManifest,
   parseViewBox,
   parseShaarManifest,
+  safeAreaOf,
   shaarAssetId,
   shaarManifestIssues,
   textBoxAnchorsOf,
@@ -183,6 +184,32 @@ describe('שלב 68: assets — מניפסטי נכסים חזותיים v2', ()
     expect(mm.topMm).toBe(0.25 * 297);
     expect(mm.rightMm).toBe(0.125 * 210);
     expect(mm.bottomMm).toBe(0.1 * 297);
+  });
+
+  it('safeAreaOf — תיבה חתוכה לעמוד: תיבה פנימית [left, 1−right]×[top, 1−bottom] (שלב 69)', () => {
+    expect(safeAreaOf({ left: 0.25, top: 0.2, right: 0.15, bottom: 0.1 })).toEqual({
+      left: 0.25, top: 0.2, width: 0.6, height: 0.7,
+    });
+    // חריגה מתחת למקור — נחתכת לתחום העמוד (נאמן, לא דחייה)
+    expect(safeAreaOf({ left: -0.2, top: 0.1, right: 0.1, bottom: -0.1 })).toEqual({
+      left: 0, top: 0.1, width: 0.9, height: 0.9,
+    });
+  });
+
+  it('safeAreaOf — תיבה מנוונת/פרושה (חיתוך ריק) או חסרה ⇒ null — הצרכן נופל לברירת המחדל המתועדת', () => {
+    // דף-כפול וירטואלי: left=1.235, right=0.29 ⇒ [1.235, 0.71] — הפוך
+    expect(safeAreaOf({ left: 1.235, top: 0.206, right: 0.29, bottom: 0.206 })).toBeNull();
+    // left+right > 1 בתוך העמוד — מנוונת
+    expect(safeAreaOf({ left: 0.7, top: 0.2, right: 0.7, bottom: 0.2 })).toBeNull();
+    // אנכית מנוונת
+    expect(safeAreaOf({ left: 0.1, top: 0.6, right: 0.1, bottom: 0.6 })).toBeNull();
+    // אין תיבה כלל (4 העיצובים בלי)
+    expect(safeAreaOf(null)).toBeNull();
+  });
+
+  it('safeAreaOf — עמוד מלא (שוליים 0) ⇒ העמוד כולו; שוליים סימטריים קטנים', () => {
+    expect(safeAreaOf({ left: 0, top: 0, right: 0, bottom: 0 })).toEqual({ left: 0, top: 0, width: 1, height: 1 });
+    expect(safeAreaOf({ left: 0.1, top: 0.1, right: 0.1, bottom: 0.1 })).toEqual({ left: 0.1, top: 0.1, width: 0.8, height: 0.8 });
   });
 
   it('shaarAssetId — נגזר מהתוכן: shaar:v2|{סוג}|{sha16}#{אינדקס}', () => {

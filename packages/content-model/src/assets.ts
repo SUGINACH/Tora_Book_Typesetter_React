@@ -232,6 +232,38 @@ export interface TextBoxMm {
   readonly bottomMm: number;
 }
 
+/** שברי-עמוד של תיבת הטקסט חתוכה לעמוד — האזור הבטוח (§11.2; שלב 69). */
+export interface SafeAreaFractions {
+  /** מיקום האזור משמאל העמוד (0..1). */
+  readonly left: number;
+  /** מיקום האזור מראש העמוד (0..1). */
+  readonly top: number;
+  /** רוחב האזור (0..1). */
+  readonly width: number;
+  /** גובה האזור (0..1). */
+  readonly height: number;
+}
+
+/**
+ * האזור הבטוח של עיצוב שער — תיבת הטקסט חתוכה לתחום העמוד (§11.2; שלב 69):
+ * תיבה פנימית [left, 1−right]×[top, 1−bottom], נחתכת ל-[0,1] בכל ציר.
+ * תיבה חסרה (null) או מנוונת/פרושה מחוץ לעמוד (חיתוך ריק — נתוני המקור
+ * של שער-אחורי/משנה ממוקמים על דף-כפול וירטואלי) ⇒ null: אין אזור
+ * בטוח מהעיצוב, והצרכן (תבנית העמוד) נופל במפורש לברירת המחדל
+ * המתועדת — תיבת השוליים הקבועה. אין תיקון שקט של הגאומטריה.
+ */
+export function safeAreaOf(textBox: PageFractions | null): SafeAreaFractions | null {
+  if (textBox === null) return null;
+  const x0 = Math.max(0, Math.min(1, textBox.left));
+  const x1 = Math.max(0, Math.min(1, 1 - textBox.right));
+  const y0 = Math.max(0, Math.min(1, textBox.top));
+  const y1 = Math.max(0, Math.min(1, 1 - textBox.bottom));
+  const width = x1 - x0;
+  const height = y1 - y0;
+  if (!(width > 0) || !(height > 0)) return null;
+  return { left: x0, top: y0, width, height };
+}
+
 /** שברי-עמוד ← מ"מ פיזיים לפי A4 הנעול (עוגן המרה יחיד). */
 export function pageFractionsToMm(f: PageFractions): TextBoxMm {
   return {

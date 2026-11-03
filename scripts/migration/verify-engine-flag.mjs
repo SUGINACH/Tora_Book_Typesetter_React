@@ -102,8 +102,8 @@ const workerTests = run('npx', ['vitest', 'run', '--config', 'vitest.packages.co
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  949 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+949\s+passed/m.test(testOut) ? ok : fail)('test:packages — 949/949 (613 + 2 שלב 40: מנוע + CLI)');
+const testOut = (SKIP_TESTS ? 'Tests  966 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+966\s+passed/m.test(testOut) ? ok : fail)('test:packages — 966/966 (613 + 2 שלב 40: מנוע + CLI)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

@@ -39,6 +39,7 @@
     "gen:fonts-manifest": "node scripts/migration/gen-fonts-manifest.mjs",
     "gen:assets-manifest": "node scripts/migration/gen-assets-manifest.mjs",
     "verify:assets": "node scripts/migration/verify-assets.mjs",
+    "verify:ornament-space": "node scripts/migration/verify-ornament-space.mjs",
     "verify:harfbuzz": "node scripts/migration/verify-harfbuzz-provider.mjs",
     "verify:enforcement": "node scripts/migration/verify-enforcement.mjs",
     "verify:cache": "node scripts/migration/verify-shaping-cache.mjs",

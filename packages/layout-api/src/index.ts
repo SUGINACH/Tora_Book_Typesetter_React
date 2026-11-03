@@ -36,6 +36,10 @@ export type {
   MetadataEntry,
 } from '@tora/content-model';
 export { allBlocks } from '@tora/content-model';
+// נכסים חזותיים (שלב 68–69; §11.2) — safeAreaOf והטיפוסים עוברים מהבעלים
+// (content-model) דרך layout-api: המנוע והמדיניות תלויים ב-layout-api בלבד.
+export type { PageFractions, SafeAreaFractions, AssetViewBox } from '@tora/content-model';
+export { safeAreaOf, parseViewBox } from '@tora/content-model';
 
 // יחידות ומדידה (measurement-api) — יחידות LU (ADR-001), Rect, FontFaceKey
 // וספק המדידה (לחתימת auditLayout §12 — הביקורת מקבלת את אותו חוזה).

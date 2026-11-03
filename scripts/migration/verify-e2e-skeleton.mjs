@@ -76,8 +76,8 @@ const pkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8'));
 
 console.log('\n4) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  949 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+949\s+passed/m.test(testOut) ? ok : fail)('test:packages — 949/949 (603 + 10 e2e + 2 דגל מנוע + 13 מועמדים + 10 DP + 10 איכות + 8 חירום)');
+const testOut = (SKIP_TESTS ? 'Tests  966 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+966\s+passed/m.test(testOut) ? ok : fail)('test:packages — 966/966 (603 + 10 e2e + 2 דגל מנוע + 13 מועמדים + 10 DP + 10 איכות + 8 חירום)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

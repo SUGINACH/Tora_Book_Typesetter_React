@@ -49,6 +49,8 @@ export const LAYOUT_AUDIT_FINDING_CODES: readonly string[] = Object.freeze([
   'audit.layout.REGION_REF_UNKNOWN',
   'audit.layout.COLUMN_ORDER_RTL',
   'audit.layout.LINE_HEIGHT_NONUNIFORM',
+  // נכסים (§14.2; שלב 69) — אף נכס אינו מכסה טקסט בשקט
+  'audit.layout.ORNAMENT_OVERLAP',
 ]);
 
 export interface LayoutAuditReport {
@@ -254,6 +256,67 @@ export function auditLayout(input: LayoutAuditInput): LayoutAuditReport {
         finding('audit.layout.COLUMN_ORDER_RTL', 'MEDIUM',
           { pageId: page.id, rightRegion: rightCol.id, leftRegion: leftCol.id },
           { pageId: page.id, regionId: leftCol.id }, []);
+      }
+    }
+    // ── עיטורים ונכסים: אף נכס אינו מכסה טקסט בשקט (§14.2; שלב 69) ──
+    // רקע שער מתועד: פריט עיטור באזור ornament (השכבה שמאחורי ה-custom-box —
+    // האזור הבטוח של העיצוב) אינו נבדק מול קווים; כל עיטור אחר — כן.
+    const ornRegionIds = new Set(page.regions.filter((r) => r.kind === 'ornament').map((r) => r.id));
+    const absLines: Array<{ id: string; x: number; y: number; w: number; h: number; spans: readonly unknown[] }> = [];
+    for (const item of page.items as readonly PlacedItem[]) {
+      if (item.kind !== 'line') continue;
+      const line = item as unknown as LineFragment;
+      const reg = regions.get(line.regionId);
+      if (reg === undefined) continue;
+      absLines.push({
+        id: line.id,
+        x: (reg.rect.x as number) + (line.rect.x as number),
+        y: (reg.rect.y as number) + (line.rect.y as number),
+        w: line.rect.width as number,
+        h: line.rect.height as number,
+        spans: line.sourceSpans ?? [],
+      });
+    }
+    const overlaps = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }): boolean =>
+      a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+    for (const item of page.items as readonly PlacedItem[]) {
+      const isOrnament = item.kind === 'ornament'
+        || (item.kind === 'rule' && (item as unknown as { ruleKind?: unknown }).ruleKind === 'ornament');
+      if (!isOrnament || ornRegionIds.has((item as unknown as { regionId: string }).regionId)) continue;
+      const orn = item as unknown as { id: string; regionId: string; rect: RectLike };
+      const reg = regions.get(orn.regionId);
+      if (reg === undefined) continue;
+      const abs = {
+        x: (reg.rect.x as number) + (orn.rect.x as number),
+        y: (reg.rect.y as number) + (orn.rect.y as number),
+        w: orn.rect.width as number,
+        h: orn.rect.height as number,
+      };
+      for (const l of absLines) {
+        if (overlaps(abs, l)) {
+          finding('audit.layout.ORNAMENT_OVERLAP', 'HIGH',
+            { itemId: orn.id, lineId: l.id, regionId: orn.regionId },
+            { pageId: page.id, regionId: orn.regionId, itemId: orn.id }, l.spans as readonly SourceSpan[], 1, 0);
+        }
+      }
+    }
+    // אזור עיטור החופף אזור תוכן בעמוד שאינו שער — בשער הרקע מתועד (§11.2).
+    const pageKind = String((page as unknown as { kind?: unknown }).kind ?? '');
+    const isShaarPage = pageKind === 'main-shaar' || pageKind === 'back-shaar' || pageKind === 'sub-shaar';
+    if (!isShaarPage) {
+      const contentKinds = new Set(['body-column', 'header', 'footnotes', 'outer-notes', 'footer']);
+      const ornRegions = page.regions.filter((r) => r.kind === 'ornament');
+      for (const orn of ornRegions) {
+        const o = { x: orn.rect.x as number, y: orn.rect.y as number, w: orn.rect.width as number, h: orn.rect.height as number };
+        for (const r of page.regions) {
+          if (r.id === orn.id || !contentKinds.has(String(r.kind))) continue;
+          const c = { x: r.rect.x as number, y: r.rect.y as number, w: r.rect.width as number, h: r.rect.height as number };
+          if (overlaps(o, c)) {
+            finding('audit.layout.ORNAMENT_OVERLAP', 'HIGH',
+              { regionId: orn.id, overlapsRegion: r.id, pageId: page.id },
+              { pageId: page.id, regionId: r.id }, []);
+          }
+        }
       }
     }
   }

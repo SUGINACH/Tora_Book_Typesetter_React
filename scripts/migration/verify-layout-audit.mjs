@@ -41,15 +41,15 @@ const ac = await import(join(repoRoot, 'packages', 'audit-core', 'dist', 'index.
 for (const name of ['auditLayout', 'LAYOUT_AUDIT_FINDING_CODES']) {
   (name in ac ? ok : fail)(`מיוצא: ${name}`);
 }
-(ac.LAYOUT_AUDIT_FINDING_CODES.length === 12 ? ok : fail)(`12 קודי ממצא רשומים (נמצאו ${ac.LAYOUT_AUDIT_FINDING_CODES.length})`);
+(ac.LAYOUT_AUDIT_FINDING_CODES.length === 13 ? ok : fail)(`13 קודי ממצא רשומים — 12 קודמים + ORNAMENT_OVERLAP שלב 69 (נמצאו ${ac.LAYOUT_AUDIT_FINDING_CODES.length})`);
 try {
   // טוהר: שתי קריאות ⇐ דוח זהה (נבדק על פלט ה-CLI בסעיף 3)
-  ok('קוד ממצא לא רשום נדחה — נבדק בבדיקות היחידה (12/12)');
+  ok('קוד ממצא לא רשום נדחה — נבדק בבדיקות היחידה (14/14)');
 } catch { fail('unexpected'); }
 
 console.log('\n2) בדיקות היחידה');
 const auditOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'packages/audit-core/test/layout-audit.test.ts']);
-(auditOut !== null && /Tests\s+12\s+passed/.test(auditOut) ? ok : fail)('layout-audit tests — 12/12');
+(auditOut !== null && /Tests\s+14\s+passed/.test(auditOut) ? ok : fail)('layout-audit tests — 14/14');
 
 console.log('\n3) ה-CLI משלב את הביקורת (engine:layout / engine:audit)');
 const BIN = join(repoRoot, 'packages', 'cli', 'dist', 'main.js');
@@ -93,8 +93,8 @@ const badAudit = cli(['--layout', mutatedPath]);
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  949 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+949\s+passed/m.test(testOut) ? ok : fail)('test:packages — 949/949 (589 + 12 audit + 2 CLI-audit + 10 e2e + 2 דגל)');
+const testOut = (SKIP_TESTS ? 'Tests  966 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+966\s+passed/m.test(testOut) ? ok : fail)('test:packages — 966/966 (589 + 12 audit + 2 CLI-audit + 10 e2e + 2 דגל)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

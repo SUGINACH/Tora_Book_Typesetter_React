@@ -38,7 +38,7 @@
  *      החיפוש (שלב 51) מזרים את אותם מזהים גם ל־PaginationState
  *      (remainingByRegion) וגם ל־IR.
  */
-import { asLu, type LayoutUnit, type Rect } from '@tora/layout-api';
+import { asLu, quantizeSetting, roundDiv, safeMul, type LayoutUnit, type Rect, type SafeAreaFractions } from '@tora/layout-api';
 import type { PageKind, PageParity, RegionKind } from '@tora/layout-api';
 import { LayoutEngineError } from '../errors.js';
 
@@ -73,6 +73,13 @@ export interface TemplateAssetRef {
   readonly sha256: string;
   /** viewBox של הנכס (יחידות SVG) — לתיעוד ולפרופורציה בלבד. */
   readonly viewBox: { readonly width: number; readonly height: number };
+  /**
+   * האזור הבטוח של העיצוב כשברי-עמוד (§11.2; שלב 69) — תיבת הטקסט חתוכה
+   * לעמוד (safeAreaOf של content-model, דרך layout-api). null/חסר —
+   * אין אזור בטוח מהעיצוב (בלי תיבה או תיבה פרושה/מנוונת) והתבנית נופלת
+   * במפורש לברירת המחדל המתועדת: תיבת השוליים הקבועה (כמו legacy).
+   */
+  readonly safeArea?: SafeAreaFractions | null;
 }
 
 /** מדיניות פוליו מודפס לסוג עמוד (§11.1 — המספר המודפס נגזר מ-AnchorTable). */
@@ -212,6 +219,18 @@ export function pageTemplateIssues(t: unknown): string[] {
     if (typeof a !== 'object' || a === null || typeof a.assetId !== 'string' || a.assetId.length === 0
       || typeof a.sha256 !== 'string' || !/^[0-9a-f]{64}$/.test(a.sha256)
       || !isPositiveInt(vb?.width) || !isPositiveInt(vb?.height)) issues.push('asset');
+    // safeArea (שלב 69): null חוקי (אין אזור בטוח מהעיצוב); כשקיים — ארבעה
+    // שברים סופיים בתחום [0,1] וממדים חיוביים (התבנית תיבנה ממנו rect ב-LU).
+    const sa = a?.safeArea;
+    if (sa !== undefined && sa !== null) {
+      const s = sa as Record<string, unknown>;
+      const f = ['left', 'top', 'width', 'height'] as const;
+      const bad = f.some((k) => typeof s[k] !== 'number' || !Number.isFinite(s[k] as number) || (s[k] as number) < 0 || (s[k] as number) > 1)
+        || !((s.width as number) > 0) || !((s.height as number) > 0)
+        || (s.left as number) + (s.width as number) > 1 + 1e-9
+        || (s.top as number) + (s.height as number) > 1 + 1e-9;
+      if (bad) issues.push('asset.safeArea');
+    }
   }
   // עוגן הערות: בתוך העמוד, רוחב חוקי, טורים 1|2; קיים רק בתבניות תוכן.
   if (v.footnoteAnchor !== undefined) {
@@ -320,18 +339,48 @@ function buildNotesTemplate(parity: PageParity, input: TemplateSetInput): PageTe
 }
 
 /**
+ * תיבת ה-custom-box של תבנית שער (§11.2; שלב 69): האזור הבטוח של העיצוב
+ * — שברי-עמוד ← LU דרך הפרימיטיבים של units בלבד (quantizeSetting למיליוניות
+ * × גאומטריה, roundDiv יחיד; ADR-001 §4 — אין עיגול מקומי). כשאין אזור
+ * בטוח מהעיצוב (null — בלי תיבה, או תיבה מנוונת/פרושה שחיתוכה ריק;
+ * נתוני המקור של שער-אחורי/משנה) — תיבת השוליים הקבועה, ברירת המחדל
+ * המתועדת שהתבניות השתמשו בה עד שלב 68 (והרנדרר הישן לפניו).
+ */
+function shaarTextBoxRect(
+  safeArea: SafeAreaFractions | null,
+  g: { readonly pageWidth: LayoutUnit; readonly pageHeight: LayoutUnit; readonly margin: LayoutUnit },
+): Rect {
+  if (safeArea === null) {
+    return {
+      x: g.margin,
+      y: g.margin,
+      width: asLu(Math.max(1, g.pageWidth - 2 * g.margin)),
+      height: asLu(Math.max(1, g.pageHeight - 2 * g.margin)),
+    };
+  }
+  const SCALE = 1000000; // מיליוניות — רזולוציית הקוונטיזציה של שברי האזור
+  const lu = (frac: number, page: number, key: string): number =>
+    roundDiv(safeMul(quantizeSetting(frac, SCALE, `shaar.safeArea.${key}`), page, `shaar.safeArea.${key}`), SCALE);
+  return {
+    x: asLu(lu(safeArea.left, g.pageWidth, 'left')),
+    y: asLu(lu(safeArea.top, g.pageHeight, 'top')),
+    width: asLu(Math.max(1, lu(safeArea.width, g.pageWidth, 'width'))),
+    height: asLu(Math.max(1, lu(safeArea.height, g.pageHeight, 'height'))),
+  };
+}
+
+/**
  * תבנית עמוד שער (main/back/sub): העמוד כולו אזור ornament + custom-box
- * המקושר לנכס לפי מזהה ו־sha256 (§11.2). פענוח תיבות הטקסט וה-safe-areas
- * של העיצוב — שלב 68 (M8), מתועד ב-transfer-inventory; כאן הגאומטריה
- * המלאה של העמוד שמורה והנכס נעול בהאש.
+ * מגואומטריית האזור הבטוח של העיצוב (§11.2; שלב 69 — תיבת הטקסט של השער
+ * חתוכה לעמוד; תיעוד המניפסטים — שלב 68), כשהנכס נעול במזהה ובהאש.
  */
 function buildShaarTemplate(kind: 'main-shaar' | 'back-shaar' | 'sub-shaar', parity: PageParity, input: TemplateSetInput): PageTemplate {
   const g = input.geometry;
+  const asset = input.shaarAssets?.[kind];
   const regions: TemplateRegionSpec[] = [
     { role: 'ornament', rect: { x: asLu(0), y: asLu(0), width: g.pageWidth, height: g.pageHeight } },
-    { role: 'custom-box', rect: { x: g.margin, y: g.margin, width: asLu(Math.max(1, g.pageWidth - 2 * g.margin)), height: asLu(Math.max(1, g.pageHeight - 2 * g.margin)) } },
+    { role: 'custom-box', rect: shaarTextBoxRect(asset?.safeArea ?? null, g) },
   ];
-  const asset = input.shaarAssets?.[kind];
   return makeTemplate({
     id: `tpl:${kind}:${parity}`,
     kind,

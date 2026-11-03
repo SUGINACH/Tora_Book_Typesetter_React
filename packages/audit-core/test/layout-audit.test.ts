@@ -118,7 +118,7 @@ describe('שלב 38: ביקורת פריסה — תקין', () => {
 
   test('קוד ממצא לא רשום נדחה — אין קוד צד', () => {
     const codes = LAYOUT_AUDIT_FINDING_CODES.length;
-    expect(codes).toBe(12);
+    expect(codes).toBe(13); // 12 קודמים + ORNAMENT_OVERLAP (שלב 69)
   });
 });
 
@@ -235,6 +235,59 @@ describe('שלב 38: מוטציות שליליות — נתפסות', () => {
     line.baseline = (line.rect.y as number) - 5000;
     const report = auditLayout({ content, settings: {}, layout: bad });
     expect(report.findings.some((f) => f.code === 'audit.layout.BASELINE_OUT_OF_LINE')).toBe(true);
+  });
+
+  test('פריט עיטור באזור תוכן החופף קו ⇒ ORNAMENT_OVERLAP (HIGH; שלב 69 — אף נכס אינו מכסה טקסט)', () => {
+    const { content, layout } = makeLayout();
+    const bad = mutatedLayout(layout, (draft) => {
+      const { pageIdx, itemIdx } = firstLineOf(draft);
+      const page = draft.pages[pageIdx];
+      const line = page?.items[itemIdx] as unknown as { id: string; regionId: string; rect: { x: number; y: number; width: number; height: number } };
+      page?.items.push({
+        kind: 'ornament',
+        id: 'orn-cover-test',
+        regionId: line.regionId,
+        rect: { ...line.rect },
+        assetId: 'shaar:v2|main|4ac3285bbd68337f#0',
+        assetSha256: 'a'.repeat(64),
+      } as never);
+    });
+    const report = auditLayout({ content, settings: {}, layout: bad });
+    const f = report.findings.find((x) => x.code === 'audit.layout.ORNAMENT_OVERLAP');
+    expect(f).toBeDefined();
+    expect(f?.severity).toBe('HIGH');
+  });
+
+  test('רקע שער פטור (פריט באזור ornament); אזור עיטור חופף אזור תוכן בעמוד גוף ⇒ ORNAMENT_OVERLAP (שלב 69)', () => {
+    const { content, layout } = makeLayout();
+    // (א) פריט עיטור בתוך אזור ornament (שכבת הרקע שמאחורי האזור הבטוח) — פטור
+    const background = mutatedLayout(layout, (draft) => {
+      const { pageIdx } = firstLineOf(draft);
+      const page = draft.pages[pageIdx];
+      const body = page?.regions.find((r) => r.kind === 'body-column');
+      if (body === undefined) throw new Error('no body column');
+      page?.regions.push({ id: 'page-bg-orn', kind: 'ornament', rect: { x: 0, y: 0, width: (page?.size.width as number), height: (page?.size.height as number) } } as never);
+      page?.items.push({
+        kind: 'ornament',
+        id: 'orn-bg-test',
+        regionId: 'page-bg-orn',
+        rect: { x: 0, y: 0, width: 100, height: 100 },
+        assetId: 'shaar:v2|main|4ac3285bbd68337f#0',
+        assetSha256: 'a'.repeat(64),
+      } as never);
+    });
+    const bgReport = auditLayout({ content, settings: {}, layout: background });
+    expect(bgReport.findings.some((f) => f.code === 'audit.layout.ORNAMENT_OVERLAP' && f.params.itemId === 'orn-bg-test')).toBe(false);
+    // (ב) אזור עיטור החופף אזור תוכן בעמוד גוף — נתפס (בשער היה פטור — §11.2)
+    const overlapping = mutatedLayout(layout, (draft) => {
+      const { pageIdx } = firstLineOf(draft);
+      const page = draft.pages[pageIdx];
+      const body = page?.regions.find((r) => r.kind === 'body-column');
+      if (body === undefined) throw new Error('no body column');
+      page?.regions.push({ id: 'page-orn-overlap', kind: 'ornament', rect: { ...body.rect } } as never);
+    });
+    const ornReport = auditLayout({ content, settings: {}, layout: overlapping });
+    expect(ornReport.findings.some((f) => f.code === 'audit.layout.ORNAMENT_OVERLAP' && f.params.regionId === 'page-orn-overlap')).toBe(true);
   });
 
   test('קלט שגוי ⇒ שגיאה מקוטלגת (לא קריסה שקטה)', () => {
