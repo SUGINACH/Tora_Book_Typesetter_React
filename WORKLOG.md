@@ -4,6 +4,11 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### תיקון CI סבב כ"ב — חריג מעטפת מתועד לשלב 77 (כלל 8) + סדר הרצת הסוללה — הושלם 2026-11-05
+- **רקע:** ה־CI נכשל על 6528e9a/c2aa2ed ב־verify-work-conventions ("הקוד הישן לא נערך", כלל 8): שלב 77 מחייב מטבעו את החלפת קבצי ה־UI הישנים — מסלול ה־typeset הסינכרוני חי בהם (useTypesetter, הזרקת HTML בתצוגה). 13 קבצים קדם־תכנית נערכו/נמחקו + שני נכסים חדשים ב־public/fonts. מקומית זה לא נתפס **כי הסוללה רצה לפני ה־commit** — המאמת קורא `git diff eba2c63..HEAD`, ושינויים לא מחויבים בלתי נראים לו.
+- **תיקון:** (א) חריג מעטפת מתועד ב־verify-work-conventions — רשימה **סגורה** של 13 קבצים (App/AppShell/PreviewArea/TextEditor/ImportButtons/ZoomControls/SettingsSidebar/CustomStylePanel + שלושת ה־hooks שנמחקו + fonts.css + deploy.yml), בסגנון התקדימים (.gitignore, package.json LIVING, תיקום־התיאום a1674fb) — עם הצדקה פר־קובץ ואיסור הרחבה בלי תיעוד; (ב) NEW_ALLOWED נוספו בדיוק שני נכסים — `public/fonts/manifest.json` ו־`Guttman-Rashi-Normal.woff2` (העתקים ביט־ביט של assets; הזהות נאכפת ב־verify-ui-worker). (ג) הלכת הליך חדשה: **הסוללה המקומית רצה אחרי ה־commit** — git-based verifiers רואים מצב מחויב בלבד.
+- **בדיקות:** verify-work-conventions — **44/44** על המצב המחויב; verify-workspaces — **46/46**; מלוא הסוללה על המצב המחויב — ירוקה.
+
 ### תיקון Deploy לאחר שלב 77 — ה־Pages build חייב build:packages — הושלם 2026-11-05
 - **רקע:** ה־Deploy to GitHub Pages נכשל על 6528e9a (`Failed to resolve entry for package "@tora/settings-schema"`) — מאז שלב 76/77 האפליקציה מייבאת חבילות @tora בזמן ריצה, אך deploy.yml הריץ `vite build` בלי `build:packages` לפניו (ה־dist של החבילות לא היה קיים אצל ה־runner). ה־CI הראשי לא נפגע — אך זו חזרה על הלקח: **כל workflow שבונה את האפליקציה חייב את אותה שרשרת בנייה**, לא רק זה שנגענו בו.
 - **תיקון:** `deploy.yml` — נוסף `npm run build:packages` בין `npm ci` ל־`npm run build` (זהה ל־ci.yml). אומת מקומית: `npm run build` מצליח ומפיק את העובד (worker-entry 195KB), harfbuzz.wasm (444KB) והמפענחן — המסלול המלא של שלב 77 נכנס לבנדל.

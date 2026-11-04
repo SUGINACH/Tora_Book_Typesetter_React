@@ -87,6 +87,29 @@ const LIVING_FILES = new Set(['package.json', 'package-lock.json', 'CHECKLIST.md
 // בנייה מקומיים לעקיבה ושובר את ה־CI בשיבוט טרי (כפי שקרה בשלבים 18–27).
 // תקדים: package.json/package-lock.json התקבלו כ-LIVING לצורך חיווט ה-workspaces.
 LIVING_FILES.add('.gitignore');
+// חריג מעטפת מתועד (שלב 77, 2026-11-05; תיקון CI סבב כ"ב): התכנית מחייבת
+// "הסרת כל מסלול typeset סינכרוני" — ומסלול זה חי בקבצי ה־UI הישנים עצמם
+// (useTypesetter רץ את המנוע הישן בחוט הראשי; הקומפוננטות הזריקו HTML).
+// החלפת המעטפת היא תוכן השלב, לא עקיפת כלל 8: הקבצים נכתבו מחדש על חמשת
+// ה־stores (שלב 76) ועל היטל ה־IR (שלב 36), ומסלול העימוד הסינכרוני נמחק
+// במפורש. רשימה סגורה — כל קובץ נוסף ייתפס; אין להרחיב בלי תיעוד מפורש
+// ב־WORKLOG בסגנון תיקום-התיאום (a1674fb).
+const SHELL_REPLACED_STAGE_77 = new Set([
+  'src/App.tsx', // מריץ מיגרציה+החייאה; ErrorBoundary נשמר; useAutoSave (מסלול ישן) הוסר
+  'src/components/layout/AppShell.tsx', // חוטר לבוררים + useTypesetRun (Worker בלבד)
+  'src/components/layout/PreviewArea.tsx', // LayoutPreview — היטל IR; הוסר dangerouslySetInnerHTML
+  'src/components/editor/TextEditor.tsx', // editorStore — מקור גולמי (§13.1)
+  'src/components/editor/ImportButtons.tsx', // editorStore + resetForNewDocument
+  'src/components/view/ZoomControls.tsx', // הוסר ייבוא מת מהמרשם הישן
+  'src/components/settings/SettingsSidebar.tsx', // מוסר מההרכבה עד שלב 78 — הותאם ייבוא בלבד
+  'src/components/settings/panels/CustomStylePanel.tsx', // כנ"ל
+  'src/hooks/useTypesetter.ts', // נמחק — המסלול הסינכרוני עצמו (§12.1)
+  'src/hooks/useAutoSave.ts', // נמחק — שמירת המסלול הישן (editor-store מחליף)
+  'src/hooks/useEditorPreviewSync.ts', // נמחק — סנכרון התצוגה הישנה
+  'public/fonts/fonts.css', // נוספה הצהרת @font-face לגופן הגוף (ייחוס CLI)
+  '.github/workflows/deploy.yml', // נדרש build:packages לפני vite build מאז שהאפליקציה צורכת חבילות @tora
+]);
+for (const f of SHELL_REPLACED_STAGE_77) LIVING_FILES.add(f);
 // תיקון תכנית מבוקר (כלל 3 בתכנית): קובץ התכנית נערך בתיאום "לפני שלב 15"
 // המתועד ב־WORKLOG — תחילה ב־commit ed3b856, ואחר כך תוקן ב־a1674fb
 // ("שחזור שלבים שהושלמו ותיקום תיאום התכנית") שהשיב את ניסוחי שלבים 1–14
@@ -154,6 +177,10 @@ const NEW_ALLOWED = [
   /^docs\//, /^assets\//, /^packages\//, /^scripts\/migration\//, /^tests\/[a-z0-9-]+\//,
   /^src\/(stores|worker-host|renderers)\//, /^\.github\/(PULL_REQUEST_TEMPLATE\.md|workflows\/ci\.yml)$/,
   /^\.nvmrc$/, /^tsconfig\.base\.json$/, /^eslint\.config\.js$/, /^\.dependency-cruiser\.cjs$/, /^vitest\.packages\.config\.ts$/,
+  // שלב 77 (תיקון CI סבב כ"ב): שני נכסי צרור העובד — העתקים ביט־ביט של מקור
+  // האמת ב־assets/fonts (הזהות נאכפת ב־verify-ui-worker), המוגשמים לדפדפן
+  // דרך public/ כנדרש ל־fetch האפליקציה. רשימה סגורה — לא תיקייה שלמה.
+  /^public\/fonts\/(manifest\.json|Guttman-Rashi-Normal\.woff2)$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;
