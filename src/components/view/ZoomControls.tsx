@@ -1,5 +1,3 @@
-import { useViewStore } from '../../store/view-store';
-
 interface Props {
   zoom: number;
   onChange: (zoom: number) => void;

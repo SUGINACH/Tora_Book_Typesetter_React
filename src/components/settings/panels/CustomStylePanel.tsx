@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useSettings } from '../../../hooks/useTypesetter';
 import { useSettingsStore } from '../../../store/settings-store';
+
+/** גישה להגדרות המעטפת הישנה — מוחלפת בלוח המרשם בשלב 78. */
+const useSettings = () => useSettingsStore((s) => s.settings);
 import type { CustomTextStyle } from '../../../types';
 
 export function CustomStylePanel() {

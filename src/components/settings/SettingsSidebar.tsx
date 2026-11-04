@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSettingsStore } from '../../store/settings-store';
-import { useSettings } from '../../hooks/useTypesetter';
+
+/** גישה להגדרות המעטפת הישנה — מוחלפת בלוח המרשם בשלב 78. */
+const useSettings = () => useSettingsStore((s) => s.settings);
 import { loadShaarDesigns, type ShaarDesigns } from '../../lib/shaar-loader';
 import { exportCustomStyles } from '../../lib/custom-styles-io';
 import { CustomStylePanel } from './panels/CustomStylePanel';

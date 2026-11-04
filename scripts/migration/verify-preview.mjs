@@ -61,15 +61,16 @@ for (const frag of ['insetInlineStart', 'insetBlockStart', 'inlineSize', 'blockS
 console.log('\n3) בדיקות הקומפוננטות (tests/component)');
 const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/']);
 // שלב 76: התיקייה כוללת גם את stores.test.tsx (4 בדיקות רינדור) — 8 preview + 4 stores
-(compOut !== null && /Tests\s+12\s+passed/.test(compOut) ? ok : fail)('tests/component — 12/12 (8 preview + 4 stores שלב 76)');
+// שלב 77: וגם את e2e-worker-path.test.tsx (4 בדיקות מעטפת מלאה) — סה"כ 16
+(compOut !== null && /Tests\s+16\s+passed/.test(compOut) ? ok : fail)('tests/component — 16/16 (8 preview + 4 stores + 4 e2e-worker)');
 
 console.log('\n4) typecheck שורש');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1098 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1098\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1098/1098 (581 + 8 preview + 12 audit + 3 CLI + 10 e2e + 2 דגל)');
+const testOut = (SKIP_TESTS ? 'Tests  1118 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1118\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1118/1118 (581 + 8 preview + 12 audit + 3 CLI + 10 e2e + 2 דגל)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

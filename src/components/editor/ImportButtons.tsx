@@ -1,5 +1,13 @@
-import { useDocumentStore } from '../../store/document-store';
+/**
+ * ImportButtons.tsx — ייבוא מסמכים למעטפת החדשה (שלב 77).
+ *
+ * קבצי טקסט/Word/דוגמאות נכנסים ל־editorStore (מקור גולמי; שלב 76).
+ * ייבוא מסמך חדש מנקה את התוצאה הקודמת — אין הצגה של תוצאה ישנה כאילו
+ * היא של המסמך החדש (resetForNewDocument שומר zoom/locale).
+ */
 import { importTextFile, importWordFile } from '../../lib/text-importers';
+import { useEditorStore } from '../../stores/editor-store.js';
+import { resetForNewDocument } from '../../stores/index.js';
 
 const SAMPLE_FILES = [
   { name: 'טקסט קצר — אלמנה/יתום', path: './widow-orphan.txt' },
@@ -11,9 +19,15 @@ const SAMPLE_FILES = [
   { name: 'טקסט ארוך מאוד', path: './very_long_test_text.txt' },
 ];
 
-export function ImportButtons() {
-  const setText = useDocumentStore((s) => s.setText);
+/** קליטת תוכן חדש — מסמך חדש: ניקוי בין מסמכים לפני הכתיבה. */
+function acceptNewDocument(text: string, name: string): void {
+  resetForNewDocument();
+  const editor = useEditorStore.getState();
+  editor.setDocumentName(name);
+  editor.setText(text);
+}
 
+export function ImportButtons() {
   const handleTextFile = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -23,7 +37,7 @@ export function ImportButtons() {
       if (!file) return;
       try {
         const text = await importTextFile(file);
-        setText(text);
+        acceptNewDocument(text, file.name);
       } catch (err) {
         console.warn('File not loaded:', err);
       }
@@ -40,7 +54,7 @@ export function ImportButtons() {
       if (!file) return;
       try {
         const text = await importWordFile(file);
-        setText(text);
+        acceptNewDocument(text, file.name);
       } catch (err) {
         console.warn('Word file not loaded:', err);
       }
@@ -52,7 +66,7 @@ export function ImportButtons() {
     try {
       const response = await fetch(path);
       const text = await response.text();
-      setText(text);
+      acceptNewDocument(text, path.replace(/^\.\//, ''));
     } catch (err) {
       console.warn('Failed to load sample:', err);
     }
@@ -63,6 +77,7 @@ export function ImportButtons() {
       <button
         onClick={handleTextFile}
         className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+        data-testid="import-text"
       >
         📄 ייבוא טקסט
       </button>
@@ -75,12 +90,13 @@ export function ImportButtons() {
       <select
         onChange={(e) => {
           if (e.target.value) {
-            handleLoadSample(e.target.value);
+            void handleLoadSample(e.target.value);
             e.target.value = '';
           }
         }}
         className="px-2 py-1 text-xs border border-gray-300 rounded bg-white"
         defaultValue=""
+        data-testid="import-sample"
       >
         <option value="">📝 טען דוגמה...</option>
         {SAMPLE_FILES.map((f) => (

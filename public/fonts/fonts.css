@@ -119,3 +119,13 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* === גופן גוף הייחוס (CLI parity — שלב 77) === */
+
+@font-face {
+  font-family: 'Guttman Rashi';
+  src: url('/fonts/Guttman-Rashi-Normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

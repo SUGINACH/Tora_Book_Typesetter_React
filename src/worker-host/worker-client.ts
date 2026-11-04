@@ -170,8 +170,10 @@ export class WorkerClient {
   }
 }
 
-/** inputHash צפוי מהבקשה — אותם רכיבים של makeRunManifest (§6.7). */
-function expectedInputHashOf(request: TypesetRequest): string {
+/** inputHash צפוי מהבקשה — אותם רכיבים של makeRunManifest (§6.7).
+ * מיוצא משלב 77: המנצח (typeset-run) רושם את אותו hash ב־runStore —
+ * מקור אחד, בלי ייבוא מנוע נוסף בחוט הראשי. */
+export function expectedInputHashOf(request: TypesetRequest): string {
   const assets = request.assets;
   return inputHashOf({
     sourceSha256: request.sourceSha256,
