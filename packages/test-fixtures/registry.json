@@ -982,11 +982,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-headings-all.txt",
         "reason": "כל רמות H0–H7 ושילובי heading escort — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
     },
     {
@@ -1014,11 +1014,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-h3-edges.txt",
         "reason": "H3 באמצע עמוד ובסמוך לתחתית עם שתי הערות — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
     },
     {
@@ -1046,11 +1046,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-notes-heavy.txt",
         "reason": "הערת שוליים ארוכה, כמה הערות לאותו עוגן, sidenotes מרובות — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
     },
     {
@@ -1078,11 +1078,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-brackets-cross.txt",
         "reason": "סוגריים מקוננים חוצי טור ועמוד — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
     },
     {
@@ -1110,11 +1110,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-firstword-dropword.txt",
         "reason": "first-word-window, drop-word ו-dibbur חופפים — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
     },
     {
@@ -1142,11 +1142,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-toc-pages.txt",
         "reason": "TOC בן עמוד אחד/כמה עמודים; מספור התחלתי; שערים לא ממוספרים — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
     },
     {
@@ -1174,11 +1174,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-shaar-ornaments.txt",
         "reason": "shaar main/back/sub, ornaments בכל scope, מחיצות ועיטורי סיום — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
     },
     {
@@ -1206,11 +1206,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-mixed-scripts.txt",
         "reason": "עברית, לטינית, מספרים, NBSP ומילה ארוכה — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
     },
     {
@@ -1241,11 +1241,11 @@
       },
       "provenance": {
         "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
-        "sourceSha": "stage-74-generated",
+        "sourceSha": "4026faac50702831c4b98ad30418df9367b08490",
         "sourcePath": "corpus/release/release-reference-document.txt",
         "reason": "מסמך הייחוס של ההפצה — שילוב כל היסודות (H0–H7, שערים, TOC, notes, קישורים, מעורב) בהרכבת release (--compose) — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
       },
-      "fontManifestSha256": null,
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
       "settingsSha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
     }
   ],

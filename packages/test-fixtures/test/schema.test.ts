@@ -18,7 +18,7 @@ const demoHash = (ir: unknown): string => {
   return createHash('sha256').update(JSON.stringify(ir)).digest('hex');
 };
 
-describe('סכמת fixture — כל 26 הפריטים משלב 4 עוברים', () => {
+describe('סכמת fixture — כל 35 הפריטים (26 משלב 4 + 9 release משלב 74)', () => {
   it('הרישום כולו תקין (0 בעיות)', () => {
     const issues = validateRegistry(registry);
     expect(issues).toEqual([]);
