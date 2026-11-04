@@ -24,6 +24,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # שלב 76/77: האפליקציה מייבאת את חבילות @tora בזמן ריצה (stores/worker-host)
+      # — ה־dist שלהן חייב להיבנות לפני vite build (בדיוק כמו ב־ci.yml).
+      - run: npm run build:packages
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

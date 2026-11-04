@@ -4,6 +4,10 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### תיקון Deploy לאחר שלב 77 — ה־Pages build חייב build:packages — הושלם 2026-11-05
+- **רקע:** ה־Deploy to GitHub Pages נכשל על 6528e9a (`Failed to resolve entry for package "@tora/settings-schema"`) — מאז שלב 76/77 האפליקציה מייבאת חבילות @tora בזמן ריצה, אך deploy.yml הריץ `vite build` בלי `build:packages` לפניו (ה־dist של החבילות לא היה קיים אצל ה־runner). ה־CI הראשי לא נפגע — אך זו חזרה על הלקח: **כל workflow שבונה את האפליקציה חייב את אותה שרשרת בנייה**, לא רק זה שנגענו בו.
+- **תיקון:** `deploy.yml` — נוסף `npm run build:packages` בין `npm ci` ל־`npm run build` (זהה ל־ci.yml). אומת מקומית: `npm run build` מצליח ומפיק את העובד (worker-entry 195KB), harfbuzz.wasm (444KB) והמפענחן — המסלול המלא של שלב 77 נכנס לבנדל.
+
 ### שלב 77 — חיבור מלא ל־Worker ללא עימוד ב־main thread (M9) — הושלם 2026-11-05
 - **תוצרים (`src/worker-host/`):**
   - `typeset-run.ts` — **TypesetController**, המנצח: הנקודה היחידה שבה ה־UI נוגע בעימוד — ואינו מעמד. מסלול: submit ⇐ preparing; progress ראשון ⇐ running; done ⇐ auditing (פרסור IR + auditLayout הבלתי־תלויה) ⇐ done + setResult (IR/manifest/findings קפואים). שגיאה ⇒ מפתח קטלוגי ב־runStore. שלוש שכבות stale: supersede בלקוח, jobId/inputHash ב־runStore, ומזהה ה־job של הריצה הנוכחית בלבד רשאי לכתוב. **AnchorTable=null מתועד** — אינה בפרוטוקול v1; לא ממציאים ערכים.
