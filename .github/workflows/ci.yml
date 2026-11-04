@@ -130,6 +130,7 @@ jobs:
           node scripts/migration/verify-parity-matrix.mjs
           node scripts/migration/verify-compatibility.mjs
           node scripts/migration/verify-release-fixtures.mjs
+          node scripts/migration/verify-fixtures-matrix.mjs
 
       - name: פרסום artifacts שלד המהלך (manifest/ledger/audit — שלב 39)
         uses: actions/upload-artifact@v4
