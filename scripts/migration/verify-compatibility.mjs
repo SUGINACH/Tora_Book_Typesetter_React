@@ -237,8 +237,8 @@ console.log('\n9) רגרסיה — build, typecheck, lint, deps, test:packages')
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('npm run lint:packages');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('npm run deps:check');
 {
-  const t = SKIP_TESTS ? 'Tests  1033 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']);
-  (/Tests\s+1033\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 1033/1033');
+  const t = SKIP_TESTS ? 'Tests  1039 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']);
+  (/Tests\s+1039\s+passed/.test(t ?? '') ? ok : fail)('test:packages — 1039/1039');
 }
 
 // ---------- סיכום ----------

@@ -26,6 +26,8 @@ export interface CliArgs {
   readonly request?: string;
   /** דגל מנוע מפורש (שלב 40; §18-M4): legacy|next; ברירת מחדל next. */
   readonly engine: 'legacy' | 'next';
+  /** הרכבת release (שלב 74): שער ראשי/אחורי + עמודי TOC מיוצבים מעל תוצאת v0. */
+  readonly compose: boolean;
 }
 
 export type ArgsResult =
@@ -56,6 +58,7 @@ export const USAGE = `@tora/cli — Node 22 reference runner (שלב 34; אפי�
   --trace <level>       off | summary | decisions | full (ברירת מחדל: off)
   --engine <name>       legacy | next (ברירת מחדל: next; לריצות reference בלבד — שלב 40)
   --repeat <n>          מספר ריצות לאימות דטרמיניזם (ברירת מחדל: 1; חייב להיות זהה)
+  --compose             הרכבת release (שלב 74): שערים + עמודי TOC מיוצבים (נקודת שבת)
   --html                יצירת preview.html נוסף דרך render-html
   --layout <path>       מצב ביקורת: audit של layout.json קיים (עם request.json לצדו)
   --request <path>      בקשת המקור לביקורת (ברירת מחדל: request.json לצד ה-layout)
@@ -78,6 +81,7 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
     const a = argv[i] as string;
     if (a === '--help' || a === '-h') return { ok: true, help: true, args: nullArgs() };
     if (a === '--html') { flags.add('html'); continue; }
+    if (a === '--compose') { flags.add('compose'); continue; }
     if (a.startsWith('--')) {
       const key = a.slice(2);
       const next = argv[i + 1];
@@ -148,6 +152,7 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
       trace: traceRaw as TraceLevel,
       repeat,
       html: flags.has('html'),
+      compose: flags.has('compose'),
       engine: engineRaw as 'legacy' | 'next',
       ...(layout !== undefined ? { layout } : {}),
       ...(raw.get('request') !== undefined ? { request: raw.get('request') } : {}),
@@ -164,6 +169,6 @@ function nullArgs(): CliArgs {
   return {
     input: '', out: '', fontsManifest: '', fontsDir: '', bodyFont: '',
     shaarManifest: '', ornamentsManifest: '',
-    trace: 'off', repeat: 1, html: false, engine: 'next',
+    trace: 'off', repeat: 1, html: false, compose: false, engine: 'next',
   };
 }

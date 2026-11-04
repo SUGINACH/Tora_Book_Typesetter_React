@@ -1,953 +1,1256 @@
 {
- "schemaVersion": 2,
- "generatedAt": "2026-10-30",
- "authority": "תכנית 100 השלבים, שלב 4 · אפיון §17.3, §18-M0, §23",
- "status": "סכמה מלאה (§17.3) — שלב 13; goldenLayoutSha256 ימולא עם היווצרות פלט המנוע החדש",
- "defaultSettings": {
-  "source": "default_settings.json",
-  "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
-  "provenance": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e57"
- },
- "aliases": [
-  {
-   "corpusFile": "canonical/very_long_test_text.txt",
-   "note": "זהה ביטים ל־fixtures/canonical_very_long_test_text.txt שבמקור (hash משותף) — נשמר עותק אחד"
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-30",
+  "authority": "תכנית 100 השלבים, שלב 4 · אפיון §17.3, §18-M0, §23",
+  "status": "סכמה מלאה (§17.3) — שלב 13; goldenLayoutSha256 ימולא עם היווצרות פלט המנוע החדש",
+  "defaultSettings": {
+    "source": "default_settings.json",
+    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8",
+    "provenance": "SUGINACH/Tora_Book_Typesetter_Orange@93ad1e57"
+  },
+  "aliases": [
+    {
+      "corpusFile": "canonical/very_long_test_text.txt",
+      "note": "זהה ביטים ל־fixtures/canonical_very_long_test_text.txt שבמקור (hash משותף) — נשמר עותק אחד"
+    }
+  ],
+  "documentedBehaviors": [
+    {
+      "id": "column-balance-3-bugs",
+      "corpus": [
+        "long-document-1",
+        "chapter-focus-*"
+      ],
+      "reason": "3 באגים מתועדים באיזון טורים (worklog 2026-10-11): ceiling של budget במקום targetH ב־justifyColumnsPair; applied=delta במקום += ב־applyPriority5_WordSpacing; refuse-to-fill-with-runt שלא השווה לפני/אחרי. תוקנו בעמודים 18,29,30,35,41.",
+      "invariants": [
+        "COLUMN_IMBALANCE_NONE_OVER_30PX"
+      ]
+    },
+    {
+      "id": "layout-invalidator-override",
+      "corpus": [
+        "long-document-1"
+      ],
+      "reason": "באג קריטי מתועד: layoutInvalidator.invalidateBlock דרס את תיקוני האיזון (re-balance V2 דרס V1) — בוטלו שתי קריאות.",
+      "invariants": [
+        "NO_POST_PASS_OVERRIDE"
+      ]
+    },
+    {
+      "id": "word-spacing-reset-before-justify",
+      "corpus": [
+        "long-document-1"
+      ],
+      "reason": "באג מתועד: distributeColumnJustification לא יכול לגדול טור עם word-spacing קיים — נדרש resetColumnJustificationStyles לפני.",
+      "invariants": [
+        "COLUMN_IMBALANCE_NONE_OVER_30PX"
+      ]
+    },
+    {
+      "id": "note-marker-protrusion-policy",
+      "corpus": [
+        "canonical-long-document",
+        "mid-document"
+      ],
+      "reason": "מדיניות מתועדת: בליטת סמני הערות 0–3px מותרת (non-blocking containment-rounding); מעבר לכך — blocking.",
+      "invariants": [
+        "NOTE_MARKER_PROTRUSION_0_TO_3PX_ONLY"
+      ]
+    },
+    {
+      "id": "global-justify-rollback-residuals",
+      "corpus": [
+        "canonical-long-document"
+      ],
+      "reason": "אבחון מתועד (2026-10-26) של שאריות rollback של justify גלובלי — local final-justify counters בדוח הבייסליין.",
+      "invariants": [
+        "NO_JUSTIFY_OVERSHOOT_REMAINING"
+      ]
+    },
+    {
+      "id": "h2-ornament-scope",
+      "corpus": [
+        "ornament-geometry-smoke"
+      ],
+      "reason": "התנהגות מתועדת ב־tests/h2-ornament-scope.test.js: היקף עיטורי H2 (both/siman_only/title_only).",
+      "invariants": [
+        "H2_ORNAMENT_SCOPE_RESPECTED"
+      ]
+    },
+    {
+      "id": "header-recto-verso",
+      "corpus": [
+        "canonical-long-document"
+      ],
+      "reason": "התנהגות מתועדת ב־tests/header-settings.test.js: כותרות עליונות מתחלפות recto/verso ומצבי title.",
+      "invariants": [
+        "HEADERS_BY_PARITY"
+      ]
+    },
+    {
+      "id": "settings-wiring",
+      "corpus": [
+        "canonical-long-document"
+      ],
+      "reason": "התנהגות מתועדת ב־tests/settings-wiring.test.js + settings-consistency.test.js: כל הגדרה חייבת להשפיע בפועל.",
+      "invariants": [
+        "SETTINGS_AFFECT_LAYOUT"
+      ]
+    }
+  ],
+  "plannedFixtures": {
+    "note": "דרישות קורפוס §17.3 מומשו בשלב 74 — קורפוס release/ עם מקור, hash ו-invariants; הרישום מקושר מכל fixture",
+    "requirements": [
+      "כל רמות H0–H7 וכל שילובי heading escort",
+      "H3 באמצע עמוד, בסמוך לתחתית ועם שתי הערות",
+      "הערת שוליים ארוכה, כמה הערות לאותו עוגן, sidenotes מרובות",
+      "סוגריים מקוננים חוצי טור ועמוד, וסוגר לא סגור בקלט",
+      "first-word-window בפסקה מלאה ובהמשך; drop-word ו־dibbur חופפים",
+      "TOC בן עמוד אחד/כמה עמודים, מספור התחלתי ושערים לא ממוספרים",
+      "shaar main/back/sub, ornaments בכל scope ועיטורי סוף פרק",
+      "עברית, לטינית, מספרים, תווי בידיוק, NBSP ומילה ארוכה"
+    ],
+    "fulfilledAtStage": 74,
+    "fulfilledBy": [
+      "release-headings-all",
+      "release-h3-edges",
+      "release-notes-heavy",
+      "release-brackets-cross",
+      "release-firstword-dropword",
+      "release-toc-pages",
+      "release-shaar-ornaments",
+      "release-mixed-scripts",
+      "release-reference-document"
+    ]
+  },
+  "fixtures": [
+    {
+      "id": "canonical-long-document",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/canonical/very_long_test_text.txt",
+        "sha256": "5e73b913f9843fce695d0e4073c176961b8dbc2fa87e8e4c3d99051a826ce0e4",
+        "bytes": 3424454
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "PAGE_COUNT_639",
+          "DECISION_LEDGER_PARITY",
+          "REPEAT_DETERMINISM"
+        ],
+        "baselineArtifact": "docs/migration/baseline/canonical.json.gz",
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "very_long_test_text.txt",
+        "reason": "המסמך הארוך הקנוני — ריצת הייחוס של כל המערכת מ־Orange/Green; hash מתועד גם ב־PROVENANCE.md. מכסה: H0–H7, הערות שוליים וצד, סוגריים חוצי עמוד, פרקים מרובים, מוספים ומחיצות. בייסליין: 639 עמודים, 39 ממצאים (0 גבוהים), 857 רשומות ספר החלטות."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "long-document-1",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/long/long_test_text.txt",
+        "sha256": "d039b599cfc1971acc236c9bec6e4588c651a8a3429074df72214b0e6c397f7c",
+        "bytes": 2718900
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "long_test_text.txt",
+        "reason": "מסמך ארוך 1 — קורפוס בדיקות מסמך ארוך מהתוכנה הישנה."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "long-document-2",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/long/long_test_text_2.txt",
+        "sha256": "3b11f4e30e703b6c717949ca41f73179253af2fd41fd54f2a2a9822e400ded66",
+        "bytes": 2646152
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "long_test_text_2.txt",
+        "reason": "מסמך ארוך 2 — וריאציה שנייה של מסמך ארוך לבדיקות רגרסיה."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "long-document-no-parentheses",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/long/long_test_text_no_parentheses.txt",
+        "sha256": "d48786f63aa6f08966dbbff772c64a3696c9cd018306cca8451a31b8335a7653",
+        "bytes": 2715579
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "NO_PARENTHESIS_PATH"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "long_test_text_no_parentheses.txt",
+        "reason": "מסמך ארוך ללא סוגריים — מפעיל את מסלול העימוד ללא הגנת סוגריים/סוגריים חוצי עמוד; מבחן הפרד בין שני מסלולי הפרסר."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "mid-document",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/mid/mid_long_test_text.txt",
+        "sha256": "d1ffea910215be3ecbd6f4d46f3bc81cddc446f1f68b1c9717a338de406c6bfb",
+        "bytes": 667221
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "PAGE_COUNT_125",
+          "DECISION_LEDGER_PARITY"
+        ],
+        "baselineArtifact": "docs/migration/baseline/mid.json.gz",
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "mid_long_test_text.txt",
+        "reason": "מסמך בינוני (125 עמודים בבייסליין) עם אודיט מלא step-by-step — כולל 4 ממצאי imbalance ו־4 containment-rounding מתועדים שיש לשמר או לתקן במנוע החדש במפורש."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "base-very-long",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/canonical/base_very_long_test_text.txt",
+        "sha256": "e9681f1ee9909dfa0dab4ee38bee2ad4c2013be1549c851ddd8b31d12234fd5b",
+        "bytes": 3387848
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/base_very_long_test_text.txt",
+        "reason": "בסיס להשוואת מסמך ארוך — משמש לבדיקות differential בין גרסאות עימוד של אותו גוף טקסט."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "ch63-final-paragraph-failure",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/cases/ch63_final_paragraph_failure_case.txt",
+        "sha256": "4699a3070479f247586237f18c5f608bb7f4901278cadbac6539512541135dfa",
+        "bytes": 28668
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "PAGE_COUNT_8"
+        ],
+        "baselineArtifact": "docs/migration/baseline/ch63.json.gz",
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/ch63_final_paragraph_failure_case.txt",
+        "reason": "באג מתועד: כשל עימוד של הפסקה האחרונה בפרק 63 — קובץ ממוקד שנוצר במפורש כדי לשחזר את הכשל. בייסליין: 8 עמודים, 3 ממצאים (0 גבוהים)."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "no-legal-two-column-split",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/cases/no-legal-two-column-split.txt",
+        "sha256": "6e6c1729a8eb1156d1b9853a9d7ac3d27a031c89eb494c06548620b5e956be04",
+        "bytes": 268
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "PAGE_COUNT_4"
+        ],
+        "baselineArtifact": "docs/migration/baseline/twocol.json.gz",
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "tests/fixtures/no-legal-two-column-split.txt",
+        "reason": "התנהגות מתועדת: עמוד שבו אין נקודת פיצול חוקית לשני טורים — בודק את מדיניות החירום כשאין מועמד חוקי. בייסליין: 4 עמודים, 2 ממצאים."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "geometry-audit-smoke",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/cases/geometry-audit-smoke.txt",
+        "sha256": "1aec6688976243118051068752d72acc85b8830fdc0a0be96bd133c2b018276c",
+        "bytes": 1020
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "PAGE_COUNT_6"
+        ],
+        "baselineArtifact": "docs/migration/baseline/smoke.json.gz",
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "tests/fixtures/geometry-audit-smoke.txt",
+        "reason": "קלט smoke לאימות הצינור המלא של ביקורת הגאומטריה. בייסליין: 6 עמודים, 3 ממצאים (container-gap, sparse-page, structural-fallback)."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "geometry-audit-diagnostics-smoke",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/cases/geometry-audit-diagnostics-smoke.txt",
+        "sha256": "25b5f1fc10f89acd586e6f66e69f14b2670d7a3cc0efbd02fc2028f9ec1120f8",
+        "bytes": 622
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "tests/fixtures/geometry-audit-diagnostics-smoke.txt",
+        "reason": "קלט smoke לאימות ערוץ האבחון (diagnostics) של ביקורת הגאומטריה."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "ornament-geometry-smoke",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/cases/ornament-geometry-smoke.txt",
+        "sha256": "452a1a158659309cd11bb2b106ccb5557cd7a0f6ad73c47a1846c8353bd04772",
+        "bytes": 1244
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "ORNAMENT_GEOMETRY_VALID"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "tests/fixtures/ornament-geometry-smoke.txt",
+        "reason": "בדיקת גאומטריית עיטורים פעילים — השפעת עיטורי H2 על המקום הזמין, עם הגדרות ייעודיות."
+      },
+      "settingsVariant": {
+        "path": "corpus/cases/settings/ornament-geometry-settings.json",
+        "sha256": "1a4e63bf5f3799cdd093aa96ea236ce4be58fdc5a738e103aff2917a8abdda89",
+        "bytes": 8075
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "ornament-geometry-parity-smoke",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/cases/ornament-geometry-parity-smoke.txt",
+        "sha256": "d5fbfe050856b146bbe216cca85d19309ef303d9fe07ff43c4fda9fe596479be",
+        "bytes": 41568
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "ORNAMENT_GEOMETRY_VALID"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "tests/fixtures/ornament-geometry-parity-smoke.txt",
+        "reason": "בדיקת parity של גאומטריית עיטורים בין recto ל־verso — עם הגדרות ייעודיות."
+      },
+      "settingsVariant": {
+        "path": "corpus/cases/settings/ornament-geometry-parity-settings.json",
+        "sha256": "5e0f35c0fb9fddc08b7701234fbefa6a31a54b486e4097c00ce8107a5f4a8216",
+        "bytes": 8062
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "ornament-geometry-title-tb-settings",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/cases/ornament-geometry-smoke.txt",
+        "sha256": "452a1a158659309cd11bb2b106ccb5557cd7a0f6ad73c47a1846c8353bd04772",
+        "bytes": 1244
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "ORNAMENT_GEOMETRY_VALID"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "tests/fixtures/ornament-geometry-smoke.txt",
+        "reason": "הגדרות משתנה לבדיקת עיטורי כותרת (title-tb) על קלט העיטורים — הגדרות בלבד, הקלט זהה ל־ornament-geometry-smoke."
+      },
+      "settingsVariant": {
+        "path": "corpus/cases/settings/ornament-geometry-title-tb-settings.json",
+        "sha256": "f6bb9435c23516374318dcbf5be37dc23d5c4384d06584c1a0e34f3a56d71fd4",
+        "bytes": 8085
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch05",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch05.txt",
+        "sha256": "3ae75db1ca7ba501b90f9f5af60394a05c6f52e09fe77561cd523843a67fcbb4",
+        "bytes": 44257
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch05.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch05) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch09",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch09.txt",
+        "sha256": "a87bd1cb29611d7accc83fe4b4ac44532e697474212b860b8749ccdb28a3d798",
+        "bytes": 89783
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch09.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch09) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch13",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch13.txt",
+        "sha256": "3aef5ddb0364ffcaa59f4ee323cac0b91f60bdaaf0047e54e7112466fafff880",
+        "bytes": 87615
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch13.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch13) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch35",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch35.txt",
+        "sha256": "5b1719560f57a84bc799c8fb7f6f48540783fcefea2856d3394d7448da61b20d",
+        "bytes": 12023
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch35.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch35) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch42",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch42.txt",
+        "sha256": "b45f757196692c083a1863ff3f9f6d2288e25428a92aafccdac1008cc8e64cbd",
+        "bytes": 27034
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch42.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch42) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch55",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch55.txt",
+        "sha256": "191ec6d3275399ae2419e4d4fb8f068a00a92a14c47dcb6dd8dee742f10c8c5d",
+        "bytes": 126628
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch55.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch55) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch62",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch62.txt",
+        "sha256": "821c3394a7f3c5f48cdfbec1a5abd4f56c4b687dcbd3ffe644490d3482e432f8",
+        "bytes": 32750
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch62.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch62) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch63",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch63.txt",
+        "sha256": "0e8d77ebbe1ad2ddf8fb6c7837cbcacb97b9853aa8961680c8cac8212a8abe0d",
+        "bytes": 112619
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch63.txt",
+        "reason": "פרק 63 במלואו — הפרק שממנו נולחץ מקרה הכשל של הפסקה האחרונה; בדיקת רגרסיה ממוקדת."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch67",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch67.txt",
+        "sha256": "f377d8e37e9b0657954fd6c4485bb81c0ddb6b4fcfb787aaec9da1a07af78d6f",
+        "bytes": 54972
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch67.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch67) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch71",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch71.txt",
+        "sha256": "91be1c944af611f1e5861bf0dd77d90db00860cfe3edc2a4128b9d1944211aa2",
+        "bytes": 41645
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch71.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch71) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch72",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch72.txt",
+        "sha256": "5c3046351d0a1ce0012362146ec50a4d3dcaa579396561dddfe1824a08e457ff",
+        "bytes": 59689
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch72.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch72) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch73",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch73.txt",
+        "sha256": "ddf1b1b2b770ef39121b14499a52629998d83a86bafa78509392b83782858c0e",
+        "bytes": 37707
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch73.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch73) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "chapter-focus-ch75",
+      "schemaVersion": 2,
+      "kind": "document",
+      "corpusFile": {
+        "path": "corpus/chapters/ch75.txt",
+        "sha256": "3672d6c5f99d0342a8cc21441f0d84114538aef9c0280b59bfb83837dff97d2d",
+        "bytes": 58497
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "legacy-orange-v23",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
+        "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
+        "sourcePath": "fixtures/chapters_focus/ch75.txt",
+        "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch75) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
+      },
+      "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "release-headings-all",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-headings-all.txt",
+        "sha256": "000ce3cfb5c7d20e4e61dd6c024bc1db56cf3b67bc3cdeefdabbaff06a627f03",
+        "bytes": 2959
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "ALL_HEADING_LEVELS"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-headings-all.txt",
+        "reason": "כל רמות H0–H7 ושילובי heading escort — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "release-h3-edges",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-h3-edges.txt",
+        "sha256": "d8da6f4be98223f603c0733f15489faf9baef706f9c2b0b71a8709063b44c386",
+        "bytes": 4234
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "H3_BARRIER_HELD"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-h3-edges.txt",
+        "reason": "H3 באמצע עמוד ובסמוך לתחתית עם שתי הערות — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "release-notes-heavy",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-notes-heavy.txt",
+        "sha256": "b566aa7b94d628420e6772ce57f937e7025bc6c0ddf72b61bb7e6036da089340",
+        "bytes": 2123
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "NOTES_PLACED"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-notes-heavy.txt",
+        "reason": "הערת שוליים ארוכה, כמה הערות לאותו עוגן, sidenotes מרובות — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "release-brackets-cross",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-brackets-cross.txt",
+        "sha256": "29668eae4e29124e9c30f556e26169f882b437ee12c3006bdf433da7b778344d",
+        "bytes": 3029
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "BRACKETS_BALANCED"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-brackets-cross.txt",
+        "reason": "סוגריים מקוננים חוצי טור ועמוד — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "release-firstword-dropword",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-firstword-dropword.txt",
+        "sha256": "adaa7ae6a2cc53e962a1118193f8687a335c316742c73ee106078c3b751f8b2b",
+        "bytes": 1917
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "FIRSTWORD_APPLIED"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-firstword-dropword.txt",
+        "reason": "first-word-window, drop-word ו-dibbur חופפים — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "release-toc-pages",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-toc-pages.txt",
+        "sha256": "b5d539b1f92fc9af76d901d2190d16c64862dfe28547cdcb63ba61d95b592ff3",
+        "bytes": 6864
+      },
+      "settings": {
+        "source": "release-reference-settings.json (locked, stage 74)",
+        "sha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "TOC_FROM_ANCHORS"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-toc-pages.txt",
+        "reason": "TOC בן עמוד אחד/כמה עמודים; מספור התחלתי; שערים לא ממוספרים — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
+    },
+    {
+      "id": "release-shaar-ornaments",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-shaar-ornaments.txt",
+        "sha256": "15cb6484810cade2a2a8c77772c105208f7a3262716d322bbd1e4c790c720191",
+        "bytes": 1960
+      },
+      "settings": {
+        "source": "release-reference-settings.json (locked, stage 74)",
+        "sha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "SHAAR_KINDS_PRESENT"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-shaar-ornaments.txt",
+        "reason": "shaar main/back/sub, ornaments בכל scope, מחיצות ועיטורי סיום — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
+    },
+    {
+      "id": "release-mixed-scripts",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-mixed-scripts.txt",
+        "sha256": "8f837b91d83dfc9adcbd510e02dbd04e3d186f152da04a2b6b5ff72d4c81213e",
+        "bytes": 1728
+      },
+      "settings": {
+        "source": "default_settings.json (automatic)",
+        "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+      },
+      "enginePolicy": "next-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "MIXED_SCRIPTS_SHAPED"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-mixed-scripts.txt",
+        "reason": "עברית, לטינית, מספרים, NBSP ומילה ארוכה — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
+    },
+    {
+      "id": "release-reference-document",
+      "schemaVersion": 2,
+      "kind": "release",
+      "corpusFile": {
+        "path": "corpus/release/release-reference-document.txt",
+        "sha256": "dc7db1ba5df5ecb94dd303e674861919ad12cbfea7fe6abfcb714dfea3fd80dd",
+        "bytes": 9367
+      },
+      "settings": {
+        "source": "release-reference-settings.json (locked, stage 74)",
+        "sha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
+      },
+      "enginePolicy": "next-compose-v0",
+      "expected": {
+        "invariants": [
+          "TEXT_COMPLETE",
+          "NO_HIGH_SEVERITY",
+          "SHAAR_KINDS_PRESENT",
+          "TOC_FROM_ANCHORS",
+          "DECISION_LEDGER_PARITY",
+          "REPEAT_DETERMINISM"
+        ],
+        "baselineArtifact": null,
+        "goldenLayoutSha256": null
+      },
+      "provenance": {
+        "sourceRepo": "SUGINACH/Tora_Book_Typesetter_React",
+        "sourceSha": "stage-74-generated",
+        "sourcePath": "corpus/release/release-reference-document.txt",
+        "reason": "מסמך הייחוס של ההפצה — שילוב כל היסודות (H0–H7, שערים, TOC, notes, קישורים, מעורב) בהרכבת release (--compose) — נכתב בשלב 74 לקראת שער M8 (אפיון §17.3; plannedFixtures)"
+      },
+      "fontManifestSha256": null,
+      "settingsSha256": "f608cb82e4896365a8fb340949367b811581fe079213ace156988eacd1887fb2"
+    }
+  ],
+  "fontsManifest": {
+    "path": "assets/fonts/manifest.json",
+    "sha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f"
   }
- ],
- "documentedBehaviors": [
-  {
-   "id": "column-balance-3-bugs",
-   "corpus": [
-    "long-document-1",
-    "chapter-focus-*"
-   ],
-   "reason": "3 באגים מתועדים באיזון טורים (worklog 2026-10-11): ceiling של budget במקום targetH ב־justifyColumnsPair; applied=delta במקום += ב־applyPriority5_WordSpacing; refuse-to-fill-with-runt שלא השווה לפני/אחרי. תוקנו בעמודים 18,29,30,35,41.",
-   "invariants": [
-    "COLUMN_IMBALANCE_NONE_OVER_30PX"
-   ]
-  },
-  {
-   "id": "layout-invalidator-override",
-   "corpus": [
-    "long-document-1"
-   ],
-   "reason": "באג קריטי מתועד: layoutInvalidator.invalidateBlock דרס את תיקוני האיזון (re-balance V2 דרס V1) — בוטלו שתי קריאות.",
-   "invariants": [
-    "NO_POST_PASS_OVERRIDE"
-   ]
-  },
-  {
-   "id": "word-spacing-reset-before-justify",
-   "corpus": [
-    "long-document-1"
-   ],
-   "reason": "באג מתועד: distributeColumnJustification לא יכול לגדול טור עם word-spacing קיים — נדרש resetColumnJustificationStyles לפני.",
-   "invariants": [
-    "COLUMN_IMBALANCE_NONE_OVER_30PX"
-   ]
-  },
-  {
-   "id": "note-marker-protrusion-policy",
-   "corpus": [
-    "canonical-long-document",
-    "mid-document"
-   ],
-   "reason": "מדיניות מתועדת: בליטת סמני הערות 0–3px מותרת (non-blocking containment-rounding); מעבר לכך — blocking.",
-   "invariants": [
-    "NOTE_MARKER_PROTRUSION_0_TO_3PX_ONLY"
-   ]
-  },
-  {
-   "id": "global-justify-rollback-residuals",
-   "corpus": [
-    "canonical-long-document"
-   ],
-   "reason": "אבחון מתועד (2026-10-26) של שאריות rollback של justify גלובלי — local final-justify counters בדוח הבייסליין.",
-   "invariants": [
-    "NO_JUSTIFY_OVERSHOOT_REMAINING"
-   ]
-  },
-  {
-   "id": "h2-ornament-scope",
-   "corpus": [
-    "ornament-geometry-smoke"
-   ],
-   "reason": "התנהגות מתועדת ב־tests/h2-ornament-scope.test.js: היקף עיטורי H2 (both/siman_only/title_only).",
-   "invariants": [
-    "H2_ORNAMENT_SCOPE_RESPECTED"
-   ]
-  },
-  {
-   "id": "header-recto-verso",
-   "corpus": [
-    "canonical-long-document"
-   ],
-   "reason": "התנהגות מתועדת ב־tests/header-settings.test.js: כותרות עליונות מתחלפות recto/verso ומצבי title.",
-   "invariants": [
-    "HEADERS_BY_PARITY"
-   ]
-  },
-  {
-   "id": "settings-wiring",
-   "corpus": [
-    "canonical-long-document"
-   ],
-   "reason": "התנהגות מתועדת ב־tests/settings-wiring.test.js + settings-consistency.test.js: כל הגדרה חייבת להשפיע בפועל.",
-   "invariants": [
-    "SETTINGS_AFFECT_LAYOUT"
-   ]
-  }
- ],
- "plannedFixtures": {
-  "note": "דרישות קורפוס מחייבות מאפיון §17.3 — יחוברו/ייכתבו בשלבים 13, 17, 21, 74; לא חלק מהרישום עד שיש להם מקור ו־hash",
-  "requirements": [
-   "כל רמות H0–H7 וכל שילובי heading escort",
-   "H3 באמצע עמוד, בסמוך לתחתית ועם שתי הערות",
-   "הערת שוליים ארוכה, כמה הערות לאותו עוגן, sidenotes מרובות",
-   "סוגריים מקוננים חוצי טור ועמוד, וסוגר לא סגור בקלט",
-   "first-word-window בפסקה מלאה ובהמשך; drop-word ו־dibbur חופפים",
-   "TOC בן עמוד אחד/כמה עמודים, מספור התחלתי ושערים לא ממוספרים",
-   "shaar main/back/sub, ornaments בכל scope ועיטורי סוף פרק",
-   "עברית, לטינית, מספרים, תווי בידיוק, NBSP ומילה ארוכה"
-  ]
- },
- "fixtures": [
-  {
-   "id": "canonical-long-document",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/canonical/very_long_test_text.txt",
-    "sha256": "5e73b913f9843fce695d0e4073c176961b8dbc2fa87e8e4c3d99051a826ce0e4",
-    "bytes": 3424454
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "PAGE_COUNT_639",
-     "DECISION_LEDGER_PARITY",
-     "REPEAT_DETERMINISM"
-    ],
-    "baselineArtifact": "docs/migration/baseline/canonical.json.gz",
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "very_long_test_text.txt",
-    "reason": "המסמך הארוך הקנוני — ריצת הייחוס של כל המערכת מ־Orange/Green; hash מתועד גם ב־PROVENANCE.md. מכסה: H0–H7, הערות שוליים וצד, סוגריים חוצי עמוד, פרקים מרובים, מוספים ומחיצות. בייסליין: 639 עמודים, 39 ממצאים (0 גבוהים), 857 רשומות ספר החלטות."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "long-document-1",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/long/long_test_text.txt",
-    "sha256": "d039b599cfc1971acc236c9bec6e4588c651a8a3429074df72214b0e6c397f7c",
-    "bytes": 2718900
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "long_test_text.txt",
-    "reason": "מסמך ארוך 1 — קורפוס בדיקות מסמך ארוך מהתוכנה הישנה."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "long-document-2",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/long/long_test_text_2.txt",
-    "sha256": "3b11f4e30e703b6c717949ca41f73179253af2fd41fd54f2a2a9822e400ded66",
-    "bytes": 2646152
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "long_test_text_2.txt",
-    "reason": "מסמך ארוך 2 — וריאציה שנייה של מסמך ארוך לבדיקות רגרסיה."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "long-document-no-parentheses",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/long/long_test_text_no_parentheses.txt",
-    "sha256": "d48786f63aa6f08966dbbff772c64a3696c9cd018306cca8451a31b8335a7653",
-    "bytes": 2715579
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "NO_PARENTHESIS_PATH"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "long_test_text_no_parentheses.txt",
-    "reason": "מסמך ארוך ללא סוגריים — מפעיל את מסלול העימוד ללא הגנת סוגריים/סוגריים חוצי עמוד; מבחן הפרד בין שני מסלולי הפרסר."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "mid-document",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/mid/mid_long_test_text.txt",
-    "sha256": "d1ffea910215be3ecbd6f4d46f3bc81cddc446f1f68b1c9717a338de406c6bfb",
-    "bytes": 667221
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "PAGE_COUNT_125",
-     "DECISION_LEDGER_PARITY"
-    ],
-    "baselineArtifact": "docs/migration/baseline/mid.json.gz",
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "mid_long_test_text.txt",
-    "reason": "מסמך בינוני (125 עמודים בבייסליין) עם אודיט מלא step-by-step — כולל 4 ממצאי imbalance ו־4 containment-rounding מתועדים שיש לשמר או לתקן במנוע החדש במפורש."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "base-very-long",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/canonical/base_very_long_test_text.txt",
-    "sha256": "e9681f1ee9909dfa0dab4ee38bee2ad4c2013be1549c851ddd8b31d12234fd5b",
-    "bytes": 3387848
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/base_very_long_test_text.txt",
-    "reason": "בסיס להשוואת מסמך ארוך — משמש לבדיקות differential בין גרסאות עימוד של אותו גוף טקסט."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "ch63-final-paragraph-failure",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/cases/ch63_final_paragraph_failure_case.txt",
-    "sha256": "4699a3070479f247586237f18c5f608bb7f4901278cadbac6539512541135dfa",
-    "bytes": 28668
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "PAGE_COUNT_8"
-    ],
-    "baselineArtifact": "docs/migration/baseline/ch63.json.gz",
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/ch63_final_paragraph_failure_case.txt",
-    "reason": "באג מתועד: כשל עימוד של הפסקה האחרונה בפרק 63 — קובץ ממוקד שנוצר במפורש כדי לשחזר את הכשל. בייסליין: 8 עמודים, 3 ממצאים (0 גבוהים)."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "no-legal-two-column-split",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/cases/no-legal-two-column-split.txt",
-    "sha256": "6e6c1729a8eb1156d1b9853a9d7ac3d27a031c89eb494c06548620b5e956be04",
-    "bytes": 268
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "PAGE_COUNT_4"
-    ],
-    "baselineArtifact": "docs/migration/baseline/twocol.json.gz",
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "tests/fixtures/no-legal-two-column-split.txt",
-    "reason": "התנהגות מתועדת: עמוד שבו אין נקודת פיצול חוקית לשני טורים — בודק את מדיניות החירום כשאין מועמד חוקי. בייסליין: 4 עמודים, 2 ממצאים."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "geometry-audit-smoke",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/cases/geometry-audit-smoke.txt",
-    "sha256": "1aec6688976243118051068752d72acc85b8830fdc0a0be96bd133c2b018276c",
-    "bytes": 1020
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "PAGE_COUNT_6"
-    ],
-    "baselineArtifact": "docs/migration/baseline/smoke.json.gz",
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "tests/fixtures/geometry-audit-smoke.txt",
-    "reason": "קלט smoke לאימות הצינור המלא של ביקורת הגאומטריה. בייסליין: 6 עמודים, 3 ממצאים (container-gap, sparse-page, structural-fallback)."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "geometry-audit-diagnostics-smoke",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/cases/geometry-audit-diagnostics-smoke.txt",
-    "sha256": "25b5f1fc10f89acd586e6f66e69f14b2670d7a3cc0efbd02fc2028f9ec1120f8",
-    "bytes": 622
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "tests/fixtures/geometry-audit-diagnostics-smoke.txt",
-    "reason": "קלט smoke לאימות ערוץ האבחון (diagnostics) של ביקורת הגאומטריה."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "ornament-geometry-smoke",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/cases/ornament-geometry-smoke.txt",
-    "sha256": "452a1a158659309cd11bb2b106ccb5557cd7a0f6ad73c47a1846c8353bd04772",
-    "bytes": 1244
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "ORNAMENT_GEOMETRY_VALID"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "tests/fixtures/ornament-geometry-smoke.txt",
-    "reason": "בדיקת גאומטריית עיטורים פעילים — השפעת עיטורי H2 על המקום הזמין, עם הגדרות ייעודיות."
-   },
-   "settingsVariant": {
-    "path": "corpus/cases/settings/ornament-geometry-settings.json",
-    "sha256": "1a4e63bf5f3799cdd093aa96ea236ce4be58fdc5a738e103aff2917a8abdda89",
-    "bytes": 8075
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "ornament-geometry-parity-smoke",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/cases/ornament-geometry-parity-smoke.txt",
-    "sha256": "d5fbfe050856b146bbe216cca85d19309ef303d9fe07ff43c4fda9fe596479be",
-    "bytes": 41568
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "ORNAMENT_GEOMETRY_VALID"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "tests/fixtures/ornament-geometry-parity-smoke.txt",
-    "reason": "בדיקת parity של גאומטריית עיטורים בין recto ל־verso — עם הגדרות ייעודיות."
-   },
-   "settingsVariant": {
-    "path": "corpus/cases/settings/ornament-geometry-parity-settings.json",
-    "sha256": "5e0f35c0fb9fddc08b7701234fbefa6a31a54b486e4097c00ce8107a5f4a8216",
-    "bytes": 8062
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "ornament-geometry-title-tb-settings",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/cases/ornament-geometry-smoke.txt",
-    "sha256": "452a1a158659309cd11bb2b106ccb5557cd7a0f6ad73c47a1846c8353bd04772",
-    "bytes": 1244
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY",
-     "ORNAMENT_GEOMETRY_VALID"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "tests/fixtures/ornament-geometry-smoke.txt",
-    "reason": "הגדרות משתנה לבדיקת עיטורי כותרת (title-tb) על קלט העיטורים — הגדרות בלבד, הקלט זהה ל־ornament-geometry-smoke."
-   },
-   "settingsVariant": {
-    "path": "corpus/cases/settings/ornament-geometry-title-tb-settings.json",
-    "sha256": "f6bb9435c23516374318dcbf5be37dc23d5c4384d06584c1a0e34f3a56d71fd4",
-    "bytes": 8085
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch05",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch05.txt",
-    "sha256": "3ae75db1ca7ba501b90f9f5af60394a05c6f52e09fe77561cd523843a67fcbb4",
-    "bytes": 44257
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch05.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch05) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch09",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch09.txt",
-    "sha256": "a87bd1cb29611d7accc83fe4b4ac44532e697474212b860b8749ccdb28a3d798",
-    "bytes": 89783
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch09.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch09) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch13",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch13.txt",
-    "sha256": "3aef5ddb0364ffcaa59f4ee323cac0b91f60bdaaf0047e54e7112466fafff880",
-    "bytes": 87615
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch13.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch13) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch35",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch35.txt",
-    "sha256": "5b1719560f57a84bc799c8fb7f6f48540783fcefea2856d3394d7448da61b20d",
-    "bytes": 12023
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch35.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch35) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch42",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch42.txt",
-    "sha256": "b45f757196692c083a1863ff3f9f6d2288e25428a92aafccdac1008cc8e64cbd",
-    "bytes": 27034
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch42.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch42) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch55",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch55.txt",
-    "sha256": "191ec6d3275399ae2419e4d4fb8f068a00a92a14c47dcb6dd8dee742f10c8c5d",
-    "bytes": 126628
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch55.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch55) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch62",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch62.txt",
-    "sha256": "821c3394a7f3c5f48cdfbec1a5abd4f56c4b687dcbd3ffe644490d3482e432f8",
-    "bytes": 32750
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch62.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch62) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch63",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch63.txt",
-    "sha256": "0e8d77ebbe1ad2ddf8fb6c7837cbcacb97b9853aa8961680c8cac8212a8abe0d",
-    "bytes": 112619
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch63.txt",
-    "reason": "פרק 63 במלואו — הפרק שממנו נולחץ מקרה הכשל של הפסקה האחרונה; בדיקת רגרסיה ממוקדת."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch67",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch67.txt",
-    "sha256": "f377d8e37e9b0657954fd6c4485bb81c0ddb6b4fcfb787aaec9da1a07af78d6f",
-    "bytes": 54972
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch67.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch67) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch71",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch71.txt",
-    "sha256": "91be1c944af611f1e5861bf0dd77d90db00860cfe3edc2a4128b9d1944211aa2",
-    "bytes": 41645
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch71.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch71) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch72",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch72.txt",
-    "sha256": "5c3046351d0a1ce0012362146ec50a4d3dcaa579396561dddfe1824a08e457ff",
-    "bytes": 59689
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch72.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch72) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch73",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch73.txt",
-    "sha256": "ddf1b1b2b770ef39121b14499a52629998d83a86bafa78509392b83782858c0e",
-    "bytes": 37707
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch73.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch73) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  },
-  {
-   "id": "chapter-focus-ch75",
-   "schemaVersion": 2,
-   "kind": "document",
-   "corpusFile": {
-    "path": "corpus/chapters/ch75.txt",
-    "sha256": "3672d6c5f99d0342a8cc21441f0d84114538aef9c0280b59bfb83837dff97d2d",
-    "bytes": 58497
-   },
-   "settings": {
-    "source": "default_settings.json (automatic)",
-    "sha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-   },
-   "enginePolicy": "legacy-orange-v23",
-   "expected": {
-    "invariants": [
-     "TEXT_COMPLETE",
-     "NO_HIGH_SEVERITY"
-    ],
-    "baselineArtifact": null,
-    "goldenLayoutSha256": null
-   },
-   "provenance": {
-    "sourceRepo": "SUGINACH/Tora_Book_Typesetter_Orange",
-    "sourceSha": "93ad1e5704405fb2806a126ea1b519a35a87f378",
-    "sourcePath": "fixtures/chapters_focus/ch75.txt",
-    "reason": "פרק ממוקד לבדיקות רגרסיה פרק־לפרק (ch75) — נבחר בתוכנה הישנה לכיסוי מגוון מצבי עימוד."
-   },
-   "fontManifestSha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f",
-   "settingsSha256": "576dc778869eb3730c61555a6668cb7409b284033736fc8a210d2c47f7cb81e8"
-  }
- ],
- "fontsManifest": {
-  "path": "assets/fonts/manifest.json",
-  "sha256": "c8cf86d69c5464bfe83b27f5aed0d0d8b33c24be5ad50b010643aabaf5fd951f"
- }
 }

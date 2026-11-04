@@ -8,6 +8,8 @@
  * (+ preview.html עם --html) — ללא חותמות זמן בתוכן (§15.1; זמני host ב-stderr
  * בלבד, לא בקובץ). המנוע אינו מכיר את ה־CLI; ה־CLI אינו מכיר React/Tauri.
  */
+import { composeDocumentRelease } from '@tora/layout-engine';
+import * as policy from '@tora/policy-torah';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { typeset, ENGINE_VERSION } from '@tora/layout-engine';
@@ -126,12 +128,21 @@ export async function runCli(
     sourceSha256,
     parserVersion: PARSER_VERSION,
   };
+  // הרכבת release (שלב 74; M8): שער ראשי/אחורי + עמודי TOC מיוצבים בנקודת
+  // השבת החוץ, מעל אותה בקשת v0. ה-policy מוזרק כפונקציות טהורות (גבולות
+  // תלות): הערכים מהעוגנים בפועל — אין pageEstimate בעמודי ה-TOC.
+  const composeTocSource = {
+    entriesOf: (doc: Parameters<typeof policy.tocEntriesOf>[0], anchors: Parameters<typeof policy.tocEntriesOf>[2]) => policy.tocEntriesOf(doc, policy.tocPolicyOf(settings), anchors, policy.folioPolicyOf(settings)),
+    folioLabelOf: (physicalPage: number, pageKind: string) => policy.folioLabelOf(physicalPage, pageKind, policy.folioPolicyOf(settings)),
+  };
   let first: TypesetSuccess | undefined;
   let hash: string | undefined;
   for (let run = 1; run <= args.repeat; run += 1) {
     let out: TypesetSuccess;
     try {
-      out = typeset(request, fonts.provider, { policyId: 'torah-v1' });
+      out = args.compose
+        ? composeDocumentRelease(request, fonts.provider, { toc: composeTocSource })
+        : typeset(request, fonts.provider, { policyId: 'torah-v1' });
     } catch (e) {
       const code = e instanceof Error && 'catalogKey' in e ? String((e as { catalogKey: unknown }).catalogKey) : 'unknown';
       throw new CliError(EXIT_ENGINE, 'errors.cli.ENGINE_FAILED', {

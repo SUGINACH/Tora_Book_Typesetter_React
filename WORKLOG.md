@@ -4,6 +4,19 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 74 — קורפוס release, הרכבת שערים/TOC ומסמך הייחוס (M8) — הושלם 2026-11-04
+- **תוצרים:**
+  - `packages/layout-engine/src/v0/compose-v0.ts` — **הרכבת release מעל v0**: עמוד שער ראשי (תיבת כותרת הספר, לא ממוספר), עמודי TOC מהעוגנים בפועל (tocEntriesOf ← AnchorTable — אין pageEstimate) בזרימה מדודה (layoutTocFlow, טור ימין לפני שמאל), עמוד שער אחורי; **מספר עמודי ה-TOC מיוצב בנקודת השבת החוץ** (runOuterFixedPoint, ADR-011 — אי-התייצבות ⇒ TOC_FIXED_POINT_NOT_REACHED); ריצות ה-TOC/שער הן נגזרות בלי מזהי אטומים (כיסוי האטומים נשאר על המקור); בלי דגלים — התוצאה זהה ל-typeset הישיר.
+  - CLI: דגל `--compose` (שלב 74) — מזריק את policy-torah כפונקציות טהורות (גבולות תלות).
+  - `corpus/release/` — **9 קבצי קורפוס** ל-8 דרישות §17.3 (H0–H7+escort, H3 בקצה עמוד עם שתי הערות, הערות כבדות/עוגן משותף/sidenotes, סוגריים מקוננים חוצים, first-word/drop-word/dibbur, עמודי TOC, שערים+עיטורים, מעורב-שפות/NBSP/מילה ארוכה) + **מסמך הייחוס** המשלב הכול; הגדרות release נעולות (`release-reference-settings.json`, 41 מפתחות מיושרים ל-enum של v0).
+  - `packages/test-fixtures/release-golden.json` — **הזהב של ה-release**: לכל fixture — layoutHash, עמודים, סוגי עמודים, 0 HIGH, שימור אטומים, deterministic + נעילת כל הקלטים (sourceSha256, settings, fonts, assets) — **אין קלט חיצוני לא נעול**.
+  - `scripts/migration/gen-release-manifest.mjs` — מחולל הזהב (הרצת CLI אמיתית; ה-reference במסלול compose עם HTML).
+  - `scripts/migration/verify-release-fixtures.mjs` — **37 בדיקות**: רישום נעול; זהב (0 HIGH, אטומים, deterministic, קלטים); מיפוי מפורש של 8 הדרישות; מסמך הייחוס (5 סוגי עמודים: main-shaar/toc/body/notes/back-shaar + preview.html); דטרמיניזם חי מול הזהב; שליליים; רגרסיה.
+  - `registry.json`: 9 fixtures חדשים (kind: release) עם provenance שלב 74 + invariants; plannedFixtures מסומן **fulfilledAtStage 74**.
+  - `packages/layout-engine/test/compose.test.ts` — 6 מבחני יחידה: תואם-לאחור בלי דגלים; רצף עמודים; ערכי TOC מעוגנים; דטרמיניזם; ביקורת 0 HIGH עם שימור אטומים; צעד מתנדנד ⇒ כשל מפורש.
+- **ממצאי דרך:** שורת כותרת אינה מקבלת סמני הערות (הערות בסוגריים עברו לפסקה שאחרי הכותרת — מיקום המקור האמיתי); מילה בת 33+ תווים חורגת מרוחב הטור ומקבלת EMERGENCY_LINE מתועד (שלב 44) — הקורפוס משתמש במילה ארוכה בת 33 תווים שנכנסת לטור.
+- **בדיקות:** 1039/1039 (6 חדשות); verify-release-fixtures 37/37; מסמך הייחוס: 6 עמודים (main-shaar, toc, body×2, notes, back-shaar), 0 HIGH, 2,253 אטומים הוצבו בדיוק פעם אחת, preview.html 135KB.
+
 ### שלב 73 — שער התאימות: העברה מלאה מול הבייסליין (M8) — הושלם 2026-11-04
 - **תוצרים:**
   - `scripts/migration/gen-compatibility-report.mjs` — מחולל דטרמיניסטי: הרצת מלוא הקורפוס (26 fixtures מ-registry.json) דרך ה-CLI כתהליכי-בן אמיתיים, השוואה לבייסליין הנעול לפי מיפוי inputSha256 (אין זיהוי ידני), מטריצת 7 קטגוריות ההעברה (3,151 פריטים: מזהים 38, הגדרות 257, גופנים 1,796, חלקי עמוד 4, שערים 86, עיטורים 967, כללי הערות 3).

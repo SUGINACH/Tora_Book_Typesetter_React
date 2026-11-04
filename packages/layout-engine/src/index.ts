@@ -10,6 +10,7 @@ export const PACKAGE_NAME = '@tora/layout-engine' as const;
 export * from './errors.js';
 export * from './v0/v0-settings.js';
 export * from './v0/typeset-v0.js';
+export * from './v0/compose-v0.js';
 // פרק ו (M5) — שבירת שורות גלובלית; שלבים 41+
 export * from './linebreak/tokens.js';
 export * from './linebreak/shaping.js';
