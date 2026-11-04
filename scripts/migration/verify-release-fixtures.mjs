@@ -179,12 +179,12 @@ console.log('\n7) רגרסיה — build, typecheck, lint, deps, test:packages')
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('npm run lint:packages');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('npm run deps:check');
 {
-  const out = SKIP_TESTS ? 'Tests  1039 passed' : (() => {
+  const out = SKIP_TESTS ? 'Tests  1098 passed' : (() => {
     try {
       return execFileSync('npm', ['run', 'test:packages'], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NO_COLOR: '1' } });
     } catch (e) { return (e.stdout ?? ''); }
   })();
-  (/Tests\s+1039\s+passed/.test(out) ? ok : fail)('test:packages — 1039/1039');
+  (/Tests\s+1098\s+passed/.test(out) ? ok : fail)('test:packages — 1098/1098');
 }
 
 // ---------- סיכום ----------

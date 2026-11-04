@@ -5,11 +5,13 @@
 // (קוד מעטפת ב-src/worker-host; אפיון §12.1) — סביבת node, כמו החבילות.
 // הרחבה (שלב 36): tests/component — תצוגה מקדימה צורכת IR (jsdom בתוך
 // הקובץ עצמו דרך docblock).
+// הרחבה (שלב 76): tests/stores — חמשת ה-stores של המעטפת (§13.1):
+// editor/settings/run/result/view + מיגרציית state ישן + בוררים.
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ['packages/*/test/**/*.test.ts', 'tests/worker-host/**/*.test.ts', 'tests/component/**/*.test.tsx', 'tests/e2e-skeleton/**/*.test.ts'],
+    include: ['packages/*/test/**/*.test.ts', 'tests/worker-host/**/*.test.ts', 'tests/component/**/*.test.tsx', 'tests/e2e-skeleton/**/*.test.ts', 'tests/stores/**/*.test.ts'],
     environment: 'node',
   },
 });
