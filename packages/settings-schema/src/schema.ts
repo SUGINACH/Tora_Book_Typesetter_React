@@ -28,7 +28,16 @@ export interface SettingDefinition {
   readonly unit: string | null;
   readonly affectsLayout: boolean;
   readonly consumerId: string;
-  readonly ui: { readonly section: string; readonly control: string; readonly labelKey: string };
+  readonly ui: {
+    readonly section: string;
+    readonly control: string;
+    readonly labelKey: string;
+    /** תלות תצוגה (שלב 78; אפיון §13.3): השדה רלוונטי רק כאשר לשדה
+     *  `key` ערך הנמנה עם `values` (השוואת מחרוזות קנונית — בוליאן
+     *  מיוצג כ-'true'/'false'). מטא-דאטה של הטופס בלבד: אינה משפיעה
+     *  על אימות ואינה נכנסת ל־configHash. null = תמיד רלוונטי. */
+    readonly dependsOn: { readonly key: string; readonly values: readonly string[] } | null;
+  };
 }
 
 export interface SettingRegistry {
@@ -64,7 +73,8 @@ export function buildSettingRegistry(registryJson: {
   settings: readonly {
     legacyKey: string; canonicalKey: string; schemaVersion: number; defaultValue: unknown;
     type: SettingDefinition['type']; enum: readonly string[] | null; unit: string | null;
-    affectsLayout: boolean; consumerId: string; ui: { section: string; control: string; labelKey: string };
+    affectsLayout: boolean; consumerId: string;
+    ui: { section: string; control: string; labelKey: string; dependsOn?: { key: string; values: readonly string[] } | null };
   }[];
 }) {
   if (typeof registryJson !== 'object' || registryJson === null || !Array.isArray(registryJson.settings)) {
@@ -87,7 +97,14 @@ export function buildSettingRegistry(registryJson: {
       unit: e.unit ?? null,
       affectsLayout: e.affectsLayout === true,
       consumerId: e.consumerId,
-      ui: Object.freeze({ ...e.ui }),
+      ui: Object.freeze({
+        section: e.ui.section,
+        control: e.ui.control,
+        labelKey: e.ui.labelKey,
+        dependsOn: e.ui.dependsOn
+          ? Object.freeze({ key: e.ui.dependsOn.key, values: Object.freeze([...e.ui.dependsOn.values]) })
+          : null,
+      }),
     });
     if (byKey.has(def.key)) {
       throw new SettingsError('errors.settings.REGISTRY_INVALID', { reason: `duplicate key ${def.key}` }, '/registry/settings');

@@ -31,7 +31,8 @@
       "ui": {
         "section": "misc",
         "control": "select",
-        "labelKey": "settings.active-theme-select"
+        "labelKey": "settings.active-theme-select",
+        "dependsOn": null
       }
     },
     {
@@ -49,7 +50,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.assets-folder-input"
+        "labelKey": "settings.assets-folder-input",
+        "dependsOn": null
       }
     },
     {
@@ -67,7 +69,8 @@
       "ui": {
         "section": "body",
         "control": "checkbox",
-        "labelKey": "settings.auto-dh"
+        "labelKey": "settings.auto-dh",
+        "dependsOn": null
       }
     },
     {
@@ -85,7 +88,8 @@
       "ui": {
         "section": "body",
         "control": "checkbox",
-        "labelKey": "settings.avoid-orphans"
+        "labelKey": "settings.avoid-orphans",
+        "dependsOn": null
       }
     },
     {
@@ -103,7 +107,8 @@
       "ui": {
         "section": "body",
         "control": "checkbox",
-        "labelKey": "settings.avoid-runt-word"
+        "labelKey": "settings.avoid-runt-word",
+        "dependsOn": null
       }
     },
     {
@@ -121,7 +126,8 @@
       "ui": {
         "section": "body",
         "control": "checkbox",
-        "labelKey": "settings.avoid-widows"
+        "labelKey": "settings.avoid-widows",
+        "dependsOn": null
       }
     },
     {
@@ -139,7 +145,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.back-shaar-count-numbering"
+        "labelKey": "settings.back-shaar-count-numbering",
+        "dependsOn": null
       }
     },
     {
@@ -157,7 +164,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.back-shaar-show-number"
+        "labelKey": "settings.back-shaar-show-number",
+        "dependsOn": null
       }
     },
     {
@@ -178,7 +186,8 @@
       "ui": {
         "section": "body",
         "control": "select",
-        "labelKey": "settings.body-last-line-align"
+        "labelKey": "settings.body-last-line-align",
+        "dependsOn": null
       }
     },
     {
@@ -196,7 +205,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-back-bottom"
+        "labelKey": "settings.builder-back-bottom",
+        "dependsOn": null
       }
     },
     {
@@ -214,7 +224,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-back-left"
+        "labelKey": "settings.builder-back-left",
+        "dependsOn": null
       }
     },
     {
@@ -232,7 +243,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-back-right"
+        "labelKey": "settings.builder-back-right",
+        "dependsOn": null
       }
     },
     {
@@ -250,7 +262,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-back-top"
+        "labelKey": "settings.builder-back-top",
+        "dependsOn": null
       }
     },
     {
@@ -268,7 +281,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-main-bottom"
+        "labelKey": "settings.builder-main-bottom",
+        "dependsOn": null
       }
     },
     {
@@ -286,7 +300,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-main-left"
+        "labelKey": "settings.builder-main-left",
+        "dependsOn": null
       }
     },
     {
@@ -304,7 +319,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-main-right"
+        "labelKey": "settings.builder-main-right",
+        "dependsOn": null
       }
     },
     {
@@ -322,7 +338,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-main-top"
+        "labelKey": "settings.builder-main-top",
+        "dependsOn": null
       }
     },
     {
@@ -340,7 +357,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-sub-bottom"
+        "labelKey": "settings.builder-sub-bottom",
+        "dependsOn": null
       }
     },
     {
@@ -358,7 +376,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-sub-left"
+        "labelKey": "settings.builder-sub-left",
+        "dependsOn": null
       }
     },
     {
@@ -376,7 +395,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-sub-right"
+        "labelKey": "settings.builder-sub-right",
+        "dependsOn": null
       }
     },
     {
@@ -394,7 +414,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-sub-top"
+        "labelKey": "settings.builder-sub-top",
+        "dependsOn": null
       }
     },
     {
@@ -412,7 +433,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.builder-theme-name"
+        "labelKey": "settings.builder-theme-name",
+        "dependsOn": null
       }
     },
     {
@@ -430,7 +452,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.cbg-h0Open-color"
+        "labelKey": "settings.cbg-h0Open-color",
+        "dependsOn": null
       }
     },
     {
@@ -450,7 +473,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "select",
-        "labelKey": "settings.cbg-h0Open-mode"
+        "labelKey": "settings.cbg-h0Open-mode",
+        "dependsOn": null
       }
     },
     {
@@ -468,7 +492,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.cbg-h0Open-opacity"
+        "labelKey": "settings.cbg-h0Open-opacity",
+        "dependsOn": null
       }
     },
     {
@@ -486,7 +511,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.cbg-h2Open-color"
+        "labelKey": "settings.cbg-h2Open-color",
+        "dependsOn": null
       }
     },
     {
@@ -506,7 +532,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "select",
-        "labelKey": "settings.cbg-h2Open-mode"
+        "labelKey": "settings.cbg-h2Open-mode",
+        "dependsOn": null
       }
     },
     {
@@ -524,7 +551,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.cbg-h2Open-opacity"
+        "labelKey": "settings.cbg-h2Open-opacity",
+        "dependsOn": null
       }
     },
     {
@@ -542,7 +570,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.cbg-regular-color"
+        "labelKey": "settings.cbg-regular-color",
+        "dependsOn": null
       }
     },
     {
@@ -562,7 +591,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "select",
-        "labelKey": "settings.cbg-regular-mode"
+        "labelKey": "settings.cbg-regular-mode",
+        "dependsOn": null
       }
     },
     {
@@ -580,7 +610,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.cbg-regular-opacity"
+        "labelKey": "settings.cbg-regular-opacity",
+        "dependsOn": null
       }
     },
     {
@@ -600,7 +631,8 @@
       "ui": {
         "section": "misc",
         "control": "select",
-        "labelKey": "settings.col-divider-style"
+        "labelKey": "settings.col-divider-style",
+        "dependsOn": null
       }
     },
     {
@@ -618,7 +650,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.data-builder-back-svg"
+        "labelKey": "settings.data-builder-back-svg",
+        "dependsOn": null
       }
     },
     {
@@ -636,7 +669,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.data-builder-main-svg"
+        "labelKey": "settings.data-builder-main-svg",
+        "dependsOn": null
       }
     },
     {
@@ -654,7 +688,8 @@
       "ui": {
         "section": "shaar",
         "control": "text",
-        "labelKey": "settings.data-builder-sub-svg"
+        "labelKey": "settings.data-builder-sub-svg",
+        "dependsOn": null
       }
     },
     {
@@ -672,7 +707,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.data-cbg-h0Open-img"
+        "labelKey": "settings.data-cbg-h0Open-img",
+        "dependsOn": null
       }
     },
     {
@@ -690,7 +726,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.data-cbg-h2Open-img"
+        "labelKey": "settings.data-cbg-h2Open-img",
+        "dependsOn": null
       }
     },
     {
@@ -708,7 +745,8 @@
       "ui": {
         "section": "backgrounds",
         "control": "text",
-        "labelKey": "settings.data-cbg-regular-img"
+        "labelKey": "settings.data-cbg-regular-img",
+        "dependsOn": null
       }
     },
     {
@@ -726,7 +764,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.data-hdr-c-img"
+        "labelKey": "settings.data-hdr-c-img",
+        "dependsOn": null
       }
     },
     {
@@ -744,7 +783,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.data-sec-div-img"
+        "labelKey": "settings.data-sec-div-img",
+        "dependsOn": null
       }
     },
     {
@@ -762,7 +802,8 @@
       "ui": {
         "section": "toc",
         "control": "checkbox",
-        "labelKey": "settings.detailed-toc-count-numbering"
+        "labelKey": "settings.detailed-toc-count-numbering",
+        "dependsOn": null
       }
     },
     {
@@ -780,7 +821,8 @@
       "ui": {
         "section": "toc",
         "control": "checkbox",
-        "labelKey": "settings.detailed-toc-show-numbering"
+        "labelKey": "settings.detailed-toc-show-numbering",
+        "dependsOn": null
       }
     },
     {
@@ -798,7 +840,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h2-btm-h"
+        "labelKey": "settings.dim-h2-btm-h",
+        "dependsOn": null
       }
     },
     {
@@ -816,7 +859,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h2-btm-w"
+        "labelKey": "settings.dim-h2-btm-w",
+        "dependsOn": null
       }
     },
     {
@@ -834,7 +878,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h2-title-side-h"
+        "labelKey": "settings.dim-h2-title-side-h",
+        "dependsOn": null
       }
     },
     {
@@ -852,7 +897,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h2-title-side-w"
+        "labelKey": "settings.dim-h2-title-side-w",
+        "dependsOn": null
       }
     },
     {
@@ -870,7 +916,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h2-top-h"
+        "labelKey": "settings.dim-h2-top-h",
+        "dependsOn": null
       }
     },
     {
@@ -888,7 +935,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h2-top-w"
+        "labelKey": "settings.dim-h2-top-w",
+        "dependsOn": null
       }
     },
     {
@@ -906,7 +954,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h3-side-h"
+        "labelKey": "settings.dim-h3-side-h",
+        "dependsOn": null
       }
     },
     {
@@ -924,7 +973,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-h3-side-w"
+        "labelKey": "settings.dim-h3-side-w",
+        "dependsOn": null
       }
     },
     {
@@ -942,7 +992,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-note-side-h"
+        "labelKey": "settings.dim-note-side-h",
+        "dependsOn": null
       }
     },
     {
@@ -960,7 +1011,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-note-side-w"
+        "labelKey": "settings.dim-note-side-w",
+        "dependsOn": null
       }
     },
     {
@@ -978,7 +1030,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-secdiv-h"
+        "labelKey": "settings.dim-secdiv-h",
+        "dependsOn": null
       }
     },
     {
@@ -996,7 +1049,8 @@
       "ui": {
         "section": "ornaments",
         "control": "text",
-        "labelKey": "settings.dim-secdiv-w"
+        "labelKey": "settings.dim-secdiv-w",
+        "dependsOn": null
       }
     },
     {
@@ -1014,7 +1068,8 @@
       "ui": {
         "section": "body",
         "control": "text",
-        "labelKey": "settings.drop-word-count"
+        "labelKey": "settings.drop-word-count",
+        "dependsOn": null
       }
     },
     {
@@ -1032,7 +1087,8 @@
       "ui": {
         "section": "body",
         "control": "text",
-        "labelKey": "settings.drop-word-min-lines"
+        "labelKey": "settings.drop-word-min-lines",
+        "dependsOn": null
       }
     },
     {
@@ -1053,7 +1109,8 @@
       "ui": {
         "section": "body",
         "control": "select",
-        "labelKey": "settings.drop-word-mode"
+        "labelKey": "settings.drop-word-mode",
+        "dependsOn": null
       }
     },
     {
@@ -1073,7 +1130,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.en-line-prefix"
+        "labelKey": "settings.en-line-prefix",
+        "dependsOn": null
       }
     },
     {
@@ -1091,7 +1149,8 @@
       "ui": {
         "section": "toc",
         "control": "checkbox",
-        "labelKey": "settings.enable-detailed-toc"
+        "labelKey": "settings.enable-detailed-toc",
+        "dependsOn": null
       }
     },
     {
@@ -1109,7 +1168,8 @@
       "ui": {
         "section": "toc",
         "control": "checkbox",
-        "labelKey": "settings.enable-general-toc"
+        "labelKey": "settings.enable-general-toc",
+        "dependsOn": null
       }
     },
     {
@@ -1127,7 +1187,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.enable-shaar-box-editor"
+        "labelKey": "settings.enable-shaar-box-editor",
+        "dependsOn": null
       }
     },
     {
@@ -1145,7 +1206,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dh"
+        "labelKey": "settings.f-dh",
+        "dependsOn": null
       }
     },
     {
@@ -1163,7 +1225,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dtoc-1"
+        "labelKey": "settings.f-dtoc-1",
+        "dependsOn": null
       }
     },
     {
@@ -1181,7 +1244,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dtoc-2"
+        "labelKey": "settings.f-dtoc-2",
+        "dependsOn": null
       }
     },
     {
@@ -1199,7 +1263,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dtoc-3"
+        "labelKey": "settings.f-dtoc-3",
+        "dependsOn": null
       }
     },
     {
@@ -1217,7 +1282,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dtoc-4"
+        "labelKey": "settings.f-dtoc-4",
+        "dependsOn": null
       }
     },
     {
@@ -1235,7 +1301,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dtoc-5"
+        "labelKey": "settings.f-dtoc-5",
+        "dependsOn": null
       }
     },
     {
@@ -1253,7 +1320,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dtoc-6"
+        "labelKey": "settings.f-dtoc-6",
+        "dependsOn": null
       }
     },
     {
@@ -1271,7 +1339,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-dtoc-7"
+        "labelKey": "settings.f-dtoc-7",
+        "dependsOn": null
       }
     },
     {
@@ -1289,7 +1358,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-gtoc-1"
+        "labelKey": "settings.f-gtoc-1",
+        "dependsOn": null
       }
     },
     {
@@ -1307,7 +1377,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-gtoc-2"
+        "labelKey": "settings.f-gtoc-2",
+        "dependsOn": null
       }
     },
     {
@@ -1325,7 +1396,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-gtoc-3"
+        "labelKey": "settings.f-gtoc-3",
+        "dependsOn": null
       }
     },
     {
@@ -1343,7 +1415,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-gtoc-4"
+        "labelKey": "settings.f-gtoc-4",
+        "dependsOn": null
       }
     },
     {
@@ -1361,7 +1434,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-gtoc-5"
+        "labelKey": "settings.f-gtoc-5",
+        "dependsOn": null
       }
     },
     {
@@ -1379,7 +1453,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-gtoc-6"
+        "labelKey": "settings.f-gtoc-6",
+        "dependsOn": null
       }
     },
     {
@@ -1397,7 +1472,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-gtoc-7"
+        "labelKey": "settings.f-gtoc-7",
+        "dependsOn": null
       }
     },
     {
@@ -1415,7 +1491,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h0"
+        "labelKey": "settings.f-h0",
+        "dependsOn": null
       }
     },
     {
@@ -1433,7 +1510,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h0-body"
+        "labelKey": "settings.f-h0-body",
+        "dependsOn": null
       }
     },
     {
@@ -1451,7 +1529,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h1"
+        "labelKey": "settings.f-h1",
+        "dependsOn": null
       }
     },
     {
@@ -1469,7 +1548,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h2"
+        "labelKey": "settings.f-h2",
+        "dependsOn": null
       }
     },
     {
@@ -1487,7 +1567,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h3"
+        "labelKey": "settings.f-h3",
+        "dependsOn": null
       }
     },
     {
@@ -1505,7 +1586,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h4"
+        "labelKey": "settings.f-h4",
+        "dependsOn": null
       }
     },
     {
@@ -1523,7 +1605,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h5"
+        "labelKey": "settings.f-h5",
+        "dependsOn": null
       }
     },
     {
@@ -1541,7 +1624,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h6"
+        "labelKey": "settings.f-h6",
+        "dependsOn": null
       }
     },
     {
@@ -1559,7 +1643,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-h7"
+        "labelKey": "settings.f-h7",
+        "dependsOn": null
       }
     },
     {
@@ -1577,7 +1662,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-hdr-c"
+        "labelKey": "settings.f-hdr-c",
+        "dependsOn": null
       }
     },
     {
@@ -1595,7 +1681,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-hdr-l"
+        "labelKey": "settings.f-hdr-l",
+        "dependsOn": null
       }
     },
     {
@@ -1613,7 +1700,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-hdr-r"
+        "labelKey": "settings.f-hdr-r",
+        "dependsOn": null
       }
     },
     {
@@ -1631,7 +1719,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-hdr-verso-c"
+        "labelKey": "settings.f-hdr-verso-c",
+        "dependsOn": null
       }
     },
     {
@@ -1649,7 +1738,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-hdr-verso-l"
+        "labelKey": "settings.f-hdr-verso-l",
+        "dependsOn": null
       }
     },
     {
@@ -1667,7 +1757,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-hdr-verso-r"
+        "labelKey": "settings.f-hdr-verso-r",
+        "dependsOn": null
       }
     },
     {
@@ -1685,7 +1776,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.f-note-body"
+        "labelKey": "settings.f-note-body",
+        "dependsOn": null
       }
     },
     {
@@ -1703,7 +1795,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.f-note-title"
+        "labelKey": "settings.f-note-title",
+        "dependsOn": null
       }
     },
     {
@@ -1721,7 +1814,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-paren"
+        "labelKey": "settings.f-paren",
+        "dependsOn": null
       }
     },
     {
@@ -1739,7 +1833,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-sh-author"
+        "labelKey": "settings.f-sh-author",
+        "dependsOn": null
       }
     },
     {
@@ -1757,7 +1852,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-sh-desc"
+        "labelKey": "settings.f-sh-desc",
+        "dependsOn": null
       }
     },
     {
@@ -1775,7 +1871,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-sh-sec"
+        "labelKey": "settings.f-sh-sec",
+        "dependsOn": null
       }
     },
     {
@@ -1793,7 +1890,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-sh-sub"
+        "labelKey": "settings.f-sh-sub",
+        "dependsOn": null
       }
     },
     {
@@ -1811,7 +1909,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-sh-title"
+        "labelKey": "settings.f-sh-title",
+        "dependsOn": null
       }
     },
     {
@@ -1829,7 +1928,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-sh-year"
+        "labelKey": "settings.f-sh-year",
+        "dependsOn": null
       }
     },
     {
@@ -1847,7 +1947,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.f-siman"
+        "labelKey": "settings.f-siman",
+        "dependsOn": null
       }
     },
     {
@@ -1865,7 +1966,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-builder-back-svg"
+        "labelKey": "settings.file-builder-back-svg",
+        "dependsOn": null
       }
     },
     {
@@ -1883,7 +1985,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-builder-main-svg"
+        "labelKey": "settings.file-builder-main-svg",
+        "dependsOn": null
       }
     },
     {
@@ -1901,7 +2004,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-builder-sub-svg"
+        "labelKey": "settings.file-builder-sub-svg",
+        "dependsOn": null
       }
     },
     {
@@ -1919,7 +2023,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-cbg-h0Open-img"
+        "labelKey": "settings.file-cbg-h0Open-img",
+        "dependsOn": null
       }
     },
     {
@@ -1937,7 +2042,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-cbg-h2Open-img"
+        "labelKey": "settings.file-cbg-h2Open-img",
+        "dependsOn": null
       }
     },
     {
@@ -1955,7 +2061,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-cbg-regular-img"
+        "labelKey": "settings.file-cbg-regular-img",
+        "dependsOn": null
       }
     },
     {
@@ -1973,7 +2080,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-hdr-c-img"
+        "labelKey": "settings.file-hdr-c-img",
+        "dependsOn": null
       }
     },
     {
@@ -1991,7 +2099,8 @@
       "ui": {
         "section": "misc",
         "control": "text",
-        "labelKey": "settings.file-sec-div-img"
+        "labelKey": "settings.file-sec-div-img",
+        "dependsOn": null
       }
     },
     {
@@ -2009,7 +2118,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.fn-columns"
+        "labelKey": "settings.fn-columns",
+        "dependsOn": null
       }
     },
     {
@@ -2029,7 +2139,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.fn-delim-close"
+        "labelKey": "settings.fn-delim-close",
+        "dependsOn": null
       }
     },
     {
@@ -2049,7 +2160,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.fn-delim-open"
+        "labelKey": "settings.fn-delim-open",
+        "dependsOn": null
       }
     },
     {
@@ -2069,7 +2181,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.fn-layout-mode"
+        "labelKey": "settings.fn-layout-mode",
+        "dependsOn": null
       }
     },
     {
@@ -2089,7 +2202,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.fn-reset-mode"
+        "labelKey": "settings.fn-reset-mode",
+        "dependsOn": null
       }
     },
     {
@@ -2107,7 +2221,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.fn-title-text"
+        "labelKey": "settings.fn-title-text",
+        "dependsOn": null
       }
     },
     {
@@ -2125,7 +2240,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.font-body"
+        "labelKey": "settings.font-body",
+        "dependsOn": null
       }
     },
     {
@@ -2143,7 +2259,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.font-first-word"
+        "labelKey": "settings.font-first-word",
+        "dependsOn": null
       }
     },
     {
@@ -2161,7 +2278,8 @@
       "ui": {
         "section": "toc",
         "control": "checkbox",
-        "labelKey": "settings.general-toc-count-numbering"
+        "labelKey": "settings.general-toc-count-numbering",
+        "dependsOn": null
       }
     },
     {
@@ -2179,7 +2297,8 @@
       "ui": {
         "section": "toc",
         "control": "checkbox",
-        "labelKey": "settings.general-toc-show-numbering"
+        "labelKey": "settings.general-toc-show-numbering",
+        "dependsOn": null
       }
     },
     {
@@ -2197,7 +2316,8 @@
       "ui": {
         "section": "headings",
         "control": "checkbox",
-        "labelKey": "settings.h2-auto-siman"
+        "labelKey": "settings.h2-auto-siman",
+        "dependsOn": null
       }
     },
     {
@@ -2215,7 +2335,8 @@
       "ui": {
         "section": "headings",
         "control": "checkbox",
-        "labelKey": "settings.h2-orn-fit-text"
+        "labelKey": "settings.h2-orn-fit-text",
+        "dependsOn": null
       }
     },
     {
@@ -2235,7 +2356,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-orn-scope"
+        "labelKey": "settings.h2-orn-scope",
+        "dependsOn": null
       }
     },
     {
@@ -2255,7 +2377,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-ornament-bottom-style"
+        "labelKey": "settings.h2-ornament-bottom-style",
+        "dependsOn": null
       }
     },
     {
@@ -2275,7 +2398,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-ornament-set"
+        "labelKey": "settings.h2-ornament-set",
+        "dependsOn": null
       }
     },
     {
@@ -2295,7 +2419,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-ornament-top-style"
+        "labelKey": "settings.h2-ornament-top-style",
+        "dependsOn": null
       }
     },
     {
@@ -2313,7 +2438,8 @@
       "ui": {
         "section": "headings",
         "control": "checkbox",
-        "labelKey": "settings.h2-reset-siman"
+        "labelKey": "settings.h2-reset-siman",
+        "dependsOn": null
       }
     },
     {
@@ -2333,7 +2459,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-title-orn-mode"
+        "labelKey": "settings.h2-title-orn-mode",
+        "dependsOn": null
       }
     },
     {
@@ -2353,7 +2480,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-title-ornament-bottom-style"
+        "labelKey": "settings.h2-title-ornament-bottom-style",
+        "dependsOn": null
       }
     },
     {
@@ -2373,7 +2501,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-title-ornament-l"
+        "labelKey": "settings.h2-title-ornament-l",
+        "dependsOn": null
       }
     },
     {
@@ -2393,7 +2522,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-title-ornament-r"
+        "labelKey": "settings.h2-title-ornament-r",
+        "dependsOn": null
       }
     },
     {
@@ -2413,7 +2543,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h2-title-ornament-top-style"
+        "labelKey": "settings.h2-title-ornament-top-style",
+        "dependsOn": null
       }
     },
     {
@@ -2431,7 +2562,8 @@
       "ui": {
         "section": "headings",
         "control": "text",
-        "labelKey": "settings.h2-top-distance"
+        "labelKey": "settings.h2-top-distance",
+        "dependsOn": null
       }
     },
     {
@@ -2451,7 +2583,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h3-ornament-l"
+        "labelKey": "settings.h3-ornament-l",
+        "dependsOn": null
       }
     },
     {
@@ -2471,7 +2604,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h3-ornament-r"
+        "labelKey": "settings.h3-ornament-r",
+        "dependsOn": null
       }
     },
     {
@@ -2491,7 +2625,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.h3-ornament-set"
+        "labelKey": "settings.h3-ornament-set",
+        "dependsOn": null
       }
     },
     {
@@ -2509,7 +2644,8 @@
       "ui": {
         "section": "running-headers",
         "control": "checkbox",
-        "labelKey": "settings.hdr-alternating"
+        "labelKey": "settings.hdr-alternating",
+        "dependsOn": null
       }
     },
     {
@@ -2529,7 +2665,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-c-align"
+        "labelKey": "settings.hdr-c-align",
+        "dependsOn": null
       }
     },
     {
@@ -2547,7 +2684,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-c-custom"
+        "labelKey": "settings.hdr-c-custom",
+        "dependsOn": null
       }
     },
     {
@@ -2568,7 +2706,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-c-type"
+        "labelKey": "settings.hdr-c-type",
+        "dependsOn": null
       }
     },
     {
@@ -2586,7 +2725,8 @@
       "ui": {
         "section": "running-headers",
         "control": "checkbox",
-        "labelKey": "settings.hdr-distinct-even-odd"
+        "labelKey": "settings.hdr-distinct-even-odd",
+        "dependsOn": null
       }
     },
     {
@@ -2606,7 +2746,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-divider-style"
+        "labelKey": "settings.hdr-divider-style",
+        "dependsOn": null
       }
     },
     {
@@ -2626,7 +2767,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-h1-title-mode"
+        "labelKey": "settings.hdr-h1-title-mode",
+        "dependsOn": null
       }
     },
     {
@@ -2647,7 +2789,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-l-align"
+        "labelKey": "settings.hdr-l-align",
+        "dependsOn": null
       }
     },
     {
@@ -2665,7 +2808,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-l-custom"
+        "labelKey": "settings.hdr-l-custom",
+        "dependsOn": null
       }
     },
     {
@@ -2686,7 +2830,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-l-type"
+        "labelKey": "settings.hdr-l-type",
+        "dependsOn": null
       }
     },
     {
@@ -2707,7 +2852,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-r-align"
+        "labelKey": "settings.hdr-r-align",
+        "dependsOn": null
       }
     },
     {
@@ -2725,7 +2871,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-r-custom"
+        "labelKey": "settings.hdr-r-custom",
+        "dependsOn": null
       }
     },
     {
@@ -2746,7 +2893,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-r-type"
+        "labelKey": "settings.hdr-r-type",
+        "dependsOn": null
       }
     },
     {
@@ -2764,7 +2912,8 @@
       "ui": {
         "section": "running-headers",
         "control": "checkbox",
-        "labelKey": "settings.hdr-title-split"
+        "labelKey": "settings.hdr-title-split",
+        "dependsOn": null
       }
     },
     {
@@ -2784,7 +2933,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-verso-c-align"
+        "labelKey": "settings.hdr-verso-c-align",
+        "dependsOn": null
       }
     },
     {
@@ -2802,7 +2952,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-verso-c-custom"
+        "labelKey": "settings.hdr-verso-c-custom",
+        "dependsOn": null
       }
     },
     {
@@ -2823,7 +2974,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-verso-c-type"
+        "labelKey": "settings.hdr-verso-c-type",
+        "dependsOn": null
       }
     },
     {
@@ -2844,7 +2996,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-verso-l-align"
+        "labelKey": "settings.hdr-verso-l-align",
+        "dependsOn": null
       }
     },
     {
@@ -2862,7 +3015,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-verso-l-custom"
+        "labelKey": "settings.hdr-verso-l-custom",
+        "dependsOn": null
       }
     },
     {
@@ -2883,7 +3037,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-verso-l-type"
+        "labelKey": "settings.hdr-verso-l-type",
+        "dependsOn": null
       }
     },
     {
@@ -2904,7 +3059,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-verso-r-align"
+        "labelKey": "settings.hdr-verso-r-align",
+        "dependsOn": null
       }
     },
     {
@@ -2922,7 +3078,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-verso-r-custom"
+        "labelKey": "settings.hdr-verso-r-custom",
+        "dependsOn": null
       }
     },
     {
@@ -2943,7 +3100,8 @@
       "ui": {
         "section": "running-headers",
         "control": "select",
-        "labelKey": "settings.hdr-verso-r-type"
+        "labelKey": "settings.hdr-verso-r-type",
+        "dependsOn": null
       }
     },
     {
@@ -2961,7 +3119,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-w-c"
+        "labelKey": "settings.hdr-w-c",
+        "dependsOn": null
       }
     },
     {
@@ -2979,7 +3138,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-w-l"
+        "labelKey": "settings.hdr-w-l",
+        "dependsOn": null
       }
     },
     {
@@ -2997,7 +3157,8 @@
       "ui": {
         "section": "running-headers",
         "control": "text",
-        "labelKey": "settings.hdr-w-r"
+        "labelKey": "settings.hdr-w-r",
+        "dependsOn": null
       }
     },
     {
@@ -3015,7 +3176,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-author"
+        "labelKey": "settings.inp-book-author",
+        "dependsOn": null
       }
     },
     {
@@ -3033,7 +3195,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-back-contact"
+        "labelKey": "settings.inp-book-back-contact",
+        "dependsOn": null
       }
     },
     {
@@ -3051,7 +3214,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-back-copyright"
+        "labelKey": "settings.inp-book-back-copyright",
+        "dependsOn": null
       }
     },
     {
@@ -3069,7 +3233,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-back-extra"
+        "labelKey": "settings.inp-book-back-extra",
+        "dependsOn": null
       }
     },
     {
@@ -3087,7 +3252,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-back-publishing"
+        "labelKey": "settings.inp-book-back-publishing",
+        "dependsOn": null
       }
     },
     {
@@ -3105,7 +3271,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-desc"
+        "labelKey": "settings.inp-book-desc",
+        "dependsOn": null
       }
     },
     {
@@ -3123,7 +3290,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-sections"
+        "labelKey": "settings.inp-book-sections",
+        "dependsOn": null
       }
     },
     {
@@ -3141,7 +3309,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-subtitle"
+        "labelKey": "settings.inp-book-subtitle",
+        "dependsOn": null
       }
     },
     {
@@ -3159,7 +3328,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-title"
+        "labelKey": "settings.inp-book-title",
+        "dependsOn": null
       }
     },
     {
@@ -3177,7 +3347,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.inp-book-year"
+        "labelKey": "settings.inp-book-year",
+        "dependsOn": null
       }
     },
     {
@@ -3195,7 +3366,8 @@
       "ui": {
         "section": "body",
         "control": "text",
-        "labelKey": "settings.line-height-body"
+        "labelKey": "settings.line-height-body",
+        "dependsOn": null
       }
     },
     {
@@ -3213,7 +3385,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.main-shaar-count-numbering"
+        "labelKey": "settings.main-shaar-count-numbering",
+        "dependsOn": null
       }
     },
     {
@@ -3231,7 +3404,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.main-shaar-show-number"
+        "labelKey": "settings.main-shaar-show-number",
+        "dependsOn": null
       }
     },
     {
@@ -3251,7 +3425,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h0"
+        "labelKey": "settings.mode-h0",
+        "dependsOn": null
       }
     },
     {
@@ -3271,7 +3446,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h1"
+        "labelKey": "settings.mode-h1",
+        "dependsOn": null
       }
     },
     {
@@ -3291,7 +3467,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h2"
+        "labelKey": "settings.mode-h2",
+        "dependsOn": null
       }
     },
     {
@@ -3311,7 +3488,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h3"
+        "labelKey": "settings.mode-h3",
+        "dependsOn": null
       }
     },
     {
@@ -3331,7 +3509,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h4"
+        "labelKey": "settings.mode-h4",
+        "dependsOn": null
       }
     },
     {
@@ -3351,7 +3530,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h5"
+        "labelKey": "settings.mode-h5",
+        "dependsOn": null
       }
     },
     {
@@ -3371,7 +3551,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h6"
+        "labelKey": "settings.mode-h6",
+        "dependsOn": null
       }
     },
     {
@@ -3391,7 +3572,8 @@
       "ui": {
         "section": "headings",
         "control": "select",
-        "labelKey": "settings.mode-h7"
+        "labelKey": "settings.mode-h7",
+        "dependsOn": null
       }
     },
     {
@@ -3411,7 +3593,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.note-header-orn-l"
+        "labelKey": "settings.note-header-orn-l",
+        "dependsOn": null
       }
     },
     {
@@ -3431,7 +3614,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.note-header-orn-r"
+        "labelKey": "settings.note-header-orn-r",
+        "dependsOn": null
       }
     },
     {
@@ -3449,7 +3633,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.note-listing-num-size"
+        "labelKey": "settings.note-listing-num-size",
+        "dependsOn": null
       }
     },
     {
@@ -3467,7 +3652,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.note-marker-size"
+        "labelKey": "settings.note-marker-size",
+        "dependsOn": null
       }
     },
     {
@@ -3487,7 +3673,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.note-marker-type"
+        "labelKey": "settings.note-marker-type",
+        "dependsOn": null
       }
     },
     {
@@ -3507,7 +3694,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.note-num-separator"
+        "labelKey": "settings.note-num-separator",
+        "dependsOn": null
       }
     },
     {
@@ -3527,7 +3715,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.note-numbering-style"
+        "labelKey": "settings.note-numbering-style",
+        "dependsOn": null
       }
     },
     {
@@ -3548,7 +3737,8 @@
       "ui": {
         "section": "notes",
         "control": "select",
-        "labelKey": "settings.note-rule-style"
+        "labelKey": "settings.note-rule-style",
+        "dependsOn": null
       }
     },
     {
@@ -3566,7 +3756,8 @@
       "ui": {
         "section": "headings",
         "control": "checkbox",
-        "labelKey": "settings.odd-h0"
+        "labelKey": "settings.odd-h0",
+        "dependsOn": null
       }
     },
     {
@@ -3584,7 +3775,8 @@
       "ui": {
         "section": "headings",
         "control": "checkbox",
-        "labelKey": "settings.odd-h1"
+        "labelKey": "settings.odd-h1",
+        "dependsOn": null
       }
     },
     {
@@ -3602,7 +3794,8 @@
       "ui": {
         "section": "headings",
         "control": "checkbox",
-        "labelKey": "settings.odd-h2"
+        "labelKey": "settings.odd-h2",
+        "dependsOn": null
       }
     },
     {
@@ -3622,7 +3815,8 @@
       "ui": {
         "section": "folio",
         "control": "select",
-        "labelKey": "settings.page-num-format"
+        "labelKey": "settings.page-num-format",
+        "dependsOn": null
       }
     },
     {
@@ -3642,7 +3836,8 @@
       "ui": {
         "section": "folio",
         "control": "select",
-        "labelKey": "settings.page-num-frame"
+        "labelKey": "settings.page-num-frame",
+        "dependsOn": null
       }
     },
     {
@@ -3660,7 +3855,8 @@
       "ui": {
         "section": "folio",
         "control": "text",
-        "labelKey": "settings.page-num-initial-value"
+        "labelKey": "settings.page-num-initial-value",
+        "dependsOn": null
       }
     },
     {
@@ -3681,7 +3877,8 @@
       "ui": {
         "section": "folio",
         "control": "select",
-        "labelKey": "settings.page-num-position"
+        "labelKey": "settings.page-num-position",
+        "dependsOn": null
       }
     },
     {
@@ -3699,7 +3896,8 @@
       "ui": {
         "section": "folio",
         "control": "text",
-        "labelKey": "settings.page-num-start-idx"
+        "labelKey": "settings.page-num-start-idx",
+        "dependsOn": null
       }
     },
     {
@@ -3717,7 +3915,8 @@
       "ui": {
         "section": "grid",
         "control": "text",
-        "labelKey": "settings.prop-col"
+        "labelKey": "settings.prop-col",
+        "dependsOn": null
       }
     },
     {
@@ -3735,7 +3934,8 @@
       "ui": {
         "section": "grid",
         "control": "text",
-        "labelKey": "settings.prop-gap"
+        "labelKey": "settings.prop-gap",
+        "dependsOn": null
       }
     },
     {
@@ -3753,7 +3953,8 @@
       "ui": {
         "section": "grid",
         "control": "text",
-        "labelKey": "settings.prop-gutter"
+        "labelKey": "settings.prop-gutter",
+        "dependsOn": null
       }
     },
     {
@@ -3771,7 +3972,8 @@
       "ui": {
         "section": "grid",
         "control": "text",
-        "labelKey": "settings.prop-margin"
+        "labelKey": "settings.prop-margin",
+        "dependsOn": null
       }
     },
     {
@@ -3789,7 +3991,8 @@
       "ui": {
         "section": "grid",
         "control": "text",
-        "labelKey": "settings.prop-mb"
+        "labelKey": "settings.prop-mb",
+        "dependsOn": null
       }
     },
     {
@@ -3807,7 +4010,8 @@
       "ui": {
         "section": "grid",
         "control": "text",
-        "labelKey": "settings.prop-mt"
+        "labelKey": "settings.prop-mt",
+        "dependsOn": null
       }
     },
     {
@@ -3825,7 +4029,8 @@
       "ui": {
         "section": "grid",
         "control": "text",
-        "labelKey": "settings.prop-mt-h2"
+        "labelKey": "settings.prop-mt-h2",
+        "dependsOn": null
       }
     },
     {
@@ -3843,7 +4048,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-dtoc-1"
+        "labelKey": "settings.s-dtoc-1",
+        "dependsOn": null
       }
     },
     {
@@ -3861,7 +4067,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-dtoc-2"
+        "labelKey": "settings.s-dtoc-2",
+        "dependsOn": null
       }
     },
     {
@@ -3879,7 +4086,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-dtoc-3"
+        "labelKey": "settings.s-dtoc-3",
+        "dependsOn": null
       }
     },
     {
@@ -3897,7 +4105,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-dtoc-4"
+        "labelKey": "settings.s-dtoc-4",
+        "dependsOn": null
       }
     },
     {
@@ -3915,7 +4124,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-dtoc-5"
+        "labelKey": "settings.s-dtoc-5",
+        "dependsOn": null
       }
     },
     {
@@ -3933,7 +4143,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-dtoc-6"
+        "labelKey": "settings.s-dtoc-6",
+        "dependsOn": null
       }
     },
     {
@@ -3951,7 +4162,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-dtoc-7"
+        "labelKey": "settings.s-dtoc-7",
+        "dependsOn": null
       }
     },
     {
@@ -3969,7 +4181,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-gtoc-1"
+        "labelKey": "settings.s-gtoc-1",
+        "dependsOn": null
       }
     },
     {
@@ -3987,7 +4200,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-gtoc-2"
+        "labelKey": "settings.s-gtoc-2",
+        "dependsOn": null
       }
     },
     {
@@ -4005,7 +4219,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-gtoc-3"
+        "labelKey": "settings.s-gtoc-3",
+        "dependsOn": null
       }
     },
     {
@@ -4023,7 +4238,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-gtoc-4"
+        "labelKey": "settings.s-gtoc-4",
+        "dependsOn": null
       }
     },
     {
@@ -4041,7 +4257,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-gtoc-5"
+        "labelKey": "settings.s-gtoc-5",
+        "dependsOn": null
       }
     },
     {
@@ -4059,7 +4276,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-gtoc-6"
+        "labelKey": "settings.s-gtoc-6",
+        "dependsOn": null
       }
     },
     {
@@ -4077,7 +4295,8 @@
       "ui": {
         "section": "toc",
         "control": "text",
-        "labelKey": "settings.s-gtoc-7"
+        "labelKey": "settings.s-gtoc-7",
+        "dependsOn": null
       }
     },
     {
@@ -4095,7 +4314,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h0"
+        "labelKey": "settings.s-h0",
+        "dependsOn": null
       }
     },
     {
@@ -4113,7 +4333,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h0-body"
+        "labelKey": "settings.s-h0-body",
+        "dependsOn": null
       }
     },
     {
@@ -4131,7 +4352,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h1"
+        "labelKey": "settings.s-h1",
+        "dependsOn": null
       }
     },
     {
@@ -4149,7 +4371,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h2"
+        "labelKey": "settings.s-h2",
+        "dependsOn": null
       }
     },
     {
@@ -4167,7 +4390,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h3"
+        "labelKey": "settings.s-h3",
+        "dependsOn": null
       }
     },
     {
@@ -4185,7 +4409,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h4"
+        "labelKey": "settings.s-h4",
+        "dependsOn": null
       }
     },
     {
@@ -4203,7 +4428,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h5"
+        "labelKey": "settings.s-h5",
+        "dependsOn": null
       }
     },
     {
@@ -4221,7 +4447,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h6"
+        "labelKey": "settings.s-h6",
+        "dependsOn": null
       }
     },
     {
@@ -4239,7 +4466,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-h7"
+        "labelKey": "settings.s-h7",
+        "dependsOn": null
       }
     },
     {
@@ -4257,7 +4485,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-hdr-c"
+        "labelKey": "settings.s-hdr-c",
+        "dependsOn": null
       }
     },
     {
@@ -4275,7 +4504,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-hdr-l"
+        "labelKey": "settings.s-hdr-l",
+        "dependsOn": null
       }
     },
     {
@@ -4293,7 +4523,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-hdr-r"
+        "labelKey": "settings.s-hdr-r",
+        "dependsOn": null
       }
     },
     {
@@ -4311,7 +4542,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-hdr-verso-c"
+        "labelKey": "settings.s-hdr-verso-c",
+        "dependsOn": null
       }
     },
     {
@@ -4329,7 +4561,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-hdr-verso-l"
+        "labelKey": "settings.s-hdr-verso-l",
+        "dependsOn": null
       }
     },
     {
@@ -4347,7 +4580,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-hdr-verso-r"
+        "labelKey": "settings.s-hdr-verso-r",
+        "dependsOn": null
       }
     },
     {
@@ -4365,7 +4599,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.s-note-body"
+        "labelKey": "settings.s-note-body",
+        "dependsOn": null
       }
     },
     {
@@ -4383,7 +4618,8 @@
       "ui": {
         "section": "notes",
         "control": "text",
-        "labelKey": "settings.s-note-title"
+        "labelKey": "settings.s-note-title",
+        "dependsOn": null
       }
     },
     {
@@ -4401,7 +4637,13 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-paren"
+        "labelKey": "settings.s-paren",
+        "dependsOn": {
+          "key": "s-paren-mode",
+          "values": [
+            "relative"
+          ]
+        }
       }
     },
     {
@@ -4421,7 +4663,8 @@
       "ui": {
         "section": "fonts",
         "control": "select",
-        "labelKey": "settings.s-paren-mode"
+        "labelKey": "settings.s-paren-mode",
+        "dependsOn": null
       }
     },
     {
@@ -4439,7 +4682,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-sh-author"
+        "labelKey": "settings.s-sh-author",
+        "dependsOn": null
       }
     },
     {
@@ -4457,7 +4701,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-sh-desc"
+        "labelKey": "settings.s-sh-desc",
+        "dependsOn": null
       }
     },
     {
@@ -4475,7 +4720,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-sh-sec"
+        "labelKey": "settings.s-sh-sec",
+        "dependsOn": null
       }
     },
     {
@@ -4493,7 +4739,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-sh-sub"
+        "labelKey": "settings.s-sh-sub",
+        "dependsOn": null
       }
     },
     {
@@ -4511,7 +4758,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-sh-title"
+        "labelKey": "settings.s-sh-title",
+        "dependsOn": null
       }
     },
     {
@@ -4529,7 +4777,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-sh-year"
+        "labelKey": "settings.s-sh-year",
+        "dependsOn": null
       }
     },
     {
@@ -4547,7 +4796,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.s-siman"
+        "labelKey": "settings.s-siman",
+        "dependsOn": null
       }
     },
     {
@@ -4567,7 +4817,8 @@
       "ui": {
         "section": "misc",
         "control": "select",
-        "labelKey": "settings.section-divider-style"
+        "labelKey": "settings.section-divider-style",
+        "dependsOn": null
       }
     },
     {
@@ -4587,7 +4838,13 @@
       "ui": {
         "section": "shaar",
         "control": "select",
-        "labelKey": "settings.select-shaar-back"
+        "labelKey": "settings.select-shaar-back",
+        "dependsOn": {
+          "key": "show-back-shaar",
+          "values": [
+            "true"
+          ]
+        }
       }
     },
     {
@@ -4607,7 +4864,13 @@
       "ui": {
         "section": "shaar",
         "control": "select",
-        "labelKey": "settings.select-shaar-main"
+        "labelKey": "settings.select-shaar-main",
+        "dependsOn": {
+          "key": "show-main-shaar",
+          "values": [
+            "true"
+          ]
+        }
       }
     },
     {
@@ -4627,7 +4890,13 @@
       "ui": {
         "section": "shaar",
         "control": "select",
-        "labelKey": "settings.select-shaar-sub"
+        "labelKey": "settings.select-shaar-sub",
+        "dependsOn": {
+          "key": "show-sub-shaar",
+          "values": [
+            "true"
+          ]
+        }
       }
     },
     {
@@ -4645,7 +4914,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.show-back-shaar"
+        "labelKey": "settings.show-back-shaar",
+        "dependsOn": null
       }
     },
     {
@@ -4663,7 +4933,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.show-main-shaar"
+        "labelKey": "settings.show-main-shaar",
+        "dependsOn": null
       }
     },
     {
@@ -4681,7 +4952,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.show-sub-shaar"
+        "labelKey": "settings.show-sub-shaar",
+        "dependsOn": null
       }
     },
     {
@@ -4699,7 +4971,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.size-body"
+        "labelKey": "settings.size-body",
+        "dependsOn": null
       }
     },
     {
@@ -4717,7 +4990,8 @@
       "ui": {
         "section": "fonts",
         "control": "text",
-        "labelKey": "settings.size-first-word"
+        "labelKey": "settings.size-first-word",
+        "dependsOn": null
       }
     },
     {
@@ -4735,7 +5009,8 @@
       "ui": {
         "section": "book-meta",
         "control": "text",
-        "labelKey": "settings.style-set-select"
+        "labelKey": "settings.style-set-select",
+        "dependsOn": null
       }
     },
     {
@@ -4753,7 +5028,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.sub-shaar-count-numbering"
+        "labelKey": "settings.sub-shaar-count-numbering",
+        "dependsOn": null
       }
     },
     {
@@ -4771,7 +5047,8 @@
       "ui": {
         "section": "shaar",
         "control": "checkbox",
-        "labelKey": "settings.sub-shaar-show-number"
+        "labelKey": "settings.sub-shaar-show-number",
+        "dependsOn": null
       }
     }
   ]

@@ -25,6 +25,11 @@ import {
   type ValidationIssue,
 } from '@tora/settings-schema';
 import registryJson from '@tora/settings-schema/registry.json';
+// החוזה של המרשם מוצא מחדש דרך התפר הזה (שלב 78): הקומפוננטות צורכות
+// אותו מה-store ולא ישירות מהחבילה — קוד המעטפת הישן (components/) אינו
+// מייבא @tora/* (נאכף ב-verify-fixtures-schema; חריגי הייבוא: stores/
+// worker-host/renderers בלבד).
+export type { SettingDefinition } from '@tora/settings-schema';
 import { readJson, STORAGE_KEYS, writeJson } from './storage.js';
 
 /** המרשם היחיד — נבנה פעם אחת מה־registry המיוצר (source of truth). */

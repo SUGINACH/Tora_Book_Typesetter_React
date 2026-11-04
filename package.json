@@ -57,6 +57,7 @@
     "engine:verify": "node scripts/migration/verify-e2e-skeleton.mjs",
     "verify:stores": "node scripts/migration/verify-stores.mjs",
     "verify:ui-worker": "node scripts/migration/verify-ui-worker.mjs",
+    "verify:settings-panel": "node scripts/migration/verify-settings-panel.mjs",
     "verify:line-battery": "node scripts/migration/verify-line-battery.mjs",
     "verify:next-path": "node scripts/migration/verify-next-path.mjs",
     "verify:differential-lines": "node scripts/migration/verify-differential-lines.mjs",

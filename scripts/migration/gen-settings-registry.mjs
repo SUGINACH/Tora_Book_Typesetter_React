@@ -103,6 +103,24 @@ const sectionOf = (key) => {
 
 const controlOf = (t) => (t === 'boolean' ? 'checkbox' : t === 'enum' ? 'select' : t === 'dimension' || t === 'color' || t === 'font-stack' ? 'text' : 'text');
 
+// ── תלויות תצוגה ללוח ההגדרות (שלב 78; אפיון §13.3 "dependencies") ──
+// רשימה סגורה של זוגות עם ראיה מתועדת בלבד — כל זוג נוסף מחייב תיעוד כאן:
+//   1. s-paren ← s-paren-mode:'relative' — גודל סוגריים ביחס לגוף; ערך שלילי
+//      חוקי רק במצב יחסי (עדות: default_settings.json s-paren-mode:'relative',
+//      s-paren:'-2' + schema.ts RELATIVE_NEGATIVE_KEYS + LAYOUT_DEPENDENCY_MAP).
+//   2-4. select-shaar-{main,back,sub} ← show-{main,back,sub}-shaar:'true' —
+//      בורר עיצוב השער רלוונטי רק כאשר השער מוצג (שמות המפתחות +
+//      מבנה שערי המשנה ב-LAYOUT_DEPENDENCY_MAP §3.1).
+// לא נכללו זוגות נוספים בהיעדר ראיה: ל-cbg-*-mode נצפה ערך יחיד ('none')
+// בלבד, ולכן תלות מצב≠none תישאר תמיד-כבויה ומטעה; ל-hdr-*-type אין ערך
+// 'custom' נצפה ולכן אין שער לטקסט המותאם.
+const DEPENDS_ON = new Map([
+  ['s-paren', { key: 's-paren-mode', values: ['relative'] }],
+  ['select-shaar-main', { key: 'show-main-shaar', values: ['true'] }],
+  ['select-shaar-back', { key: 'show-back-shaar', values: ['true'] }],
+  ['select-shaar-sub', { key: 'show-sub-shaar', values: ['true'] }],
+]);
+
 // ── בניית הרשומות — איחוד מפתחות: default ∪ פריסטים (השוואה דו-כיוונית, §6.3) ──
 const ALL_KEYS = [...new Set([
   ...Object.keys(DEFAULT),
@@ -129,7 +147,7 @@ for (const key of ALL_KEYS) {
     unit,
     affectsLayout: !uiOnly,
     consumerId: uiOnly ? 'ui-only' : (sectionOf(key) === 'book-meta' ? 'ui-only' : 'engine'),
-    ui: { section: sectionOf(key), control: controlOf(type), labelKey: `settings.${key}` },
+    ui: { section: sectionOf(key), control: controlOf(type), labelKey: `settings.${key}`, dependsOn: DEPENDS_ON.get(key) ?? null },
   });
 }
 
@@ -159,13 +177,15 @@ lines.push('');
 lines.push(`**מקור:** ${ORANGE} · default_settings.json (SHA-256 ${LOCK.defaultSettings.slice(0, 16)}…) + שלושה פריסטים + LAYOUT_DEPENDENCY_MAP.md.`);
 lines.push(`**היקף:** ${entries.length} מפתחות — ${registry.affectsLayoutKeys} משפיעי פריסה, ${registry.uiOnlyKeys} UI-only (אינם נכנסים ל־EffectiveSettings/configHash).`);
 lines.push('**כללי סיווג:** (א) UI-only = קלט משתמש חולף/מצב עורך בלבד (inp-*, style-set-select, active-theme-select, enable-shaar-box-editor); (ב) כל השאר affectsLayout=true מעקרון הזהירות — היעדר מ-configHash גורם להחמצת שינוי פריסה, תיוג שווא רק מרעיש; (ג) טיפוס/enum נגזרים מתחומי הערכים שנצפתו (default+פריסטים) — ערך שלא נצפה נדחה בפירוש (path+קוד), אינו מוחלף בשקט; (ד) drop-word-mode:"window" נשמר כערך legacy חוקי — אין המרה אוטומטית.');
+lines.push('**תלויות תצוגה (שלב 78; אפיון §13.3):** רשימה סגורה של 4 זוגות מבוססי-ראיה — s-paren←s-paren-mode:relative (שלילי חוקי רק במצב יחסי) ו-select-shaar-{main,back,sub}←show-*-shaar:true. מטא-דאטה של הטופס בלבד; אינה משפיעה על אימות/configHash. זוג נוסף מחייב תיעוד במחולל.');
 lines.push('');
-lines.push('| מפתח legacy | טיפוס | ברירת מחדל (מקור) | enum | יחידה | affectsLayout | consumer | מדור UI |');
-lines.push('|---|---|---|---|---|---|---|---|');
+lines.push('| מפתח legacy | טיפוס | ברירת מחדל (מקור) | enum | יחידה | affectsLayout | consumer | מדור UI | תלות |');
+lines.push('|---|---|---|---|---|---|---|---|---|');
 for (const [, list] of [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
   for (const e of [...list].sort(byKey)) {
     const def = typeof e.defaultValue === 'boolean' ? String(e.defaultValue) : JSON.stringify(e.defaultValue);
-    lines.push(`| \`${e.legacyKey}\` | ${e.type} | ${def} | ${e.enum ? e.enum.map((v) => `\`${v}\``).join(', ') : '—'} | ${e.unit ?? '—'} | ${e.affectsLayout ? '✓' : '—'} | ${e.consumerId} | ${e.ui.section}/${e.ui.control} |`);
+    const dep = e.ui.dependsOn ? `\`${e.ui.dependsOn.key}\`=${e.ui.dependsOn.values.map((v) => `\`${v}\``).join('|')}` : '—';
+    lines.push(`| \`${e.legacyKey}\` | ${e.type} | ${def} | ${e.enum ? e.enum.map((v) => `\`${v}\``).join(', ') : '—'} | ${e.unit ?? '—'} | ${e.affectsLayout ? '✓' : '—'} | ${e.consumerId} | ${e.ui.section}/${e.ui.control} | ${dep} |`);
   }
 }
 lines.push('');

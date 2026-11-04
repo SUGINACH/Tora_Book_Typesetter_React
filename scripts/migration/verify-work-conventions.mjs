@@ -110,6 +110,22 @@ const SHELL_REPLACED_STAGE_77 = new Set([
   '.github/workflows/deploy.yml', // נדרש build:packages לפני vite build מאז שהאפליקציה צורכת חבילות @tora
 ]);
 for (const f of SHELL_REPLACED_STAGE_77) LIVING_FILES.add(f);
+// חריג מעטפת מתועד (שלב 78, 2026-11-05): השלב מחייב "אין טופס הגדרות
+// hard-coded מקביל למרשם" — והטופס הישן וברירות המחדל שלו חיים בקבצים
+// אלה. הלוח החדש נגול כולו מהמרשם (SettingsPanel/SettingRow + קטלוג
+// i18n); אלו המחיקות שמאפשרות את השער. רשימה סגורה — כל קובץ נוסף
+// ייתפס; אין להרחיב בלי תיעוד מפורש ב-WORKLOG.
+const SETTINGS_FORM_REMOVED_STAGE_78 = new Set([
+  'src/store/settings-store.ts', // מקור מצב ההגדרות הישן (טופס מקביל) — מוחלף ב-stores/settings-store (שלב 76)
+  'src/lib/default-settings.ts', // ברירות מחדל ישנות כתובות-ביד — מקור אמת מקביל למרשם
+  'scripts/check-breaklines.ts', // כלי ניפוי קדם-תכנית שצרך את ה-defaults הישנים; לא רץ בשום צינור
+  'tests/unit/engine/input-declaration.test.ts', // בדיקות המסלול הישן שצרכו default-settings; לא רצות ב-CI/סוללה (test:unit שבור מקודם — תועד)
+  'tests/unit/engine/paren-protector.test.ts', // כנ"ל
+  'tests/unit/engine/determinism.test.ts', // כנ"ל — המנוע הישן מוגן ע"י בייסליין נעול + שער התאימות (שלב 73)
+  'tests/unit/engine/typeset.test.ts', // כנ"ל
+  'tests/unit/audit/new-checks.test.ts', // כנ"ל
+]);
+for (const f of SETTINGS_FORM_REMOVED_STAGE_78) LIVING_FILES.add(f);
 // תיקון תכנית מבוקר (כלל 3 בתכנית): קובץ התכנית נערך בתיאום "לפני שלב 15"
 // המתועד ב־WORKLOG — תחילה ב־commit ed3b856, ואחר כך תוקן ב־a1674fb
 // ("שחזור שלבים שהושלמו ותיקום תיאום התכנית") שהשיב את ניסוחי שלבים 1–14
@@ -181,6 +197,10 @@ const NEW_ALLOWED = [
   // האמת ב־assets/fonts (הזהות נאכפת ב־verify-ui-worker), המוגשמים לדפדפן
   // דרך public/ כנדרש ל־fetch האפליקציה. רשימה סגורה — לא תיקייה שלמה.
   /^public\/fonts\/(manifest\.json|Guttman-Rashi-Normal\.woff2)$/,
+  // שלב 78: שלושת קבצי לוח ההגדרות מהמרשם — קטלוג ה-i18n ושתי
+  // הקומפוננטות. רשימה סגורה — לא תיקיות שלמות.
+  /^src\/i18n\/settings-labels\.ts$/,
+  /^src\/components\/settings\/(SettingsPanel|SettingRow)\.tsx$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;

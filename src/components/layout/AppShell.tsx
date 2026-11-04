@@ -6,14 +6,16 @@
  * המצב מגיע מחמשת ה־stores (שלב 76) דרך הבוררים הצרים בלבד; התצוגה
  * היא היטל של ה־IR (LayoutPreview, שלב 36) — לא HTML מוזרק.
  *
- * לוח ההגדרות של המעטפת הישנה אינו מוצג כאן — הוא נבנה מחדש מה־Setting
- * Registry בשלב 78; מה שרץ כאן הוא ברירות המחדל של המרשם + הטיוטה
- * שנשמרה ב־settingsStore.
+ * לוח ההגדרות (שלב 78; §13.3): SettingsPanel הנגול כולו מה־Setting
+ * Registry — מוצג כסרגל צד מתקפל; מצב פתיחה/סגירה הוא מצב חולף של
+ * הרכיב (אינו נשמר ואינו נכנס ל־stores/configHash).
  */
+import { useState } from 'react';
 import { useDocumentName, useFindings, useIsDirty, useLayoutHash, useLayoutIr, useRawText, useRunPhase, useRunProgress } from '../../stores/selectors.js';
 import { useTypesetRun } from '../../worker-host/use-typeset-run.js';
 import { ImportButtons } from '../editor/ImportButtons';
 import { TextEditor } from '../editor/TextEditor';
+import { SettingsPanel } from '../settings/SettingsPanel';
 import { PreviewArea } from './PreviewArea';
 
 const ACTIVE_PHASES = new Set(['preparing', 'running', 'auditing']);
@@ -28,6 +30,7 @@ export function AppShell() {
   const layoutHash = useLayoutHash();
   const findings = useFindings();
   const ir = useLayoutIr();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const isRunning = ACTIVE_PHASES.has(phase);
   const hasSource = rawText !== '';
@@ -45,6 +48,14 @@ export function AppShell() {
               {findings.length} ממצאים
             </span>
           )}
+          <button
+            onClick={() => setSettingsOpen((v) => !v)}
+            className={`px-2 py-1 rounded text-xs border ${settingsOpen ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'}`}
+            data-testid="toggle-settings"
+            aria-pressed={settingsOpen}
+          >
+            ⚙ הגדרות
+          </button>
         </div>
       </header>
 
@@ -94,6 +105,9 @@ export function AppShell() {
 
         {/* Preview Area — היטל של ה־IR מ־resultStore */}
         <PreviewArea />
+
+        {/* לוח ההגדרות — נגול מהמרשם (שלב 78) */}
+        {settingsOpen && <SettingsPanel />}
       </div>
     </div>
   );
