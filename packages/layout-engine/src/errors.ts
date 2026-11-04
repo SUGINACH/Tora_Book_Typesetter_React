@@ -22,6 +22,8 @@ export const LAYOUT_ENGINE_ERROR_CATALOG: Readonly<Record<string, EngineErrorEnt
   // פרק ז (M6) — מצב עימוד וסמני תוכן (שלב 49).
   'errors.engine.PAGINATION_STATE_INVALID': { i18nKey: 'errors.engine.PAGINATION_STATE_INVALID', params: ['action', 'reason'], severity: 'error' },
   'errors.engine.CURSOR_INVALID': { i18nKey: 'errors.engine.CURSOR_INVALID', params: ['cursor', 'issues'], severity: 'error' },
+  // פרק ט (M8) — נקודת השבת החוץ (שלב 71; ADR-011).
+  'errors.engine.TOC_FIXED_POINT_NOT_REACHED': { i18nKey: 'errors.engine.TOC_FIXED_POINT_NOT_REACHED', params: ['iterations', 'reason'], severity: 'error' },
 });
 
 export function isRegisteredEngineErrorKey(key: string): boolean {

@@ -252,7 +252,7 @@ console.log('\n6) רגרסיה');
   (lint !== null && !/\berror\b|✖/m.test(lint) ? ok : fail)('lint:packages נקי');
   const deps = run('npm', ['run', 'deps:check']);
   (deps !== null && !/^\s*✖|\berror\b/m.test(deps) ? ok : fail)('deps:check נקי');
-  const tests = (SKIP_TESTS ? 'Tests  980 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+  const tests = (SKIP_TESTS ? 'Tests  1001 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
   const m = tests?.match(/Tests\s+(\d+)\s+passed/);
   (m && Number(m[1]) >= 407 ? ok : fail)(`test:packages — ${m ? m[1] : 'נכשל'} עוברות (386 + 21 ספק)`);
 }

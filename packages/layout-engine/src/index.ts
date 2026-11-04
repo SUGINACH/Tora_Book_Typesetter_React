@@ -32,3 +32,5 @@ export * from './pagination/notes.js';
 export * from './pagination/endnotes.js';
 export * from './pagination/anchors.js';
 export * from './pagination/toc.js';
+// פרק ט (M8) — נקודת השבת החוץ; שלב 71+ (ADR-011)
+export * from './pagination/fixed-point.js';

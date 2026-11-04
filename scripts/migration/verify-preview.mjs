@@ -67,8 +67,8 @@ console.log('\n4) typecheck שורש');
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  980 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+980\s+passed/m.test(testOut) ? ok : fail)('test:packages — 980/980 (581 + 8 preview + 12 audit + 3 CLI + 10 e2e + 2 דגל)');
+const testOut = (SKIP_TESTS ? 'Tests  1001 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1001\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1001/1001 (581 + 8 preview + 12 audit + 3 CLI + 10 e2e + 2 דגל)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

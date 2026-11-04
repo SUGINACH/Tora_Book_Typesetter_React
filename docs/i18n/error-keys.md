@@ -219,6 +219,7 @@
 | `errors.engine.NO_LEGAL_LINE_BREAK` | blockId, level | error | אין שבירת שורה חוקית לבלוק {blockId} גם ברמה {level} |
 | `errors.engine.PAGINATION_STATE_INVALID` | action, reason | error | מצב/מעבר עימוד לא חוקי ({action}): {reason} |
 | `errors.engine.CURSOR_INVALID` | cursor, issues | error | סמן תוכן שגוי ‎{cursor}‎: {issues} |
+| `errors.engine.TOC_FIXED_POINT_NOT_REACHED` | iterations, reason | error | נקודת השבת של העימוד לא הושגה לאחר {iterations} איטרציות — {reason} |
 
 ## cli — reference runner (שלב 34, פרק ה)
 
