@@ -37,3 +37,13 @@ export {
   LAYOUT_AUDIT_FINDING_CODES,
   auditLayout,
 } from './layout-audit.js';
+
+// ── שלב 72 (פרק ט, M8): הביקורת הסמנטית על מערכת הקישורים (§14.2) ──
+export type {
+  LinkAuditInventories,
+  LinkAuditReport,
+} from './link-audit.js';
+export {
+  LINK_AUDIT_FINDING_CODES,
+  auditLinks,
+} from './link-audit.js';

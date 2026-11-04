@@ -42,6 +42,7 @@
     "verify:ornament-space": "node scripts/migration/verify-ornament-space.mjs",
     "verify:anchor-toc": "node scripts/migration/verify-anchor-toc.mjs",
     "verify:fixed-point": "node scripts/migration/verify-fixed-point.mjs",
+    "verify:links": "node scripts/migration/verify-links.mjs",
     "verify:harfbuzz": "node scripts/migration/verify-harfbuzz-provider.mjs",
     "verify:enforcement": "node scripts/migration/verify-enforcement.mjs",
     "verify:cache": "node scripts/migration/verify-shaping-cache.mjs",

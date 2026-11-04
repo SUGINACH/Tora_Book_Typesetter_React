@@ -10,7 +10,7 @@
  * לפי כיוון הריצה; ההחלטה הסופית על ייצוג הקו — ADR-008 (שלב 88).
  * גופנים עוגנים לפי manifest (@font-face עם src קבוע); אין גופן רשת.
  */
-import type { LayoutDocument, LayoutPage, LineFragment, PositionedNoteMarker, PositionedRun, Rect } from '@tora/layout-api';
+import type { LayoutDocument, LayoutPage, LineFragment, PositionedNoteMarker, PositionedRun, Rect, LinkTable } from '@tora/layout-api';
 import { luToCssPx } from '@tora/layout-api';
 
 export interface StyleManifest {
@@ -98,10 +98,13 @@ function renderRun(run: PositionedRun, manifest: AssetManifest | undefined): str
     + `${escapeHtmlText(run.text)}</span>`;
 }
 
-function renderMarker(marker: PositionedNoteMarker): string {
+function renderMarker(marker: PositionedNoteMarker, linkOf?: (noteId: string) => ProjectedLinkInfo | undefined): string {
   const topLu = (marker.baseline as number) - (marker.rect.y as number);
   const top = `${luToCssPx(topLu as never)}px`;
-  return `<span class="tora-note-marker" dir="ltr" data-note-id="${escapeAttr(marker.noteId)}" `
+  const link = linkOf?.(marker.noteId);
+  const linkAttrs = link === undefined ? '' : ` data-link-id="${escapeAttr(link.id)}" data-link-kind="${escapeAttr(link.kind)}"`
+    + (link.targetPage !== undefined ? ` data-link-target-page="${link.targetPage}"` : '');
+  return `<span class="tora-note-marker" dir="ltr" data-note-id="${escapeAttr(marker.noteId)}"${linkAttrs} `
     + `style="left:${px(marker.rect.x as never)};top:${top};width:${px(marker.rect.width as never)};height:${px(marker.rect.height as never)};line-height:1">`
     + `${escapeHtmlText(marker.label)}</span>`;
 }
@@ -113,7 +116,16 @@ function renderLine(line: LineFragment, manifest: AssetManifest | undefined): st
     + `style="${styleOfRect(line.rect)}">${runs}</div>`;
 }
 
-function renderPage(page: LayoutPage, manifest: AssetManifest | undefined): string {
+
+/** מידע קישור להיטל — מיוצר מ-LinkTable מסופק (שלב 72). */
+export interface ProjectedLinkInfo {
+  readonly id: string;
+  readonly kind: string;
+  readonly targetPage?: number;
+  readonly target?: string;
+}
+
+function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, markerLinkOf?: (noteId: string) => ProjectedLinkInfo | undefined, anchorLinkOf?: (anchorId: string) => ProjectedLinkInfo | undefined): string {
   const regions = page.regions
     .map((r) => `<div class="tora-region" data-region-id="${escapeAttr(r.id)}" data-region-kind="${r.kind}" style="${styleOfRect(r.rect)}"></div>`)
     .join('');
@@ -121,15 +133,19 @@ function renderPage(page: LayoutPage, manifest: AssetManifest | undefined): stri
     .map((item) => {
       switch (item.kind) {
         case 'line': return renderLine(item, manifest);
-        case 'note-marker': return renderMarker(item);
-        case 'anchor':
-          return `<span class="tora-anchor" data-anchor-id="${escapeAttr(item.anchorId)}" style="${styleOfRect(item.rect)}"></span>`;
+        case 'note-marker': return renderMarker(item, markerLinkOf);
+        case 'anchor': {
+          const link = anchorLinkOf?.(item.anchorId);
+          const linkAttrs = link === undefined ? '' : ` data-link-id="${escapeAttr(link.id)}" data-link-kind="${escapeAttr(link.kind)}"`
+            + (link.target !== undefined ? ` data-link-target="${escapeAttr(link.target)}"` : '');
+          return `<span class="tora-anchor" data-anchor-id="${escapeAttr(item.anchorId)}"${linkAttrs} style="${styleOfRect(item.rect)}"></span>`;
+        }
         default: return '';
       }
     })
     .join('');
   const folio = page.printedFolio !== undefined ? ` data-folio="${escapeAttr(page.printedFolio)}"` : '';
-  return `<section class="tora-page" dir="rtl" data-page-id="${escapeAttr(page.id)}" data-page-kind="${page.kind}" `
+  return `<section class="tora-page" dir="rtl" data-page-id="${escapeAttr(page.id)}" data-page-kind="${escapeAttr(page.kind)}" `
     + `data-parity="${page.parity}"${folio} style="width:${px(page.size.width)};height:${px(page.size.height)}">${regions}${items}</section>`;
 }
 
@@ -137,10 +153,26 @@ function renderPage(page: LayoutPage, manifest: AssetManifest | undefined): stri
  * renderHtml — היטל HTML מה־IR בלבד (§15.1). טהור: אותם קלטים ⇐ אותם bytes;
  * אין תאריך יצירה בתוכן (מטה-דטה נפרדת אם תידרש).
  */
-export function renderHtml(layout: LayoutDocument, styleManifest?: StyleManifest, assetManifest?: AssetManifest): RenderHtmlResult {
+export function renderHtml(layout: LayoutDocument, styleManifest?: StyleManifest, assetManifest?: AssetManifest, links?: LinkTable): RenderHtmlResult {
   void styleManifest;
   const css = buildCss(assetManifest);
-  const pages = layout.pages.map((p) => renderPage(p, assetManifest)).join('');
+  // שלב 72: אינדקס הקישורים להיטל — סמן הערה ⇒ ההפניה הקדימה אליה; עוגן כותרת ⇒ חזרה ל-TOC.
+  // כשלא סופקת טבלה — הפלט זהה לקודם (התנהגות קיימת לא נשברת; goldens נשמרים).
+  const noteForward = new Map<string, ProjectedLinkInfo>();
+  const anchorBack = new Map<string, ProjectedLinkInfo>();
+  if (links !== undefined) {
+    for (const r of links.records) {
+      if (r.kind === 'note' && r.target.kind === 'note') {
+        noteForward.set(r.target.id, { id: r.linkId, kind: r.kind, targetPage: r.target.physicalPage });
+      }
+      if (r.kind === 'toc-back' && r.source.kind === 'heading') {
+        anchorBack.set(r.source.id, { id: r.linkId, kind: r.kind, target: r.target.id });
+      }
+    }
+  }
+  const markerLinkOf = links === undefined ? undefined : (noteId: string) => noteForward.get(noteId);
+  const anchorLinkOf = links === undefined ? undefined : (anchorId: string) => anchorBack.get(anchorId);
+  const pages = layout.pages.map((p) => renderPage(p, assetManifest, markerLinkOf, anchorLinkOf)).join('');
   const html = `<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="utf-8">`
     + `<title>${escapeHtmlText(layout.policyId)}</title>`
     + `<style>${css}</style></head><body><div class="tora-root" data-policy-id="${escapeAttr(layout.policyId)}" data-schema-version="${layout.schemaVersion}">${pages}</div></body></html>`;

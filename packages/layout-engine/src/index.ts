@@ -34,3 +34,5 @@ export * from './pagination/anchors.js';
 export * from './pagination/toc.js';
 // פרק ט (M8) — נקודת השבת החוץ; שלב 71+ (ADR-011)
 export * from './pagination/fixed-point.js';
+// שלב 72 — מערכת הקישורים הסופית (endnotes ⇄ גוף; TOC ⇄ כותרת)
+export * from './pagination/links.js';
