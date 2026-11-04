@@ -57,6 +57,9 @@ export interface HbBuffer {
   setScript(script: string): void;
   setLanguage(language: string): void;
   guessSegmentProperties(): void;
+  /** איפוס המאגר למצב התחלתי (תוכן + מאפיינים) — hb_buffer_reset. */
+  reset(): void;
+  clearContents(): void;
   getGlyphInfos(): readonly HbGlyphInfo[];
   getGlyphPositions(): readonly HbGlyphPosition[];
 }
@@ -245,6 +248,15 @@ export async function createHarfbuzzProvider(
   }
 
   // 4) shape — סינכרוני ודטרמיניסטי (אחרי היצירה; אפיון §6.4)
+  //
+  // גהות זיכרון wasm (שלב 73): למחלקת Buffer של harfbuzzjs אין destroy
+  // סינכרוני — הניקוי נשען על FinalizationRegistry שאינו מופעל בתוך לולאה
+  // סינכרונית, ולכן מאגר חדש לכל קריאה דלף את ערימת ה-wasm (המסמך
+  // הקנוני ≈ 380K עיצובים ← כ־850MB חיצוניים ← קריסת OOM בריצה המלאה).
+  // הפתרון: מאגר אחד ממוחזר — reset() מאפס תוכן ומאפיינים לפני כל
+  // שימוש; הקריאות סינכרוניות ועוקבות, ולכן אין שימוש חופף. הקריאה
+  // ל-getGlyphInfos/getGlyphPositions מעתיקה למערכי JS טרם האיפוס.
+  const sharedBuffer = new hb.Buffer();
   const shape = (request: ShapeRequest): ShapedRun => {
     assertShapeRequest(request);
     const entry = entries.get(request.font.fontId);
@@ -256,6 +268,10 @@ export async function createHarfbuzzProvider(
     }
     const { font, upem } = entry;
     const { atoms, fontSizeLu, letterSpacingLu } = request;
+    const featureTags = Object.keys(request.features);
+    const hbFeatures = featureTags.length > 0
+      ? featureTags.map((tag) => new hb.Feature(tag, request.features[tag] === true ? 1 : 0))
+      : undefined;
 
     // הטקסט המאוחד + טווחי האטומים (UTF-16)
     let combined = '';
@@ -267,20 +283,17 @@ export async function createHarfbuzzProvider(
       atomEnds.push(combined.length);
     }
 
-    const buffer = new hb.Buffer();
-    buffer.addText(combined);
-    buffer.setDirection(request.direction === 'rtl' ? hb.Direction.RTL : hb.Direction.LTR);
-    buffer.setScript(scriptOfRequest(atoms, request.direction));
-    buffer.setLanguage(request.language);
+    sharedBuffer.reset();
+    sharedBuffer.addText(combined);
+    sharedBuffer.setDirection(request.direction === 'rtl' ? hb.Direction.RTL : hb.Direction.LTR);
+    sharedBuffer.setScript(scriptOfRequest(atoms, request.direction));
+    sharedBuffer.setLanguage(request.language);
 
-    const featureTags = Object.keys(request.features);
-    const hbFeatures = featureTags.length > 0
-      ? featureTags.map((tag) => new hb.Feature(tag, request.features[tag] === true ? 1 : 0))
-      : undefined;
-    hb.shape(font, buffer, hbFeatures);
+    hb.shape(font, sharedBuffer, hbFeatures);
 
-    const infos = buffer.getGlyphInfos();
-    const positions = buffer.getGlyphPositions();
+    // העתקה לזיכרון JS לפני האיפוס הבא — המערכים חדשים בכל קריאה.
+    const infos = sharedBuffer.getGlyphInfos();
+    const positions = sharedBuffer.getGlyphPositions();
     const glyphs: ShapedGlyph[] = [];
     const missingByIndex = new Map<number, ShapedRun['missingGlyphAtomIds'][number]>();
     let width = 0;

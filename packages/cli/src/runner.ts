@@ -148,11 +148,33 @@ export async function runCli(
     if (first === undefined) first = out;
     progressLine(`typeset run ${run}/${args.repeat}: layoutHash=${runHash.slice(0, 16)}…`);
   }
-  const result = first as TypesetSuccess;
+  // args.ts מאמת repeat ≥ 1 — הלולאה תמיד רצה לפחות פעם אחת (cast הגנתי).
+  // סדר הפעולות מכאן הוא מסלול חסכוני-זיכרון (שלב 73): במסמכים בני
+  // מאות עמודים החזקת שלושה עותקי IR בו-זמנית (מקור + מחרוזת סריאליזציה
+  // + עותק מנותח) ועוד גיבוב קנוני של המחרוזת כולה קרסו ב-OOM. לכן:
+  //   1) סריאליזציה (המקור חי) ← 2) שחרור המקור ← 3) כתיבת layout.json
+  //   מוקדמת ← 4) פריסה לעותק ← 5) בדיקת §17.2#9 וההמשך (ביקורת/היטל)
+  //   על העותק בלבד — שיא הזיכרון של כל שלב בנפרד נמוך משמעותית.
+  const manifest = (first as TypesetSuccess).manifest;
+  const ledger = (first as TypesetSuccess).ledger;
+  let layoutRef: LayoutDocument | null = (first as TypesetSuccess).layout;
+  first = undefined; // שחרור ה-TypesetSuccess — ה-IR חי רק דרך layoutRef
 
-  // אימות עצמאי: ה-IR המסודר משמר את ה-hash (§17.2#9)
-  const serialized = serializeLayoutDocument(result.layout);
-  const roundTripHash = layoutHashOf(JSON.parse(serialized) as unknown as LayoutDocument);
+  await mkdir(args.out, { recursive: true });
+  // כתיבה מוקדמת של layout.json — המחרוזת הגדולה נפטרת לפני הגיבוב.
+  // במסלול כשל (חוסר התאמה) יישאר הקובץ; יציאת השגיאה מסמנת שהריצה
+  // לא אומתה — artifacts של ריצה כושלת הם אבחוניים בלבד (§17).
+  let serialized: string | null = serializeLayoutDocument(layoutRef as LayoutDocument);
+  await writeArtifact(join(args.out, 'layout.json'), serialized);
+  const serializedForParse: string = serialized;
+  serialized = null; // המחרוזת הגדולה משוחררת מיד לאחר הכתיבה
+
+  // אימות עצמאי: ה-IR המסודר משמר את ה-hash (§17.2#9) — על העותק
+  // המנותח; לאחר הפריסה משוחררים גם את המקור וגם את המחרוזת
+  // (איפוס הפניות — הזכוך התוכניתי היה מחזיק אותן עד סוף הפונקציה).
+  const roundTripLayout = JSON.parse(serializedForParse) as unknown as LayoutDocument;
+  layoutRef = null; // ה-IR המקורי ניתן לאיסוץ
+  const roundTripHash = layoutHashOf(roundTripLayout);
   if (roundTripHash !== hash) {
     throw new CliError(EXIT_ENGINE, 'errors.cli.REPEAT_MISMATCH', {
       run: 'serialize-round-trip', expected: hash as string, actual: roundTripHash,
@@ -160,28 +182,27 @@ export async function runCli(
   }
 
   // ── ביקורת עצמאית (§12: בקריאה נפרשת; §14) — על התוצאה כמות שהיא ──
-  const audit = auditLayout({ content: request.document, settings, layout: result.layout });
+  const audit = auditLayout({ content: request.document, settings, layout: roundTripLayout });
   progressLine(`audit: ${audit.findingCount} findings (HIGH=${audit.counts.HIGH}, MEDIUM=${audit.counts.MEDIUM}, LOW=${audit.counts.LOW})`);
 
-  // ── פלט ──
-  await mkdir(args.out, { recursive: true });
   const report: RunReport = {
     schemaVersion: 1,
     layoutHash: hash,
-    pages: result.layout.pages.length,
-    notesPages: result.layout.pages.filter((p) => p.kind === 'notes').length,
+    pages: roundTripLayout.pages.length,
+    notesPages: roundTripLayout.pages.filter((p) => p.kind === 'notes').length,
     engineVersion: ENGINE_VERSION,
     parserVersion: PARSER_VERSION,
     bodyFontFile: fonts.bodyRecord.file,
     repeats: args.repeat,
     deterministic: true,
     trace: args.trace,
-    engine: result.manifest.engine,
+    engine: manifest.engine,
     audit: { ok: audit.ok, high: audit.counts.HIGH, medium: audit.counts.MEDIUM, low: audit.counts.LOW },
   };
+  // layout.json נכתב כבר בשלב מוקדם (לפני הגיבוב) — המחרוזת הגדולה
+  // אינה נשמרת עד כאן; שאר ה-artifacts קטנים.
   const files: Array<[string, string]> = [
-    ['layout.json', serialized],
-    ['manifest.json', canonicalJson(result.manifest as unknown as Record<string, unknown>)],
+    ['manifest.json', canonicalJson(manifest as unknown as Record<string, unknown>)],
     ['request.json', canonicalJson({
       schemaVersion: 1,
       source: sourceText,
@@ -200,11 +221,11 @@ export async function runCli(
     ['report.json', canonicalJson(report as unknown as Record<string, unknown>)],
     ['audit.json', canonicalJson(audit as unknown as Record<string, unknown>)],
   ];
-  if (result.ledger !== undefined) {
-    files.push(['ledger.json', canonicalJson(result.ledger as unknown as Record<string, unknown>)]);
+  if (ledger !== undefined) {
+    files.push(['ledger.json', canonicalJson(ledger as unknown as Record<string, unknown>)]);
   }
   if (args.html) {
-    const html = renderHtml(result.layout, { schemaVersion: 1 }, {
+    const html = renderHtml(roundTripLayout, { schemaVersion: 1 }, {
       schemaVersion: 1,
       fonts: [{
         fontId: fonts.bodyRecord.fontId,

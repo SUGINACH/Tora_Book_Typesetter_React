@@ -299,6 +299,32 @@ describe('עשן על פסוק אמיתי מהקורפוס', () => {
   });
 });
 
+describe('גהות wasm — השמדת מאגרים (שלב 73)', () => {
+  const verseAtoms = [...'וְאֵלֶּה שְׁמוֹת בְּנֵי יִשְׂרָאֵל הַבָּאִים מִצְרַיְמָה']
+    .map((ch, i) => atom(i, ch));
+
+  it('יציבות לאורך אלפי קריאות — כל תוצאה זהה לראשונה ביט-ביט', () => {
+    const first = provider.shape(request({ atoms: verseAtoms }));
+    let identical = 0;
+    for (let i = 0; i < 3000; i++) {
+      const r = provider.shape(request({ atoms: verseAtoms }));
+      if (JSON.stringify(r) === JSON.stringify(first)) identical += 1;
+    }
+    expect(identical).toBe(3000);
+  });
+
+  it('הזיכרון החיצוני אינו תופח עם מספר העיצובים (מאגר מושמד)', () => {
+    // חימום: הקצאות wasm הראשוניות (גדילת ערימה בסיסית) מאחורינו
+    for (let i = 0; i < 500; i++) provider.shape(request({ atoms: verseAtoms }));
+    const before = process.memoryUsage().external;
+    for (let i = 0; i < 8000; i++) provider.shape(request({ atoms: verseAtoms }));
+    const growth = process.memoryUsage().external - before;
+    // לפני התיקון: כל מאגר שאינו מושמד נשאר בערימת ה-wasm — 8000 קריאות
+    // הצטברו לעשרות MB. אחרי: צמיחה זניחה בלבד (רעש הקצאות JS רגיל).
+    expect(growth).toBeLessThan(8 * 1048576);
+  });
+});
+
 /** עזר: בניית ספק עם מניפסט מותאם (לבדיקת האימות הכפול). */
 async function buildProviderWithManifest(fm: readonly FontManifestRecord[]) {
   const fonts = await loadFontSet(fm, FONT_FILES.map((f) => recordOf(f).fontId), async (rec) =>

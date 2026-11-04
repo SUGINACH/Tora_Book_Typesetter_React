@@ -66,3 +66,33 @@ describe('SHA-256 נייב — אורקל node:crypto', () => {
     expect(sha256Hex(s)).toBe(sha256Hex(s));
   });
 });
+
+describe('מסלול זורם לקלטים ענקיים (שלב 73)', () => {
+  // המסלול הזורם נכנס מעל 256K יחידות UTF-16 — בדיקת שקילות מול האורקל
+  // על קלטים שעוברים את הסף, כולל נתחים באורכים שאינם כפולה שלמה של
+  // גודל הנתח, גבולות בלוקים וניקוד רב-בתים.
+  it('קלט 300K יחידות (מעל הסף) ⇐ זהה לאורקל node:crypto', () => {
+    const big = ('וְאֵלֶּה שְׁמוֹת בְּנֵי יִשְׂרָאֵל — test 123 · ').repeat(7000);
+    expect(big.length).toBeGreaterThan(1 << 18);
+    expect(sha256Hex(big)).toBe(createHash('sha256').update(big, 'utf8').digest('hex'));
+  });
+  it('קלט גדול עם אורך שאינו כפולה של גודל הנתח (שארית אמיתית)', () => {
+    let big = '';
+    while (big.length <= (1 << 18)) big += 'אָבּ'; // 3 יחידות לכל חזרה — שארית לא-אחידה
+    big = big.slice(0, (1 << 18) + 12345);
+    expect(sha256Hex(big)).toBe(createHash('sha256').update(big, 'utf8').digest('hex'));
+  });
+  it('גבול הסף בדיוק — מתחת ומעל נותנים את אותה תוצאה כמו האורקל', () => {
+    const base = 'x'.repeat((1 << 18) - 1);
+    for (const s of [base, base + 'x', base + 'ש']) {
+      expect(sha256Hex(s)).toBe(createHash('sha256').update(s, 'utf8').digest('hex'));
+    }
+  });
+  it('קלט ענק דמוי layoutHash (2MB JSON) ⇐ זהה לאורקל', () => {
+    const parts: string[] = [];
+    for (let i = 0; i < 40000; i++) parts.push(`{"page":${i},"lines":[{"id":"l${i}","rect":{"x":${i},"y":0}}]}`);
+    const big = '{' + parts.join(',') + '}';
+    expect(big.length).toBeGreaterThan(2_000_000);
+    expect(sha256Hex(big)).toBe(createHash('sha256').update(big, 'utf8').digest('hex'));
+  });
+});

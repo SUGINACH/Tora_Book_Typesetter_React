@@ -15,7 +15,7 @@
  * כלל הזהב: אותם קלט, הגדרות אפקטיביות, גופנים, provider וגרסת מנוע
  * מניבים את אותו layoutHash — על כל host (אפיון §4.3, §22.2).
  */
-import { sha256Hex } from './hash.js';
+import { createSha256Stream, sha256Hex } from './hash.js';
 import { CanonicalHashError } from './canonical-hash-error.js';
 
 /** סריאליזציה קנונית: מפתחות ממוינים רקורסיבית, escaping קבוע, ללא רווחים. */
@@ -83,11 +83,71 @@ export function inputHash(c: InputHashComponents): string {
 }
 
 /**
- * layoutHash — ה־Layout IR הקנוני בלבד. אחריות הקורא: ה־IR חייב להיות
- * אובייקט סדיר (JSON-able) ונקי משדות רץ-זמן (timestamps, משכים, host, progress).
+ * פליטת ה-JSON הקנוני בנתחים — זהה בתים-בתים ל-canonicalJson(value),
+ * אך בלי לבנות את המחרוזת השלמה בזיכרון (שלב 73): כל פיסה נשלחת ל-emit
+ * ברגע יצירתה. מיועדת לגיבוב זרים של מסמכים ענקיים — הסדר, ה-escaping
+ * והרגישות לסוגים זהים לחלוטין למימוש המחרוזתי.
+ */
+export function canonicalJsonFeed(value: unknown, emit: (chunk: string) => void): void {
+  if (value === null) { emit('null'); return; }
+  switch (typeof value) {
+    case 'boolean':
+      emit(value ? 'true' : 'false');
+      return;
+    case 'number': {
+      if (!Number.isFinite(value)) {
+        throw new CanonicalHashError('NON_FINITE_NUMBER', { value });
+      }
+      if (Object.is(value, -0)) { emit('0'); return; } // נרמול אפס שליחי — דטרמיניזם
+      emit(String(value));
+      return;
+    }
+    case 'string':
+      emit(JSON.stringify(value));
+      return;
+    case 'object': {
+      if (Array.isArray(value)) {
+        emit('[');
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0) emit(',');
+          canonicalJsonFeed(value[i], emit);
+        }
+        emit(']');
+        return;
+      }
+      const obj = value as Record<string, unknown>;
+      const keys = Object.keys(obj).sort();
+      emit('{');
+      for (let i = 0; i < keys.length; i++) {
+        if (i > 0) emit(',');
+        emit(JSON.stringify(keys[i]));
+        emit(':');
+        canonicalJsonFeed(obj[keys[i] as string], emit);
+      }
+      emit('}');
+      return;
+    }
+    default:
+      throw new CanonicalHashError('UNSUPPORTED_TYPE', { type: typeof value });
+  }
+}
+
+/**
+ * layoutHash — ה-Layout IR הקנוני בלבד. אחריות הקורא: ה-IR חיב להיות
+ * אוביקט סדיר (JSON-able) ונקי משדות רץ-זמן (timestamps, משכים, host, progress).
+ *
+ * גיבוב זרים (שלב 73): ה-JSON הקנוני נפלט בנתחים ישירות אל SHA-256
+ * זורם — בלי לבנות מחרוזת שלמה של מאות MB. התוצאה זהה ביט-ביט
+ * לגיבוב המחרוזת (canonicalJson ממיש את אותם נתיחים באותו סדר עם אותם
+ * מפתחות ממוינים) — נבדק במבחני שקילות מול האורקל.
  */
 export function layoutHash(ir: unknown): string {
-  return sha256Hex(canonicalJson({ v: 1, kind: 'layout', ir }));
+  const stream = createSha256Stream();
+  const emit = (chunk: string): void => { stream.update(chunk); };
+  emit('{"ir":');
+  canonicalJsonFeed(ir, emit);
+  emit(',"kind":"layout","v":1}');
+  return stream.digest();
 }
 
 /** runFingerprint — מזהה ריצה: קלט מדויק + פלט מדויק. */

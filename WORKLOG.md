@@ -4,6 +4,19 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 73 — שער התאימות: העברה מלאה מול הבייסליין (M8) — הושלם 2026-11-04
+- **תוצרים:**
+  - `scripts/migration/gen-compatibility-report.mjs` — מחולל דטרמיניסטי: הרצת מלוא הקורפוס (26 fixtures מ-registry.json) דרך ה-CLI כתהליכי-בן אמיתיים, השוואה לבייסליין הנעול לפי מיפוי inputSha256 (אין זיהוי ידני), מטריצת 7 קטגוריות ההעברה (3,151 פריטים: מזהים 38, הגדרות 257, גופנים 1,796, חלקי עמוד 4, שערים 86, עיטורים 967, כללי הערות 3).
+  - `docs/migration/compatibility/matrix.json` + `docs/migration/compatibility-report.md` — הדוח הקנוני: **26/26 עברו, 0 רגרסיות**; נוסח/אטומים נבדקים תמיד בנפרד מגאומטריה (שימור תוכן = תנאי חובה; הבדלי גאומטריה ⇒ justified-different עם הצדקה: מדידה בפועל, ADR-004/011, differential M5).
+  - `scripts/migration/verify-compatibility.mjs` — 48 בדיקות: מבנה וסטטוסים מהקבוצה הסגורה; כיסוי מלא; הקנוני בצינור מלא (HTML, repeat, offline, sourceSha256=registry — "אותו קובץ טקסט ישן בלי עריכה ידנית"); צלבי differential/parity/מלאי; **דטרמיניזם חי** (ch05 רץ מחדש מול המטריצה); שליליים (זיוף atoms/רגרסיה/סטטוס נתפסים); רגרסיה מלאה.
+- **תיקוני זיכרון שאפשרו את הריצה המלאה (מכונת 3GB; לפניהן הקנוני קרס ב-OOM בשלוש נקודות):**
+  - `measurement-harfbuzz/provider.ts` — **מאגר HarfBuzz משותף**: Buffer של harfbuzzjs אינו בר השמדה סינכרונית (FinalizationRegistry בלבד — לא מופעל בלולאה סינכר�ית); מאגר לכל עיצוב דלף ~850MB מערימת ה-wasm. עכשיו: מאגר אחד + reset() לפני כל שימוש. 2 בדיקות חדשות (יציבות 3000 קריאות + צמיחת external אפסית לאורך 8000).
+  - `hash.ts` (measurement-api + layout-api) — **גיבוב על חיצים משותפים**: encodeInto + ריפוד משותף במקום TextEncoder().encode() + Uint8Array לכל קריאה (מאות אלפי קריאות בריצה גדולה צברו מאות MB זיכרון חיצוני שאינו מפעיל GC).
+  - `canonical-hash.ts` + `hash.ts` (layout-api) — **גיבוב קנוני זורם**: canonicalJsonFeed פולט את ה-JSON הקנוני בנתחים ישירות אל createSha256Stream — layoutHash של IR שלם בלי לבנות מחרוזת של 354MB; שקילות מוכחת מול האורקל (4 בדיקות חדשות: 300K יחידות, שארית לא-אחידה, גבול הסף, 2MB דמוי-layoutHash) ומול ערכי העבר — **ה-hash של ch05 לא השתנה** (a0546b85…).
+  - `cli/runner.ts` — **סדר פעולות חסכוני**: סריאליזציה ← כתיבת layout.json מוקדמת ← פריסה לעותק ← שחרור המקור והמחרוזת (איפוס הפניות) ← §17.2#9 על העותק ← ביקורת/היטל/artifacts על העותק בלבד.
+- **תוצאת הקנוני (ברירת מחדל זיכרון, 89 שניות):** 642 עמודים; 2 ריצות hash זהה; ביקורת 0 ממצאים; 703,449 אטומים הוצבו בדיוק פעם אחת; offline מלא; preview.html 33.1MB.
+- **בדיקות:** 1033/1033 (6 חדשות); מאמתים 71/71 כולל verify-compatibility 48/48; מועמד CI מחכה.
+
 ### שלב 72 — השלמת endnotes וקישורים הדדיים: מערכת הקישורים הסופית (M8) — הושלם 2026-11-04
 - **תוצרים:**
   - `packages/layout-api/src/links.ts` — **חוזה LinkTable**: LinkKind (note/note-back/toc/toc-back/internal/external) + LinkEndpoint (block/note/heading/anchor/url + עמוד פיזי פענוחי מהתוצאה) + LinkRecord עם **linkId דטרמיניסטי** — makeLinkId נגזר מהתוכן (סוג+מקור+יעד), לא מסדר ריצה; buildLinkTable/linkTableIssues/linkRecordIssues (כפילויות, כיווניות לפי סוג, linkId זר ⇒ issue, נקודות שגויות) + **linkMappingHash** — חתימה קנונית בלתי-תלויה בסדר הבנייה (ממוין לפי linkId); **מדיניות קישורים חיצוניים** — EXTERNAL_LINK_ALLOWED_SCHEMES=http/https בלבד (javascript/data/file נדחים; רווחים/בלי סכמה ⇒ issue).

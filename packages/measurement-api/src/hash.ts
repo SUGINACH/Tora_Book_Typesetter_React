@@ -38,6 +38,9 @@ const INITIAL_H = new Uint32Array([
   0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
 ]);
 
+/** מילות ההרחבה — משותפות (נכתבות במלואן לפני כל שימוש; שלב 73). */
+const SHARED_W = new Uint32Array(64);
+
 const rotr = (x: number, n: number): number => (x >>> n) | (x << (32 - n));
 
 function hex8(x: number): string {
@@ -47,14 +50,28 @@ function hex8(x: number): string {
     + (x & 0xff).toString(16).padStart(2, '0');
 }
 
-/** SHA-256 של בתים → hex (קטן). מימוש נייב, ללא תלות בסביבה. */
+/** SHA-256 של בתים → hex (קטן). מימוש נייב, ללא תלות בסביבה.
+ *
+ * חיסכון זיכרון (שלב 73): הריפוד רץ על חיץ משותף שגדל פי-שתיים בלבד —
+ * במסלול החם (גיבובי בקשות shaping, מאות אלפי קריאות במסמך גדול)
+ * הקצאת Uint8Array לכל קריאה צברה מאות MB זיכרון חיצוני שאינו נאסף
+ * בלולאה סינכרונית וקרסה את הריצה המלאה. התוצאה זהה ביט-ביט.
+ */
+let padScratch = new Uint8Array(1 << 16);
+
 export function sha256Bytes(input: Uint8Array): string {
   const len = input.length;
   if (!Number.isSafeInteger(len) || len < 0) {
     throw new EngineError('errors.hash.INVALID_LENGTH', { len });
   }
   const paddedLen = (Math.floor((len + 8) / 64) + 1) * 64;
-  const buf = new Uint8Array(paddedLen);
+  if (padScratch.length < paddedLen) {
+    let next = padScratch.length;
+    while (next < paddedLen) next *= 2;
+    padScratch = new Uint8Array(next);
+  }
+  const buf = padScratch.subarray(0, paddedLen);
+  buf.fill(0, len, paddedLen);
   buf.set(input);
   buf[len] = 0x80;
   // אורך בסיביות — 64 סיביות big-endian, בחישוב שלם בטוח (ללא גלישת 32 סיביות)
@@ -74,7 +91,8 @@ export function sha256Bytes(input: Uint8Array): string {
 
   let h0 = INITIAL_H[0]!, h1 = INITIAL_H[1]!, h2 = INITIAL_H[2]!, h3 = INITIAL_H[3]!;
   let h4 = INITIAL_H[4]!, h5 = INITIAL_H[5]!, h6 = INITIAL_H[6]!, h7 = INITIAL_H[7]!;
-  const w = new Uint32Array(64);
+  // w משותף — נכתב במלואו (64 מילים) לפני כל שימוש בכל בלוק
+  const w = SHARED_W;
 
   for (let block = 0; block < paddedLen; block += 64) {
     for (let t = 0; t < 16; t++) {
@@ -111,7 +129,146 @@ export function sha256Bytes(input: Uint8Array): string {
   return hex8(h0) + hex8(h1) + hex8(h2) + hex8(h3) + hex8(h4) + hex8(h5) + hex8(h6) + hex8(h7);
 }
 
-/** SHA-256 של מחרורת (UTF-8) → hex (קטן). */
-export function sha256Hex(text: string): string {
-  return sha256Bytes(new TextEncoder().encode(text));
+/** סף המסלול הזורם — מעליו אין מקודדים את המחרוזת כולה לזיכרון
+ * (layoutHash של IR שלם: מחרוזת של מאות MB; שלב 73). */
+const STREAM_THRESHOLD = 1 << 18;
+
+/** חיץ קידוד לנתחים — 16384 יחידות UTF-16 × 3 בתים = 48KB קבועים. */
+const STREAM_CHUNK_UNITS = 1 << 14;
+const sharedEncoder = new TextEncoder();
+let encodeScratch = new Uint8Array(1 << 16);
+const streamChunkBytes = new Uint8Array(STREAM_CHUNK_UNITS * 3);
+const streamStage = new Uint8Array(128);
+const streamState = new Uint32Array(8);
+
+/** דחיסת בלוק אחד (64 בתים) אל תוך streamState — זהה מתמטית ללולאה
+ * הפנימית של sha256Bytes (אותם קבועי K ואותם סבבים). */
+function compress64(buf: Uint8Array, off: number, w: Uint32Array): void {
+  for (let t = 0; t < 16; t++) {
+    const i = off + t * 4;
+    const b0 = buf[i]!;
+    const b1 = buf[i + 1]!;
+    const b2 = buf[i + 2]!;
+    const b3 = buf[i + 3]!;
+    w[t] = ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3) >>> 0;
+  }
+  for (let t = 16; t < 64; t++) {
+    const w15 = w[t - 15]!;
+    const w2 = w[t - 2]!;
+    const s0 = rotr(w15, 7) ^ rotr(w15, 18) ^ (w15 >>> 3);
+    const s1 = rotr(w2, 17) ^ rotr(w2, 19) ^ (w2 >>> 10);
+    w[t] = (w[t - 16]! + s0 + w[t - 7]! + s1) >>> 0;
+  }
+  let a = streamState[0]!, b = streamState[1]!, c = streamState[2]!, d = streamState[3]!;
+  let e = streamState[4]!, f = streamState[5]!, g = streamState[6]!, h = streamState[7]!;
+  for (let t = 0; t < 64; t++) {
+    const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+    const ch = (e & f) ^ (~e & g);
+    const temp1 = (h + S1 + ch + K[t]! + w[t]!) >>> 0;
+    const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+    const maj = (a & b) ^ (a & c) ^ (b & c);
+    const temp2 = (S0 + maj) >>> 0;
+    h = g; g = f; f = e;
+    e = (d + temp1) >>> 0;
+    d = c; c = b; b = a;
+    a = (temp1 + temp2) >>> 0;
+  }
+  streamState[0] = (streamState[0]! + a) >>> 0;
+  streamState[1] = (streamState[1]! + b) >>> 0;
+  streamState[2] = (streamState[2]! + c) >>> 0;
+  streamState[3] = (streamState[3]! + d) >>> 0;
+  streamState[4] = (streamState[4]! + e) >>> 0;
+  streamState[5] = (streamState[5]! + f) >>> 0;
+  streamState[6] = (streamState[6]! + g) >>> 0;
+  streamState[7] = (streamState[7]! + h) >>> 0;
 }
+
+/** SHA-256 זורם על מחרוזת ענקית: קידוד UTF-8 בנתחים (substring של
+ * מחרוזת שטוחה הוא SlicedString ללא העתקה) ודחיסה מצטברת — זיכרון
+ * העבודה O(48KB) בלבד, בלי להכפיל את המסמך בזיכרון חיצוני. התוצאה
+ * זהה ביט-ביט לגיבוב המלא (אותם בתים באותו סדר; אותו ריפוד). */
+function sha256HexStreaming(text: string, w: Uint32Array): string {
+  streamState.set(INITIAL_H);
+  let stageLen = 0;
+  let total = 0;
+  for (let pos = 0; pos < text.length; pos += STREAM_CHUNK_UNITS) {
+    const end = Math.min(pos + STREAM_CHUNK_UNITS, text.length);
+    const piece = text.substring(pos, end);
+    const { read, written } = sharedEncoder.encodeInto(piece, streamChunkBytes);
+    if (read < piece.length) {
+      // בלתי-אפשרי תיאורטית (החיץ גדול משלושה בתים לכל יחידה) — החלפת
+      // הנתח בקידוד מקצה אחד; תוצאה זהה.
+      const enc = new TextEncoder().encode(piece);
+      feedBytes(enc, enc.length);
+      total += enc.length;
+      continue;
+    }
+    feedBytes(streamChunkBytes, written);
+    total += written;
+  }
+  // ריפוד סופי לפי FIPS-180-4: 0x80, אפסים עד 56 mod 64, אורך בסיביות
+  streamStage[stageLen] = 0x80;
+  stageLen += 1;
+  if (stageLen > 56) {
+    streamStage.fill(0, stageLen, 64);
+    compress64(streamStage, 0, w);
+    stageLen = 0;
+  }
+  streamStage.fill(0, stageLen, 56);
+  const hi = Math.floor(total / 536870912);
+  const lo = (total - hi * 536870912) * 8;
+  const put = (idx: number, v: number): void => { streamStage[idx] = v & 0xff; };
+  put(56, Math.floor(hi / 16777216));
+  put(57, Math.floor(hi / 65536));
+  put(58, Math.floor(hi / 256));
+  put(59, hi);
+  put(60, Math.floor(lo / 16777216));
+  put(61, Math.floor(lo / 65536));
+  put(62, Math.floor(lo / 256));
+  put(63, lo);
+  compress64(streamStage, 0, w);
+  return hex8(streamState[0]!) + hex8(streamState[1]!) + hex8(streamState[2]!) + hex8(streamState[3]!)
+    + hex8(streamState[4]!) + hex8(streamState[5]!) + hex8(streamState[6]!) + hex8(streamState[7]!);
+
+  function feedBytes(src: Uint8Array, n: number): void {
+    let i = 0;
+    while (i < n) {
+      const take = Math.min(64 - stageLen, n - i);
+      streamStage.set(src.subarray(i, i + take), stageLen);
+      stageLen += take;
+      i += take;
+      if (stageLen === 64) {
+        compress64(streamStage, 0, w);
+        stageLen = 0;
+      }
+    }
+  }
+}
+
+/** SHA-256 של מחרוזת (UTF-8) → hex (קטן).
+ *
+ * חיסכון זיכרון (שלב 73): קידוד לחיץ משותף באמצעות encodeInto — במקום
+ * TextEncoder().encode() שהקצה Uint8Array חדש (זיכרון חיצוני שאינו
+ * מפעיל GC בלחץ) בכל קריאה. UTF-8 חסום ב־3 בתים ליחידת קוד UTF-16
+ * (כולל מקרי קצה: surrogate בודד ← U+FFFD בן 3 בתים; זוג surrogate
+ * ← 4 בתים לשתי יחידות) — לכן אורך החיץ תמיד מספיק בניסיון אחד.
+ * קלטים ענקיים (מעל 256K יחידות) עוברים למסלול הזורם.
+ */
+export function sha256Hex(text: string): string {
+  if (text.length > STREAM_THRESHOLD) {
+    return sha256HexStreaming(text, SHARED_W);
+  }
+  const need = text.length * 3;
+  if (encodeScratch.length < need) {
+    let next = encodeScratch.length;
+    while (next < need) next *= 2;
+    encodeScratch = new Uint8Array(next);
+  }
+  const { read, written } = sharedEncoder.encodeInto(text, encodeScratch);
+  if (read < text.length) {
+    // בלתי-אפשרי תיאורטית — נתיב גיבוי מקצה אחד, תוצאה זהה
+    return sha256Bytes(new TextEncoder().encode(text));
+  }
+  return sha256Bytes(encodeScratch.subarray(0, written));
+}
+
