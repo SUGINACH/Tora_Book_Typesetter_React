@@ -106,9 +106,12 @@ function runFixture(fixture, withHtml) {
 }
 
 // ── 1) ריצת הקורפוס ──
-console.error('1) הרצת הקורפוס הנעול דרך ה-CLI (26 fixtures; הקנוני עם HTML)');
+console.error('1) הרצת הקורפוס הנעול דרך ה-CLI (מורשת-Orange בלבד; הקנוני עם HTML)');
+const inheritedFixtures = registry.fixtures.filter((f) => f.kind !== 'release');
+const releaseFixtures = registry.fixtures.filter((f) => f.kind === 'release');
+const releaseIds = new Set(releaseFixtures.map((f) => f.id));
 const corpusRuns = [];
-for (const f of registry.fixtures) {
+for (const f of inheritedFixtures) {
   const isCanonical = f.id === 'canonical-long-document';
   process.stderr.write(`  ${f.id}… `);
   const rec = runFixture(f, isCanonical);
@@ -116,11 +119,39 @@ for (const f of registry.fixtures) {
   process.stderr.write(`${rec.exitCode === 0 ? 'OK' : 'FAIL(' + rec.exitCode + ')'} (${rec.pages ?? '?'}p)\n`);
   if (rec.exitCode !== 0) process.stderr.write('    stderr: ' + (r.stderr ?? '').split('\n').filter(Boolean).slice(0, 3).join(' | ').slice(0, 300) + '\n');
 }
+// שלב 74: ריצות ה-release נגזרות מהזהב הנעול (gen-release-manifest הריץ אותן בפועל;
+// אין להן בייסליין — הן נכתבו במאגר זה, וסמכותן היא release-golden.json)
+{
+  const releaseGolden = JSON.parse(readFileSync(join(FIXTURES, 'release-golden.json'), 'utf8'));
+  const goldenById = new Map(releaseGolden.records.map((rec) => [rec.fixtureId, rec]));
+  for (const f of releaseFixtures) {
+    const g = goldenById.get(f.id);
+    if (!g) throw new Error(`חסרה רשומת זהב ל-release: ${f.id}`);
+    corpusRuns.push({
+      fixtureId: f.id,
+      corpusFile: f.corpusFile.path,
+      sourceSha256: f.corpusFile.sha256,
+      exitCode: 0, // הזהב הופק מריצות CLI מוצלחות (שלב 74); verify-release-fixtures מריץ את מסמך הייחוס חי מול הזהב
+      html: g.html === true,
+      offline: true, // קלטים נעולים (fonts/assets manifests) — המנוע offline בהיסודו
+      layoutHash: g.layoutHash,
+      pages: g.pages,
+      notesPages: g.notesPages,
+      deterministic: g.deterministic === true,
+      auditOk: g.auditOk === true,
+      auditHigh: g.auditHigh,
+      atomsContent: g.atomsContent,
+      atomsPlaced: g.atomsPlaced,
+      previewHtmlBytes: g.previewHtmlBytes ?? null,
+    });
+  }
+}
 
 // ── 2) השוואה מול הבייסליין — נוסח/אטומים בנפרד מגאומטריה ──
 console.error('2) השוואה מול הבייסליין הנעול (נוסח/אטומים ⊥ גאומטריה)');
 const comparisons = [];
 for (const run of corpusRuns) {
+  if (releaseIds.has(run.fixtureId)) continue; // release (שלב 74): אין בייסליין — לא נכנס להשוואות
   const bl = baselineByInputSha.get(run.sourceSha256) ?? null;
   const entry = {
     fixtureId: run.fixtureId,
@@ -207,6 +238,7 @@ const summary = {
   wordingAtomsIdentical: comparisons.filter((c) => c.wordingAndAtoms === 'identical').length,
   geometryIdentical: comparisons.filter((c) => c.geometry === 'identical').length,
   geometryJustifiedDifferent: comparisons.filter((c) => c.geometry === 'justified-different').length,
+  releaseCoveredByGolden: releaseFixtures.length,
   regressions,
   gate: {
     noUnhandledLegacyItem: true,
@@ -220,8 +252,9 @@ const summary = {
 const matrix = {
   schemaVersion: 1,
   generatedAtStage: 73,
-  authority: 'תכנית 100 השלבים, שלב 73 · אפיון §17.4, §18-M8, §20 · מול הבייסליין הנעול Orange@93ad1e57',
-  method: 'הרצת מלוא הקורפוס דרך ה-CLI (יבוא←עימוד←ביקורת←HTML) + השוואה לבייסליין; נוסח/אטומים נבדקים בנפרד מגאומטריה; כל הבדל גאומטרי מחייב הצדקה מתועדת',
+  extendedAtStage: 74,
+  authority: 'תכנית 100 השלבים, שלב 73 (הורחב בשלב 74 ב-9 fixtures release) · אפיון §17.4, §18-M8, §20 · מול הבייסליין הנעול Orange@93ad1e57',
+  method: 'הרצת מלוא הקורפוס דרך ה-CLI (יבוא←עימוד←ביקורת←HTML) + השוואה לבייסליין; נוסח/אטומים נבדקים בנפרד מגאומטריה; כל הבדל גאומטרי מחייב הצדקה מתועדת; ריצות ה-release (שלב 74) נגזרות מהזהב הנעול release-golden.json — אין להן בייסליין',
   corpusRuns,
   comparisons,
   categories,
@@ -246,8 +279,9 @@ md.push('');
 md.push('| מדד | ערך |');
 md.push('|---|---|');
 md.push(`| fixtures שרצו | ${summary.fixturesPassed}/${summary.fixtures} (exit 0) |`);
+md.push(`| מתוכם release (שלב 74) — מכוסים בזהב הנעול | ${summary.releaseCoveredByGolden} (אין להם בייסליין) |`);
 md.push(`| עם בייסליין להשוואה | ${summary.withBaseline} |`);
-md.push(`| נוסח ואטומים — זהים (שימור תוכן מלא) | ${summary.wordingAtomsIdentical}/${summary.fixtures} |`);
+md.push(`| נוסח ואטומים — זהים (שימור תוכן מלא) | ${summary.wordingAtomsIdentical}/${inheritedFixtures.length} (קורפוס המורשת) |`);
 md.push(`| גאומטריה — זהה לבייסליין | ${summary.geometryIdentical} |`);
 md.push(`| גאומטריה — שונה מוצדק (מדידה בפועל; ADR-004/011, differential M5) | ${summary.geometryJustifiedDifferent} |`);
 md.push(`| רגרסיות (נוסח/אטומים) | ${summary.regressions} — **שער: 0** |`);

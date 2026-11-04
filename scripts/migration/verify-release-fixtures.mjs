@@ -40,6 +40,12 @@ const runCode = (cmd, args) => {
 };
 
 const FIX = join(repoRoot, 'packages', 'test-fixtures');
+const REACT_REPO = 'SUGINACH/Tora_Book_Typesetter_React';
+const HEX40 = /^[0-9a-f]{40}$/;
+/** קומיט אמיתי בהיסטוריה — provenance של ה-release מצביע על הקומיט שהכניס את הקורפוס. */
+const commitExists = (sha) => {
+  try { execFileSync('git', ['cat-file', '-e', `${sha}^{commit}`], { cwd: repoRoot, stdio: 'ignore' }); return true; } catch { return false; }
+};
 const registry = JSON.parse(readFileSync(join(FIX, 'registry.json'), 'utf8'));
 const golden = JSON.parse(readFileSync(join(FIX, 'release-golden.json'), 'utf8'));
 const releaseFixtures = registry.fixtures.filter((f) => f.kind === 'release');
@@ -50,9 +56,11 @@ console.log('1) הרישום — קורפוס release נעול');
 let hashOk = 0;
 for (const f of releaseFixtures) {
   const p = join(FIX, f.corpusFile.path);
-  if (existsSync(p) && /^[0-9a-f]{64}$/.test(f.corpusFile.sha256 ?? '') && f.provenance?.sourceSha === 'stage-74-generated') hashOk += 1;
+  const provOk = f.provenance?.sourceRepo === REACT_REPO
+    && HEX40.test(f.provenance?.sourceSha ?? '') && commitExists(f.provenance.sourceSha);
+  if (existsSync(p) && /^[0-9a-f]{64}$/.test(f.corpusFile.sha256 ?? '') && provOk) hashOk += 1;
 }
-(hashOk === 9 ? ok : fail)(`לכל ה-9: קובץ קיים + sourceSha256 (hex-64) + provenance שלב 74 (${hashOk}/9)`);
+(hashOk === 9 ? ok : fail)(`לכל ה-9: קובץ קיים + sourceSha256 (hex-64) + provenance — SHA-40 של הקומיט שהכניס, אמיתי בהיסטוריה (${hashOk}/9)`);
 ((registry.plannedFixtures?.fulfilledAtStage ?? 0) === 74 ? ok : fail)('plannedFixtures מסומן כמומש בשלב 74');
 (Array.isArray(registry.plannedFixtures?.fulfilledBy) && registry.plannedFixtures.fulfilledBy.length === 9
   ? ok : fail)('fulfilledBy מקשר את 9 ה-fixtures');

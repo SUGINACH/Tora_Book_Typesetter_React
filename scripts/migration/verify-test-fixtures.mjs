@@ -6,7 +6,9 @@
  * בדיקות:
  *   1. מבנה הרישום: schemaVersion, fixtures לא ריק, documentedBehaviors, plannedFixtures.
  *   2. לכל fixture: id ייחודי; קובץ הקורפוס קיים ו־sha256 תואם בחישוב מחדש;
- *      provenance מלא (repo, SHA של Orange הנעול, נתיב, סיבה); invariants לא ריקים.
+ *      provenance מלא משני סוגים — מורשת-Orange (נעולה ל־SHA הבייסליין)
+ *      או קורפוס שנכתב במאגר זה (release, שלב 74: SHA-40 של הקומיט שהכניס,
+ *      מאומת מול היסטוריית ה־git); invariants לא ריקים.
  *   3. קישורי בייסליין: הקובץ קיים, וגם inputSha256 הרשום ב־baseline-run.json של אותה ריצה
  *      תואם בדיוק ל־sourceSha256 של ה־fixture (צליבת שלב 3↔שלב 4).
  *   4. הגדרות: sha256 של default_settings.json תואם לרשום במלאי ההעברה (צליבת שלב 2↔שלב 4).
@@ -14,6 +16,7 @@
  *
  * יציאה: 0 = הכל ירוק; 1 = כשל.
  */
+import { execFileSync } from 'node:child_process';
 import { readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
@@ -34,7 +37,20 @@ const sha256 = (p) => {
   return h.digest('hex');
 };
 const HEX64 = /^[0-9a-f]{64}$/;
+const HEX40 = /^[0-9a-f]{40}$/;
+const ORANGE_REPO = 'SUGINACH/Tora_Book_Typesetter_Orange';
+const REACT_REPO = 'SUGINACH/Tora_Book_Typesetter_React';
 const ORANGE_SHA = '93ad1e5704405fb2806a126ea1b519a35a87f378';
+/** קומיט אמיתי בהיסטוריה של מאגר זה (ל־provenance של קורפוס שנכתב כאן). */
+const commitExists = (sha) => {
+  if (!HEX40.test(sha ?? '')) return false;
+  try {
+    execFileSync('git', ['cat-file', '-e', `${sha}^{commit}`], { cwd: repoRoot, stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 // ---------- 1. מבנה ----------
 console.log('1) מבנה הרישום');
@@ -49,6 +65,8 @@ const reg = json(join(PKG, 'registry.json'));
 console.log('\n2) פריטים: קורפוס, hash, provenance, invariants');
 const ids = new Set();
 let corpusOk = 0;
+let orangeInherited = 0;
+let authoredHere = 0;
 for (const f of reg.fixtures ?? []) {
   if (ids.has(f.id)) fail(`id כפול: ${f.id}`);
   ids.add(f.id);
@@ -57,16 +75,24 @@ for (const f of reg.fixtures ?? []) {
   if (!HEX64.test(f.corpusFile.sha256 ?? '')) { fail(`${f.id}: sha256 חסר/שגוי`); continue; }
   if (sha256(p) !== f.corpusFile.sha256) { fail(`${f.id}: sha256 אינו תואם את הקובץ`); continue; }
   const prov = f.provenance ?? {};
-  const provOk = prov.sourceRepo === 'SUGINACH/Tora_Book_Typesetter_Orange'
-    && prov.sourceSha === ORANGE_SHA && !!prov.sourcePath && !!prov.reason;
-  if (!provOk) { fail(`${f.id}: provenance חסר או שגוי`); continue; }
+  const fieldsOk = !!prov.sourcePath && !!prov.reason;
+  let provOk = false;
+  if (prov.sourceRepo === ORANGE_REPO) {
+    // מורשת מ־Orange — נעול ל־SHA הבייסליין (אותו קובץ טקסט ישן, בלי עריכה)
+    provOk = prov.sourceSha === ORANGE_SHA;
+  } else if (prov.sourceRepo === REACT_REPO) {
+    // נכתב במאגר זה (release, שלב 74) — SHA-40 של הקומיט שהכניס את הקובץ, אמיתי בהיסטוריה
+    provOk = commitExists(prov.sourceSha);
+  }
+  if (!fieldsOk || !provOk) { fail(`${f.id}: provenance חסר או שגוי`); continue; }
   if (!Array.isArray(f.expected?.invariants) || f.expected.invariants.length === 0) {
     fail(`${f.id}: אין invariants צפויים`);
     continue;
   }
   corpusOk++;
+  if (prov.sourceRepo === ORANGE_REPO) orangeInherited += 1; else authoredHere += 1;
 }
-ok(`${corpusOk}/${reg.fixtures.length} fixtures תקינים: קובץ + hash + provenance + invariants`);
+ok(`${corpusOk}/${reg.fixtures.length} fixtures תקינים: קובץ + hash + provenance + invariants (${orangeInherited} מורשת-Orange + ${authoredHere} שנכתבו במאגר זה)`);
 
 // ---------- 3. קישורי בייסליין ----------
 console.log('\n3) קישורי בייסליין (צליבת שלב 3↔שלב 4)');

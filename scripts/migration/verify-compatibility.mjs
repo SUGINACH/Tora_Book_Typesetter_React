@@ -6,7 +6,8 @@
  * בדיקות:
  *   1. מבנה: המטריצה קיימת, generatedAtStage=73, סטטוסים מהקבוצה הסגורה
  *      {identical, justified-different, deferred, not-applicable}; אין regression.
- *   2. כיסוי קורפוס: כל 26 ה-fixtures של registry.json רצו (exit 0),
+ *   2. כיסוי קורפוס: כל 35 ה-fixtures של registry.json רצו (26 מורשת-Orange +
+ *      9 release שנכתבו בשלב 74 — ללא בייסליין; נבדקים מול זהב ה-release),
  *      deterministic, offline, ושימור תוכן מלא — atomsPlaced == atomsContent
  *      (נוסח/אטומים תמיד בנפרד מגאומטריה).
  *   3. הקנוני: הצינור המלא כולל preview.html; sourceSha256 תואם ל-registry
@@ -114,15 +115,38 @@ const corpusShas = new Set(registry.fixtures.map((f) => f.corpusFile.sha256));
 const expectedLinked = registry.fixtures.filter((f) => baselineShas.has(f.corpusFile.sha256));
 const linked = (matrix.comparisons ?? []).filter((c) => c.baselineRunId !== null);
 (linked.length === expectedLinked.length ? ok : fail)(`כל ריצת בייסליין שקיימת לקורפוס מקושרת (${linked.length}/${expectedLinked.length})`);
+// המורשת (26): לכל אחת השוואת בייסליין במטריצה — ההשוואות הן לקורפוס המורשת בלבד
+const inheritedIds = new Set(registry.fixtures.filter((f) => f.kind !== 'release').map((f) => f.id));
+const compIds = new Set((matrix.comparisons ?? []).map((c) => c.fixtureId));
+const missingComp = [...inheritedIds].filter((id) => !compIds.has(id));
+(missingComp.length === 0 ? ok : fail)(missingComp.length === 0
+  ? `כל ${inheritedIds.size} פריטי המורשת עם השוואת בייסליין במטריצה`
+  : `השוואות חסרות למורשת: ${missingComp.slice(0, 3).join(', ')}`);
 let wordingAll = 0;
 let justOk = 0;
 for (const c of matrix.comparisons ?? []) {
   if (c.wordingAndAtoms === 'identical') wordingAll += 1;
   if (c.geometry === 'justified-different' && typeof c.justification === 'string' && c.justification.length > 20) justOk += 1;
 }
-(wordingAll === registry.fixtures.length ? ok : fail)(`נוסח/אטומים זהים בכל הקורפוס: ${wordingAll}/${registry.fixtures.length}`);
+(wordingAll === inheritedIds.size ? ok : fail)(`נוסח/אטומים זהים בכל קורפוס המורשת: ${wordingAll}/${inheritedIds.size} (ל-9 ה-release אין בייסליין — סמכותם זהב שלב 74)`);
 const justDiff = (matrix.comparisons ?? []).filter((c) => c.geometry === 'justified-different');
 (justDiff.length === justOk ? ok : fail)(`כל ${justDiff.length} הבדלי הגאומטריה מוצדקים בכתב (ADR/differential)`);
+// ה-release (שלב 74): אין להם בייסליין — ריצות המטריצה שלהם חייבות להתאים לזהב הנעול
+{
+  const releaseGolden = JSON.parse(readFileSync(join(repoRoot, 'packages', 'test-fixtures', 'release-golden.json'), 'utf8'));
+  const goldenById = new Map(releaseGolden.records.map((r) => [r.fixtureId, r]));
+  const releaseFixtures = registry.fixtures.filter((f) => f.kind === 'release');
+  let releaseMatch = 0;
+  for (const f of releaseFixtures) {
+    const run = runById.get(f.id);
+    const g = goldenById.get(f.id);
+    if (run && g && run.layoutHash === g.layoutHash && run.sourceSha256 === f.corpusFile.sha256
+      && run.atomsContent === run.atomsPlaced && run.auditHigh === 0) releaseMatch += 1;
+  }
+  (releaseMatch === releaseFixtures.length ? ok : fail)(`ריצות ה-release במטריצה תואמות את זהב שלב 74 — layoutHash + שימור אטומים + 0 HIGH (${releaseMatch}/${releaseFixtures.length})`);
+  (matrix.summary.releaseCoveredByGolden === releaseFixtures.length ? ok : fail)(`summary.releaseCoveredByGolden = ${releaseFixtures.length}`);
+  (matrix.extendedAtStage === 74 ? ok : fail)('המטריצה הורחבה בשלב 74 לכלול את ריצות ה-release');
+}
 
 // ---------- 5) קטגוריות ----------
 console.log('\n5) כיסוי קטגוריות ההעברה');
