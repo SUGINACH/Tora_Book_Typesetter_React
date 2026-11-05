@@ -10,6 +10,11 @@
  * ה-revision anchor: הניתוח נחתם למהדורה שנוצרה בכתיבת הטקסט — עריכה
  * מאוחרת משאירה את המפה "לא עדכנית" עד הריצה הבאה (עוגן stale-job
  * של שלב 76, באותה שיטה, בלי שעון).
+ *
+ * שלב 84: גם resetForNewDocument מבטל ריצה דרך הוק רשום (App בהרכבה).
+ * הביטול המפורש כאן נשמר בכוונה — החוזה של פעולת הייבוא עומד גם בלי
+ * חיווט ההרכבה (בדיקות מזריקות הקשר ישירות); שני המסלולים אידמפוטנטיים
+ * (cancel על חסר-handle הוא no-op), ושכבות ה-stale-job מגינות מכל מקרה.
  */
 import { peekUiRuntime } from '../worker-host/ui-runtime.js';
 import { analyzeSource, makeImportIssue, type LocatedIssue } from './source-analysis.js';

@@ -19,6 +19,16 @@
  *      ב־applyDraft — ה־configHash הוא של המצב האפקטיבי, לא של ה־draft.
  *      כשל בנייה ⇐ effective=null (אין ערך מלוכלך מהריצה הקודמת — הריצה
  *      נחסמת לפני תחילת עימוד).
+ *   5. אין effective מהעולם הישן (שלב 84; אפיון §13, §18-M9): כל שינוי
+ *      **ממשי** של ה־draft — עריכת ערך, ייבוא אובייקט/קובץ או טעינת
+ *      תבנית — מאפס את ה־effective עד applyDraft הבא. תבנית A ← תבנית
+ *      B לעולם אינה משאירה hash של A כביכול "עדכני"; צרכן ששכח
+ *      לרענן נחסם בריצה, לא רץ עם הגדרות ישנות. עריכה שנדחתה (issue)
+ *      אינה מאפסת — ה־draft לא זז.
+ *   6. rehydrate מאמת את ה־draft השמור מול המרשם (שלב 84): מפתח
+ *      שירד מהמרשם מאז השמירה (או אחסון זר) אינו נכנס ל־draft כיתום —
+ *      אותו צינור ייבוא כמו כל מקור אחר: הוא נשמר ב־unmappedLegacy עם
+ *      issue מתועד. אין שני מסלולים להכנסת ערכים ל־draft.
  */
 import { create } from 'zustand';
 import {
@@ -165,7 +175,10 @@ export const useSettingsStore = create<SettingsStoreState>()((set, get) => ({
       if (issues.some((i) => i.code !== 'errors.settings.COERCED_LEGACY_STRING')) {
         return { ...state, issues: Object.freeze(issues) };
       }
-      const next = { ...state, draft: Object.freeze({ ...state.draft, ...merged }), issues: Object.freeze(issues) };
+      // ה־draft השתנה באמת — ה־effective של ה-draft הקודם אינו עדכני
+      // עוד (שלב 84): נבנה מחדש רק ב-applyDraft. עריכה שנדחתה (לעיל)
+      // אינה מגיעה לכאן — ה-draft לא זז וה-effective נשאר תקף לו.
+      const next = { ...state, draft: Object.freeze({ ...state.draft, ...merged }), issues: Object.freeze(issues), effective: null };
       persist(next);
       return next;
     }),
@@ -185,6 +198,9 @@ export const useSettingsStore = create<SettingsStoreState>()((set, get) => ({
         draft: Object.freeze({ ...state.draft, ...merged }),
         issues: Object.freeze(issues),
         unmappedLegacy: Object.freeze({ ...state.unmappedLegacy, ...unmapped }),
+        // שלב 84: מה שנכנס ל-draft מאפס את ה-effective; מה שנדחה
+        // בשלמותו (merged ריק) אינו מאפס — ה-draft לא זז.
+        ...(Object.keys(merged).length > 0 ? { effective: null } : {}),
       };
       persist(next);
       return next;
@@ -251,6 +267,10 @@ export const useSettingsStore = create<SettingsStoreState>()((set, get) => ({
         draft: Object.freeze({ ...merged }),
         issues: Object.freeze(issues),
         unmappedLegacy: Object.freeze({ ...unmapped }),
+        // הקובץ מחליף את ה-draft — ה-effective של הקודם מאופס תמיד
+        // (שלב 84), גם אם הקובץ ריק/נדחה במלואו: תמונת המצב החדשה
+        // היא ה-draft, והיא טרם הוחלה.
+        effective: null,
       };
       persist(next);
       return next;
@@ -310,6 +330,9 @@ export const useSettingsStore = create<SettingsStoreState>()((set, get) => ({
         ...state,
         draft: Object.freeze({ ...merged }),
         issues: Object.freeze(issues),
+        // התבנית מחליפה את ה-draft — ה-effective מאופס עד applyDraft
+        // (שלב 84): אין hash של התבנית הקודמת שנראה עדכני בכפוף לה.
+        effective: null,
       };
       persist(next);
       return next;
@@ -340,10 +363,30 @@ export const useSettingsStore = create<SettingsStoreState>()((set, get) => ({
 
   rehydrate: () => {
     const saved = readJson<PersistedSettings>(STORAGE_KEYS.settings, {});
-    set((state) => ({
-      draft: 'draft' in saved ? asDraft(saved.draft) : state.draft,
-      presets: 'presets' in saved ? asPresets(saved.presets) : state.presets,
-      unmappedLegacy: 'unmappedLegacy' in saved ? asDraft(saved.unmappedLegacy) : state.unmappedLegacy,
-    }));
+    set((state) => {
+      // ה־presets/unmappedLegacy השמורים נטענים כפי שהם — הם נתוני
+      // משתמש גולמיים; הפרסום (presets) עובר ייבוא בכל loadPreset, והמורשת
+      // הבלתי־ממופה מוצגת כמות שהיא (דחייה עם הסבר — שלב 79).
+      const base = {
+        ...state,
+        presets: 'presets' in saved ? asPresets(saved.presets) : state.presets,
+        unmappedLegacy: 'unmappedLegacy' in saved ? asDraft(saved.unmappedLegacy) : state.unmappedLegacy,
+      };
+      // ה־draft השמור עובר את צינור הייבוא (שלב 84): מפתח שירד מהמרשם
+      // מאז השמירה אינו נכנס כיתום — הוא נשמר ב־unmappedLegacy עם issue,
+      // כמו בכל ייבוא אחר (אין שני מסלולים ל-draft). ערך שאינו חוקי
+      // עוד נדחה בקול רם. draft שלם ותקין נטען כמו שהוא.
+      if (typeof saved.draft === 'object' && saved.draft !== null && !Array.isArray(saved.draft)) {
+        const { merged, issues, unmapped } = importEntries(Object.entries(saved.draft as Record<string, unknown>));
+        return {
+          ...base,
+          draft: merged,
+          issues: Object.freeze(issues),
+          unmappedLegacy: Object.freeze({ ...base.unmappedLegacy, ...unmapped }),
+          effective: null, // draft נטען — ייבנה רק ב-applyDraft
+        };
+      }
+      return base;
+    });
   },
 }));

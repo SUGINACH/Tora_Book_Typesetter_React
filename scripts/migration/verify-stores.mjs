@@ -18,7 +18,7 @@
  *   19–25. בדיקות ירוקות (65+4), typecheck, lint:packages, אין any,
  *      אין גישת localStorage ישירה מחוץ ל־storage.ts.
  *   26–30. אינטגרציה: החבית; resetForNewDocument שומר zoom/locale;
- *      vitest כולל את tests/stores; המרשם מהחבילה; סוויטה מלאה 1265.
+ *      vitest כולל את tests/stores; המרשם מהחבילה; סוויטה מלאה 1281.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
@@ -111,8 +111,8 @@ const selectorsCode = stripComments(read('selectors.ts'));
 
 console.log('\n9) בדיקות וסטטיקה');
 const storesOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/stores/']);
-// שלב 81: + linked-navigation.test.ts (20 ניווט provenance) — סה"כ 104
-(storesOut !== null && /Tests\s+104\s+passed/.test(storesOut) ? ok : fail)('tests/stores — 104/104 (65 + 19 ניתוח קלט + 20 ניווט מקושר, שלבים 80–81)');
+// שלב 84: + store-cleanup.test.ts (16 ניקוי בין מסמכים/תבניות) — סה"כ 120
+(storesOut !== null && /Tests\s+120\s+passed/.test(storesOut) ? ok : fail)('tests/stores — 120/120 (65 + 19 ניתוח קלט + 20 ניווט מקושר + 16 ניקוי stores, שלבים 80–84)');
 const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/stores.test.tsx']);
 (compOut !== null && /Tests\s+4\s+passed/.test(compOut) ? ok : fail)('tests/component/stores — 4/4 (רינדורים)');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
@@ -128,8 +128,8 @@ const indexCode = stripComments(read('index.ts'));
   ? ok : fail)('zoom/locale נשמרים בין מסמכים (העדפות משתמש)');
 (/tests\/stores\//.test(readFileSync(join(repoRoot, 'vitest.packages.config.ts'), 'utf8')) ? ok : fail)('vitest.packages.config כולל את tests/stores');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1265 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1265\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1265/1265 (1098 עד שלב 76 + 20 שלב 77 + 26 שלב 78 + 19 קבצים ותבניות שלב 79 + 36 ייבוא ומפת קלט שלב 80 + 27 עורך מקושר שלב 81 + 17 ממצאי Audit שלב 82)');
+const testOut = (SKIP_TESTS ? 'Tests  1281 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1281\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1281/1281 (1098 עד שלב 76 + 20 שלב 77 + 26 שלב 78 + 19 קבצים ותבניות שלב 79 + 36 ייבוא ומפת קלט שלב 80 + 27 עורך מקושר שלב 81 + 17 ממצאי Audit שלב 82 + 22 שלב 83 + 16 ניקוי stores שלב 84)');
 
 console.log('\n' + '='.repeat(60));
 if (failures > 0) {

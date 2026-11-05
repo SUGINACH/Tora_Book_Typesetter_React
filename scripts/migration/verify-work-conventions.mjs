@@ -126,6 +126,20 @@ const SETTINGS_FORM_REMOVED_STAGE_78 = new Set([
   'tests/unit/audit/new-checks.test.ts', // כנ"ל
 ]);
 for (const f of SETTINGS_FORM_REMOVED_STAGE_78) LIVING_FILES.add(f);
+// חריג מעטפת מתועד (שלב 84, 2026-11-05): השלב מחייב "אין state מוסמך כפול"
+// — וארבעת ה-stores הישנים של src/store (document/trace/view/worker) הם
+// בעלות מצב מקבילה מתה לחלוטין: אף מודול ייצור אינו מייבא אותם מאז שלב 76
+// (נבדק ב-verify-settings-coverage), ובדיקת היחידה היחידה שנשארה (trace)
+// אינה רצה בשום צינור CI. החמישייה החדשה ב-src/stores היא בעלת ה-state
+// היחידה (אפיון §13.1). רשימה סגורה — כל קובץ נוסף ייתפס.
+const LEGACY_STORE_REMOVED_STAGE_84 = new Set([
+  'src/store/document-store.ts', // מקור מסמך ישן — מוחלף ב-stores/editor-store (שלב 76)
+  'src/store/trace-store.ts', // עקבות ישנים — אין צרכן ייצור מאז ההחלפה
+  'src/store/view-store.ts', // תצוגה ישנה — מוחלף ב-stores/view-store
+  'src/store/worker-store.ts', // מצב עובד ישן — מוחלף ב-stores/run-store + worker-host
+  'tests/unit/store/trace-store.test.ts', // בדיקת היחידה היחידה של הישן — מחוץ לצינורות ה-CI (מתועד לעיל)
+]);
+for (const f of LEGACY_STORE_REMOVED_STAGE_84) LIVING_FILES.add(f);
 // תיקון תכנית מבוקר (כלל 3 בתכנית): קובץ התכנית נערך בתיאום "לפני שלב 15"
 // המתועד ב־WORKLOG — תחילה ב־commit ed3b856, ואחר כך תוקן ב־a1674fb
 // ("שחזור שלבים שהושלמו ותיקום תיאום התכנית") שהשיב את ניסוחי שלבים 1–14

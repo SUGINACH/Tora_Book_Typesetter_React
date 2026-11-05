@@ -22,3 +22,15 @@ Layout IR, אינו נשמר לדיסק ואינו נכנס ל־layoutHash) ונ
 
 מחליף את `src/store/` הישן עם השלמת פרק י. הקוד הישן ב־src/ אינו נקודת ייחוס
 (כלל 8 בתכנית) ויוחלף בסיום ההגירה.
+
+שלב 84 — ניקוי stores ובדיקת הגדרות יתומות (אפיון §13, §18-M9): ה־store
+הישן `src/store/` **נמחק** (בעלות מצב מקבילה מתה — החמישייה כאן היא בעלת
+ה־state היחידה); `rehydrate` מאמת את ה־draft השמור מול המרשם — מפתח
+שירד מהמרשם אינו נכנס כיתום (נשמר ב־unmappedLegacy עם issue; אין שני
+מסלולים ל־draft); כל שינוי draft ממשי מאפס את ה־effective עד
+`applyDraft` — אין effective מהעולם הישן בין תבניות/קבצים;
+`resetForNewDocument` מבטל ריצה פעילה **לפני** האיפוס דרך הוק רשום
+(`registerRunCancellation` — App רושם `controller.cancel`; פעולת הייבוא
+שומרת ביטול משלה, אידמפוטנטי). דוח כיסוי ההגדרות:
+`docs/migration/settings-coverage.json` (מחולל: `gen-settings-coverage`,
+מאמת: `verify-settings-coverage`).

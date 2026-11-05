@@ -48,6 +48,7 @@
     "verify:cache": "node scripts/migration/verify-shaping-cache.mjs",
     "verify:uax14": "node scripts/migration/verify-uax14.mjs",
     "gen:uax14-tables": "node scripts/migration/gen-uax14-tables.mjs",
+    "gen:settings-coverage": "node scripts/migration/gen-settings-coverage.mjs",
     "verify:layout-ir": "node scripts/migration/verify-layout-ir.mjs",
     "verify:typeset-contract": "node scripts/migration/verify-typeset-contract.mjs",
     "verify:layout-engine": "node scripts/migration/verify-layout-engine.mjs",
@@ -66,7 +67,8 @@
     "verify:document-import": "node scripts/migration/verify-document-import.mjs",
     "verify:linked-editor": "node scripts/migration/verify-linked-editor.mjs",
     "verify:audit-findings": "node scripts/migration/verify-audit-findings.mjs",
-    "verify:preview-virtualization": "node scripts/migration/verify-preview-virtualization.mjs"
+    "verify:preview-virtualization": "node scripts/migration/verify-preview-virtualization.mjs",
+    "verify:settings-coverage": "node scripts/migration/verify-settings-coverage.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

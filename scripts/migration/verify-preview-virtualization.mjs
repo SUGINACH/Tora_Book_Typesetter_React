@@ -20,7 +20,7 @@
  *      מתועד); בצד העובד רישומי הביטול מתנקים בפגישה — ״started״
  *      נשמר בכוונה (דחיית כפילות היא אכיפת פרוטוקול; מתועד).
  *   6. הבדיקות: 15 וירטואליזציה + 7 מחזור חיים = 22 חדשות;
- *      הסוויטה 1265 נעולה ב־ci.yml ובכל המאמתים (הלכת סבב כ"ג).
+ *      הסוויטה 1281 נעולה ב־ci.yml ובכל המאמתים (הלכת סבב כ"ג).
  *   7. רגרסיה: typecheck, lint:packages, build:packages, deps:check.
  */
 import { execFileSync } from 'node:child_process';
@@ -146,7 +146,7 @@ console.log('\n5) ביטול וניקוי — אין זליגת jobs ואין מ
     ? ok : fail)('״started״ נשמר בכוונה ומתועד — דחיית כפילות אינה זליגה');
 }
 
-console.log('\n6) הבדיקות — 15 וירטואליזציה + 7 מחזור חיים = 22 חדשות; הסוויטה 1265');
+console.log('\n6) הבדיקות — 15 וירטואליזציה + 7 מחזור חיים = 22 חדשות; הסוויטה 1281');
 {
   const virtTests = read('tests/component/virtualization.test.tsx');
   const virtCount = countMatches(virtTests, /\btest\(/g);
@@ -161,14 +161,14 @@ console.log('\n6) הבדיקות — 15 וירטואליזציה + 7 מחזור 
   const pkg = read('package.json');
   (/"verify:preview-virtualization":\s*"node scripts\/migration\/verify-preview-virtualization\.mjs"/.test(pkg)
     ? ok : fail)('המאמת רשום ב־package.json');
-  const ciLock = /Tests\[\[:space:\]\]\+1265\[\[:space:\]\]\+passed/.test(ci);
-  (ciLock ? ok : fail)('נעיקת הספירה ב־ci.yml עודכנה ל־1265 (הלכת סבב כ"ג)');
+  const ciLock = /Tests\[\[:space:\]\]\+1281\[\[:space:\]\]\+passed/.test(ci);
+  (ciLock ? ok : fail)('נעיקת הספירה ב־ci.yml עודכנה ל־1281 (הלכת סבב כ"ג)');
 }
 
 console.log('\n7) רגרסיה');
 {
-  const testOut = (SKIP_TESTS ? 'Tests  1265 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
-  (testOut !== null && /Tests\s+1265\s+passed/.test(testOut) ? ok : fail)('test:packages — 1265/1265 (1243 שלב 82 + 22 שלב 83)');
+  const testOut = (SKIP_TESTS ? 'Tests  1281 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
+  (testOut !== null && /Tests\s+1281\s+passed/.test(testOut) ? ok : fail)('test:packages — 1281/1281 (1265 שלב 83 + 16 שלב 84)');
   (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
   (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
   (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');

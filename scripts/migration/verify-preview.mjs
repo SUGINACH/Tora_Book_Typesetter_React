@@ -73,8 +73,8 @@ console.log('\n4) typecheck שורש');
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1265 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1265\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1265/1265 (1243 שלב 82 + 22 שלב 83: 15 וירטואליזציה + 7 מחזור חיים)');
+const testOut = (SKIP_TESTS ? 'Tests  1281 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1281\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1281/1281 (1265 שלב 83 + 16 ניקוי stores והגדרות יתומות שלב 84)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

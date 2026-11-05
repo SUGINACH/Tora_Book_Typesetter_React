@@ -232,8 +232,8 @@ console.log('\n7) differential מלא — הקורפוס כולו מול הפר�
 // ─────────────────────────── 8. רגרסיה ───────────────────────────
 console.log('\n8) רגרסיה מלאה');
 {
-  const testOut = (SKIP_TESTS ? 'Tests  1265 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
-  (testOut !== null && /Tests\s+1265\s+passed/.test(testOut) ? ok : fail)('test:packages — 1265/1265 (613 עד שלב 39 + 2 דגל מנוע שלב 40 + 13 מועמדי שורה שלב 41 + 10 DP שלב 42 + 10 איכות שלב 43 + 8 חירום שלב 44)');
+  const testOut = (SKIP_TESTS ? 'Tests  1281 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
+  (testOut !== null && /Tests\s+1281\s+passed/.test(testOut) ? ok : fail)('test:packages — 1281/1281 (613 עד שלב 39 + 2 דגל מנוע שלב 40 + 13 מועמדי שורה שלב 41 + 10 DP שלב 42 + 10 איכות שלב 43 + 8 חירום שלב 44)');
   const build = run('npm', ['run', 'build:packages', '--silent']);
   (build !== null && !/error TS/.test(build) ? ok : fail)('build:packages');
   const typecheck = run('npm', ['run', 'typecheck:packages', '--silent']);
