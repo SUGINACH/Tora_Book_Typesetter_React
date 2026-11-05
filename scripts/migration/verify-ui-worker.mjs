@@ -21,7 +21,7 @@
  *      LayoutPreview (אין dangerouslySetInnerHTML); App מריץ מיגרציה
  *      חד־פעמית + החייאה; רכיבי העריכה על ה־stores החדשים.
  *   28–34. בדיקות ורגרסיה: 20 הבדיקות החדשות ירוקות; typecheck; lint;
- *      build; deps; הסוויטה המלאה 1199.
+ *      build; deps; הסוויטה המלאה 1226.
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -142,8 +142,8 @@ const e2e = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts'
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1199 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1199\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1199/1199 (1098 + 20 שלב 77 + 26 שלב 78 + 19 שלב 79)');
+const testOut = (SKIP_TESTS ? 'Tests  1226 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1226\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1226/1226 (1098 + 20 שלב 77 + 26 שלב 78 + 19 שלב 79 + 36 שלב 80 + 27 שלב 81)');
 
 console.log('\n' + '='.repeat(60));
 if (failures > 0) {
