@@ -17,6 +17,7 @@ import { useSettingsStore } from './settings-store.js';
 import { useViewStore, type ViewFocus, type Locale } from './view-store.js';
 import type { ValidationIssue, EffectiveSettings } from '@tora/settings-schema';
 import type { AnchorTable, LayoutDocument, RunManifest } from '@tora/layout-api';
+import type { LocatedIssue, SourceAnalysis } from './source-analysis.js';
 
 // ─────────────────────────── editor ───────────────────────────
 
@@ -24,6 +25,14 @@ export const useRawText = (): string => useStoreWithEqualityFn(useEditorStore, (
 export const useDocumentName = (): string => useStoreWithEqualityFn(useEditorStore, (s) => s.documentName);
 export const useRevision = (): number => useStoreWithEqualityFn(useEditorStore, (s) => s.revision);
 export const useIsDirty = (): boolean => useStoreWithEqualityFn(useEditorStore, (s) => s.dirty);
+// שלב 80 — מפת שגיאות הקלט וסקירת המסמך (אינן נכנסות ל-layoutHash)
+export const useImportAnalysis = (): Readonly<SourceAnalysis> | null =>
+  useStoreWithEqualityFn(useEditorStore, (s) => s.analysis);
+export const useImportIssue = (): Readonly<LocatedIssue> | null =>
+  useStoreWithEqualityFn(useEditorStore, (s) => s.importIssue);
+/** המפה טריה ⇐ הניתוח נחתם למהדורה הנוכחית (עוגן stale — שלב 80). */
+export const useAnalysisIsStale = (): boolean =>
+  useStoreWithEqualityFn(useEditorStore, (s) => s.analysis !== null && s.analysis.analyzedRevision !== s.revision);
 
 // ─────────────────────────── settings ───────────────────────────
 

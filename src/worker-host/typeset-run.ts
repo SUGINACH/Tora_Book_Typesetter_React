@@ -27,6 +27,7 @@ import {
   type RunManifest,
   type TypesetRequest,
 } from '@tora/layout-api';
+import type { ParseResult } from '@tora/content-model';
 import { expectedInputHashOf, WorkerJobCancelled, WorkerTypesetError, type JobHandle, type WorkerClient } from './worker-client.js';
 import type { FontBytesEntry } from './protocol.js';
 import { buildUiTypesetRequest } from './ui-request.js';
@@ -42,6 +43,8 @@ export interface UiTypesetRunInput {
   readonly wasmBytes: Uint8Array;
   readonly woff2DecoderBytes: Uint8Array;
   readonly documentId?: string;
+  /** תוצאת פרסור קיימת של אותו מקור (שלב 80 — פרסור יחיד); אופציונלי. */
+  readonly parsed?: ParseResult;
 }
 
 /** תלות מוזרקות — ה־client הוא הערוץ; הכול השאר טהור. */
@@ -77,6 +80,7 @@ export class TypesetController {
       settings: input.settings,
       assets: input.assets,
       documentId: input.documentId,
+      parsed: input.parsed,
     });
     const payload = {
       request,

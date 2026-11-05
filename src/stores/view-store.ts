@@ -24,6 +24,8 @@ export interface ViewFocus {
   readonly pane: 'source' | 'layout';
   readonly pageId?: string;
   readonly atomId?: string;
+  /** טווח מקור לבחירה בעורך (שלב 80) — היסטים UTF-16 במרחב המקור הגולמי. */
+  readonly sourceSpan?: { readonly startUtf16: number; readonly endUtf16: number };
 }
 
 interface ViewStoreState {

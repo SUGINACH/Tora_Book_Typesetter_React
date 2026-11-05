@@ -204,6 +204,10 @@ const NEW_ALLOWED = [
   // שלב 79: סרגל קבצים ותבניות בלוח ההגדרות — ייבוא/ייצוא קובצי
   // הגדרות ותבניות שמורות (§6.3, §18-M9). רשימה סגורה — לא תיקייה שלמה.
   /^src\/components\/settings\/SettingsFiles\.tsx$/,
+  // שלב 80: מפת שגיאות קלט וסקירת מסמך — קטלוג ה-i18n והפאנל
+  // (§3.3, §13–14). רשימה סגורה — לא תיקייה שלמה.
+  /^src\/i18n\/import-labels\.ts$/,
+  /^src\/components\/editor\/ImportInsights\.tsx$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;

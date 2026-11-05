@@ -10,6 +10,7 @@ import { describe, expect, test } from 'vitest';
 import { buildUiTypesetRequest, UI_PARSER_VERSION } from '../../src/worker-host/ui-request.js';
 import { expectedInputHashOf } from '../../src/worker-host/worker-client.js';
 import { buildEffectiveSettings, buildSettingRegistry } from '@tora/settings-schema';
+import { parseSourceText } from '@tora/content-model';
 import { DEFAULT_SEARCH_BUDGET, sha256Hex, type ResolvedAssetManifest } from '@tora/layout-api';
 import type { FontFaceKey } from '@tora/measurement-api';
 import registryJson from '@tora/settings-schema/registry.json';
@@ -70,6 +71,25 @@ describe('ui-request — רכיבי inputHash זהים ל־CLI', () => {
     const otherSettings = buildEffectiveSettings(registry, [{ 'auto-dh': true }]);
     const s2 = buildUiTypesetRequest({ source: SOURCE, settings: otherSettings, assets: ASSETS });
     expect(expectedInputHashOf(s2)).not.toBe(expectedInputHashOf(a1));
+  });
+
+
+  test('הזרקת parsed (שלב 80 — פרסור יחיד) — בקשה ו-inputHash זהים ביט-ביט; אי-התאמת אורך נדחית', () => {
+    const direct = buildUiTypesetRequest({ source: SOURCE, settings, assets: ASSETS });
+    const injected = buildUiTypesetRequest({
+      source: SOURCE,
+      settings,
+      assets: ASSETS,
+      // הפרסור שנעשה בניתוח הקלט — אותו מקור, אותה תוצאה
+      parsed: parseSourceText(SOURCE, { documentId: 'ui' }),
+    });
+    expect(JSON.stringify(injected)).toBe(JSON.stringify(direct));
+    expect(expectedInputHashOf(injected)).toBe(expectedInputHashOf(direct));
+    // תוצאת פרסור של מקור אחר נדחית בקול רם — חוזה, לא ניחוש
+    const other = parseSourceText(SOURCE + 'שורה נוספת\n', { documentId: 'ui' });
+    expect(() =>
+      buildUiTypesetRequest({ source: SOURCE, settings, assets: ASSETS, parsed: other }),
+    ).toThrow(/mismatch/);
   });
 
   test('documentId מוזר: ברירת מחדל ui; שם קובץ עובר ולא משנה את ה־hash', () => {

@@ -27,9 +27,13 @@ describe('editor-store — מקור גולמי בלי IR', () => {
 
   test('אין שדות IR במצב — editor אינו מחזיק פריסה (§13.1)', () => {
     const forbidden = ['ir', 'pages', 'manifest', 'findings', 'anchors', 'layoutHash', 'lastRenderedPages'];
-    const dataFields = Object.keys(useEditorStore.getState()).filter((k) => !['setText', 'setDocumentName', 'markSaved', 'reset', 'rehydrate'].includes(k));
+    const dataFields = Object.keys(useEditorStore.getState()).filter(
+      (k) => !['setText', 'setDocumentName', 'setImportAnalysis', 'setImportIssue', 'markSaved', 'reset', 'rehydrate'].includes(k),
+    );
     for (const f of forbidden) expect(dataFields).not.toContain(f);
-    expect(dataFields.sort()).toEqual(['dirty', 'documentName', 'rawText', 'revision']);
+    // שלב 80: analysis/importIssue — ניתוח קלט מתחום המסמך (נגזר מהמקור הגולמי;
+    // אינו IR/פריסה) — הרשימה נותרת סגורה ונעולה.
+    expect(dataFields.sort()).toEqual(['analysis', 'dirty', 'documentName', 'importIssue', 'rawText', 'revision']);
   });
 
   test('setText מעלה מהדורה ומלכלך; טקסט זהה — נייטרלי', () => {

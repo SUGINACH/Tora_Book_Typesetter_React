@@ -8,11 +8,18 @@
  *
  * ברירת מחדל לא־נודעת: אין טקסט ⇐ אין ריצה; הגדרות לא חוקיות ⇐ אין ריצה
  * (הבעיות כבר מוצגות דרך settingsStore.issues — אין "כמעט תקין").
+ *
+ * שלב 80 (אפיון §3.3, §13–14): הקלט מנותח לפני השליחה — מפת שגיאות
+ * הקלט מתעדכנת מאותו פרסור (פרסור יחיד; התוצאה מוזרקת למנצח), וכשל
+ * פרסור ⇐ אין ריצה בכלל — שום job לא נשלח לעובד, השגיאה הקטלוגית
+ * הממוקדת (שורה:עמודה) מוצגת במפה. זה המשך ישיר של חסימת ההגדרות
+ * משלב 79: שני סוגי הקלט הגרועים נחסמים לפני תחילת עימוד, בלי פעולת-אין.
  */
 import { useCallback } from 'react';
 import { getUiRuntime } from './ui-runtime.js';
 import { useEditorStore } from '../stores/editor-store.js';
 import { useSettingsStore } from '../stores/settings-store.js';
+import { analyzeSource } from '../stores/source-analysis.js';
 
 export interface UseTypesetRun {
   /** הרצת עימוד של המקור הנוכחי דרך ה־Worker. */
@@ -28,7 +35,19 @@ export function useTypesetRun(): UseTypesetRun {
     const settings = useSettingsStore.getState();
     settings.applyDraft();
     const effective = useSettingsStore.getState().effective;
-    if (effective === null) return; // יש בעיות — מוצגות ב־issues; לא רצים
+    if (effective === null) return; // יש בעיות — מוצגות ב-issues; לא רצים
+
+    // ניתוח הקלט — לפני השליחה: מפת השגיאות מתעדכנת מהפרסור הזה עצמו,
+    // וכשל פרסור חוסם את הריצה (אין job; השגיאה ממוקמת במפה).
+    const { analysis, parsed } = analyzeSource({
+      source: editor.rawText,
+      documentId: editor.documentName !== '' ? editor.documentName : 'ui',
+      revision: editor.revision,
+      documentName: editor.documentName,
+    });
+    useEditorStore.getState().setImportAnalysis(analysis);
+    if (parsed === null) return; // parseError מוצג במפה — שום job לא נשלח
+
     const runtime = await getUiRuntime();
     runtime.controller.run({
       source: editor.rawText,
@@ -38,6 +57,7 @@ export function useTypesetRun(): UseTypesetRun {
       wasmBytes: runtime.bundle.wasmBytes,
       woff2DecoderBytes: runtime.bundle.woff2DecoderBytes,
       documentId: editor.documentName !== '' ? editor.documentName : 'ui',
+      parsed,
     });
   }, []);
 

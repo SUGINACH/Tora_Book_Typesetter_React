@@ -10,17 +10,35 @@
  *      job ישן (stale) בלי שעון (שיעור ADR: אין זמן בהחלטות מנוע).
  *   3. השמירה: rawText+documentName בלבד נכתבים ל־`tora-ui:editor:v1`;
  *      revision/dirty אינם נשמרים — הם מצב עבודה, לא מסמך.
+ *
+ * שלב 80 (אפיון §3.3, §13–14): ניתוח הקלט — מפת שגיאות ממוקדת
+ * (שורה:עמודה מהפרסר הנעול) וסקירת מסמך (metadata, זרמי הערות).
+ * נתון מתחום המסמך, לא Layout IR — נגזר מהמקור הגולמי עצמו
+ * (content-model, שלב 17) ואינו נכנס להחלטות עימוד. מתעדכן בפעולת
+ * הייבוא ובכל הרצה (אין פרסור בהקלדה — §13.4), נחתם למהדורה
+ * שיצר אותו (analyzedRevision — אותו עוגן stale) ואינו נשמר לדיסק:
+ * הוא נגזרת, לא מסמך. importIssue — כישלון מתאם חולף שאינו משנה
+ * את המסמך הנוכחי.
  */
 import { create } from 'zustand';
 import { readJson, STORAGE_KEYS, writeJson } from './storage.js';
+import type { LocatedIssue, SourceAnalysis } from './source-analysis.js';
 
 interface EditorStoreState {
   readonly rawText: string;
   readonly documentName: string;
   readonly revision: number;
   readonly dirty: boolean;
+  /** ניתוח הקלט האחרון (ייבוא/ריצה); null עד הפעולה הראשונה (שלב 80). */
+  readonly analysis: SourceAnalysis | null;
+  /** כישלון מתאם חולף (פורמט/קריאה/המרה); null כשאין (שלב 80). */
+  readonly importIssue: LocatedIssue | null;
   setText(text: string): void;
   setDocumentName(name: string): void;
+  /** פרסום ניתוח קלט — קפוא במקום (שלב 80). */
+  setImportAnalysis(analysis: SourceAnalysis): void;
+  /** דיווח כישלון מתאם ייבוא — לתצוגה בלבד (שלב 80). */
+  setImportIssue(issue: LocatedIssue | null): void;
   markSaved(): void;
   reset(): void;
   /** קריאה מחדש מהאחסון המוזרק (מיגרציה/בדיקות). */
@@ -44,6 +62,8 @@ export const useEditorStore = create<EditorStoreState>()((set) => ({
   documentName: '',
   revision: 0,
   dirty: false,
+  analysis: null,
+  importIssue: null,
 
   setText: (text) =>
     set((state) => {
@@ -61,6 +81,12 @@ export const useEditorStore = create<EditorStoreState>()((set) => ({
       return next;
     }),
 
+  setImportAnalysis: (analysis) =>
+    set((state) => ({ ...state, analysis: Object.freeze(analysis), importIssue: null })),
+
+  setImportIssue: (issue) =>
+    set((state) => ({ ...state, importIssue: issue === null ? null : Object.freeze(issue) })),
+
   markSaved: () =>
     set((state) => {
       if (!state.dirty) return state;
@@ -70,13 +96,23 @@ export const useEditorStore = create<EditorStoreState>()((set) => ({
   reset: () =>
     set((state) => {
       // אין מה לאפס — מצב התחלתי; לא מקפיצים מהדורה ולא כותבים לדיסק.
-      if (state.rawText === '' && state.documentName === '' && !state.dirty) return state;
+      if (
+        state.rawText === '' &&
+        state.documentName === '' &&
+        !state.dirty &&
+        state.analysis === null &&
+        state.importIssue === null
+      ) {
+        return state;
+      }
       const next = {
         ...state,
         rawText: '',
         documentName: '',
         revision: state.revision + 1,
         dirty: false,
+        analysis: null,
+        importIssue: null,
       };
       persist(next);
       return next;

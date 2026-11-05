@@ -26,7 +26,10 @@ import type { WorkerRequest, WorkerResponse } from '../../src/worker-host/protoc
 import { TypesetController } from '../../src/worker-host/typeset-run.js';
 import { setUiRuntime } from '../../src/worker-host/ui-runtime.js';
 import type { BrowserAssetBundle } from '../../src/worker-host/asset-bundle.js';
+import { importDocumentText } from '../../src/stores/import-document.js';
 import { useEditorStore } from '../../src/stores/editor-store.js';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { useRunStore } from '../../src/stores/run-store.js';
 import { useResultStore } from '../../src/stores/result-store.js';
 import { useSettingsStore } from '../../src/stores/settings-store.js';
@@ -70,6 +73,15 @@ class Channel implements WorkerLike {
 
   onMessage(handler: (msg: WorkerResponse) => void): void {
     this.clientHandler = handler;
+  }
+}
+
+/** ערוץ סופר — מוכיח ששום הודעה לא נשלחה לעובד (חסימה לפני השליחה). */
+class CountingChannel extends Channel {
+  posted = 0;
+  override postMessage(msg: WorkerRequest): void {
+    this.posted += 1;
+    super.postMessage(msg);
   }
 }
 
@@ -238,5 +250,89 @@ describe('שלב 77: מעטפת מלאה מעל ה־Worker — אין typeset ב
     expect(
       useSettingsStore.getState().issues.some((i) => i.code === 'errors.settings.UNKNOWN_KEY'),
     ).toBe(true);
+  });
+
+  test('קלט פגום (sentinel) — הריצה נחסמת לפני השליחה; השגיאה ממוקמת במפת הקלט (שלב 80; §3.3)', async () => {
+    const channel = new CountingChannel();
+    const client = new WorkerClient(channel);
+    setUiRuntime({ client, bundle: BUNDLE, controller: new TypesetController({ client }) });
+    const { container } = render(createElement(App));
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    typeSource(editor, 'שם הספר - בדיקה\n\nכותרת 1 מספר 1 - פרק\nטקסט מזוהם \u0001 באמצע\n');
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement);
+    });
+    await new Promise((r) => { setTimeout(r, 50); });
+    // שום job לא נשלח לעובד — החסימה לפני השליחה (כמו הגדרות לא חוקיות בשלב 79)
+    expect(useRunStore.getState().phase).toBe('idle');
+    expect(useRunStore.getState().jobId).toBeNull();
+    expect(channel.posted).toBe(0);
+    expect(useResultStore.getState().ir).toBeNull();
+    // השגיאה הקטלוגית ממוקמת ומוצגת במפה — עם שורה ועמודה, לא הודעה גולמת
+    const errBlock = container.querySelector('[data-testid="insights-parse-error"]');
+    expect(errBlock).not.toBeNull();
+    expect(errBlock?.textContent).toContain('הריצה חסומה');
+    expect(errBlock?.textContent).toMatch(/שורה 4/);
+    const analysis = useEditorStore.getState().analysis;
+    expect(analysis?.parseError?.code).toBe('errors.parser.SENTINEL_IN_INPUT');
+    expect(analysis?.parseError?.start?.line).toBe(4);
+  });
+
+  test('ייבוא בזמן ריצה פעילה — הריצה מבוטלת ואין job יתום; המפה של המסמך החדש (שלב 80)', async () => {
+    const channel = new CountingChannel(150);
+    const client = new WorkerClient(channel);
+    setUiRuntime({ client, bundle: BUNDLE, controller: new TypesetController({ client }) });
+    const { container } = render(createElement(App));
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    typeSource(editor, SOURCE_A);
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement);
+    });
+    // הריצה חיה (הערוץ מושהה) — מגיע מסמך חדש דרך פעולת הייבוא
+    await waitFor(() => {
+      expect(useRunStore.getState().phase).toBe('preparing');
+    });
+    act(() => {
+      importDocumentText(SOURCE_B, 'מסמך-חדש.txt', 'text-file');
+    });
+    // הריצה הקודמת בוטלה במפורש (controller.cancel) ואז המצב אופס למסמך
+    // החדש — cancelled ואז reset ⇐ idle; שום job יתום לא נשאר חי מאחור.
+    expect(useRunStore.getState().phase).toBe('idle');
+    expect(useRunStore.getState().jobId).toBeNull();
+    expect(useEditorStore.getState().rawText).toBe(SOURCE_B);
+    expect(useEditorStore.getState().documentName).toBe('מסמך-חדש.txt');
+    // מפת הקלט של המסמך החדש — טריה וממוקמת במהדורה הנוכחית
+    const analysis = useEditorStore.getState().analysis;
+    expect(analysis?.documentName).toBe('מסמך-חדש.txt');
+    expect(analysis?.analyzedRevision).toBe(useEditorStore.getState().revision);
+    // ההשהיה פגה — שום תוצאה של ה-job הישן לא נכנסת
+    await new Promise((r) => { setTimeout(r, 250); });
+    expect(useResultStore.getState().ir).toBeNull();
+  });
+
+  test('המסמך הקנוני דרך האפליקציה המלאה — סקירה אמיתית ומפה עם האזהרות המתועדות (שלב 80)', async () => {
+    const src = readFileSync(
+      join(process.cwd(), 'packages/test-fixtures/corpus/release/release-reference-document.txt'),
+      'utf8',
+    );
+    const { container } = render(createElement(App));
+    act(() => {
+      importDocumentText(src, 'release-reference-document.txt', 'text-file');
+    });
+    const overview = container.querySelector('[data-testid="insights-overview"]');
+    expect(overview).not.toBeNull();
+    const notes = container.querySelector('[data-testid="insights-notes"]')?.textContent ?? '';
+    expect(notes).toContain('16'); // הערות שוליים — מספרי הקורפוס האמיתיים
+    expect(notes).toContain('3'); // הערות צד
+    // מסמך release נקי — הודעת "נטען ונותח"
+    expect(container.querySelector('[data-testid="insights-clean"]')).not.toBeNull();
+    // והריצה המלאה עדיין עובדת דרך ה-Worker עם אותו פרסור (פרסור יחיד)
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement);
+    });
+    await waitFor(() => {
+      expect(useRunStore.getState().phase).toBe('done');
+    }, { timeout: 10000 });
+    expect(useResultStore.getState().ir).not.toBeNull();
   });
 });

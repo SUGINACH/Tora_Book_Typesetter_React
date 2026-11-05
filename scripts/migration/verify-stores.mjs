@@ -18,7 +18,7 @@
  *   19–25. בדיקות ירוקות (65+4), typecheck, lint:packages, אין any,
  *      אין גישת localStorage ישירה מחוץ ל־storage.ts.
  *   26–30. אינטגרציה: החבית; resetForNewDocument שומר zoom/locale;
- *      vitest כולל את tests/stores; המרשם מהחבילה; סוויטה מלאה 1163.
+ *      vitest כולל את tests/stores; המרשם מהחבילה; סוויטה מלאה 1199.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
@@ -111,7 +111,7 @@ const selectorsCode = stripComments(read('selectors.ts'));
 
 console.log('\n9) בדיקות וסטטיקה');
 const storesOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/stores/']);
-(storesOut !== null && /Tests\s+65\s+passed/.test(storesOut) ? ok : fail)('tests/stores — 65/65');
+(storesOut !== null && /Tests\s+84\s+passed/.test(storesOut) ? ok : fail)('tests/stores — 84/84 (65 + 19 ניתוח קלט, שלב 80)');
 const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/stores.test.tsx']);
 (compOut !== null && /Tests\s+4\s+passed/.test(compOut) ? ok : fail)('tests/component/stores — 4/4 (רינדורים)');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
@@ -127,8 +127,8 @@ const indexCode = stripComments(read('index.ts'));
   ? ok : fail)('zoom/locale נשמרים בין מסמכים (העדפות משתמש)');
 (/tests\/stores\//.test(readFileSync(join(repoRoot, 'vitest.packages.config.ts'), 'utf8')) ? ok : fail)('vitest.packages.config כולל את tests/stores');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1163 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1163\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1163/1163 (1098 עד שלב 76 + 20 שלב 77 + 26 שלב 78 + 19 קבצים ותבניות שלב 79)');
+const testOut = (SKIP_TESTS ? 'Tests  1199 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1199\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1199/1199 (1098 עד שלב 76 + 20 שלב 77 + 26 שלב 78 + 19 קבצים ותבניות שלב 79)');
 
 console.log('\n' + '='.repeat(60));
 if (failures > 0) {

@@ -1,13 +1,14 @@
 /**
- * ImportButtons.tsx — ייבוא מסמכים למעטפת החדשה (שלב 77).
+ * ImportButtons.tsx — ייבוא מסמכים למעטפת החדשה (שלב 77; שלב 80 — מסלול ייבוא).
  *
- * קבצי טקסט/Word/דוגמאות נכנסים ל־editorStore (מקור גולמי; שלב 76).
- * ייבוא מסמך חדש מנקה את התוצאה הקודמת — אין הצגה של תוצאה ישנה כאילו
- * היא של המסמך החדש (resetForNewDocument שומר zoom/locale).
+ * קבצי טקסט/Word/דוגמאות נכנסים דרך פעולת הייבוא היחידה (import-document,
+ * שלב 80): ביטול ריצה פעילה ← ניקוי בין מסמכים ← כתיבה ← ניתוח הקלט ←
+ * מפת שגיאות וסקירה ב־editorStore. כישלון מתאם (פורמט/קריאה/המרה/דוגמה)
+ * אינו מחליף מסמך ואינו נבלע ב־console — הוא מדווח בקוד קטלוגי ומוצג
+ * במפת הקלט (reportImportFailure; אין תיקון שקט — אפיון §3.3, §16).
  */
 import { importTextFile, importWordFile } from '../../lib/text-importers';
-import { useEditorStore } from '../../stores/editor-store.js';
-import { resetForNewDocument } from '../../stores/index.js';
+import { importDocumentText, reportImportFailure } from '../../stores/import-document.js';
 
 const SAMPLE_FILES = [
   { name: 'טקסט קצר — אלמנה/יתום', path: './widow-orphan.txt' },
@@ -19,14 +20,6 @@ const SAMPLE_FILES = [
   { name: 'טקסט ארוך מאוד', path: './very_long_test_text.txt' },
 ];
 
-/** קליטת תוכן חדש — מסמך חדש: ניקוי בין מסמכים לפני הכתיבה. */
-function acceptNewDocument(text: string, name: string): void {
-  resetForNewDocument();
-  const editor = useEditorStore.getState();
-  editor.setDocumentName(name);
-  editor.setText(text);
-}
-
 export function ImportButtons() {
   const handleTextFile = () => {
     const input = document.createElement('input');
@@ -37,9 +30,16 @@ export function ImportButtons() {
       if (!file) return;
       try {
         const text = await importTextFile(file);
-        acceptNewDocument(text, file.name);
-      } catch (err) {
-        console.warn('File not loaded:', err);
+        importDocumentText(text, file.name, 'text-file');
+      } catch {
+        // סיווג לפי תכונות הקובץ עצמו — לא לפי message גולם (§16):
+        // סיומת/סוג שאינם טקסט ⇐ פורמט; אחרת ⇐ כשל קריאה.
+        const isFormatIssue = !file.name.toLowerCase().endsWith('.txt') && file.type !== 'text/plain';
+        if (isFormatIssue) {
+          reportImportFailure('errors.import.UNSUPPORTED_FORMAT', { extension: file.name.split('.').pop() ?? '' });
+        } else {
+          reportImportFailure('errors.import.FILE_UNREADABLE', { reason: 'read-failed' });
+        }
       }
     };
     input.click();
@@ -54,9 +54,14 @@ export function ImportButtons() {
       if (!file) return;
       try {
         const text = await importWordFile(file);
-        acceptNewDocument(text, file.name);
-      } catch (err) {
-        console.warn('Word file not loaded:', err);
+        importDocumentText(text, file.name, 'word-file');
+      } catch {
+        const isFormatIssue = !file.name.toLowerCase().endsWith('.docx');
+        if (isFormatIssue) {
+          reportImportFailure('errors.import.UNSUPPORTED_FORMAT', { extension: file.name.split('.').pop() ?? '' });
+        } else {
+          reportImportFailure('errors.import.WORD_CONVERT_FAILED', {});
+        }
       }
     };
     input.click();
@@ -65,10 +70,11 @@ export function ImportButtons() {
   const handleLoadSample = async (path: string) => {
     try {
       const response = await fetch(path);
+      if (!response.ok) throw new Error(String(response.status));
       const text = await response.text();
-      acceptNewDocument(text, path.replace(/^\.\//, ''));
-    } catch (err) {
-      console.warn('Failed to load sample:', err);
+      importDocumentText(text, path.replace(/^\.\//, ''), 'sample');
+    } catch {
+      reportImportFailure('errors.import.SAMPLE_UNAVAILABLE', { path: path.replace(/^\.\//, '') });
     }
   };
 
@@ -98,7 +104,9 @@ export function ImportButtons() {
         defaultValue=""
         data-testid="import-sample"
       >
-        <option value="">📝 טען דוגמה...</option>
+        <option value="" disabled>
+          טעינת דוגמה…
+        </option>
         {SAMPLE_FILES.map((f) => (
           <option key={f.path} value={f.path}>
             {f.name}

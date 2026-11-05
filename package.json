@@ -61,7 +61,9 @@
     "verify:line-battery": "node scripts/migration/verify-line-battery.mjs",
     "verify:next-path": "node scripts/migration/verify-next-path.mjs",
     "verify:differential-lines": "node scripts/migration/verify-differential-lines.mjs",
-    "diff:lines": "node scripts/migration/differential-lines.mjs"
+    "diff:lines": "node scripts/migration/differential-lines.mjs",
+    "verify:presets-migrations": "node scripts/migration/verify-presets-migrations.mjs",
+    "verify:document-import": "node scripts/migration/verify-document-import.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

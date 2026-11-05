@@ -4,11 +4,12 @@
  * אותם רכיבי inputHash כמו ה־CLI/e2e (tests/e2e-skeleton): מסמך מנותח
  * (content-model), הגדרות אפקטיביות מאומתות (settings-schema), מניפסט
  * נכסים פתור, תקציב חיפוש ברירת מחדל, sourceSha256 וגרסת פרסר — כך
- * שאותו קלט מניב אותו layoutHash בכל host (§17.2#2). הפרסור טהור וזול
- * יחסית — הוא רץ במעטפת; **העימוד עצמו אינו כאן** (§12.1 — typeset
- * בתוך ה־Worker בלבד).
+ * שאותו קלט מניב אותו layoutHash בכל host (§17.2#2). הפרסור טהור ורץ
+ * במעטפת; מסמך קנוני גדול לוקח שניות אחדות — לכן שלב 80 מזריק את
+ * תוצאת הפרסור מניתוח הקלט (פרסור יחיד); **העימוד עצמו אינו כאן**
+ * (§12.1 — typeset בתוך ה־Worker בלבד).
  */
-import { parseSourceText } from '@tora/content-model';
+import { parseSourceText, type ParseResult } from '@tora/content-model';
 import {
   DEFAULT_SEARCH_BUDGET,
   sha256Hex,
@@ -26,11 +27,23 @@ export interface UiTypesetRequestInput {
   readonly assets: ResolvedAssetManifest;
   /** מזהה מסמך יציב (יומן/ביקורת); ברירת מחדל ui. */
   readonly documentId?: string;
+  /**
+   * תוצאת פרסור קיימת של אותו מקור בדיוק (שלב 80) — פרסור יחיד: מפת
+   * שגיאות הקלט מנתחת את המקור לפני הריצה ומעבירה את אותה תוצאה;
+   * המסמך הקנוני (3.4MB) לוקח ~3 שניות לפרסור — פעמיים זה בזבוז
+   * מוחשי. אורך המקור נבדק מול התוצאה; אי-התאמה ⇐ זריקה (חוזה).
+   */
+  readonly parsed?: ParseResult;
 }
 
 /** בניית הבקשה — טהורה ודטרמיניסטית; זריקה על קלט לא מנותח. */
 export function buildUiTypesetRequest(input: UiTypesetRequestInput): TypesetRequest {
-  const parsed = parseSourceText(input.source, { documentId: input.documentId ?? 'ui' });
+  if (input.parsed !== undefined) {
+    if (input.parsed.doc.sourceLength !== input.source.length) {
+      throw new Error('parsed/source mismatch: injected ParseResult does not belong to the given source');
+    }
+  }
+  const parsed = input.parsed ?? parseSourceText(input.source, { documentId: input.documentId ?? 'ui' });
   const request: TypesetRequest = {
     document: { ...parsed.doc, transforms: parsed.transforms },
     settings: input.settings,

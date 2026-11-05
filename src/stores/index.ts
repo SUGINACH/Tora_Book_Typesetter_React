@@ -17,6 +17,10 @@ export * from './result-store.js';
 export * from './view-store.js';
 export * from './legacy-migrate.js';
 export * from './selectors.js';
+// source-analysis — ניתוח הקלט (שלב 80): טיפוסים ופונקציות טהורות.
+// import-document — פעולת הייבוא (שלב 80) אינה בחבית: הוא צורך את
+// resetForNewDocument מכאן, וייצואו מהחבית היה יוצר תלות מעגלית.
+export * from './source-analysis.js';
 
 import { useEditorStore } from './editor-store.js';
 import { useSettingsStore } from './settings-store.js';

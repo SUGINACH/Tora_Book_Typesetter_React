@@ -21,7 +21,7 @@
  *      LayoutPreview (אין dangerouslySetInnerHTML); App מריץ מיגרציה
  *      חד־פעמית + החייאה; רכיבי העריכה על ה־stores החדשים.
  *   28–34. בדיקות ורגרסיה: 20 הבדיקות החדשות ירוקות; typecheck; lint;
- *      build; deps; הסוויטה המלאה 1163.
+ *      build; deps; הסוויטה המלאה 1199.
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -127,20 +127,22 @@ const app = stripComments(read('src/App.tsx'));
 (/migrateLegacyUiState/.test(app) && /rehydrateStores/.test(app) ? ok : fail)('App מריץ מיגרציה חד־פעמית + החייאה בעלייה');
 const editor = stripComments(read('src/components/editor/TextEditor.tsx'));
 (/editor-store|stores\/selectors/.test(editor) ? ok : fail)('העורך כתוב על editorStore (מקור גולמי)');
-const imports = stripComments(read('src/components/editor/ImportButtons.tsx'));
-(/resetForNewDocument/.test(imports) ? ok : fail)('ייבוא מסמך חדש מנקה בין מסמכים (resetForNewDocument)');
+// שלב 80: הניקוי עבר מ-ImportButtons לפעולת הייבוא היחידה (src/stores/import-document.ts)
+// — כל מקורות הייבוא עוברים שם; הכוונה (ניקוי בין מסמכים לפני הכתיבה) לא השתנתה.
+const importAction = stripComments(read('src/stores/import-document.ts'));
+(/resetForNewDocument/.test(importAction) ? ok : fail)('ייבוא מסמך חדש מנקה בין מסמכים (resetForNewDocument בפעולת הייבוא)');
 
 console.log('\n6) בדיקות ורגרסיה');
 const t77 = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/worker-host/typeset-run.test.ts', 'tests/worker-host/asset-bundle.test.ts', 'tests/worker-host/ui-request.test.ts']);
-(t77 !== null && /Tests\s+16\s+passed/.test(t77) ? ok : fail)('בדיקות המנצח/צרור/בקשה — 16/16');
+(t77 !== null && /Tests\s+17\s+passed/.test(t77) ? ok : fail)('בדיקות המנצח/צרור/בקשה — 17/17 (16 + הזרקת parsed, שלב 80)');
 const e2e = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/e2e-worker-path.test.tsx']);
-(e2e !== null && /Tests\s+5\s+passed/.test(e2e) ? ok : fail)('E2E מעטפת מלאה מעל הפרוטוקול — 5/5 (ביטול/החלפה/תצוגה/חסימת הגדרות)');
+(e2e !== null && /Tests\s+8\s+passed/.test(e2e) ? ok : fail)('E2E מעטפת מלאה מעל הפרוטוקול — 8/8 (ביטול/החלפה/תצוגה/חסימת הגדרות; שלב 80: קלט פגום/ייבוא בזמן ריצה/קנוני)');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1163 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1163\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1163/1163 (1098 + 20 שלב 77 + 26 שלב 78 + 19 שלב 79)');
+const testOut = (SKIP_TESTS ? 'Tests  1199 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1199\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1199/1199 (1098 + 20 שלב 77 + 26 שלב 78 + 19 שלב 79)');
 
 console.log('\n' + '='.repeat(60));
 if (failures > 0) {

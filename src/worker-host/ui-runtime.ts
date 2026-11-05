@@ -23,11 +23,23 @@ export interface UiRuntime {
 
 let injected: UiRuntime | null = null;
 let realRuntime: Promise<UiRuntime> | null = null;
+let resolvedReal: UiRuntime | null = null;
 
 /** הזרקת הקשר חלופי — בדיקות בלבד; null מחזיר לייצור. */
 export function setUiRuntime(runtime: UiRuntime | null): void {
   injected = runtime;
   realRuntime = null;
+  resolvedReal = null;
+}
+
+/**
+ * הצצה סינכרונית — ההקשר רק אם כבר קיים (מוזרק או שנבנה ונפרס עד תום).
+ * שלב 80: ייבוא מסמך חדש מבטל ריצה פעילה דרך כאן — בלי לבנות זמן־ריצה
+ * רק כדי לבטל (בנייה ראשונה טוענת גופנים; אם לא נבנה — אין job פעיל).
+ */
+export function peekUiRuntime(): UiRuntime | null {
+  if (injected !== null) return injected;
+  return resolvedReal;
 }
 
 /** ההקשר הפעיל — מוזרק אם יש, אחרת נבנה בעצלתם (ויחיד) לייצור. */
@@ -38,7 +50,9 @@ export function getUiRuntime(): Promise<UiRuntime> {
       const client = createBrowserWorkerClient();
       const bundle = await loadBrowserAssetBundle();
       const controller = new TypesetController({ client });
-      return { client, bundle, controller };
+      const runtime = { client, bundle, controller };
+      resolvedReal = runtime;
+      return runtime;
     })();
   }
   return realRuntime;

@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { useDocumentName, useFindings, useIsDirty, useLayoutHash, useLayoutIr, useRawText, useRunPhase, useRunProgress } from '../../stores/selectors.js';
 import { useTypesetRun } from '../../worker-host/use-typeset-run.js';
 import { ImportButtons } from '../editor/ImportButtons';
+import { ImportInsights } from '../editor/ImportInsights';
 import { TextEditor } from '../editor/TextEditor';
 import { SettingsPanel } from '../settings/SettingsPanel';
 import { PreviewArea } from './PreviewArea';
@@ -66,6 +67,8 @@ export function AppShell() {
           <div className="p-2 border-b border-gray-200">
             <ImportButtons />
           </div>
+          {/* מפת שגיאות הקלט וסקירת המסמך — שלב 80 (§3.3, §13–14) */}
+          <ImportInsights />
           <div className="flex-1 overflow-auto">
             <TextEditor />
           </div>

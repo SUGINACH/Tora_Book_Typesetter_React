@@ -1,20 +1,39 @@
 /**
- * TextEditor.tsx — עורך המקור של המעטפת החדשה (שלב 77).
+ * TextEditor.tsx — עורך המקור של המעטפת החדשה (שלב 77; שלב 80 — הדגשה).
  *
  * מקור גולמי בלבד (editorStore — שלב 76; §13.1 "אינו מכיר Layout IR"):
  * הקלדה מעדכנת rawText + revision (עוגן stale-job) ומלכלכת את המסמך.
  * אין עימוד בזמן הקלדה — ההרצה היא פעולה מפורשת של המשתמש דרך ה־Worker
  * (§13.4 — debounce/תור הוא שלב 83).
+ *
+ * שלב 80: כשמוקד התצוגה הוא מקור עם טווח (לחיצה על שורה במפת שגיאות
+ * הקלט) — הטווח נבחר בעורך (setSelectionRange במרחב UTF-16 של המקור,
+ * בדיוק כמו המיקום במפה) והעורך מקבל מיקוד; הדפדפן גולל אל הבחירה.
+ * זו ההדגשה הכנה: העורך נשאר textarea טהור — אין שכבת-על ואין DOM
+ * מסונכרן ידנית (מקור לבאגים); הטווח החשוד מסומן גם בתוך שורת הבעיה.
  */
-import { useDocumentName, useIsDirty, useRawText } from '../../stores/selectors.js';
+import { useEffect, useRef } from 'react';
+import { useDocumentName, useIsDirty, useRawText, useViewFocus } from '../../stores/selectors.js';
 import { useEditorStore } from '../../stores/editor-store.js';
 
 export function TextEditor() {
   const rawText = useRawText();
   const dirty = useIsDirty();
   const documentName = useDocumentName();
+  const focus = useViewFocus();
   const setText = useEditorStore((s) => s.setText);
   const setDocumentName = useEditorStore((s) => s.setDocumentName);
+  const areaRef = useRef<HTMLTextAreaElement>(null);
+
+  // הדגשה במקור (שלב 80): מוקד עם טווח ⇐ בחירת הטווח בעורך + מיקוד.
+  useEffect(() => {
+    if (focus === null || focus.pane !== 'source' || focus.sourceSpan === undefined) return;
+    const el = areaRef.current;
+    if (el === null) return;
+    const { startUtf16, endUtf16 } = focus.sourceSpan;
+    el.focus();
+    el.setSelectionRange(startUtf16, endUtf16);
+  }, [focus]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDocumentName(e.target.value);
@@ -34,6 +53,7 @@ export function TextEditor() {
         {dirty && <span className="text-orange-600 shrink-0" title="שינויים שלא עומדו">●</span>}
       </div>
       <textarea
+        ref={areaRef}
         value={rawText}
         onChange={(e) => {
           setText(e.target.value);
