@@ -15,6 +15,7 @@ import { useDocumentName, useFindings, useIsDirty, useLayoutHash, useLayoutIr, u
 import { useTypesetRun } from '../../worker-host/use-typeset-run.js';
 import { ImportButtons } from '../editor/ImportButtons';
 import { ImportInsights } from '../editor/ImportInsights';
+import { AuditFindings } from '../audit/AuditFindings';
 import { TextEditor } from '../editor/TextEditor';
 import { SettingsPanel } from '../settings/SettingsPanel';
 import { PreviewArea } from './PreviewArea';
@@ -69,6 +70,8 @@ export function AppShell() {
           </div>
           {/* מפת שגיאות הקלט וסקירת המסמך — שלב 80 (§3.3, §13–14) */}
           <ImportInsights />
+          {/* ממצאי ה-Audit והניווט אליהם — שלב 82 (§13–14) */}
+          <AuditFindings />
           <div className="flex-1 overflow-auto">
             <TextEditor />
           </div>

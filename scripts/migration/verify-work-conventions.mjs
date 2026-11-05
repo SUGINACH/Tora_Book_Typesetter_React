@@ -208,6 +208,10 @@ const NEW_ALLOWED = [
   // (§3.3, §13–14). רשימה סגורה — לא תיקייה שלמה.
   /^src\/i18n\/import-labels\.ts$/,
   /^src\/components\/editor\/ImportInsights\.tsx$/,
+  // שלב 82: פאנל ממצאי ה-Audit והניווט אליהם — קטלוג ה-i18n והפאנל
+  // (§13–14). רשימה סגורה — לא תיקייה שלמה.
+  /^src\/i18n\/audit-labels\.ts$/,
+  /^src\/components\/audit\/AuditFindings\.tsx$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;
