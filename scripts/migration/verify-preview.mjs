@@ -62,16 +62,17 @@ console.log('\n3) בדיקות הקומפוננטות (tests/component)');
 const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/']);
 // שלב 76: התיקייה כוללת גם את stores.test.tsx (4 בדיקות רינדור) — 8 preview + 4 stores
 // שלב 77: וגם את e2e-worker-path.test.tsx (4 בדיקות מעטפת מלאה) — סה"כ 16
-// שלב 78: וגם את settings-panel.test.tsx (26 בדיקות לוח ההגדרות מהמרשם) — סה"כ 42
-(compOut !== null && /Tests\s+42\s+passed/.test(compOut) ? ok : fail)('tests/component — 42/42 (8 preview + 4 stores + 4 e2e-worker + 26 לוח הגדרות)');
+// שלב 78: וגם את settings-panel.test.tsx (26 בדיקות לוח הגדרות מהמרשם) — סה"כ 42
+// שלב 79: e2e הורחב ל־5 (חסימת ריצה על הגדרות לא תקינות) + settings-files.test.tsx (8 קבצים ותבניות) — סה"כ 51
+(compOut !== null && /Tests\s+51\s+passed/.test(compOut) ? ok : fail)('tests/component — 51/51 (8 preview + 4 stores + 5 e2e-worker + 26 לוח הגדרות + 8 קבצים ותבניות)');
 
 console.log('\n4) typecheck שורש');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1144 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1144\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1144/1144 (581 + 8 preview + 12 audit + 3 CLI + 10 e2e + 2 דגל)');
+const testOut = (SKIP_TESTS ? 'Tests  1163 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1163\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1163/1163 (581 + 8 preview + 12 audit + 3 CLI + 10 e2e + 2 דגל)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

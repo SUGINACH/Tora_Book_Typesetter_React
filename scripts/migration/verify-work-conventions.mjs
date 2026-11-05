@@ -201,6 +201,9 @@ const NEW_ALLOWED = [
   // הקומפוננטות. רשימה סגורה — לא תיקיות שלמות.
   /^src\/i18n\/settings-labels\.ts$/,
   /^src\/components\/settings\/(SettingsPanel|SettingRow)\.tsx$/,
+  // שלב 79: סרגל קבצים ותבניות בלוח ההגדרות — ייבוא/ייצוא קובצי
+  // הגדרות ותבניות שמורות (§6.3, §18-M9). רשימה סגורה — לא תיקייה שלמה.
+  /^src\/components\/settings\/SettingsFiles\.tsx$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;

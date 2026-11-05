@@ -215,4 +215,28 @@ describe('שלב 77: מעטפת מלאה מעל ה־Worker — אין typeset ב
     expect(useRunStore.getState().phase).toBe('idle');
     expect(useRunStore.getState().jobId).toBeNull();
   });
+
+  test('הגדרות לא חוקיות — הריצה נחסמת לפני תחילת עימוד (שלב 79; §18-M9)', async () => {
+    const { container } = render(createElement(App));
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    typeSource(editor, SOURCE_A);
+    // מצב לא אפשרי בנתיב הרגיל (הייבוא דוחה) — הגנה בעומק: draft מושחת
+    // עם מפתח לא מוכר. applyDraft נכשל עם הקוד קטלוגי, effective מתאפס
+    // (אין ערך מלוכלך מריצה קודמת) ושום job אינו נשלח לעובד.
+    useSettingsStore.setState({ draft: Object.freeze({ 'no-such-key': 1 }) });
+    const runButton = container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement;
+    expect((runButton as HTMLButtonElement).disabled).toBe(false); // יש מקור — הכפתור פעיל
+    await act(async () => {
+      fireEvent.click(runButton);
+    });
+    await new Promise((r) => { setTimeout(r, 50); });
+    expect(useRunStore.getState().phase).toBe('idle'); // לא יצאה מהמקום
+    expect(useRunStore.getState().jobId).toBeNull(); // שום job לא נשלח
+    expect(useResultStore.getState().ir).toBeNull();
+    expect(useSettingsStore.getState().effective).toBeNull();
+    // הכשל מתועד עם קוד קטלוגי — לא הודעה גולמת (פטרון שלב 12)
+    expect(
+      useSettingsStore.getState().issues.some((i) => i.code === 'errors.settings.UNKNOWN_KEY'),
+    ).toBe(true);
+  });
 });

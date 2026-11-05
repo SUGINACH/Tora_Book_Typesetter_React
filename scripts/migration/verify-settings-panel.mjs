@@ -13,7 +13,7 @@
  *      כולל 13 תוויות מדורים.
  *   4. המרשם נושא תלויות תצוגה תקינות (רשימה סגורה של 4; מטרה קיימת).
  *   5. המעטפת מחוברת: AppShell מרנדר את הלוח; לוח ההגדרות נגיש מהכותרת.
- *   6. הבדיקות: 26 בדיקות הלוח ב-tests/component; הסוויטה המלאה 1144.
+ *   6. הבדיקות: 26 בדיקות הלוח ב-tests/component; הסוויטה המלאה 1163.
  *   7. רגרסיה: typecheck, lint:packages, build:packages, deps:check.
  */
 import { execFileSync } from 'node:child_process';
@@ -168,7 +168,7 @@ console.log('\n5) חיבור המעטפת');
   (/applyDraft\(\)/.test(row) ? ok : fail)('כל שינוי שדה מסתיים ב-applyDraft (draft ← validation ← effective/hash)');
 }
 
-console.log('\n6) הבדיקות — 26 בדיקות הלוח; הסוויטה המלאה 1144');
+console.log('\n6) הבדיקות — 26 בדיקות הלוח; הסוויטה המלאה 1163');
 {
   const testSrc = read('tests/component/settings-panel.test.tsx');
   const its = [...testSrc.matchAll(/\bit\(/g)].length;
@@ -185,7 +185,7 @@ console.log('\n6) הבדיקות — 26 בדיקות הלוח; הסוויטה ה
   }
   if (!SKIP_TESTS) {
     const testOut = run('npm', ['run', 'test:packages']);
-    (/Tests\s+1144\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1144/1144');
+    (/Tests\s+1163\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1163/1163');
   } else {
     ok('test:packages — דולג (הצעד האב הריץ את הסוויטה)');
   }

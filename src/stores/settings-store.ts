@@ -1,26 +1,33 @@
 /**
- * settings-store.ts — draft, presets ו־validation (שלב 76; אפיון §13.1, §13.3).
+ * settings-store.ts — draft, presets ו־validation (שלב 76; אפיון §13.1, §13.3)
+ * + מסלול קובצי הגדרות: מיגרציה, ייבוא וייצוא (שלב 79; אפיון §6.3, §18-M9).
  *
  * "settingsStore — draft, presets, migrations ו־validation."
  *
  *   1. **כל** הלוגיקה הסמנטית מגיעה מ־`@tora/settings-schema` — ה־store
  *      אינו מממש בדיקת תקינות משלו (אין מימוש מקביל; שיעור כלל 8):
  *      ייבוא ערך/אובייקט ⇐ importSettings; אפקטיבי+hash ⇐
- *      buildEffectiveSettings; המרשם ⇐ buildSettingRegistry מה־registry
- *      המיוצר.
+ *      buildEffectiveSettings; המרות גרסאות ⇐ migrateSettings (השרשרת
+ *      הנעולה של שלב 30 — גם במסלול הקובץ אין מימוש מקביל של המרות).
  *   2. מפתח לא מוכר ⇐ issue מתועד **ואינו נכנס ל־draft**; ערך לא חוקי
- *      ⇐ issue וה־draft אינו משתנה. אין תיקון שקט.
- *   3. מפתחות legacy שאינם ממופים במרשם נשמרים ב־unmappedLegacy —
- *      לא נזרקים ולא נמחקים; המיפוי שלהם הוא עבודת שלב 79 (מיגרציית
- *      קובצי הגדרות ישנים), לא החלטה שקטה כאן.
+ *      ⇐ issue וה־draft אינו משתנה. אין תיקון שקט. מפתחות לא מוכרים
+ *      מקובץ נשמרים ב־unmappedLegacy — נדחים עם הסבר מדויק, לא נזרקים.
+ *   3. קובץ הגדרות (שלב 79): פריקת מעטפת ייצוא ← שרשרת migrateSettings ←
+ *      ייבוא פריט־פריט. הקובץ **מחליף** את ה־draft (תמונת מצב מלאה,
+ *      כמו קובצי התוכנה הישנה וכמו טעינת תבנית) — לא ממזג.
  *   4. שכבות ההפעלה (§6.3): ברירות מחדל < draft; effective נבנה רק
  *      ב־applyDraft — ה־configHash הוא של המצב האפקטיבי, לא של ה־draft.
+ *      כשל בנייה ⇐ effective=null (אין ערך מלוכלך מהריצה הקודמת — הריצה
+ *      נחסמת לפני תחילת עימוד).
  */
 import { create } from 'zustand';
 import {
   buildEffectiveSettings,
   buildSettingRegistry,
   importSettings,
+  migrateSettings,
+  SCHEMA_VERSION,
+  SettingsError,
   type EffectiveSettings,
   type ValidationIssue,
 } from '@tora/settings-schema';
@@ -40,6 +47,25 @@ export const settingsRegistry = buildSettingRegistry(
 type Draft = Readonly<Record<string, unknown>>;
 type Presets = Readonly<Record<string, Draft>>;
 
+/** מסמן ייצוא הגדרות של המערכת החדשה — מפתח שאינו יכול להתנגש עם
+ * מפתחות legacy (כולם מקוטלגים במרשם; אף אחד אינו מתחיל ב-$). */
+export const SETTINGS_FILE_FORMAT = 'tora-settings' as const;
+
+/** פורמט קובץ הייצוא (שלב 79): מעטפת מזוהה + גרסת סכמה + ערכים קנוניים.
+ * קובץ מורשת שטוח (התוכנה הישנה) נחשב v1 — אין לו מעטפת. */
+export interface SettingsFileExport {
+  readonly $format: typeof SETTINGS_FILE_FORMAT;
+  readonly schemaVersion: number;
+  readonly values: Readonly<Record<string, unknown>>;
+}
+
+/** תוצאת ייבוא קובץ — לתצוגת המשתמש ולבדיקות: כמה נטען ואילו בעיות
+ * (אזהרות COERCED לצד דחיות — הפרדה לפי קוד בצרכן). */
+export interface SettingsFileImportSummary {
+  readonly loaded: number;
+  readonly issues: readonly ValidationIssue[];
+}
+
 interface SettingsStoreState {
   readonly draft: Draft;
   readonly presets: Presets;
@@ -54,6 +80,19 @@ interface SettingsStoreState {
    * issue. מחזיר את מספר הבעיות (לבדיקות).
    */
   importObject(obj: unknown): number;
+  /**
+   * ייבוא **קובץ** הגדרות (שלב 79): פריקת מעטפת ייצוא ← שרשרת
+   * migrateSettings הנעולה ← ייבוא פריט־פריט. הקובץ מחליף את ה־draft
+   * ואת unmappedLegacy (תמונת מצב מלאה). קובץ מורשת שטוח נחשב v1.
+   * גרסה עתידית ללא צעד מיגרציה ⇐ MIGRATION_FAILED מדויק, כלום לא נטען.
+   */
+  importSettingsFile(obj: unknown): SettingsFileImportSummary;
+  /**
+   * ייצוא מצב ההגדרות הנוכחי: מעטפת {$format, schemaVersion, values}
+   * מה־effective (ערכים קנוניים, מפתחות ממוינים — דטרמיניסטי).
+   * null כאשר אין effective (הצרכן מריץ applyDraft קודם).
+   */
+  exportSettingsFile(): SettingsFileExport | null;
   /** בניית effective + configHash מה־draft הנוכחי. */
   applyDraft(): void;
   savePreset(name: string): void;
@@ -113,7 +152,7 @@ const importEntries = (
   return { merged: Object.freeze(merged), issues, unmapped };
 };
 
-export const useSettingsStore = create<SettingsStoreState>()((set) => ({
+export const useSettingsStore = create<SettingsStoreState>()((set, get) => ({
   draft: Object.freeze({}),
   presets: Object.freeze({}),
   issues: Object.freeze([]),
@@ -153,6 +192,85 @@ export const useSettingsStore = create<SettingsStoreState>()((set) => ({
     return issueCount;
   },
 
+  importSettingsFile: (obj) => {
+    let summary: SettingsFileImportSummary = { loaded: 0, issues: Object.freeze([]) };
+    set((state) => {
+      // (א) צורה: קובץ הגדרות הוא אובייקט בלבד — מחרוזת/מספר/מערך נדחים
+      // מיד עם קוד+path, בלי להגיע כלל למיגרציה או לייבוא.
+      if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+        const issues: readonly ValidationIssue[] = Object.freeze([{
+          code: 'errors.settings.INVALID_TYPE',
+          path: '/import/file',
+          params: { value: JSON.stringify(obj).slice(0, 80), type: 'object' },
+        }]);
+        summary = { loaded: 0, issues };
+        return { ...state, issues };
+      }
+      // (ב) פריקת מעטפת — ייצוא חדש (מזוהה ב-$format) או קובץ מורשת שטוח (v1)
+      let raw: unknown = obj;
+      let fromVersion = 1; // Orange אינו מספר גרסאות — כל קובץ מורשת הוא v1
+      if ((obj as Record<string, unknown>)['$format'] === SETTINGS_FILE_FORMAT) {
+        const wrapped = obj as Record<string, unknown>;
+        const version = wrapped.schemaVersion;
+        const inner = wrapped.values;
+        if (typeof version !== 'number' || !Number.isInteger(version) || version < 1
+          || typeof inner !== 'object' || inner === null || Array.isArray(inner)) {
+          const issues: readonly ValidationIssue[] = Object.freeze([{
+            code: 'errors.settings.INVALID_TYPE',
+            path: '/import/file',
+            params: { value: JSON.stringify(obj).slice(0, 80), type: 'object' },
+          }]);
+          summary = { loaded: 0, issues };
+          return { ...state, issues };
+        }
+        fromVersion = version;
+        raw = inner;
+      }
+      // (ג) שרשרת המיגרציות הנעולה (שלב 30) — אין מימוש מקביל; גרסה ללא
+      // צעד ⇐ MIGRATION_FAILED מדויק (קוד+path+פרמטרים), כלום לא נטען.
+      let migrated: Record<string, unknown>;
+      try {
+        migrated = { ...migrateSettings(raw as Readonly<Record<string, unknown>>, fromVersion, SCHEMA_VERSION).settings };
+      } catch (error) {
+        const issue: ValidationIssue = error instanceof SettingsError
+          ? Object.freeze({ code: error.code, path: error.path, params: { ...error.params } })
+          : Object.freeze({
+            code: 'errors.settings.MIGRATION_FAILED',
+            path: '/settings/migration',
+            params: { reason: error instanceof Error ? error.message : String(error) },
+          });
+        summary = { loaded: 0, issues: Object.freeze([issue]) };
+        return { ...state, issues: Object.freeze([issue]) };
+      }
+      // (ד) ייבוא פריט־פריט — אותו צינור כמו importObject; הקובץ מחליף
+      // (תמונת מצב מלאה): ערכי הקובץ בלבד, לא מיזוג עם draft קודם.
+      const { merged, issues, unmapped } = importEntries(Object.entries(migrated));
+      summary = { loaded: Object.keys(merged).length, issues: Object.freeze(issues) };
+      const next = {
+        ...state,
+        draft: Object.freeze({ ...merged }),
+        issues: Object.freeze(issues),
+        unmappedLegacy: Object.freeze({ ...unmapped }),
+      };
+      persist(next);
+      return next;
+    });
+    return summary;
+  },
+
+  exportSettingsFile: () => {
+    const { effective } = get();
+    if (effective === null) return null;
+    // דטרמיניזם: מפתחות ממוינים; הערכים קנוניים כבר ב-effective (§6.3).
+    const values: Record<string, unknown> = {};
+    for (const key of Object.keys(effective.values).sort()) values[key] = effective.values[key];
+    return Object.freeze({
+      $format: SETTINGS_FILE_FORMAT,
+      schemaVersion: SCHEMA_VERSION,
+      values: Object.freeze(values),
+    });
+  },
+
   applyDraft: () =>
     set((state) => {
       try {
@@ -161,14 +279,15 @@ export const useSettingsStore = create<SettingsStoreState>()((set) => ({
         return { ...state, effective: Object.freeze(effective) };
       } catch (error) {
         // לא אמור לקרות (draft מאומת) — אבל כשל מרשם הוא כשל מפורש,
-        // לא מצב "כמעט תקין".
+        // לא מצב "כמעט תקין". effective מתאפס: אין ערך מלוכלך מהריצה
+        // הקודמת — הריצה נחסמת לפני תחילת עימוד (שלב 79; §18-M9).
         const code = error instanceof Error && 'code' in error ? String((error as { code: string }).code) : 'errors.settings.INVALID_TYPE';
         const issue: ValidationIssue = Object.freeze({
           code,
           path: '/effective',
           params: { reason: error instanceof Error ? error.message : String(error) },
         });
-        return { ...state, issues: Object.freeze([issue]) };
+        return { ...state, effective: null, issues: Object.freeze([issue]) };
       }
     }),
 

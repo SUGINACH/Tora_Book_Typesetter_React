@@ -18,6 +18,7 @@ import { settingsRegistry, useSettingsStore, type SettingDefinition } from '../.
 import { useStoreWithEqualityFn } from 'zustand/traditional';
 import { SECTION_LABELS, SETTINGS_LABELS } from '../../i18n/settings-labels.js';
 import { SettingRow } from './SettingRow';
+import { SettingsFiles } from './SettingsFiles';
 
 /** קיבוץ לפי מדור בסדר הופעה ראשון במרשם — דטרמיניסטי (מיון המחולל). */
 const grouped = (): readonly { readonly section: string; readonly defs: readonly SettingDefinition[] }[] => {
@@ -75,6 +76,12 @@ export function SettingsPanel() {
         {filter.trim() !== '' && (
           <p className="text-[10px] text-gray-400">{shown} מתוך {total}</p>
         )}
+      </div>
+
+      {/* קבצים ותבניות (שלב 79; §6.3): ייבוא/ייצוא קובצי הגדרות + תבניות
+          שמורות — מעל רשימת השדות כדי שהמשתמש יראה קודקודם את מסלולי הקובץ. */}
+      <div className="px-3 pt-2">
+        <SettingsFiles />
       </div>
 
       <div className="flex-1 overflow-auto px-3 pb-2">

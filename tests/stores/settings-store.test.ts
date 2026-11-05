@@ -1,16 +1,28 @@
 /**
- * settings-store.test.ts — בדיקות store ההגדרות (שלב 76; אפיון §13.1, §13.3).
+ * settings-store.test.ts — בדיקות store ההגדרות (שלב 76; אפיון §13.1, §13.3)
+ * + מסלול קובצי הגדרות: מיגרציות, ייבוא וייצוא (שלב 79; אפיון §6.3, §18-M9).
  *
  * מה מוכח כאן: כל הלוגיקה מגיעה מ־@tora/settings-schema (המרשם אמיתי,
  * 257 הגדרות) — אין מימוש מקביל; מפתח לא מוכר ⇐ issue ואינו נכנס ל־draft;
  * ערך לא חוקי ⇐ issue וה־draft לא זז; מפתחות legacy לא ממופים נשמרים
- * ב־unmappedLegacy (לשלב 79) ואינם נזרקים; applyDraft בונה effective
- * עם configHash; presets סבב שמירה/טעינה/מחיקה.
+ * ב־unmappedLegacy ואינם נזרקים; applyDraft בונה effective עם configHash;
+ * presets סבב שמירה/טעינה/מחיקה.
+ *
+ * שלב 79 — שער השלב ("כל קובץ הגדרות ישן נטען או נדחה עם הסבר מדויק"):
+ * כל ארבעת קובצי הבייסליין (ברירת המחדל + שלוש הערכות) נטענים במלואם
+ * ללא דחיות חוסמות; הייצוא עובר הלוך־ושוב עם אותו configHash; גרסה
+ * עתידית נדחית ב־MIGRATION_FAILED מדויק (קוד+path+פרמטרים) בלי טעינה
+ * חלקית; ערך NaN/שלילי/מפתח לא מוכר נכשלים לפני תחילת עימוד.
  */
 import { beforeEach, describe, expect, test } from 'vitest';
 import { createMemoryKVStorage, setKVStorage, STORAGE_KEYS } from '../../src/stores/storage.js';
 import { settingsRegistry, useSettingsStore } from '../../src/stores/settings-store.js';
 import { buildEffectiveSettings } from '@tora/settings-schema';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+const asset = (name: string): unknown =>
+  JSON.parse(readFileSync(fileURLToPath(new URL(`../../assets/settings/${name}`, import.meta.url)), 'utf8'));
 
 beforeEach(() => {
   setKVStorage(createMemoryKVStorage());
@@ -140,5 +152,152 @@ describe('settings-store — presets', () => {
     expect(saved.draft['auto-dh']).toBe(true);
     expect(saved.unmappedLegacy['old-key']).toBe('kept');
     expect(Object.keys(saved.presets)).toContain('א');
+  });
+});
+
+describe('settings-store — שלב 79: קובצי הגדרות, מיגרציות וייצוא', () => {
+  test('קובץ ברירת המחדל של התוכנה הישנה נטען במלואו — 248 מפתחות, אפס דחיות', () => {
+    const file = asset('default_settings.json') as Record<string, unknown>;
+    const summary = useSettingsStore.getState().importSettingsFile(file);
+    expect(summary.loaded).toBe(248);
+    const blocking = summary.issues.filter((i) => i.code !== 'errors.settings.COERCED_LEGACY_STRING');
+    expect(blocking).toHaveLength(0); // שער: נטען — לא נדחה
+    const s = useSettingsStore.getState();
+    expect(Object.keys(s.draft)).toHaveLength(248);
+    expect(Object.keys(s.unmappedLegacy)).toHaveLength(0); // כל מפתחות המורשת ממופים במרשם
+    // המרות מתועדות (מחרוזות־מספר legacy) — אזהרה בלבד
+    expect(summary.issues.some((i) => i.code === 'errors.settings.COERCED_LEGACY_STRING')).toBe(true);
+    // ה־configHash זהה לחישוב ישיר מהחבילה עם אותה שכבה — אין מימוש מקביל
+    useSettingsStore.getState().applyDraft();
+    const after = useSettingsStore.getState();
+    const direct = buildEffectiveSettings(settingsRegistry, [after.draft]);
+    expect(after.effective!.configHash).toBe(direct.configHash);
+  });
+
+  test('שלוש הערכות הבייסליין (פרשנות/קונטרס/תלמוד) נטענות במלואן — ונבדלות זו מזו', () => {
+    const hashes: string[] = [];
+    for (const name of ['פרשנות', 'קונטרס', 'תלמוד']) {
+      useSettingsStore.getState().reset();
+      const file = asset(`setting_sets/${name}.json`) as Record<string, unknown>;
+      const summary = useSettingsStore.getState().importSettingsFile(file);
+      expect(summary.loaded).toBe(249);
+      expect(summary.issues.filter((i) => i.code !== 'errors.settings.COERCED_LEGACY_STRING')).toHaveLength(0);
+      useSettingsStore.getState().applyDraft();
+      hashes.push(useSettingsStore.getState().effective!.configHash);
+    }
+    expect(new Set(hashes).size).toBe(3); // שלוש ערכות שונות — לא אותה תוצאה בטעות
+  });
+
+  test('הקובץ מחליף את ה־draft — לא ממזג עם מה שהיה קודם', () => {
+    useSettingsStore.getState().setDraftValue('auto-dh', false);
+    const file = asset('default_settings.json') as Record<string, unknown>;
+    useSettingsStore.getState().importSettingsFile(file);
+    const s = useSettingsStore.getState();
+    // ברירת המחדל של הקובץ גוברת על העריכה הקודמת — תמונת מצב מלאה
+    expect(s.draft['auto-dh']).toBe(file['auto-dh']);
+    expect(Object.keys(s.draft)).toHaveLength(248);
+  });
+
+  test('ייצוא ← ייבוא הלוך־ושוב: אותו configHash; המעטפת מזוהה ודטרמיניסטית', () => {
+    useSettingsStore.getState().setDraftValue('auto-dh', true);
+    useSettingsStore.getState().setDraftValue('avoid-orphans', false);
+    useSettingsStore.getState().applyDraft();
+    const exported = useSettingsStore.getState().exportSettingsFile();
+    expect(exported).not.toBeNull();
+    expect(exported!.$format).toBe('tora-settings');
+    expect(exported!.schemaVersion).toBe(1);
+    expect(Object.keys(exported!.values)).toHaveLength(257); // תמונת מצב מלאה מה-effective
+    expect(Object.keys(exported!.values)).toEqual([...Object.keys(exported!.values)].sort()); // ממוין
+    const hashBefore = useSettingsStore.getState().effective!.configHash;
+
+    // סביבה נקייה — הייצוא נטען כקובץ ומשחזר בדיוק את אותו מצב
+    useSettingsStore.getState().reset();
+    const summary = useSettingsStore.getState().importSettingsFile(JSON.parse(JSON.stringify(exported)));
+    expect(summary.loaded).toBe(257);
+    expect(summary.issues).toHaveLength(0); // ערכים קנוניים — אפילו ללא אזהרות המרה
+    useSettingsStore.getState().applyDraft();
+    expect(useSettingsStore.getState().effective!.configHash).toBe(hashBefore);
+  });
+
+  test('גרסה עתידית (v2) בלי צעד מיגרציה ⇐ MIGRATION_FAILED מדויק, כלום לא נטען', () => {
+    useSettingsStore.getState().setDraftValue('auto-dh', true);
+    const before = useSettingsStore.getState().draft;
+    const summary = useSettingsStore.getState().importSettingsFile({
+      $format: 'tora-settings',
+      schemaVersion: 2,
+      values: { 'auto-dh': false },
+    });
+    expect(summary.loaded).toBe(0);
+    expect(summary.issues).toHaveLength(1);
+    const issue = summary.issues[0]!;
+    expect(issue.code).toBe('errors.settings.MIGRATION_FAILED');
+    expect(issue.path).toBe('/settings/migration');
+    expect(issue.params.fromVersion).toBe(2);
+    expect(useSettingsStore.getState().draft).toBe(before); // אותה הפניה — כלום לא זז
+  });
+
+  test('מעטפת מושחתת ⇐ INVALID_TYPE ב־/import/file, כלום לא נטען', () => {
+    const before = useSettingsStore.getState().draft;
+    for (const bad of [
+      { $format: 'tora-settings', schemaVersion: 1, values: 'not-an-object' },
+      { $format: 'tora-settings', schemaVersion: 'x', values: {} },
+      { $format: 'tora-settings', values: {} },
+    ]) {
+      const summary = useSettingsStore.getState().importSettingsFile(bad);
+      expect(summary.loaded).toBe(0);
+      expect(summary.issues.some((i) => i.code === 'errors.settings.INVALID_TYPE' && i.path === '/import/file')).toBe(true);
+    }
+    expect(useSettingsStore.getState().draft).toBe(before);
+  });
+
+  test('קלט שאינו אובייקט (מחרוזת/מספר/מערך) ⇐ INVALID_TYPE, ה־draft לא זז', () => {
+    const before = useSettingsStore.getState().draft;
+    for (const bad of ['text', 42, [1, 2]]) {
+      const summary = useSettingsStore.getState().importSettingsFile(bad);
+      expect(summary.loaded).toBe(0);
+      expect(summary.issues.some((i) => i.code === 'errors.settings.INVALID_TYPE')).toBe(true);
+    }
+    expect(useSettingsStore.getState().draft).toBe(before);
+  });
+
+  test('מפתח זר בקובץ ⇐ unmappedLegacy (מוחלף, לא הצטברות) + UNKNOWN_KEY עם path', () => {
+    useSettingsStore.getState().importObject({ 'old-stray': 'first' });
+    const summary = useSettingsStore.getState().importSettingsFile({ 'stray-key': 'x', 'auto-dh': false });
+    expect(summary.loaded).toBe(1);
+    expect(summary.issues.some((i) => i.code === 'errors.settings.UNKNOWN_KEY' && i.path.includes('stray-key'))).toBe(true);
+    const s = useSettingsStore.getState();
+    expect(s.draft['auto-dh']).toBe(false);
+    expect(s.unmappedLegacy['stray-key']).toBe('x'); // נשמר — הסבר מדויק, לא השמטה
+    expect(s.unmappedLegacy['old-stray']).toBeUndefined(); // הקובץ מחליף, לא מצטבר
+  });
+
+  test('NaN / מידה שלילית / מפתח לא מוכר נכשלים לפני תחילת עימוד — קוד ו־path, הערך אינו ב־draft', () => {
+    // NaN (מספר בשדה number — כמו קלט ריק בטופס)
+    let summary = useSettingsStore.getState().importSettingsFile({ 'builder-back-bottom': Number.NaN });
+    expect(summary.loaded).toBe(0);
+    expect(summary.issues.some((i) => i.code === 'errors.settings.NON_FINITE_NUMBER' && i.path.includes('builder-back-bottom'))).toBe(true);
+    // מידה שלילית
+    summary = useSettingsStore.getState().importSettingsFile({ 'dim-h2-btm-h': '-2em' });
+    expect(summary.loaded).toBe(0);
+    expect(summary.issues.some((i) => i.code === 'errors.settings.NEGATIVE_DIMENSION' && i.path.includes('dim-h2-btm-h'))).toBe(true);
+    // מפתח לא מוכר
+    summary = useSettingsStore.getState().importSettingsFile({ 'no-such-key': 1 });
+    expect(summary.loaded).toBe(0);
+    expect(summary.issues.some((i) => i.code === 'errors.settings.UNKNOWN_KEY' && i.path.includes('no-such-key'))).toBe(true);
+    // אף אחד מהם לא נכנס ל־draft — העימוד ירוץ רק על מצב תקין
+    expect(Object.keys(useSettingsStore.getState().draft)).toHaveLength(0);
+  });
+
+  test('הגנה מפני draft מושחת: applyDraft נכשל ⇐ effective=null (אין ערך מלוכלך מהריצה הקודמת)', () => {
+    useSettingsStore.getState().setDraftValue('auto-dh', true);
+    useSettingsStore.getState().applyDraft();
+    expect(useSettingsStore.getState().effective).not.toBeNull();
+    // שחזור מצב לא אפשרי בנתיב הרגיל (הייבוא דוחה) — הגנה בעומק: כשל
+    // buildEffectiveSettings מאפס את ה־effective, לא משאיר ישן
+    useSettingsStore.setState({ draft: Object.freeze({ 'no-such-key': 1 }) });
+    useSettingsStore.getState().applyDraft();
+    const s = useSettingsStore.getState();
+    expect(s.effective).toBeNull();
+    expect(s.issues.some((i) => i.code === 'errors.settings.UNKNOWN_KEY')).toBe(true);
   });
 });
