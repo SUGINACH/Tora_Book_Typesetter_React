@@ -10,10 +10,21 @@ import type { CSSProperties } from 'react';
 import type { LayoutPage } from '@tora/layout-api';
 import { projectPage, type PageViewModel, type RunViewModel } from './preview-model.js';
 
+/** פריט שהופעל בפריסה — קליק לניווט למקור (שלב 81; §13.2). */
+export interface ItemActivation {
+  readonly kind: 'line' | 'note-marker';
+  readonly itemId: string;
+  readonly pageId: string;
+}
+
 export interface PageViewProps {
   readonly page: LayoutPage;
   /** כיוון העמוד — קובע את פרשנות המאפיינים הלוגיים (rtl לתורה). */
   readonly dir?: 'rtl' | 'ltr';
+  /** שלב 81 — קליק על קו/סמן מדגיש את ה־SourceSpan בעורך (§13.2). */
+  readonly onItemActivate?: (activation: ItemActivation) => void;
+  /** שלב 81 — מזהי פריטים להדגשה (בחירה בעורך ⇐ הפריסה, דרך provenance). */
+  readonly highlightItemIds?: ReadonlySet<string>;
 }
 
 function runStyle(r: RunViewModel): CSSProperties {
@@ -42,8 +53,25 @@ function renderRun(r: RunViewModel) {
   );
 }
 
-export function PageView({ page, dir = 'rtl' }: PageViewProps) {
+/** סגנון הדגשת פריט מקושר (שלב 81) — מסגרת כחולה + רקע קל; inline כמו שאר העמוד. */
+function highlightStyle(highlighted: boolean): CSSProperties {
+  if (!highlighted) return {};
+  return {
+    outline: '2px solid rgba(37, 99, 235, 0.9)',
+    outlineOffset: '-2px',
+    background: 'rgba(37, 99, 235, 0.08)',
+  };
+}
+
+export function PageView({ page, dir = 'rtl', onItemActivate, highlightItemIds }: PageViewProps) {
   const model: PageViewModel = projectPage(page);
+  const clickable = onItemActivate !== undefined;
+  const activateLine = (lineId: string): void => {
+    onItemActivate?.({ kind: 'line', itemId: lineId, pageId: model.id });
+  };
+  const activateMarker = (markerId: string): void => {
+    onItemActivate?.({ kind: 'note-marker', itemId: markerId, pageId: model.id });
+  };
   return (
     <section
       className="tora-preview-page"
@@ -79,42 +107,59 @@ export function PageView({ page, dir = 'rtl' }: PageViewProps) {
           }}
         />
       ))}
-      {model.lines.map((l) => (
-        <div
-          key={l.id}
-          data-fragment-id={l.id}
-          data-source-id={l.blockId}
-          data-region-id={l.regionId}
-          style={{
-            position: 'absolute',
-            insetInlineStart: `${l.insetInlineStartPx}px`,
-            insetBlockStart: `${l.insetBlockStartPx}px`,
-            inlineSize: `${l.inlineSizePx}px`,
-            blockSize: `${l.blockSizePx}px`,
-            boxSizing: 'border-box',
-          }}
-        >
-          {l.runs.map(renderRun)}
-        </div>
-      ))}
-      {model.markers.map((m) => (
-        <span
-          key={m.id}
-          dir="ltr"
-          data-note-id={m.noteId}
-          style={{
-            position: 'absolute',
-            insetInlineStart: `${m.insetInlineStartPx}px`,
-            insetBlockStart: `${m.insetBlockStartPx}px`,
-            inlineSize: `${m.inlineSizePx}px`,
-            blockSize: `${m.blockSizePx}px`,
-            lineHeight: 1,
-            whiteSpace: 'pre',
-          }}
-        >
-          {m.label}
-        </span>
-      ))}
+      {model.lines.map((l) => {
+        const highlighted = highlightItemIds?.has(l.id) === true;
+        return (
+          <div
+            key={l.id}
+            data-fragment-id={l.id}
+            data-source-id={l.blockId}
+            data-region-id={l.regionId}
+            data-item-kind="line"
+            {...(highlighted ? { 'data-highlighted': 'true' } : {})}
+            onClick={clickable ? () => activateLine(l.id) : undefined}
+            style={{
+              position: 'absolute',
+              insetInlineStart: `${l.insetInlineStartPx}px`,
+              insetBlockStart: `${l.insetBlockStartPx}px`,
+              inlineSize: `${l.inlineSizePx}px`,
+              blockSize: `${l.blockSizePx}px`,
+              boxSizing: 'border-box',
+              ...(clickable ? { cursor: 'pointer' } : {}),
+              ...highlightStyle(highlighted),
+            }}
+          >
+            {l.runs.map(renderRun)}
+          </div>
+        );
+      })}
+      {model.markers.map((m) => {
+        const highlighted = highlightItemIds?.has(m.id) === true;
+        return (
+          <span
+            key={m.id}
+            dir="ltr"
+            data-marker-id={m.id}
+            data-note-id={m.noteId}
+            data-item-kind="note-marker"
+            {...(highlighted ? { 'data-highlighted': 'true' } : {})}
+            onClick={clickable ? () => activateMarker(m.id) : undefined}
+            style={{
+              position: 'absolute',
+              insetInlineStart: `${m.insetInlineStartPx}px`,
+              insetBlockStart: `${m.insetBlockStartPx}px`,
+              inlineSize: `${m.inlineSizePx}px`,
+              blockSize: `${m.blockSizePx}px`,
+              lineHeight: 1,
+              whiteSpace: 'pre',
+              ...(clickable ? { cursor: 'pointer' } : {}),
+              ...highlightStyle(highlighted),
+            }}
+          >
+            {m.label}
+          </span>
+        );
+      })}
     </section>
   );
 }

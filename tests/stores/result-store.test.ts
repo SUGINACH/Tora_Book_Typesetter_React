@@ -46,7 +46,7 @@ describe('result-store — הכנסה והחלפה', () => {
     expect(s0.anchors).toBeNull();
     expect(s0.layoutHash).toBeNull();
     useResultStore.getState().setResult(
-      { ir: makeIr(), manifest: makeManifest(), findings: [{ code: 'audit.text.MISSING_ATOM', severity: 'HIGH', messageKey: 'x', params: {}, sourceSpans: [] }] },
+      { ir: makeIr(), manifest: makeManifest(), sourceRevision: 3, findings: [{ code: 'audit.text.MISSING_ATOM', severity: 'HIGH', messageKey: 'x', params: {}, sourceSpans: [] }] },
       'e'.repeat(64),
     );
     const s1 = useResultStore.getState();
@@ -54,20 +54,22 @@ describe('result-store — הכנסה והחלפה', () => {
     expect(s1.manifest?.engine).toBe('next');
     expect(s1.findings).toHaveLength(1);
     expect(s1.layoutHash).toBe('e'.repeat(64));
+    expect(s1.sourceRevision).toBe(3); // שלב 81 — עוגן הטריות נשמר עם התוצאה
   });
 
   test('הכנסה שנייה מחליפה את הקודמת בשלמותה — אין מיזוג', () => {
-    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), findings: [{ code: 'a', severity: 'LOW', messageKey: 'm', params: {}, sourceSpans: [] }] }, 'h1');
+    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), sourceRevision: 1, findings: [{ code: 'a', severity: 'LOW', messageKey: 'm', params: {}, sourceSpans: [] }] }, 'h1');
     const ir2 = makeIr();
-    useResultStore.getState().setResult({ ir: ir2, manifest: makeManifest() }, 'h2');
+    useResultStore.getState().setResult({ ir: ir2, manifest: makeManifest(), sourceRevision: 2 }, 'h2');
     const s = useResultStore.getState();
     expect(s.findings).toEqual([]); // בלי findings ⇐ ריק, לא שארית
     expect(s.layoutHash).toBe('h2');
     expect(s.ir).toBe(ir2 as never);
+    expect(s.sourceRevision).toBe(2); // עוגן הטריות של האחרונה בלבד
   });
 
   test('reset מנקה הכל', () => {
-    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest() }, 'h');
+    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), sourceRevision: 5 }, 'h');
     useResultStore.getState().reset();
     const s = useResultStore.getState();
     expect(s.ir).toBeNull();
@@ -75,12 +77,13 @@ describe('result-store — הכנסה והחלפה', () => {
     expect(s.findings).toEqual([]);
     expect(s.anchors).toBeNull();
     expect(s.layoutHash).toBeNull();
+    expect(s.sourceRevision).toBeNull(); // שלב 81 — העוגן מתאפס עם התוצאה
   });
 });
 
 describe('result-store — הקפאה עמוקה של מה שנכנס', () => {
   test('ה־IR קפוא עמוק: שינוי מקונן זורק במצב strict', () => {
-    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest() }, 'h');
+    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), sourceRevision: 1 }, 'h');
     const ir = useResultStore.getState().ir!;
     expect(Object.isFrozen(ir)).toBe(true);
     expect(Object.isFrozen(ir.pages)).toBe(true);
@@ -94,7 +97,7 @@ describe('result-store — הקפאה עמוקה של מה שנכנס', () => {
 
   test('הממצאים והמניפסט קפואים גם הם; anchors=null כשלא סופק', () => {
     const finding = { code: 'x', severity: 'HIGH' as const, messageKey: 'm', params: { k: 1 }, sourceSpans: [] };
-    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), findings: [finding] }, 'h');
+    useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), sourceRevision: 1, findings: [finding] }, 'h');
     const s = useResultStore.getState();
     expect(Object.isFrozen(s.findings)).toBe(true);
     expect(Object.isFrozen(s.findings[0])).toBe(true);

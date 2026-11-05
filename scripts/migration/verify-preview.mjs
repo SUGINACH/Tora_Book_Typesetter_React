@@ -64,8 +64,9 @@ const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config
 // שלב 77: וגם את e2e-worker-path.test.tsx (4 בדיקות מעטפת מלאה) — סה"כ 16
 // שלב 78: וגם את settings-panel.test.tsx (26 בדיקות לוח הגדרות מהמרשם) — סה"כ 42
 // שלב 80: e2e הורחב ל־8 (קלט פגום חוסם לפני שליחה; ייבוא בזמן ריצה; מסמך קנוני)
-// + import-insights.test.tsx (13 מפת שגיאות קלט וסקירה) — סה"כ 67
-(compOut !== null && /Tests\s+67\s+passed/.test(compOut) ? ok : fail)('tests/component — 67/67 (8 preview + 4 stores + 8 e2e-worker + 26 לוח הגדרות + 8 קבצים ותבניות + 13 מפת קלט)');
+// + import-insights.test.tsx (13 מפת שגיאות קלט וסקירה)
+// שלב 81: e2e הורחב ל־13 (עורך מקושר: שני הכיוונים, BiDi/reorder, שער הטריות) — סה"כ 72
+(compOut !== null && /Tests\s+72\s+passed/.test(compOut) ? ok : fail)('tests/component — 72/72 (8 preview + 4 stores + 13 e2e-worker + 26 לוח הגדרות + 8 קבצים ותבניות + 13 מפת קלט)');
 
 console.log('\n4) typecheck שורש');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');

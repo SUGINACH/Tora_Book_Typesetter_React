@@ -22,6 +22,7 @@ import type { WorkerRequest, WorkerResponse } from '../../src/worker-host/protoc
 import { TypesetController, type UiTypesetRunInput } from '../../src/worker-host/typeset-run.js';
 import { useRunStore, type RunPhase } from '../../src/stores/run-store.js';
 import { useResultStore } from '../../src/stores/result-store.js';
+import { useEditorStore } from '../../src/stores/editor-store.js';
 
 const registry = buildSettingRegistry(registryJson as unknown as Parameters<typeof buildSettingRegistry>[0]);
 const settings: Readonly<EffectiveSettings> = buildEffectiveSettings(registry, []);
@@ -61,6 +62,8 @@ const runInputOf = (source: string): UiTypesetRunInput => ({
   source,
   settings,
   assets: ASSETS,
+  // שלב 81 — עוגן הטריות: המהדורה של המקור בעת השליחה, כמו ב־use-typeset-run
+  sourceRevision: useEditorStore.getState().revision,
   fonts: [{
     record: {
       file: 'test.woff2', fontId: 'font:v1|test', sha256: 'a'.repeat(64),
@@ -101,6 +104,8 @@ class Channel implements WorkerLike {
 const resetStores = (): void => {
   useRunStore.getState().reset();
   useResultStore.getState().reset();
+  // שלב 81 — עוגן הטריות חי במרחב המסמך; העורך מתאפס אף הוא בין הבדיקות
+  useEditorStore.getState().reset();
 };
 
 const settle = async (): Promise<void> => {
@@ -203,6 +208,35 @@ describe('typeset-run — ביטול והחלפת מסמך (stale)', () => {
     expect(useResultStore.getState().layoutHash).toBe(hashB);
     expect(phases).toContain('cancelled'); // A בוטל בדרך
     (phases as unknown as { unsubscribe: () => void }).unsubscribe();
+  });
+});
+
+describe('typeset-run — שער הטריות של שלב 81 (עריכה בין שליחה לקבלה)', () => {
+  test('המקור נערך אחרי השליחה ⇐ התוצאה אינה מתקבלת; אין הצגת ישן כחדש', async () => {
+    const controller = new TypesetController({ client: new WorkerClient(new Channel()) });
+    const input = runInputOf(SOURCE_A);
+    controller.run(input);
+    // עריכה לפני שה־job נענה — המהדורה עולה, התוצאה שבדרך כבר אינה של המסמך
+    useEditorStore.getState().setText(SOURCE_A + 'שורה נוספת.\n');
+    expect(useEditorStore.getState().revision).toBe(input.sourceRevision + 1);
+    await settle();
+    await settle();
+    // ה־job הושלם כרגיל (done) — אבל התוצאה נדחתה בשער: שום IR, שום עוגן
+    expect(useRunStore.getState().phase).toBe('done');
+    expect(useResultStore.getState().ir).toBeNull();
+    expect(useResultStore.getState().layoutHash).toBeNull();
+    expect(useResultStore.getState().sourceRevision).toBeNull();
+  });
+
+  test('בלי עריכה — אותה מהדורה בשליחה ובקבלה; התוצאה מתקבלת עם העוגן', async () => {
+    const controller = new TypesetController({ client: new WorkerClient(new Channel()) });
+    const input = runInputOf(SOURCE_A);
+    controller.run(input);
+    await settle();
+    expect(useRunStore.getState().phase).toBe('done');
+    const result = useResultStore.getState();
+    expect(result.ir).not.toBeNull();
+    expect(result.sourceRevision).toBe(input.sourceRevision); // העוגן נכנס עם התוצאה
   });
 });
 

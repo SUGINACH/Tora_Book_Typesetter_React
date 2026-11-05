@@ -63,7 +63,8 @@
     "verify:differential-lines": "node scripts/migration/verify-differential-lines.mjs",
     "diff:lines": "node scripts/migration/differential-lines.mjs",
     "verify:presets-migrations": "node scripts/migration/verify-presets-migrations.mjs",
-    "verify:document-import": "node scripts/migration/verify-document-import.mjs"
+    "verify:document-import": "node scripts/migration/verify-document-import.mjs",
+    "verify:linked-editor": "node scripts/migration/verify-linked-editor.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

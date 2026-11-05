@@ -111,7 +111,8 @@ const selectorsCode = stripComments(read('selectors.ts'));
 
 console.log('\n9) בדיקות וסטטיקה');
 const storesOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/stores/']);
-(storesOut !== null && /Tests\s+84\s+passed/.test(storesOut) ? ok : fail)('tests/stores — 84/84 (65 + 19 ניתוח קלט, שלב 80)');
+// שלב 81: + linked-navigation.test.ts (20 ניווט provenance) — סה"כ 104
+(storesOut !== null && /Tests\s+104\s+passed/.test(storesOut) ? ok : fail)('tests/stores — 104/104 (65 + 19 ניתוח קלט + 20 ניווט מקושר, שלבים 80–81)');
 const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/stores.test.tsx']);
 (compOut !== null && /Tests\s+4\s+passed/.test(compOut) ? ok : fail)('tests/component/stores — 4/4 (רינדורים)');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');

@@ -134,9 +134,10 @@ const importAction = stripComments(read('src/stores/import-document.ts'));
 
 console.log('\n6) בדיקות ורגרסיה');
 const t77 = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/worker-host/typeset-run.test.ts', 'tests/worker-host/asset-bundle.test.ts', 'tests/worker-host/ui-request.test.ts']);
-(t77 !== null && /Tests\s+17\s+passed/.test(t77) ? ok : fail)('בדיקות המנצח/צרור/בקשה — 17/17 (16 + הזרקת parsed, שלב 80)');
+// שלב 81: typeset-run 6→8 (שער הטריות — עריכה בין שליחה לקבלה)
+(t77 !== null && /Tests\s+19\s+passed/.test(t77) ? ok : fail)('בדיקות המנצח/צרור/בקשה — 19/19 (16 + הזרקת parsed, שלב 80 + 2 שער הטריות, שלב 81)');
 const e2e = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/e2e-worker-path.test.tsx']);
-(e2e !== null && /Tests\s+8\s+passed/.test(e2e) ? ok : fail)('E2E מעטפת מלאה מעל הפרוטוקול — 8/8 (ביטול/החלפה/תצוגה/חסימת הגדרות; שלב 80: קלט פגום/ייבוא בזמן ריצה/קנוני)');
+(e2e !== null && /Tests\s+13\s+passed/.test(e2e) ? ok : fail)('E2E מעטפת מלאה מעל הפרוטוקול — 13/13 (ביטול/החלפה/תצוגה/חסימת הגדרות; שלב 80: קלט פגום/ייבוא בזמן ריצה/קנוני; שלב 81: עורך מקושר ×5)');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');

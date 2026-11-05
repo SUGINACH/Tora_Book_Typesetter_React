@@ -28,6 +28,12 @@ import { setUiRuntime } from '../../src/worker-host/ui-runtime.js';
 import type { BrowserAssetBundle } from '../../src/worker-host/asset-bundle.js';
 import { importDocumentText } from '../../src/stores/import-document.js';
 import { useEditorStore } from '../../src/stores/editor-store.js';
+import {
+  atomSourceRangeOf,
+  itemSourceRange,
+  linkedItemsForRange,
+  provenanceIssues,
+} from '../../src/stores/linked-navigation.js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { useRunStore } from '../../src/stores/run-store.js';
@@ -334,5 +340,222 @@ describe('שלב 77: מעטפת מלאה מעל ה־Worker — אין typeset ב
       expect(useRunStore.getState().phase).toBe('done');
     }, { timeout: 10000 });
     expect(useResultStore.getState().ir).not.toBeNull();
+  });
+});
+
+describe('שלב 81: עורך מקושר מקור ↔ פריסה — מיפוי provenance דו־כיווני', () => {
+  /** הרצת SOURCE_A עד השלמה והחזרת העורך — הפרה-קונדישן של כל בדיקות השלב. */
+  const runToDone = async (container: HTMLElement): Promise<void> => {
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    typeSource(editor, SOURCE_A);
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement);
+    });
+    await waitFor(() => {
+      expect(useRunStore.getState().phase).toBe('done');
+    }, { timeout: 5000 });
+  };
+
+  test('קליק על קו בפריסה בוחר את טווח המקור שלו בעורך (§13.2: קו ← SourceSpan)', async () => {
+    const { container } = render(createElement(App));
+    await runToDone(container);
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    const ir = useResultStore.getState().ir!;
+    // קו גוף ראשון עם מקור — בחירה מה-IR, לא מה-DOM (ה-IR הוא אמת המידה)
+    const firstLine = linkedItemsForRange(ir, { startUtf16: 0, endUtf16: SOURCE_A.length })
+      .find((r) => r.kind === 'line');
+    expect(firstLine).toBeDefined();
+    const expected = itemSourceRange(ir, firstLine!.pageId, firstLine!.itemId)!;
+    expect(expected.endUtf16).toBeGreaterThan(expected.startUtf16);
+
+    const lineEl = container.querySelector(`[data-fragment-id="${firstLine!.itemId}"]`) as HTMLElement;
+    expect(lineEl).not.toBeNull();
+    act(() => {
+      fireEvent.click(lineEl);
+    });
+    // המוקד עבר למקור, והעורך בחר בדיוק את הטווח שה-provenance נתן
+    const focus = useViewStore.getState().focus;
+    expect(focus?.pane).toBe('source');
+    expect(focus?.itemId).toBe(firstLine!.itemId);
+    expect(editor.selectionStart).toBe(expected.startUtf16);
+    expect(editor.selectionEnd).toBe(expected.endUtf16);
+    // הטווח שנבחר חופף לטווח של הקו מה-IR — והוא בתוך גבולות המקור
+    expect(expected.startUtf16).toBeGreaterThanOrEqual(0);
+    expect(expected.endUtf16).toBeLessThanOrEqual(SOURCE_A.length);
+    const picked = SOURCE_A.slice(editor.selectionStart, editor.selectionEnd);
+    expect(picked.length).toBeGreaterThan(0);
+  });
+
+  test('בחירה בעורך מדגישה בפריסה בדיוק את הפריטים החופפים — כולל סמן הערת השוליים', async () => {
+    const { container } = render(createElement(App));
+    await runToDone(container);
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    const ir = useResultStore.getState().ir!;
+    // סמן הערת השוליים של [הערת שוליים] — מיקומו במקור מה-IR
+    const marker = linkedItemsForRange(ir, { startUtf16: 0, endUtf16: SOURCE_A.length })
+      .find((r) => r.kind === 'note-marker');
+    expect(marker).toBeDefined(); // SOURCE_A מכיל הערה — הסמן קיים ב-IR
+    const range = marker!.sourceRange;
+
+    // בחירת הטווח בעורך (כמו קליק-גרירה של המשתמש)
+    editor.setSelectionRange(range.startUtf16, range.endUtf16);
+    act(() => {
+      fireEvent.select(editor);
+    });
+    const focus = useViewStore.getState().focus;
+    expect(focus?.pane).toBe('layout');
+    expect(focus?.sourceSpan).toEqual({ startUtf16: range.startUtf16, endUtf16: range.endUtf16 });
+
+    // ההדגשה ב-DOM זהה לחלוטין לקבוצת ה-provenance מה-IR (קווים + סמנים)
+    const expectedIds = new Set(
+      linkedItemsForRange(ir, range)
+        .filter((r) => r.kind === 'line' || r.kind === 'note-marker')
+        .map((r) => r.itemId),
+    );
+    expect(expectedIds.size).toBeGreaterThan(0);
+    expect(expectedIds.has(marker!.itemId)).toBe(true); // הסמן עצמו מודגש
+    const highlighted = container.querySelectorAll('[data-highlighted="true"]');
+    // מזהה פריט מדויק: data-fragment-id לקווים, data-marker-id לסמנים (ייחודיים;
+    // data-note-id משותף לכל סמני אותה הערה ואינו מזהה פריט)
+    const highlightedByIr = new Set([...highlighted].map((el) => {
+      const frag = el.getAttribute('data-fragment-id');
+      if (frag !== null) return frag;
+      return el.getAttribute('data-marker-id');
+    }).filter((v): v is string => v !== null));
+    expect([...highlightedByIr].sort()).toEqual([...expectedIds].sort());
+  });
+
+  test('שעת השלב: המיפוי נכון גם לאחר shaping ו-reorder — כל קו, גם BiDi, ממופה לטווח חוקי ואטומיו מתכנסים אליו', async () => {
+    const { container } = render(createElement(App));
+    await runToDone(container);
+    const ir = useResultStore.getState().ir!;
+    // (א) שלמות provenance על IR אמיתי שלם — אף קו/סמן/עוגן יתום
+    expect(provenanceIssues(ir)).toEqual([]);
+    // (ב) לכל קו: טווח חוקי, וכל אטום שלו (מפוענח מה-AtomId!) נופל בתוך הטווח —
+    // הזהות הלוגית במזהה, לא בסדר הוויזואלי; קו BiDi (עברית+ספרות) מוכח כאן כמו כולם
+    let lineCount = 0;
+    let bidiLineCount = 0;
+    for (const page of ir.pages as unknown as readonly { items: readonly Record<string, unknown>[] }[]) {
+      for (const item of page.items) {
+        if (item.kind !== 'line') continue;
+        lineCount += 1;
+        const lineRange = itemSourceRange(ir, undefined, item.id as string);
+        expect(lineRange).not.toBeNull();
+        expect(lineRange!.startUtf16).toBeGreaterThanOrEqual(0);
+        expect(lineRange!.endUtf16).toBeLessThanOrEqual(SOURCE_A.length);
+        const runs = (item.runs ?? []) as readonly { atomIds?: readonly string[]; text?: string }[];
+        const hasDigits = runs.some((r) => (r.text ?? '').match(/\d/) !== null);
+        if (hasDigits) bidiLineCount += 1;
+        for (const run of runs) {
+          for (const atomId of run.atomIds ?? []) {
+            const atomRange = atomSourceRangeOf(atomId);
+            expect(atomRange).not.toBeNull(); // AtomId קנוני מפוענח תמיד
+            expect(atomRange!.startUtf16).toBeGreaterThanOrEqual(lineRange!.startUtf16);
+            expect(atomRange!.endUtf16).toBeLessThanOrEqual(lineRange!.endUtf16);
+          }
+        }
+        // (ג) הכיוון ההפוך: הטווח של הקו מוצא את הקו עצמו בין החופפים
+        const found = linkedItemsForRange(ir, lineRange!).some((r) => r.itemId === item.id);
+        expect(found).toBe(true);
+      }
+    }
+    expect(lineCount).toBeGreaterThan(5);
+    expect(bidiLineCount).toBeGreaterThan(0); // יש קו מעורב עברית+ספרות — והוא עמד בכל התנאים
+  });
+
+  test('עריכה אחרי תוצאה — סמן "לא עדכנית"; הריצה החדשה היא job חדש והתוצאה מתקבלת (עריכות רצופות)', async () => {
+    const { container } = render(createElement(App));
+    await runToDone(container);
+    const job1 = useRunStore.getState().jobId;
+    const rev1 = useResultStore.getState().sourceRevision;
+    expect(rev1).toBe(useEditorStore.getState().revision);
+    expect(container.querySelector('[data-testid="preview-stale"]')).toBeNull();
+    // טווח קו אמיתי מה־IR — הבחירה שתשמש את כל המשך הבדיקה (מכסה פריטים בוודאות)
+    const ir1 = useResultStore.getState().ir!;
+    const probe = linkedItemsForRange(ir1, { startUtf16: 0, endUtf16: SOURCE_A.length })
+      .find((r) => r.kind === 'line')!;
+    const probeRange = probe.sourceRange;
+
+    // עריכה — המקור השתנה; התוצאה שבתצוגה כבר אינה של המהדורה הנוכחית
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    typeSource(editor, SOURCE_A + 'שורה נוספת אחרי עריכה.\n');
+    expect(useEditorStore.getState().revision).toBe(rev1! + 1);
+    await waitFor(() => {
+      expect(container.querySelector('[data-testid="preview-stale"]')).not.toBeNull();
+    });
+    // הניווט המקושר מושהה על תוצאה לא-טריה (הגנה בעומק) — בחירה בטווח
+    // שהוכח כמכסה פריטים בתוצאה הקודמת אינה מדגישה דבר כשהמקור נערך
+    editor.setSelectionRange(probeRange.startUtf16, probeRange.endUtf16);
+    act(() => {
+      fireEvent.select(editor);
+    });
+    expect(container.querySelectorAll('[data-highlighted="true"]').length).toBe(0);
+
+    // הרצה חוזרת — job חדש (לא המשך), והתוצאה הטרייה מתקבלת
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement);
+    });
+    await waitFor(() => {
+      expect(useRunStore.getState().phase).toBe('done');
+    }, { timeout: 5000 });
+    expect(useRunStore.getState().jobId).not.toBe(job1);
+    expect(useResultStore.getState().sourceRevision).toBe(useEditorStore.getState().revision);
+    expect(container.querySelector('[data-testid="preview-stale"]')).toBeNull();
+    // והקישור חזר לעבוד: אותה בחירה עצמה מדגישה פריטים בתוצאה הטרייה
+    editor.setSelectionRange(probeRange.startUtf16, probeRange.endUtf16);
+    act(() => {
+      fireEvent.select(editor);
+    });
+    expect(container.querySelectorAll('[data-highlighted="true"]').length).toBeGreaterThan(0);
+  });
+
+  test('עריכה בזמן ריצה — תוצאת ה-job שנשלח לפני העריכה אינה מתקבלת כלל; אין הצגת ישן כחדש (§13.3#5)', async () => {
+    // ערוץ מושהה — העורך נערך בזמן שה-job חי
+    const client = new WorkerClient(new Channel(150));
+    setUiRuntime({ client, bundle: BUNDLE, controller: new TypesetController({ client }) });
+    const { container } = render(createElement(App));
+    const editor = container.querySelector('[data-testid="source-editor"]') as HTMLTextAreaElement;
+    typeSource(editor, SOURCE_A);
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement);
+    });
+    await waitFor(() => {
+      const phase = useRunStore.getState().phase;
+      expect(phase === 'preparing' || phase === 'running').toBe(true);
+    });
+    // עריכה בזמן ריצה — מהדורת המקור עולה; ה-job שבעובד כבר אינו של המסמך הנוכחי
+    const revisionAtSubmit = useEditorStore.getState().revision;
+    typeSource(editor, SOURCE_B);
+    expect(useEditorStore.getState().revision).toBe(revisionAtSubmit + 1);
+    // ה-job מסיים (ההשהיה פגה) — התוצאה נדחית: אין IR, אין עוגן, והסמן מסביר
+    await waitFor(() => {
+      expect(useRunStore.getState().phase).toBe('done');
+    }, { timeout: 5000 });
+    expect(useResultStore.getState().ir).toBeNull();
+    expect(useResultStore.getState().sourceRevision).toBeNull();
+    expect(container.querySelector('[data-testid="preview-stale"]')).not.toBeNull();
+
+    // הריצה החדשה — job חדש של המקור שאחרי העריכה — מתקבלת ומקושרת
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="run-typeset"]') as HTMLButtonElement);
+    });
+    await waitFor(() => {
+      expect(useRunStore.getState().phase).toBe('done');
+    }, { timeout: 5000 });
+    const ir = useResultStore.getState().ir!;
+    expect(useResultStore.getState().sourceRevision).toBe(useEditorStore.getState().revision);
+    expect(container.querySelector('[data-testid="preview-stale"]')).toBeNull();
+    // הקישור תקף על המקור החדש: טווח של קו אמיתי מה־IR החדש מדגיש אותו בפריסה
+    const freshLine = linkedItemsForRange(ir, { startUtf16: 0, endUtf16: SOURCE_B.length })
+      .find((r) => r.kind === 'line')!;
+    editor.setSelectionRange(freshLine.sourceRange.startUtf16, freshLine.sourceRange.endUtf16);
+    act(() => {
+      fireEvent.select(editor);
+    });
+    const highlightedNow = container.querySelectorAll('[data-highlighted="true"]');
+    expect(highlightedNow.length).toBeGreaterThan(0);
+    const ids = new Set([...highlightedNow].map((el) =>
+      el.getAttribute('data-fragment-id') ?? el.getAttribute('data-marker-id')).filter(Boolean) as string[]);
+    expect(ids.has(freshLine.itemId)).toBe(true);
   });
 });

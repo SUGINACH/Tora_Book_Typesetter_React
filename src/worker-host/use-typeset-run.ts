@@ -58,6 +58,9 @@ export function useTypesetRun(): UseTypesetRun {
       woff2DecoderBytes: runtime.bundle.woff2DecoderBytes,
       documentId: editor.documentName !== '' ? editor.documentName : 'ui',
       parsed,
+      // שלב 81 — עוגן הטריות: המהדורה של המקור שנשלח; עריכה מכאן ועד הקבלה
+      // הופכת את התוצאה לזרה (אינה מתקבלת — שער במנצח).
+      sourceRevision: editor.revision,
     });
   }, []);
 

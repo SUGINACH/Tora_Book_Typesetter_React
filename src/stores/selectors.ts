@@ -71,6 +71,19 @@ export const useAnchors = (): Readonly<AnchorTable> | null =>
   useStoreWithEqualityFn(useResultStore, (s) => s.anchors);
 export const useLayoutHash = (): string | null =>
   useStoreWithEqualityFn(useResultStore, (s) => s.layoutHash);
+/** שלב 81 — מהדורת המקור שממנה הופקה התוצאה (עוגן טריות). */
+export const useResultSourceRevision = (): number | null =>
+  useStoreWithEqualityFn(useResultStore, (s) => s.sourceRevision);
+/**
+ * שלב 81 — האם התוצאה מהדורת המקור הנוכחית (הניווט המקושר תקף רק אז):
+ * ההיסטים ב־IR מתפרשים על המקור שבעורך; עריכה מאז הריצה הופכת אותם
+ * לזרים. הגנה בעומק — שער הקבלה כבר חוסם תוצאה שנערך המקור מאז שליחתה.
+ */
+export const useResultIsCurrent = (): boolean => {
+  const resultRevision = useResultSourceRevision();
+  const editorRevision = useRevision();
+  return resultRevision !== null && resultRevision === editorRevision;
+};
 
 // ─────────────────────────── view ───────────────────────────
 

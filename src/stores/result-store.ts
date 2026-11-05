@@ -34,6 +34,10 @@ export interface TypesetResultInput {
   readonly manifest: RunManifest;
   readonly findings?: readonly ResultFinding[];
   readonly anchors?: AnchorTable | null;
+  /** מהדורת המקור שממנה הופקה התוצאה — עוגן הטריות מול editorStore.revision (שלב 81).
+   *  תוצאה שנערך המקור מאז שליחתה אינה מתקבלת כלל (שער במנצח); העוגן
+   *  נועד להגנה בעומק בצד הצרכן — הניווט המקושר בטל כשאין התאמה. */
+  readonly sourceRevision: number;
 }
 
 /**
@@ -67,6 +71,8 @@ interface ResultStoreState {
   readonly findings: readonly ResultFinding[];
   readonly anchors: Readonly<AnchorTable> | null;
   readonly layoutHash: string | null;
+  /** מהדורת המקור שממנה הופקה התוצאה; null ⇐ אין תוצאה (שלב 81). */
+  readonly sourceRevision: number | null;
   setResult(input: TypesetResultInput, layoutHash: string): void;
   /** ניקוי מלא (מסמך חדש/ביטול) — אין "תוצאה ריקה חלקית". */
   reset(): void;
@@ -78,6 +84,7 @@ export const useResultStore = create<ResultStoreState>()((set) => ({
   findings: Object.freeze([]),
   anchors: null,
   layoutHash: null,
+  sourceRevision: null,
 
   setResult: (input, layoutHash) =>
     set({
@@ -87,6 +94,7 @@ export const useResultStore = create<ResultStoreState>()((set) => ({
       findings: deepFreeze([...(input.findings ?? [])]) as readonly ResultFinding[],
       anchors: input.anchors === null || input.anchors === undefined ? null : (deepFreeze(input.anchors) as Readonly<AnchorTable>),
       layoutHash,
+      sourceRevision: input.sourceRevision,
     }),
 
   reset: () =>
@@ -96,5 +104,6 @@ export const useResultStore = create<ResultStoreState>()((set) => ({
       findings: Object.freeze([]),
       anchors: null,
       layoutHash: null,
+      sourceRevision: null,
     }),
 }));

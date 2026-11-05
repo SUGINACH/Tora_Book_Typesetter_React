@@ -257,7 +257,7 @@ console.log('\n6) הבדיקות — 19 ניתוח + 13 רכיב + 3 E2E + 1 ה�
   (/ייבוא בזמן ריצה/.test(e2eTest) ? ok : fail)('E2E: ייבוא בזמן ריצה מבטל את ה-job');
   (/release-reference-document/.test(e2eTest) ? ok : fail)('E2E: המסמך הקנוני דרך האפליקציה המלאה');
   const e2eIts = [...e2eTest.matchAll(/\btest\(/g)].length;
-  (e2eIts === 8 ? ok : fail)(`8 בדיקות E2E (5 שלב 79 + 3 שלב 80; נמצא ${e2eIts})`);
+  (e2eIts === 13 ? ok : fail)(`13 בדיקות E2E (5 שלב 79 + 3 שלב 80 + 5 שלב 81; נמצא ${e2eIts})`);
 
   const requestTest = read('tests/worker-host/ui-request.test.ts');
   (/הזרקת parsed/.test(requestTest) ? ok : fail)('בדיקת הזרקת parsed — זהות בקשה ו-inputHash');

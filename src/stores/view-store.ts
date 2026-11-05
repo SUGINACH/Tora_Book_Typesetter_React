@@ -19,11 +19,15 @@ export const ZOOM_MAX = 4;
 export const LOCALES = Object.freeze(['he', 'en'] as const);
 export type Locale = (typeof LOCALES)[number];
 
-/** מוקד הצגה — קישור עורך↔פריסה (§13.3/§14.2) ברמת ה־UI בלבד. */
+/** מוקד הצגה — קישור עורך↔פריסה (§13.3/§14.2) ברמת ה־UI בלבד.
+ * שלב 81: שני הכיוונים — pane 'layout' = בחירה בעורך שמדגישה פריטים בפריסה;
+ * pane 'source' = קליק על פריט בפריסה (או בעיה במפת הקלט) שבוחר טווח בעורך. */
 export interface ViewFocus {
   readonly pane: 'source' | 'layout';
   readonly pageId?: string;
   readonly atomId?: string;
+  /** הפריט שהופעל בפריסה (קו/סמן) — להדגשתו שם גם כשהמוקד בעורך (שלב 81). */
+  readonly itemId?: string;
   /** טווח מקור לבחירה בעורך (שלב 80) — היסטים UTF-16 במרחב המקור הגולמי. */
   readonly sourceSpan?: { readonly startUtf16: number; readonly endUtf16: number };
 }

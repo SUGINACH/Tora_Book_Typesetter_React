@@ -10,7 +10,7 @@
  */
 import type { ReactNode } from 'react';
 import type { LayoutDocument } from '@tora/layout-api';
-import { PageView } from './PageView.js';
+import { PageView, type ItemActivation } from './PageView.js';
 
 export type PreviewError = {
   readonly errorCode: string;
@@ -28,6 +28,10 @@ export interface LayoutPreviewProps {
   /** הגדלה — transform בלבד; ברירת מחדל 1. */
   readonly zoom?: number;
   readonly dir?: 'rtl' | 'ltr';
+  /** שלב 81 — קליק על קו/סמן ← הדגשת ה־SourceSpan בעורך (§13.2). */
+  readonly onItemActivate?: (activation: ItemActivation) => void;
+  /** שלב 81 — מזהי פריטים להדגשה (בחירה בעורך ⇐ הפריסה, דרך provenance). */
+  readonly highlightItemIds?: ReadonlySet<string>;
 }
 
 export function LayoutPreview({
@@ -37,6 +41,8 @@ export function LayoutPreview({
   progressStage,
   zoom = 1,
   dir = 'rtl',
+  onItemActivate,
+  highlightItemIds,
 }: LayoutPreviewProps): ReactNode {
   const hasPages = layout !== undefined && layout.pages.length > 0;
 
@@ -72,7 +78,7 @@ export function LayoutPreview({
       }}
     >
       {(layout as LayoutDocument).pages.map((p) => (
-        <PageView key={p.id} page={p} dir={dir} />
+        <PageView key={p.id} page={p} dir={dir} onItemActivate={onItemActivate} highlightItemIds={highlightItemIds} />
       ))}
     </div>
   );

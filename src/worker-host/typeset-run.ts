@@ -33,6 +33,7 @@ import type { FontBytesEntry } from './protocol.js';
 import { buildUiTypesetRequest } from './ui-request.js';
 import { useResultStore, type ResultFinding } from '../stores/result-store.js';
 import { useRunStore } from '../stores/run-store.js';
+import { useEditorStore } from '../stores/editor-store.js';
 
 /** קלט ריצה — כל מה שמניב בקשה זהה ל־CLI (§17.2#2). */
 export interface UiTypesetRunInput {
@@ -45,6 +46,8 @@ export interface UiTypesetRunInput {
   readonly documentId?: string;
   /** תוצאת פרסור קיימת של אותו מקור (שלב 80 — פרסור יחיד); אופציונלי. */
   readonly parsed?: ParseResult;
+  /** מהדורת המקור בעת השליחה (editorStore.revision) — עוגן הטריות של התוצאה (שלב 81). */
+  readonly sourceRevision: number;
 }
 
 /** תלות מוזרקות — ה־client הוא הערוץ; הכול השאר טהור. */
@@ -91,6 +94,11 @@ export class TypesetController {
     const handle = this.client.submit(payload);
     this.handle = handle;
     const jobId = handle.jobId;
+    // שלב 81: מהדורת המקור בעת השליחה — עוגן הקבלה ב־onDone. עריכה אחרי
+    // השליחה הופכת את התוצאה לזרה: ההיסטים שלה מתפרשים על מקור שכבר
+    // איננו, והניווט המקושר היה ממפה טווחים שגויים. הריצה הבאה אחרי
+    // העריכה היא תמיד job חדש (supersede למעלה) — "עריכה מפעילה job חדש".
+    const sourceRevision = input.sourceRevision;
     // הרשמה אחרי submit — בטוח: הודעות העובד אסינכרוניות ואינן מטופלות
     // לפני סוף הבלוק הסינכרוני הזה.
     useRunStore.getState().begin(jobId, expectedInputHashOf(request));
@@ -101,7 +109,7 @@ export class TypesetController {
       run.setProgress(jobId, stage, completedUnits);
     });
     void handle.done.then(
-      (result) => this.onDone(jobId, request, result.layoutJson, result.layoutHash, result.manifest),
+      (result) => this.onDone(jobId, request, result.layoutJson, result.layoutHash, result.manifest, sourceRevision),
       (e: unknown) => this.onRejected(jobId, e),
     );
   }
@@ -123,10 +131,20 @@ export class TypesetController {
     layoutJson: string,
     layoutHash: string,
     manifest: RunManifest,
+    sourceRevision: number,
   ): void {
     const run = useRunStore.getState();
     if (run.jobId !== jobId) return; // שכבה נוספת — אין כתיבה מ־job שהוחלף
     run.markAuditing(jobId);
+    // שעת השלב (81): המקור נערך מאז השליחה ⇐ התוצאה אינה של המסמך
+    // הנוכחי — היא **אינה מתקבלת** (אין הצגת תוצאה ישנה כאילו היא חדשה,
+    // §13.3#5). ה־job עצמו הושלם כנדרש; המהדורה שנדחתה מתועדת בעוגן
+    // הטריות שלא נכתב. התוצאה המוצגת נשארת האחרונה שהתקבלה + סמן "לא
+    // עדכנית" בצד התצוגה.
+    if (useEditorStore.getState().revision !== sourceRevision) {
+      useRunStore.getState().complete(jobId);
+      return;
+    }
     try {
       const ir = parseLayoutDocument(layoutJson);
       const report = auditLayout({ content: request.document, settings: request.settings, layout: ir });
@@ -137,6 +155,7 @@ export class TypesetController {
           findings: report.findings as readonly ResultFinding[],
           // AnchorTable אינה בפרוטוקול v1 — null מתועד, לא המצאה.
           anchors: null,
+          sourceRevision,
         },
         layoutHash,
       );
