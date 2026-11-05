@@ -691,3 +691,13 @@ inputHash = גיבוב כל מה שמשפיע על הפלט (מקור, configHas
 - **חסימת ריצה על הגדרות לא תקינות (§18-M9; שלב 79)**: כשל buildEffectiveSettings ב־applyDraft ⇐ effective=null (לא ערך מלוכלך מהריצה הקודמת) ← use-typeset-run חוזר לפני controller.run — שום job לא נשלח. NaN/מידה שלילית/מפתח לא מוכר נדחים כבר בכניסה ל־draft עם אותם קוד ו־path קטלוגיים.
 - **גרסה עתידית ללא צעד (שלב 79)**: קובץ עם schemaVersion גבוה מהנוכחית, ואין לו צעד בשרשרת המיגרציות ⇐ MIGRATION_FAILED {fromVersion, toVersion, reason:'no-migration-step'} ב־/settings/migration — כלום לא נטען; כשתתווסף מיגרציה היא תחול אוטומטית מהשרשרת הנעולה.
 - **דחייה שקטה של מטען ריק (שיעור שלב 77)**: הפרוטוקול דוחה prepare עם `fonts: []` בלי תשובה לערוץ (v1) — ה־UI נשאר ב־preparing; לכן בדיקות מעטפת חייבות צרור בצורתו האמיתית, ואי־הגעה ל־done היא תסמין למטען פגום.
+
+## מונחי שלב 83 — virtualization בטוח, progress וביטול (M9; §13.2, §17.2#5, §17.3)
+
+- **וירטואליזציה בטוחה (§13.2; שלב 83)**: הצגת עמודי ה-preview הגלויים בלבד; הטווח נגזר מהגאומטריה של ה־IR (לא מדידת DOM) במרחב הלא־מוגדל — ‎(scrollTop − inset)/zoom‎; ‎גהה ≤ 0 ⇐ הצגה מלאה. קוד: `src/renderers/virtualization.ts` (`visiblePageRange`, `pageOffsets`, `spacerHeights`, `totalHeightPx`).
+- **פס ריווח (spacer)**: עמוד ריק (`preview-spacer-top/bottom`, `aria-hidden`) המשלים את גובה הגלילה מעל/מתחת לטווח המוצג — הפסים מוגדרים בגאומטריה מה־IR, לא במדידה.
+- **PAGE_GAP_PX / CONTENT_INSET_PX (שלב 83)**: 16px — הפער בין עמודי התצוגה (מקור אחד; `marginBlockEnd` לוגי ב־LayoutPreview) וריפוד תיבת הגלילה (p-4) הנכנס למיפוי ‎(scrollTop − inset)/zoom‎.
+- **זום מהפינה העליונה־התחלתית (שלב 83)**: `transformOrigin: right top` ב־RTL — מיפוי גלילה⇐תוכן ליניארי; תיקון שורש: הערך הקודם `inline start` (לא־תקני) נפל לברירת המחדל `50% 50%` והזום היה מתמרכז ומזיז את ראש המסמך.
+- **progress נאמן (שלב 83)**: העובד מעביר את יחידות המנוע כמות שהן — ‎`stage, completedUnits, totalUnits?`‎ — בלי מונה מקומי (המונה `progressUnits` הוסר; הפרוטוקול תמך ב־`totalUnits?` משלב 35 והחיבור נעשה בשלב 83). האחוזים נקבעים בתצוגה בלבד (`src/renderers/progress-display.ts` — `progressPercent`/`formatProgress`) ואינם קלט למנוע/לערוץ.
+- **retainedJobs (שלב 83)**: טלמטריה של `WorkerClient` — סך הרשומות במפת העבודות; במצב תקין שווה ל־`activeJobs`: כל job שהסתיים/בוטל/נזרק (done עם inputHash שונה) הוסר — ההוכחה שאין זליגת jobs. הבטחה של done-שונה נשארת תלויה בכוונה (מתועד).
+- **ניקוי בפגישה (שלב 83)**: בצד העובד, רישומי הביטול (`cancelled`) מתנקים ברגע שנפגשים — prepare שנזרק, תוצאה שנזרקה או שגיאה שהושתקה (`cancelled.delete` בשלושת האתרים); `started` נשמר בכוונה לכל חיי ה-job — דחיית כפילות היא אכיפת פרוטוקול.

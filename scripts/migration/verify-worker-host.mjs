@@ -75,8 +75,8 @@ const handler = readFileSync(join(repoRoot, 'src', 'worker-host', 'engine-worker
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1243 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1243\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1243/1243 (1098 עד שלב 76 + 20 שלב 77 + 26 לוח הגדרות שלב 78 + 19 שלב 79 + 36 שלב 80 + 27 שלב 81 + 17 שלב 82)');
+const testOut = (SKIP_TESTS ? 'Tests  1265 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1265\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1265/1265 (1098 עד שלב 76 + 20 שלב 77 + 26 לוח הגדרות שלב 78 + 19 שלב 79 + 36 שלב 80 + 27 שלב 81 + 17 שלב 82)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

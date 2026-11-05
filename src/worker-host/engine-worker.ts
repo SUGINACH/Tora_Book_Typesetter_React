@@ -13,6 +13,13 @@
  * ביטול (v0): המנוע סינכרוני — cancel מכובד בגבולות job: job שבתור
  * וטרם התחיל נזרק; job שרץ יסתיים וה-WorkerClient יזרוק את תוצאתו
  * (stale-job לפי jobId; §12.1 "job ישן שנגמר אחרי edit חדש נזרק").
+ *
+ * שלב 83 — progress נאמן ואין זליגת רישומים: ה-observer מעביר את
+ * יחידות המנוע כמות שהן (‎stage, completedUnits, totalUnits?‎ —
+ * לא מונה מקומי); רישומי הביטול מתנקים בפגישה — כל רישום מבוטל
+ * משוחרר ברגע שנפגש (prepare שנזרק, תוצאה שנזרקה או שגיאה שהושתקה).
+ * ״started״ נשמר לכל חיי ה-job: דחיית כפילות היא אכיפת פרוטוקול
+ * (מחרוזת קצרה אחת לכל job שרץ אי־פעם — מתועד; אין זליגת עבודות).
  */
 import {
   canonicalJson,
@@ -39,7 +46,7 @@ export interface EngineWorkerDeps {
   /** הספק מדידה — נבנה מהנכסים שבמטען (HarfBuzz/WASM בייצור). */
   readonly createProvider: ProviderFactory;
   /** המנוע — מוזרק (typeset של layout-engine; stub בבדיקות). */
-  readonly typeset: (request: TypesetRequest, provider: AnyProvider, policy: { policyId: string }, observer?: { onProgress: (stage: string) => void }) => TypesetSuccess;
+  readonly typeset: (request: TypesetRequest, provider: AnyProvider, policy: { policyId: string }, observer?: { onProgress: (stage: string, completedUnits: number, totalUnits?: number) => void }) => TypesetSuccess;
 }
 
 /**
@@ -67,8 +74,8 @@ export function createEngineHandler(deps: EngineWorkerDeps): (msg: unknown, port
 
     // prepare
     const { jobId, payload } = req;
-    if (cancelled.has(jobId)) {
-      return; // בוטל בטרם התחיל — לא מריצים כלל
+    if (cancelled.delete(jobId)) {
+      return; // בוטל בטרם התחיל — לא מריצים כלל; הרישום מתנקה בפגישה
     }
     if (started.has(jobId)) {
       port.post({
@@ -77,24 +84,25 @@ export function createEngineHandler(deps: EngineWorkerDeps): (msg: unknown, port
       return;
     }
     started.add(jobId);
-    let progressUnits = 0;
     try {
       const provider = await deps.createProvider(payload);
       const result = deps.typeset(payload.request, provider, { policyId: 'torah-v1' }, {
-        onProgress: (stage: string) => {
-          progressUnits += 1;
-          port.post({ type: 'progress', jobId, stage, completedUnits: progressUnits });
+        // שלב 83: העברה נאמנה של יחידות המנוע — האחוזים נקבעים בתצוגה
+        // בלבד (progress-display); כאן אין מונה מקומי שיעריך את הסדר.
+        onProgress: (stage, completedUnits, totalUnits) => {
+          port.post(
+            totalUnits !== undefined
+              ? { type: 'progress', jobId, stage, completedUnits, totalUnits }
+              : { type: 'progress', jobId, stage, completedUnits },
+          );
         },
       });
-      if (cancelled.has(jobId)) {
-        return; // הסתיים אחרי ביטול — התוצאה נזרקת בצד העובד עצמו
-      }
+      // בוטל במהלך/אחרי הריצה — התוצאה נזרקת בצד העובד עצמו + ניקוי הרישום
+      if (cancelled.delete(jobId)) return;
       const serialized = serializeTypesetSuccess(result);
       port.post({ type: 'done', jobId, result: serialized });
     } catch (e) {
-      if (cancelled.has(jobId)) {
-        return; // השגיאה של job מבוטל אינה מדווחת
-      }
+      if (cancelled.delete(jobId)) return; // השגיאה של job מבוטל אינה מדווחת + ניקוי
       const errorCode = e instanceof Error && 'catalogKey' in e
         ? String((e as { catalogKey: unknown }).catalogKey)
         : 'errors.worker.ENGINE_UNCLASSIFIED';

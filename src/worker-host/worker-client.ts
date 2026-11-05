@@ -54,13 +54,13 @@ export class WorkerProtocolError extends Error {
 export interface JobHandle {
   readonly jobId: string;
   readonly done: Promise<SerializedTypesetResult>;
-  onProgress(cb: (stage: string, completedUnits: number) => void): void;
+  onProgress(cb: (stage: string, completedUnits: number, totalUnits?: number) => void): void;
   /** ביטול — מסמן את ה-job; תוצאה מאוחרת תיזרק (ההבטחה תידחה כבוטלת). */
   cancel(): void;
 }
 
 export interface SubmitOptions {
-  onProgress?: (stage: string, completedUnits: number) => void;
+  onProgress?: (stage: string, completedUnits: number, totalUnits?: number) => void;
   /** job קודם שה-submit הזה מחליף — יבוטל אוטומטית (stale-job). */
   supersede?: JobHandle;
 }
@@ -75,7 +75,7 @@ interface JobState {
   cancelled: boolean;
   resolve: (r: SerializedTypesetResult) => void;
   reject: (e: unknown) => void;
-  progressCbs: Array<(stage: string, units: number) => void>;
+  progressCbs: Array<(stage: string, completedUnits: number, totalUnits?: number) => void>;
   readonly expectedInputHash: string;
 }
 
@@ -129,6 +129,10 @@ export class WorkerClient {
     if (state === undefined || state.cancelled) return;
     state.cancelled = true;
     this.worker.postMessage({ type: 'cancel', jobId });
+    // שלב 83 — ניקוי מלא בביטול: אין זליגת jobs ואין מאזינים תלויים.
+    // ההבטחה נדחית; שאריות מאוחרות של אותו jobId ייזרקו כ־"job לא מוכר".
+    state.progressCbs.length = 0;
+    this.jobs.delete(jobId);
     state.reject(new WorkerJobCancelled(jobId));
   }
 
@@ -137,6 +141,12 @@ export class WorkerClient {
     let n = 0;
     for (const s of this.jobs.values()) if (!s.cancelled) n += 1;
     return n;
+  }
+
+  /** סה"כ רשומות במפת העבודות — לבדיקות "אין זליגת jobs" (שלב 83).
+   * במצב תקין שווה ל־activeJobs: כל job שהסתיים/בוטל/נזרק הוסר. */
+  get retainedJobs(): number {
+    return this.jobs.size;
   }
 
   private handleResponse(msg: WorkerResponse): void {
@@ -149,13 +159,15 @@ export class WorkerClient {
     if (state.cancelled) return; // תוצאה מאוחרת של job מבוטל — נזרקת (§12.1)
     switch (msg.type) {
       case 'progress':
-        for (const cb of state.progressCbs) cb(msg.stage, msg.completedUnits);
+        for (const cb of state.progressCbs) cb(msg.stage, msg.completedUnits, msg.totalUnits);
         return;
       case 'done': {
         const actual = String((msg.result.manifest as { inputHash?: unknown }).inputHash ?? '');
         if (actual !== state.expectedInputHash) {
-          // תוצאה של קלט אחר (stale לפי תוכן) — נזרקת; ה-job נשאר תלוי
-          // ויוחלף ב-submit הבא (אין הצגת ישן כחדש; §13.3#5)
+          // תוצאה של קלט אחר (stale לפי תוכן) — נזרקת; ההבטחה נשארת
+          // תלויה (מתועד) ויוחלף ב-submit הבא. הרישום עצמו מוסר — אין
+          // זליגת jobs (שלב 83); חוזרת מאוחרת תיזרק כ־"job לא מוכר".
+          this.jobs.delete(msg.jobId);
           return;
         }
         this.jobs.delete(msg.jobId);

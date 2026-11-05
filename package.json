@@ -65,7 +65,8 @@
     "verify:presets-migrations": "node scripts/migration/verify-presets-migrations.mjs",
     "verify:document-import": "node scripts/migration/verify-document-import.mjs",
     "verify:linked-editor": "node scripts/migration/verify-linked-editor.mjs",
-    "verify:audit-findings": "node scripts/migration/verify-audit-findings.mjs"
+    "verify:audit-findings": "node scripts/migration/verify-audit-findings.mjs",
+    "verify:preview-virtualization": "node scripts/migration/verify-preview-virtualization.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

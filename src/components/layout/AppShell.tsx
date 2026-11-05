@@ -13,6 +13,7 @@
 import { useState } from 'react';
 import { useDocumentName, useFindings, useIsDirty, useLayoutHash, useLayoutIr, useRawText, useRunPhase, useRunProgress } from '../../stores/selectors.js';
 import { useTypesetRun } from '../../worker-host/use-typeset-run.js';
+import { formatProgress } from '../../renderers/progress-display.js';
 import { ImportButtons } from '../editor/ImportButtons';
 import { ImportInsights } from '../editor/ImportInsights';
 import { AuditFindings } from '../audit/AuditFindings';
@@ -87,7 +88,7 @@ export function AppShell() {
               data-testid="run-typeset"
             >
               {isRunning
-                ? `⚡ ${phase}${progress !== null ? ` — ${progress.stage} ${progress.completedUnits}` : ''}`
+                ? `⚡ ${phase}${progress !== null ? ` — ${formatProgress(progress)}` : ''}`
                 : '⚡ עדכן ועמד מחדש'}
             </button>
             {isRunning && (

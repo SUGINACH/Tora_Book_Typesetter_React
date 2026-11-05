@@ -102,11 +102,12 @@ export class TypesetController {
     // הרשמה אחרי submit — בטוח: הודעות העובד אסינכרוניות ואינן מטופלות
     // לפני סוף הבלוק הסינכרוני הזה.
     useRunStore.getState().begin(jobId, expectedInputHashOf(request));
-    handle.onProgress((stage, completedUnits) => {
+    handle.onProgress((stage, completedUnits, totalUnits) => {
       const run = useRunStore.getState();
       // דיווח ראשון מהמנוע ⇐ הספק נבנה והעימוד רץ (preparing → running).
       if (run.phase === 'preparing') run.markRunning(jobId);
-      run.setProgress(jobId, stage, completedUnits);
+      // שלב 83: העברה נאמנה עד הסטור — האחוזים נקבעים בתצוגה בלבד.
+      run.setProgress(jobId, stage, completedUnits, totalUnits);
     });
     void handle.done.then(
       (result) => this.onDone(jobId, request, result.layoutJson, result.layoutHash, result.manifest, sourceRevision),

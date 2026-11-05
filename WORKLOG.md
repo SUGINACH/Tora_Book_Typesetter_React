@@ -4,6 +4,24 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 83 — virtualization בטוח, progress וביטול (M9) — הושלם 2026-11-05
+- **תוצרים:**
+  - **`src/renderers/virtualization.ts` (חדש)** — החישוב הטהור של הווירטואליזציה: `PAGE_GAP_PX=16` (מקור אחד לפער בין עמודים — LayoutPreview אינו קובע `gap` בעצמו עוד), `CONTENT_INSET_PX`, `pageOffsets`/`totalHeightPx`/`visiblePageRange`/`spacerHeights`. הטווח נגזר מהגאומטריה של ה־IR במרחב הלא־מוגדל — ‎(scrollTop − inset)/zoom‎; ‎גהה ≤ 0 ⇐ null ⇐ הצגה מלאה (נפילה לאחור מתועדת — jsdom/הדפסה), לא רשימה ריקה בשקט. אפס גישות DOM בקובץ.
+  - **LayoutPreview** — הצגה וירטואלית של עמודי ה-preview בלבד: הפער בין עמודים הפך `marginBlockEnd` לוגי; פסי ריווח (`preview-spacer-top/bottom`) משלימים את הגלילה לגובה האמת; הטווח מתועד (`data-virtual-range`); הזום עבר לפינה העליונה־התחלתית (`right top` ב־RTL) — מיפוי גלילה⇐תוכן ליניארי; ה-hooks נקראים תמיד לפני המצבים (אין early-return מותנה).
+  - **PreviewArea** — המעטפת קוראת את גהת הגלילה (scrollTop/clientHeight — תצוגה בלבד; אין `getBoundingClientRect`) ומעבירה `viewport` כ־prop; מאזינים (גלילה/ResizeObserver/beforeprint/afterprint) ב־effect אחד עם ניקוי מלא בהסרה; לפני הדפסה — הצגה מלאה; ניווט שלב 81 על מסמך ארוך: הגלילה אל עמוד המוקד מחושבת מהגאומטריה (‎offsets[i] + h/2) × זום + ריפוד − חצי גהה‎) ורק אז מחפשים את האלמנט המודגש.
+  - **`src/renderers/progress-display.ts` (חדש)** — `progressPercent` (אחוז שלם, קלמפ 0..100) + `formatProgress` (‎`breaking 3/7 — 42%`‎) — טהור, לתצוגה בלבד; AppShell מציג דרכו.
+  - **העברה נאמנה של progress** — הפרוטוקול תמך ב־`totalUnits?` משלב 35 אך החיבור לא נעשה מעולם: ה־observer בעובד מעביר את יחידות המנוע כמות שהן (‎`stage, completedUnits, totalUnits?`‎) — **המונה המקומי `progressUnits` הוסר**; הלקוח והמנצח מעבירים עד הסטור (`runStore.progress.totalUnits`); LayoutPreview מציג יחידות+אחוזים (`data-progress-percent`).
+  - **ביטול וניקוי** — `WorkerClient.cancel` מנקה את `progressCbs` ומסיר את הרישום מהמפה; done עם inputHash שונה מסיר את הרישום (ההבטחה נשארת תלויה, מתועד); טלמטריה `retainedJobs` לצד `activeJobs`; בעובד — רישומי הביטול מתנקים בפגישה (`cancelled.delete` בשלושת האתרים); `started` נשמר בכוונה (דחיית כפילות היא אכיפת פרוטוקול — מתועד בקוד ובמאמת).
+  - **בדיקות חדשות** — `tests/component/virtualization.test.tsx` (15) + `tests/worker-host/job-lifecycle.test.ts` (7) = 22; מאמת שלב חדש `scripts/migration/verify-preview-virtualization.mjs` (40 בדיקות) חובר ל־CI ול־package.json.
+- **פקודות בדיקה שרצו (ירוק):** Node v24.22.2 — `npx vitest run --config vitest.packages.config.ts` — **1265/1265** (1243 שלב 82 + 22 חדשות); `npx tsc --noEmit`; `npm run lint:packages`; `npm run build:packages`; `npm run deps:check`; `node scripts/migration/verify-preview-virtualization.mjs` — 40/40; `verify-work-conventions` 44/44; `verify-workspaces` 46/46 (עם GITHUB_TOKEN); `verify-preview` (component 104/104) + `verify-worker-host` + `verify-audit-findings` — ירוק.
+- **ממצאים:**
+  1. **המונה המקומי בעובד היה מטעה מלכתחילה** — `progressUnits` מנה אירועים (1, 2, 3…) במקום יחידות המנוע האמיתיות; האחוזים נקבעים כעת בתצוגה בלבד (`Math.floor` + קלמפ) ואינם קלט למנוע/לערוץ — נאכף במאמת (אין `percent` בערוץ כלל).
+  2. **זליגת jobs אמיתית נמצאה ותוקנה** — מפת העבודות בלקוח לא התרוקנה לעולם בביטול וב־done שלא התאים ל־inputHash; `progressCbs` נותרו תלויים אחרי ביטול. כעת `retainedJobs` מתאפס בכל סבב (נעול בבדיקות); בעובד, בדיקת הרגרסיה מוכיחה ש־prepare חוזר אחרי cancel-before-prepare **רץ ומסיים** (בקוד הקודם היה נזרק לנצח).
+  3. **הזום היה שבור בפינה** — `transformOrigin: 'inline start'` (ערך לא־תקני, שתי מילים) נפל בדפדפן לברירת המחדל `50% 50%`: זום גדול מ־1 היה מתמרכז ומזיז את ראש המסמך מתחילת הגלילה. תוקן לפינה עליונה־התחלתית פיזית (`right top` ב־RTL) — מיפוי ליניארי שהווירטואליזציה נשענת עליו.
+  4. **מסמך ארוך נבדק על 120 עמודים** (שכפול עמוד אמיתי מהמנוע) — הצגה מלאה בלי גהה (jsdom), טווח חלוני עם overscan 2, פסי ריווח מדויקים; גלילה במחזור מלא לא שינתה את אותו IR קפוא ואת אותו layoutHash — שעת השלב.
+  5. **הדפסה הייתה נשברת עם וירטואליזציה** (היו מודפסים רק העמודים הגלויים) — `beforeprint` מעביר להצגה מלאה ו־`afterprint` מחזיר; נעול בבדיקה.
+- **layoutHash diff:** אין — השלב אינו נוגע למנוע (§17.2#5: zoom/DPR אינם משתתפים; נעול — אותו hash לפני ואחרי גלילה/זום; התצוגה היא היטל בלבד).
+
 ### שלב 82 — הצגת ממצאי Audit וניווט אליהם (M9) — הושלם 2026-11-05
 - **תוצרים:**
   - **קטלוג i18n סגור** — `src/i18n/audit-labels.ts` (דפוס settings-labels שלב 78 / import-labels שלב 80): 31 תוויות עבריות מסבירות — בדיוק שלוש הרשימות הקפואות של audit-core (‎TEXT 11 + LAYOUT 13 + LINK 7‎), דו־כיווני ונאכף; תוויות חומרה (חמור/בינוני/קל) ותוויות פאנל; ‎`formatAuditLabel`‎ בפורמט ‎{param}‎ (פרמטר חסר נשאר מילולי; §16 — אין message גולם, והחוזה §14.1 כלל אינו נושא שדה message — רק messageKey).

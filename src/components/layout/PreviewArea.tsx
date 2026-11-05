@@ -16,8 +16,18 @@
  *     להדגשה ב־DOM. שני הכיוונים תקפים רק כשהתוצאה טריה — עוגן
  *     הטריות (sourceRevision) שומר שהיסטי ה־IR מתפרשים על המקור שבעורך.
  *   - הניווט אינו עימוד: אין כאן מנוע, מדידה או כתיבה ל־IR — UI בלבד.
+ *
+ * שלב 83 — virtualization בטוח, progress וביטול (§13.2, §17.2#5, §17.3):
+ *   - המעטפת היא היחידה שקוראת את גהת הגלילה (scrollTop/clientHeight —
+ *     תצוגה בלבד) ומעבירה אותה ל־LayoutPreview כ־prop; החישוב עצמו טהור
+ *     (virtualization.ts). zoom/DPR אינם משנים את התוצאה — הם משנים רק
+ *     *כמה* עמודים מוצגים.
+ *   - ניווט שלב 81 על מסמך ארוך: הגלילה אל עמוד המוקד מחושבת מהגאומטריה
+ *     של ה־IR (לא מדידת DOM), ורק אז מחפשים את האלמנט המודגש.
+ *   - כל המאזינים (גלילה/גודל/הדפסה) נרשמים ב־effect אחד עם ניקוי
+ *     מלא בהסרה — אין זליגת מאזינים; לפני הדפסה — הצגה מלאה.
  */
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   useFindings,
   useLayoutIr,
@@ -35,6 +45,8 @@ import {
   linkedItemsForRange,
 } from '../../stores/linked-navigation.js';
 import { LayoutPreview, type PreviewError } from '../../renderers/LayoutPreview.js';
+import { projectLayout } from '../../renderers/preview-model.js';
+import { CONTENT_INSET_PX, pageOffsets } from '../../renderers/virtualization.js';
 import type { ItemActivation } from '../../renderers/PageView.js';
 import { ZoomControls } from '../view/ZoomControls';
 
@@ -61,8 +73,91 @@ export function PreviewArea() {
   const setZoom = useViewStore((s) => s.setZoom);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const error: PreviewError | undefined =
-    phase === 'error' && errorCode !== null ? { errorCode, params: {} } : undefined;
+  // ── שלב 83: גהת הגלילה כמצב תצוגה בלבד (לא נכנס ל־hash/למנוע) ──
+  const [viewport, setViewport] = useState<{ scrollTopPx: number; viewportHeightPx: number } | null>(null);
+
+  /** קריאה ב־DOM של תיבת הגלילה — תצוגה בלבד; עדכון רק כששווי השתנה. */
+  const readViewport = useCallback((): void => {
+    const el = scrollRef.current;
+    if (el === null) return;
+    const scrollTopPx = el.scrollTop;
+    const viewportHeightPx = el.clientHeight;
+    setViewport((prev) =>
+      prev !== null && prev.scrollTopPx === scrollTopPx && prev.viewportHeightPx === viewportHeightPx
+        ? prev
+        : { scrollTopPx, viewportHeightPx },
+    );
+  }, []);
+
+  // רישום המאזינים — גלילה, שינוי גודל (ResizeObserver כשקיים; jsdom —
+  // אין), לפני/אחרי הדפסה (הצגה מלאה להדפסה) — עם ניקוי מלא בהסרה.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el === null) return;
+    readViewport();
+    el.addEventListener('scroll', readViewport, { passive: true });
+    const onBeforePrint = (): void => setViewport(null); // הדפסה ⇐ הצגה מלאה
+    const onAfterPrint = (): void => readViewport();
+    window.addEventListener('beforeprint', onBeforePrint);
+    window.addEventListener('afterprint', onAfterPrint);
+    let resizeObserver: { disconnect(): void } | null = null;
+    if (typeof ResizeObserver === 'function') {
+      const ro = new ResizeObserver(() => readViewport());
+      ro.observe(el);
+      resizeObserver = ro;
+    }
+    return () => {
+      el.removeEventListener('scroll', readViewport);
+      window.removeEventListener('beforeprint', onBeforePrint);
+      window.removeEventListener('afterprint', onAfterPrint);
+      resizeObserver?.disconnect(); // אין זליגת מאזינים (§17.3#10 ברוח זו)
+    };
+  }, [readViewport]);
+
+  // זום משנה את מרחב הגלילה (scale) בלי אירוע גלילה — קריאה חוזרת מפורשת.
+  useEffect(() => {
+    readViewport();
+  }, [zoom, readViewport]);
+
+  // גאומטריית העמודים מה־IR (היטל טהור; לא מדידה) — לניווט הגלילה שלהלן.
+  const pageHeights = useMemo(
+    () => (ir === null ? [] : projectLayout(ir).map((p) => p.blockSizePx)),
+    [ir],
+  );
+
+  // ── שלב 81 + 83: ניווט למוקד — קודם מביאים את העמוד לטווח הגלוי ──
+  // הגלילה מחושבת מהגאומטריה (offsets מה־IR × זום + ריפוד), לא מדידת DOM.
+  useEffect(() => {
+    if (focus === null || focus.pane !== 'layout') return;
+    const el = scrollRef.current;
+    if (el === null) return;
+    if (ir !== null && focus.pageId !== undefined) {
+      const idx = ir.pages.findIndex((p) => p.id === focus.pageId);
+      if (idx >= 0) {
+        const offsets = pageOffsets(pageHeights);
+        const targetPx = (offsets[idx] ?? 0) + (pageHeights[idx] ?? 0) / 2;
+        // מרחב הגלילה: תוכן x נראה ב־scroll = inset + zoom·x (פינה עליונה).
+        const desired = targetPx * zoom + CONTENT_INSET_PX - el.clientHeight / 2;
+        if (el.clientHeight > 0 && Number.isFinite(desired)) {
+          el.scrollTop = Math.max(0, desired);
+        }
+      }
+    }
+    // עדכון סינכרוני של הטווח לפני חיפוש האלמנט המודגש (האפקט הבא).
+    readViewport();
+  }, [focus, ir, pageHeights, zoom, readViewport]);
+
+  // ── שלב 81: גלילה לפריט המודגש הראשון (רק אחרי שהטווח התעדכן) ──
+  useEffect(() => {
+    if (focus === null || focus.pane !== 'layout') return;
+    const el = scrollRef.current;
+    if (el === null) return;
+    const hl = el.querySelector('[data-highlighted="true"]');
+    // jsdom אינו מממש scrollIntoView — השמירה כאן היא לבדיקות ולא מדלגת על הדפדפן
+    if (hl !== null && typeof (hl as HTMLElement).scrollIntoView === 'function') {
+      (hl as HTMLElement).scrollIntoView({ block: 'center' });
+    }
+  }, [focus, viewport]);
 
   // ── שלב 81: ההדגשות בפריסה — מהמוקד, רק על תוצאה טריה (הגנה בעומק) ──
   const highlightItemIds = useMemo(() => {
@@ -97,16 +192,6 @@ export function PreviewArea() {
     [ir, setFocus],
   );
 
-  // ── שלב 81: גלילה לפריט המודגש הראשון (תצוגה בלבד; וירטואליזציה — שלב 83) ──
-  useEffect(() => {
-    if (focus === null || focus.pane !== 'layout') return;
-    const el = scrollRef.current?.querySelector('[data-highlighted="true"]');
-    // jsdom אינו מממש scrollIntoView — השמירה כאן היא לבדיקות ולא מדלגת על הדפדפן
-    if (el !== null && typeof (el as HTMLElement).scrollIntoView === 'function') {
-      (el as HTMLElement).scrollIntoView({ block: 'center' });
-    }
-  }, [focus]);
-
   // ── שלב 81: סמן "הפריסה איננה עדכנית" — המקור נערך מאז התוצאה/השליחה ──
   const staleShown = !resultIsCurrent && (ir !== null || phase === 'done');
 
@@ -137,13 +222,23 @@ export function PreviewArea() {
         </div>
       </div>
 
-      {/* Pages — היטל בלבד */}
-      <div className="flex-1 overflow-auto p-4 print:p-0" ref={scrollRef}>
+      {/* Pages — היטל בלבד; הגהה נקראת כאן (תצוגה בלבד, שלב 83) */}
+      <div className="flex-1 overflow-auto p-4 print:p-0" ref={scrollRef} data-testid="preview-scroll">
         <LayoutPreview
           layout={ir ?? undefined}
           status={previewStatusOf(phase)}
-          error={error}
+          error={
+            phase === 'error' && errorCode !== null
+              ? { errorCode, params: {} }
+              : undefined
+          }
           progressStage={progress?.stage}
+          progressInfo={
+            progress !== null
+              ? { completedUnits: progress.completedUnits, totalUnits: progress.totalUnits }
+              : null
+          }
+          viewport={viewport}
           zoom={zoom}
           onItemActivate={onItemActivate}
           highlightItemIds={highlightItemIds}
