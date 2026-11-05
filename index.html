@@ -6,12 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>מערכת עימוד ספרים תורניים</title>
     <link rel="stylesheet" href="./fonts/fonts.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Noto+Serif+Hebrew:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- שלב 85: הסרת טעינת גופנים מ־Google Fonts (preconnect ×2 + stylesheet) —
+         אפיון §19: אין CDN/רשת; הגופנים קיימים ב־public/fonts (fonts.css) ו־
+         ההצהרות המקומיות מכסות את אותן משפחות. נתפס ב־E2E "אין רשת חיצונית". -->
   </head>
   <body>
     <div id="root"></div>

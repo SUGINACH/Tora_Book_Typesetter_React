@@ -127,6 +127,18 @@ jobs:
           node scripts/migration/verify-preview-virtualization.mjs
           node scripts/migration/verify-settings-coverage.mjs
 
+      - name: E2E ממוקד — Playwright על האפליקציה הבנויה (שלב 85; §17.1)
+        # האפליקציה נבנית (vite build — כמו ב-Deploy) ונפתחת ב-vite preview;
+        # סביבה נעולה ב-playwright.config (דפדפן, ויוטפורט, DPR, locale, זמן).
+        env:
+          TORA_SKIP_TEST_REGRESSION: "1"
+        run: |
+          npm run build
+          npx playwright install --with-deps chromium
+          NO_COLOR=1 npm run test:e2e > /tmp/e2eout.log 2>&1 || { cat /tmp/e2eout.log; exit 1; }
+          grep -qE "[[:space:]]27[[:space:]]+passed" /tmp/e2eout.log || { tail -5 /tmp/e2eout.log; echo "צפוי בדיוק 27 בדיקות E2E"; exit 1; }
+          node scripts/migration/verify-e2e-focused.mjs
+
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         env:
           TORA_SKIP_TEST_REGRESSION: "1"

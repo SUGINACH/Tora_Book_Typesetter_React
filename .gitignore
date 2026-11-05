@@ -29,3 +29,7 @@ packages/*/src/**/*.d.ts.map
 
 # פלט ריצות ייחוס של המאמתים (מועלה כ-artifact ב-CI; אינו נכנס לעקיבה)
 artifacts/
+
+# Playwright (שלב 85)
+test-results/
+playwright-report/

@@ -140,6 +140,15 @@ const LEGACY_STORE_REMOVED_STAGE_84 = new Set([
   'tests/unit/store/trace-store.test.ts', // בדיקת היחידה היחידה של הישן — מחוץ לצינורות ה-CI (מתועד לעיל)
 ]);
 for (const f of LEGACY_STORE_REMOVED_STAGE_84) LIVING_FILES.add(f);
+// חריג מעטפת מתועד (שלב 85, 2026-11-05): בדיקת ה־E2E "אין רשת חיצונית"
+// (אפיון §19) תפסה ש־index.html טוען גופנים מ־Google Fonts (preconnect ×2
+// + stylesheet) בניגוד לעקרון ההרצה המקומית. הגופנים קיימים ב־public/fonts
+// (fonts.css) וההצהרות המקומיות מכסות את אותן משפחות — הסרת שלוש השורות
+// היא תיקון שורש, לא החלשת בדיקה. רשימה סגורה — כל קובץ נוסף ייתפס.
+const NO_EXTERNAL_FONTS_STAGE_85 = new Set([
+  'index.html', // נותר רק ה־stylesheet המקומי ./fonts/fonts.css
+]);
+for (const f of NO_EXTERNAL_FONTS_STAGE_85) LIVING_FILES.add(f);
 // תיקון תכנית מבוקר (כלל 3 בתכנית): קובץ התכנית נערך בתיאום "לפני שלב 15"
 // המתועד ב־WORKLOG — תחילה ב־commit ed3b856, ואחר כך תוקן ב־a1674fb
 // ("שחזור שלבים שהושלמו ותיקום תיאום התכנית") שהשיב את ניסוחי שלבים 1–14
@@ -226,6 +235,13 @@ const NEW_ALLOWED = [
   // (§13–14). רשימה סגורה — לא תיקייה שלמה.
   /^src\/i18n\/audit-labels\.ts$/,
   /^src\/components\/audit\/AuditFindings\.tsx$/,
+  // שלב 85: תצורת Playwright לבדיקות ה-E2E הממוקדות (root; לא תיקייה).
+  /^playwright\.config\.ts$/,
+  // שלב 85 (תיקון שורש שנתגלה ב-E2E): פריקת WOFF2 בדפדפן — עותק הפעלה
+  // מתוקן של wawoff2/decompress_binding.js (המקור נעול ב-sha; הפאץ' =
+  // שורת ייצוא אחת) + העטיפה והצהרת הטיפוסים. רשימה סגורה.
+  /^src\/worker-host\/woff2-browser\.ts$/,
+  /^src\/worker-host\/vendor\/decompress-binding\.(js|d\.ts)$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;

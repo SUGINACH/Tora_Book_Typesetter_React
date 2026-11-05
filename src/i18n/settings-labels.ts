@@ -43,6 +43,28 @@ export const SECTION_LABELS: Readonly<Record<string, string>> = Object.freeze({
 });
 
 /** הקטלוג — מפתח i18n (settings.<key>) ⇐ תווית + הסבר. 257 ערכים. */
+/**
+ * תרגום הודעות השגיאה של המרשם (שלב 85; שעת M9 — "שגיאות מתורגמות").
+ * הקטלוג הסגור של settings-schema (‎errors.settings.*‎ — 15 קודים, קפוא)
+ * נותן את הקודים והפרמטרים; כאן התרגום העברי עם מקומות ‎{param}‎. הצגת
+ * קוד גולם בפני המשתמש היא הפרת השער — נתפסה ב־E2E שלב 85.
+ */
+export const SETTINGS_ERROR_LABELS: Readonly<Record<string, string>> = Object.freeze({
+  'errors.settings.UNKNOWN_KEY': 'מפתח לא מוכר במרשם: {key}',
+  'errors.settings.INVALID_VALUE': 'ערך לא חוקי עבור {key}: {value} (צפוי: {expected})',
+  'errors.settings.INVALID_TYPE': 'טיפוס שגוי עבור {key}: {value} (נדרש: {type})',
+  'errors.settings.UNKNOWN_ENUM_VALUE': 'ערך לא מוכר עבור {key}: {value} (מותר: {allowed})',
+  'errors.settings.UNSUPPORTED_TYPE': 'טיפוס לא נתמך: {type}',
+  'errors.settings.NON_FINITE_NUMBER': 'ערך אינו מספר סופי עבור {key}: {value}',
+  'errors.settings.NEGATIVE_DIMENSION': 'ממד שלילי אסור עבור {key}: {value}',
+  'errors.settings.MISSING_VALUE': 'חסר ערך עבור {key}',
+  'errors.settings.REGISTRY_INVALID': 'המרשם פגום: {reason}',
+  'errors.settings.MIGRATION_FAILED': 'מיגרציה נכשלה ({fromVersion}→{toVersion}): {reason}',
+  'errors.settings.UNDEFINED_VALUE': 'ערך לא מוגדר: {path}',
+  'errors.settings.INVALID_HASH_LENGTH': 'אורך hash שגוי: {len}',
+  'errors.settings.COERCED_LEGACY_STRING': 'מחרוזת מורשת הומרה בכפייה עבור {key}: {raw} ⇒ {value}',
+});
+
 export const SETTINGS_LABELS: Readonly<Record<string, SettingLabel>> = Object.freeze({
   // ─────────────────────────── backgrounds (12) ───────────────────────────
   'settings.cbg-h0Open-color': { he: 'רקע פתיחת הספר — צבע', description: 'צבע הרקע בעמוד פתיחת הספר (H0)' },

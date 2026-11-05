@@ -224,7 +224,11 @@ describe('שלב 78 — מסלול §13.3: draft ← validation ← effective/ha
     expect(after.draft['s-h2']).toBeUndefined();
     expect(after.issues.some((i) => i.params.key === 's-h2')).toBe(true);
     const issue = document.querySelector('[data-setting-issue="s-h2"]');
-    expect(issue?.textContent).toContain('errors.settings.INVALID_VALUE');
+    // שלב 85 (שעת M9 — "שגיאות מתורגמות"): ההודעה מתורגמת מהקטלוג הסגור
+    // (SETTINGS_ERROR_LABELS) עם הפרמטרים בפנים — לא קוד גולם.
+    expect(issue?.textContent).toContain('ערך לא חוקי עבור s-h2: -5');
+    expect(issue?.textContent).toContain('non-negative');
+    expect(issue?.textContent).toMatch(/[\u0590-\u05FF]/);
     // ה-effective לא הוחלף לערך הפסול — ה-hash נותר על הערך הקודם
     expect(after.effective?.values['s-h2']).not.toBe(-5);
   });

@@ -12,16 +12,19 @@
 import { memo } from 'react';
 import { useStoreWithEqualityFn } from 'zustand/traditional';
 import { useSettingsStore, type SettingDefinition } from '../../stores/settings-store.js';
-import { SETTINGS_LABELS } from '../../i18n/settings-labels.js';
+import { SETTINGS_LABELS, SETTINGS_ERROR_LABELS } from '../../i18n/settings-labels.js';
 
 /** תנאי תלות לא מתקיים? (השוואת מחרוזות קנונית — בוליאן כ-'true'/'false'.) */
 const depMet = (dep: { readonly key: string; readonly values: readonly string[] }, current: unknown): boolean =>
   dep.values.includes(String(current));
 
 const issueText = (code: string, params: Record<string, unknown>): string => {
-  // אין הצגת message גולמי — מפתח קטלוגי + פרמטרים (פטרון שלב 12).
-  const p = Object.entries(params).map(([k, v]) => `${k}=${String(v)}`).join(' ');
-  return p === '' ? code : `${code} (${p})`;
+  // שלב 85 (שעת M9 — "שגיאות מתורגמות"): ההודעה מתורגמת מהקטלוג הסגור
+  // של המרשם (errors.settings.*‎ — 15 קודים) עם החלפת ‎{param}‎ — לא קוד
+  // גולם בפני המשתמש. נתפס ב־E2E שלב 85; הצגת קוד גולם היא הפרת השער.
+  const template = SETTINGS_ERROR_LABELS[code];
+  if (template === undefined) return code; // קטלוג סגור — לא קורה; נפילה בטוחה
+  return template.replace(/\{(\w+)\}/g, (m, name: string) => (name in params ? String(params[name]) : m));
 };
 
 interface SettingRowProps {

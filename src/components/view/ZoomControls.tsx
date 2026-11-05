@@ -9,6 +9,8 @@ export function ZoomControls({ zoom, onChange }: Props) {
       <button
         onClick={() => onChange(Math.max(0.25, zoom - 0.1))}
         className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
+        data-testid="zoom-out"
+        aria-label="הקטנת תצוגה"
       >
         −
       </button>
@@ -16,12 +18,15 @@ export function ZoomControls({ zoom, onChange }: Props) {
       <button
         onClick={() => onChange(Math.min(4, zoom + 0.1))}
         className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
+        data-testid="zoom-in"
+        aria-label="הגדלת תצוגה"
       >
         +
       </button>
       <button
         onClick={() => onChange(1)}
         className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
+        data-testid="zoom-reset"
       >
         100%
       </button>

@@ -45,7 +45,15 @@ export function AppShell() {
         <h1 className="text-xl font-bold">📖 מערכת עימוד ספרים תורניים</h1>
         <div className="flex items-center gap-3 text-sm">
           {documentName !== '' && <span className="text-gray-500 text-xs">{documentName}</span>}
-          {layoutHash !== null && <span className="text-gray-500 text-xs">hash: {layoutHash.slice(0, 8)}</span>}
+          {layoutHash !== null && (
+            <span
+              className="text-gray-500 text-xs"
+              data-layout-hash={layoutHash}
+              title={`layoutHash: ${layoutHash}`}
+            >
+              hash: {layoutHash.slice(0, 8)}
+            </span>
+          )}
           {findings.length > 0 && (
             <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
               {findings.length} ממצאים
@@ -86,6 +94,7 @@ export function AppShell() {
                 dirty ? 'bg-orange-500 text-white' : 'bg-blue-500 text-white'
               } ${isRunning || !hasSource ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
               data-testid="run-typeset"
+              data-run-phase={phase}
             >
               {isRunning
                 ? `⚡ ${phase}${progress !== null ? ` — ${formatProgress(progress)}` : ''}`
@@ -104,6 +113,8 @@ export function AppShell() {
               onClick={() => window.print()}
               disabled={isRunning || ir === null}
               className="w-full px-3 py-2 bg-gray-200 rounded text-xs disabled:opacity-50"
+              data-testid="print-export"
+              title="הדפסת ההיטל — מסלול הייצוא הסמכותי (§15.1; עד שלב 86)"
             >
               📄 הדפסה / PDF
             </button>
