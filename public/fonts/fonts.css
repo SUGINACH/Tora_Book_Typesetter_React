@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'Frank Ruhl Libre';
-  src: url('/fonts/Frank-Ruhl-Libre-Bold.woff2') format('woff2');
+  src: url('Frank-Ruhl-Libre-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: 'FrankRuehl';
-  src: url('/fonts/FrankRuehl-Regular.woff2') format('woff2');
+  src: url('FrankRuehl-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'David Libre';
-  src: url('/fonts/DavidLibre-Regular.woff2') format('woff2');
+  src: url('DavidLibre-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -26,7 +26,7 @@
 
 @font-face {
   font-family: 'David Libre';
-  src: url('/fonts/DavidLibre-Medium.woff2') format('woff2');
+  src: url('DavidLibre-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -34,7 +34,7 @@
 
 @font-face {
   font-family: 'David';
-  src: url('/fonts/David-Regular.woff2') format('woff2');
+  src: url('David-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -42,7 +42,7 @@
 
 @font-face {
   font-family: 'David';
-  src: url('/fonts/David-Bold.woff2') format('woff2');
+  src: url('David-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -50,7 +50,7 @@
 
 @font-face {
   font-family: 'FrankReal';
-  src: url('/fonts/FrankReal-Regular.woff2') format('woff2');
+  src: url('FrankReal-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -58,7 +58,7 @@
 
 @font-face {
   font-family: 'FrankReal';
-  src: url('/fonts/FrankReal-Medium.woff2') format('woff2');
+  src: url('FrankReal-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -66,7 +66,7 @@
 
 @font-face {
   font-family: 'FrankReal';
-  src: url('/fonts/FbFrankReal-Bold.woff2') format('woff2');
+  src: url('FbFrankReal-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -74,7 +74,7 @@
 
 @font-face {
   font-family: 'Frank Re';
-  src: url('/fonts/Frank-Re-Bold.woff2') format('woff2');
+  src: url('Frank-Re-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -82,7 +82,7 @@
 
 @font-face {
   font-family: 'Hadassah Friedlaender';
-  src: url('/fonts/Hadassah-Friedlaender-Regular.woff2') format('woff2');
+  src: url('Hadassah-Friedlaender-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -90,7 +90,7 @@
 
 @font-face {
   font-family: 'Hadassah Friedlaender';
-  src: url('/fonts/Hadassah-Friedlaender-Bold.woff2') format('woff2');
+  src: url('Hadassah-Friedlaender-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -98,7 +98,7 @@
 
 @font-face {
   font-family: 'Livorna';
-  src: url('/fonts/Livorna-Regular.woff2') format('woff2');
+  src: url('Livorna-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -106,7 +106,7 @@
 
 @font-face {
   font-family: 'Livorna';
-  src: url('/fonts/Livorna-Bold.woff2') format('woff2');
+  src: url('Livorna-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -114,7 +114,7 @@
 
 @font-face {
   font-family: 'Guttman Rashi';
-  src: url('/fonts/Guttman-Stam-Normal.woff2') format('woff2');
+  src: url('Guttman-Stam-Normal.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -124,7 +124,7 @@
 
 @font-face {
   font-family: 'Guttman Rashi';
-  src: url('/fonts/Guttman-Rashi-Normal.woff2') format('woff2');
+  src: url('Guttman-Rashi-Normal.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;

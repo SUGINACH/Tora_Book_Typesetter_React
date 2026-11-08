@@ -33,7 +33,7 @@ const has = (p, needle) => read(p).includes(needle);
 const ansi = (s) => (s == null ? s : String(s).replace(/\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b[@-Z\\-_]/g, '').replace(/\x1b/g, ''));
 
 /** נעיכת הסוויטה — E2E_COUNT בדיוק; אין דילוגים ואין flaky. */
-const E2E_COUNT = 27;
+const E2E_COUNT = 29;
 const run = (cmd, args) => {
   try {
     return ansi(execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NO_COLOR: '1' } }));
@@ -67,8 +67,8 @@ const cfg = read('playwright.config.ts');
   ["testDir: 'tests/e2e'", /testDir:\s*'tests\/e2e'/],
 ]).forEach(([label, re]) => ((re.test(cfg)) ? ok : fail)(label));
 
-console.log('\n3) מבנה הסוויטה — חמישה מפרטים; אין sleeps; צילומים רק ב־05');
-const specs = ['01-import-edit-run.spec.ts', '02-cli-oracle.spec.ts', '03-cancel-responsive.spec.ts', '04-audit-navigation.spec.ts', '05-export-visual.spec.ts'];
+console.log('\n3) מבנה הסוויטה — שישה מפרטים; אין sleeps; צילומים רק ב־05');
+const specs = ['01-import-edit-run.spec.ts', '02-cli-oracle.spec.ts', '03-cancel-responsive.spec.ts', '04-audit-navigation.spec.ts', '05-export-visual.spec.ts', '06-deploy-subpath.spec.ts'];
 specs.forEach((s) => ((existsSync(join(repoRoot, 'tests/e2e', s))) ? ok : fail)(`קיים: tests/e2e/${s}`));
 (existsSync(join(repoRoot, 'tests/e2e/helpers.ts')) ? ok : fail)('קיים: tests/e2e/helpers.ts (עזרים משותפים — אין בו בדיקות)');
 (!/waitForTimeout/.test(read('tests/e2e/helpers.ts')) ? ok : fail)('helpers.ts — אין waitForTimeout (אין sleeps)');
@@ -125,6 +125,22 @@ const pkg = JSON.parse(read('package.json'));
 ((pkg.devDependencies?.['@playwright/test'] !== undefined) ? ok : fail)('package.json — @playwright/test ב-devDependencies (גרסה נעולה ב-lockfile)');
 (!/tests\/e2e\//.test(read('vitest.packages.config.ts')) ? ok : fail)('vitest.packages.config.ts — tests/e2e אינו בהכללה (אין ריצה כפולה; e2e-skeleton נשאר)');
 (ci.includes('Tests[[:space:]]+1281[[:space:]]+passed') ? ok : fail)('ci.yml — נעיכת סוויטת vitest 1281 נותרה ללא שינוי (לא נוספו בדיקות vitest בשלב זה)');
+
+console.log('\n7) תיקוני השורש של כישלון האתר החי (תת-נתיב Pages; מפרט 06)');
+// התקלה החיה: "ניסיתי לעמד באתר החי של פייג'ס, ולא הצלחתי" — הצרור נטען
+// מנתיב שורש מוחלט, בתת-הנתיב של Pages זה 404, והשגיאה נבלעה בהבטחה
+// נטושה (הכפתור "לא עשה כלום"). כל תיקון ננעל כאן בהוכחת-נפל.
+(has('src/worker-host/asset-bundle.ts', "options.baseUrl ?? '.'") ? ok : fail)("asset-bundle — בסיס נכסים יחסי למסמך ('.'), לא נתיב שורש מוחלט");
+(has('src/worker-host/asset-bundle.ts', '${base}/fonts/manifest.json') && has('src/worker-host/asset-bundle.ts', '${base}/fonts/${record.file}') ? ok : fail)("asset-bundle — תבנית ה-URL על הבסיס המוזרק (זהה לבדיקות היחידה)");
+(!/url\('\/fonts\//.test(read('public/fonts/fonts.css')) ? ok : fail)("fonts.css — אפס נתיבי גופנים אבסולוטיים (יחסיים לקובץ ה-CSS; תת-נתיב)");
+(!/rel="icon"/.test(read('index.html')) ? ok : fail)("index.html — אין הפניית favicon מתה (הקובץ לא קיים ב-public; הנתיב היה מוחלט)");
+(!/external:\s*\[/.test(read('vite.config.ts')) ? ok : fail)("vite.config — אין external ל-mammoth (bare specifier אינו פתיר בדפדפן)");
+(!/@vite-ignore/.test(read('src/lib/text-importers.ts')) ? ok : fail)("text-importers — ייבוא Word מבונדל (בלי @vite-ignore שהשאיר את הייבוא שבור בייצור)");
+(has('src/worker-host/use-typeset-run.ts', 'PREPARE_FAILURE_JOB_ID') && /store\.fail\(PREPARE_FAILURE_JOB_ID/.test(read('src/worker-host/use-typeset-run.ts')) ? ok : fail)("use-typeset-run — כישלון הכנה מוצג בפאזת error עם קוד קטלוגי (לא כפתור אילם)");
+(has('src/worker-host/ui-runtime.ts', 'realRuntime = null;') && has('src/worker-host/ui-runtime.ts', 'await loadBrowserAssetBundle();') ? ok : fail)("ui-runtime — הבטחה דחויה אינה נשמרת במטמון; הצרור נטען לפני יצירת העובד");
+(/subpath-server\.mjs/.test(cfg) && /4174/.test(cfg) ? ok : fail)("playwright.config — שרת תת-הנתיב (4174) ב-webServer — סביבת Pages לרגרסיה");
+(existsSync(join(repoRoot, 'tests', 'e2e', 'subpath-server.mjs')) ? ok : fail)("קיים: tests/e2e/subpath-server.mjs (מגיש את dist מתחת לקידומת)");
+(has('tests/e2e/06-deploy-subpath.spec.ts', 'fonts/manifest.json') && /document\.fonts\.check/.test(read('tests/e2e/06-deploy-subpath.spec.ts')) ? ok : fail)("מפרט 06 — חסימת מניפסט לשגיאה גלויה + טעינת גופן אמיתית דרך ה-CSS");
 
 console.log(`\nתוצאה: ${checks - failures}/${checks}`);
 if (failures > 0) {

@@ -31,10 +31,22 @@ export default defineConfig({
     timezoneId: 'Asia/Jerusalem',
     colorScheme: 'light',
   },
-  webServer: {
-    command: 'npx vite preview --port 4173 --strictPort',
-    url: 'http://localhost:4173/',
-    reuseExistingServer: false,
-    timeout: 60_000,
-  },
+  webServer: [
+    {
+      command: 'npx vite preview --port 4173 --strictPort',
+      url: 'http://localhost:4173/',
+      reuseExistingServer: false,
+      timeout: 60_000,
+    },
+    {
+      // מפרט 06: הפריסה בתת־נתיב (GitHub Pages) — השרת מגיש את dist/
+      // מתחת לקידומת ‎/Tora_Book_Typesetter_React/, כמו הייצור החי.
+      // תקלת האתר החי (404 לצרור הנכסים בנתיב שורש מוחלט) לא הייתה
+      // נראית ב-vite preview בשורש — לכן הסביבה הזו חוסמת רגרסיה.
+      command: 'node tests/e2e/subpath-server.mjs',
+      url: 'http://localhost:4174/Tora_Book_Typesetter_React/',
+      reuseExistingServer: false,
+      timeout: 60_000,
+    },
+  ],
 });

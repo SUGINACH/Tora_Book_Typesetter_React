@@ -37,8 +37,8 @@ const jsonResponse = (text: string): Response => new Response(text, { status: 20
 const bytesResponse = (bytes: Uint8Array): Response => new Response(bytes.slice().buffer as ArrayBuffer, { status: 200 });
 
 const happyMap: FetchMap = {
-  '/fonts/manifest.json': () => jsonResponse(manifestText),
-  [`/fonts/${DEFAULT_BODY_FONT_SPEC}`]: () => bytesResponse(guttmanBytes),
+  './fonts/manifest.json': () => jsonResponse(manifestText),
+  [`./fonts/${DEFAULT_BODY_FONT_SPEC}`]: () => bytesResponse(guttmanBytes),
   '/wasm': () => bytesResponse(new Uint8Array([1, 2, 3])),
   '/decoder': () => bytesResponse(new Uint8Array([9])),
 };
@@ -82,7 +82,7 @@ describe('asset-bundle — כשלים מפורשים (אין המשך שקט ע�
     tampered.set(guttmanBytes);
     tampered[0] = (tampered[0]! + 1) % 256;
     await expect(loadBrowserAssetBundle({
-      fetchImpl: makeFetch({ ...happyMap, [`/fonts/${DEFAULT_BODY_FONT_SPEC}`]: () => bytesResponse(tampered) }),
+      fetchImpl: makeFetch({ ...happyMap, [`./fonts/${DEFAULT_BODY_FONT_SPEC}`]: () => bytesResponse(tampered) }),
       wasmUrl: '/wasm',
       woff2DecoderUrl: '/decoder',
     })).rejects.toMatchObject({ errorCode: 'errors.assets.FONT_HASH_MISMATCH' });
@@ -95,7 +95,7 @@ describe('asset-bundle — כשלים מפורשים (אין המשך שקט ע�
       woff2DecoderUrl: '/decoder',
     })).rejects.toMatchObject({ errorCode: 'errors.assets.MANIFEST_UNREADABLE' });
     await expect(loadBrowserAssetBundle({
-      fetchImpl: makeFetch({ '/fonts/manifest.json': () => jsonResponse('{broken') }),
+      fetchImpl: makeFetch({ './fonts/manifest.json': () => jsonResponse('{broken') }),
       wasmUrl: '/wasm',
       woff2DecoderUrl: '/decoder',
     })).rejects.toMatchObject({ errorCode: 'errors.assets.MANIFEST_INVALID' });

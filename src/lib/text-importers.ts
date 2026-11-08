@@ -19,8 +19,10 @@ export async function importWordFile(file: File): Promise<string> {
     throw new Error('פורמט לא נתמך (נדרש .docx)');
   }
 
-  // טעינה דינמית של mammoth
-  const mammothModule = await import(/* @vite-ignore */ 'mammoth');
+  // טעינה דינמית של mammoth — מבונדלת (chunk עצל משלה; בלי external):
+  // bare specifier אינו פתיר בדפדפן, והרצת הייבוא בפריסה היצרנית הייתה
+  // נכשלת בזמן ריצה (TypeError: Failed to resolve module specifier).
+  const mammothModule = await import('mammoth');
   const mammoth = mammothModule.default || mammothModule;
   const arrayBuffer = await file.arrayBuffer();
   const result = await mammoth.convertToHtml({ arrayBuffer });

@@ -46,14 +46,22 @@ export function peekUiRuntime(): UiRuntime | null {
 export function getUiRuntime(): Promise<UiRuntime> {
   if (injected !== null) return Promise.resolve(injected);
   if (realRuntime === null) {
-    realRuntime = (async () => {
-      const client = createBrowserWorkerClient();
+    // הצרור נטען לפני יצירת העובד: כישלון רשת (404/מניפסט) אינו משאיר
+    // Worker יתום שנוצר לשווא. תיקון שורש נוסף: הבטחה דחויה אינה נשמרת
+    // במטמון — הניסיון הבא בונה מחדש (אחרת כל לחיצה נוספת הייתה נכשלת
+    // מיד מאותה דחייה כלואה, גם אחרי התאוששות הרשת).
+    const pending = (async () => {
       const bundle = await loadBrowserAssetBundle();
+      const client = createBrowserWorkerClient();
       const controller = new TypesetController({ client });
-      const runtime = { client, bundle, controller };
+      const runtime: UiRuntime = { client, bundle, controller };
       resolvedReal = runtime;
       return runtime;
     })();
+    pending.catch(() => {
+      if (realRuntime === pending) realRuntime = null;
+    });
+    realRuntime = pending;
   }
   return realRuntime;
 }

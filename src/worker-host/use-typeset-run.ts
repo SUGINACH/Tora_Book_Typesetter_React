@@ -16,10 +16,25 @@
  * משלב 79: שני סוגי הקלט הגרועים נחסמים לפני תחילת עימוד, בלי פעולת-אין.
  */
 import { useCallback } from 'react';
-import { getUiRuntime } from './ui-runtime.js';
+import { getUiRuntime, type UiRuntime } from './ui-runtime.js';
 import { useEditorStore } from '../stores/editor-store.js';
 import { useSettingsStore } from '../stores/settings-store.js';
+import { useRunStore } from '../stores/run-store.js';
 import { analyzeSource } from '../stores/source-analysis.js';
+
+/**
+ * מזהה ה-job של כישלון ההכנה — קבוע ודטרמיניסטי: הפסאדו-job נפתח ונסגר
+ * באותו בלוק (begin ← fail) רק כדי להעביר את השגיאה הקטלוגית לפאזת
+ * הריצה, שבה מציג אותה LayoutPreview. עבור כישלון הכנה לא נבנתה בקשה —
+ * אין inputHash אמיתי, ולכן השדה ריק (אין בדיקה שנשענת עליו).
+ */
+const PREPARE_FAILURE_JOB_ID = 'ui-prepare-failure';
+
+/** מיפוי שגיאת הכנה לקוד קטלוגי — אותה פרשנות כמו onRejected במנצח. */
+const prepareErrorCodeOf = (e: unknown): string =>
+  e instanceof Error && 'errorCode' in e
+    ? String((e as { errorCode: unknown }).errorCode)
+    : 'errors.worker.ENGINE_UNCLASSIFIED';
 
 export interface UseTypesetRun {
   /** הרצת עימוד של המקור הנוכחי דרך ה־Worker. */
@@ -48,7 +63,19 @@ export function useTypesetRun(): UseTypesetRun {
     useEditorStore.getState().setImportAnalysis(analysis);
     if (parsed === null) return; // parseError מוצג במפה — שום job לא נשלח
 
-    const runtime = await getUiRuntime();
+    // שלב ההכנה (צרור נכסים + עובד) עשוי להיכשל ברשת — הכישלון חייב
+    // להיות גלוי: פאזת error עם הקוד הקטלוגי ב-runStore (מוצג ב-LayoutPreview),
+    // לא הבטחה נטושה שקטה שמשאירה את הפאזה ב-idle כאילו כלום לא קרה
+    // (זו הסיבה שכישלון ה־404 באתר החי נראה כ"כפתור לא עושה כלום").
+    let runtime: UiRuntime;
+    try {
+      runtime = await getUiRuntime();
+    } catch (e) {
+      const store = useRunStore.getState();
+      store.begin(PREPARE_FAILURE_JOB_ID, '');
+      store.fail(PREPARE_FAILURE_JOB_ID, prepareErrorCodeOf(e));
+      return;
+    }
     runtime.controller.run({
       source: editor.rawText,
       settings: effective,

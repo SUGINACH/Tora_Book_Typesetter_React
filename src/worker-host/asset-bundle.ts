@@ -39,7 +39,9 @@ export interface BrowserAssetBundle {
 export interface LoadAssetBundleOptions {
   /** ערוץ קריאה — מוזרק בבדיקות; ברירת מחדל fetch הגלובלי. */
   readonly fetchImpl?: (url: string) => Promise<Response>;
-  /** בסיס הנכסים — ברירת מחדל שורש האפליקציה (public/). */
+  /** בסיס הנכסים — ברירת מחדל '.', יחסי למסמך (שורש האפליקציה; public/).
+   *  יחסי ולא מוחלט: הפריסה החיה מוגשת מתת־נתיב (GitHub Pages), ונתיב
+   *  שורש מוחלט מפנה לשורש הדומיין ⇒ 404 (כישלון ההעמדה באתר החי). */
   readonly baseUrl?: string;
   /** גופן הגוף — fontId או שם קובץ (ברירת מחדל: כמו ה־CLI). */
   readonly bodyFontSpec?: string;
@@ -105,7 +107,7 @@ async function fetchBytes(
  */
 export async function loadBrowserAssetBundle(options: LoadAssetBundleOptions = {}): Promise<BrowserAssetBundle> {
   const fetchImpl = options.fetchImpl ?? ((url: string) => fetch(url));
-  const base = options.baseUrl ?? '';
+  const base = options.baseUrl ?? '.';
   const spec = options.bodyFontSpec ?? DEFAULT_BODY_FONT_SPEC;
 
   // 1) מניפסט הגופנים — טקסט כמות שהוא (ה־sha נכנס ל־ResolvedAssetManifest

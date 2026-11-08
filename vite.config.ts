@@ -28,7 +28,8 @@ export default defineConfig({
     sourcemap: false,
     minify: 'esbuild',
     rollupOptions: {
-      external: ['mammoth'],
+      // אין external ל-mammoth (תיקון שורש): bare specifier אינו פתיר
+      // בדפדפן — הייבוא הדינמי מבונדל ל-chunk עצל במקום להיכשל בזמן ריצה.
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
