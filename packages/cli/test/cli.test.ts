@@ -106,6 +106,32 @@ describe('שלב 34: CLI reference runner — artifacts', () => {
     expect((a.report as { layoutHash: string }).layoutHash).toBe((b.report as { layoutHash: string }).layoutHash);
     expect((a.report as { repeats: number }).repeats).toBe(3);
   }, 180_000);
+
+  // ── תיקון שורש 2026-11-09 (כישלון העמדה באתר החי): הגופן חייב להגיע ──
+  // בפועל לצד preview.html — קידומת fonts/ כפולה (fonts/fonts/…) + אי-העתקה
+  // הותירו את ה-@font-face על 404 בכל preview.html שהופק אי-פעם, והדפדפן
+  // הציג גופן חלופי במדדים זרים.
+  test('--html מעתיק את גופן הגוף לפלט ומעגן אותו בנתיב אחד (fonts/<file>); ביט-ביט זהה למקור', async () => {
+    const outcome = await runCli(args({ html: true }));
+    expect(outcome.exitCode).toBe(EXIT_SUCCESS);
+    const c = current as Case;
+    const html = await readFile(join(c.out, 'preview.html'), 'utf8');
+    // נתיב יחיד — לא fonts/fonts/
+    expect(html).toContain('src:url("fonts/Guttman-Rashi-Normal.woff2")');
+    expect(html).not.toContain('fonts/fonts/');
+    // הקובץ עצמו קיים לצד ה-preview וזהה ביט-ביט למקור שה-@font-face צריך
+    const copied = await readFile(join(c.out, 'fonts', 'Guttman-Rashi-Normal.woff2'));
+    const source = await readFile(join(repoRoot, 'assets', 'fonts', 'Guttman-Rashi-Normal.woff2'));
+    expect(copied.byteLength).toBe(source.byteLength);
+    expect(copied.equals(source)).toBe(true);
+    // הריצות ב-preview עוגנות למשפחה ההאשית בגרש בודד בתוך מאפיין ה-style
+    // (מרכאות כפולות ב-style="" חתכו את המאפיין; בלוק ה-<style> של
+    // ה-@font-face חוקי וממשיך להשתמש במרכאות כפולות — שם זה CSS גלוי)
+    expect(html).toContain(`;font-family:'tora-font-v1-`);
+    expect(html).not.toContain(';font-family:"tora-');
+    expect(html).toContain('unicode-bidi:bidi-override');
+    expect(html).toContain('dir="ltr"');
+  }, 120_000);
 });
 
 describe('שלב 34: שגיאות ממוקמות וקודי יציאה', () => {

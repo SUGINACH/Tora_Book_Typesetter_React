@@ -14,11 +14,40 @@ import type { BrowserAssetBundle } from './asset-bundle.js';
 import { loadBrowserAssetBundle } from './asset-bundle.js';
 import { createBrowserWorkerClient } from './browser-client.js';
 import type { WorkerClient } from './worker-client.js';
+import { previewFontFamilyOf } from '../renderers/preview-model.js';
 
 export interface UiRuntime {
   readonly client: WorkerClient;
   readonly bundle: BrowserAssetBundle;
   readonly controller: TypesetController;
+}
+
+/**
+ * רישום גופני התצוגה מה-bytes שכבר נטענו לעובד (תיקון שורש 2026-11-09 —
+ * כישלון העמדה באתר החי): הריצות בתצוגה עוגנות למשפחת `tora-<fontId>`
+ * (previewFontFamilyOf — זהה ל-CLI), ולכן המשפחה חייבת להירשם בדפדפן מאותם
+ * bytes שאומתו ב-sha256 — אחרת הטקסט נפל לגופן חלופי במדדים זרים וכל
+ * השורות נראו שבורות. לא רשת חדשה: אותם bytes, אותה זהות, בלבד הצבה
+ * ב-fonts של המסמך. כשל רישום אינו מפיל את העימוד (העובד ממשיך מה-byts
+ * שלו) — הוא נרשם ב-console והתצוגה נופלת לגופן ברירת המחדל; זהו מצב
+ * מתועד של ירידת נאמנות תצוגה בלבד, לא איבוד שקט של תוצאה.
+ */
+function registerPreviewFonts(bundle: BrowserAssetBundle): void {
+  if (typeof document === 'undefined' || typeof FontFace === 'undefined') return;
+  for (const { record, bytes } of bundle.fonts) {
+    try {
+      const face = new FontFace(previewFontFamilyOf(record.fontId), bytes.slice().buffer as ArrayBuffer, {
+        weight: String(record.weight ?? '400'),
+        style: record.style === 'italic' ? 'italic' : 'normal',
+      });
+      document.fonts.add(face);
+      void face.load().catch((e: unknown) => {
+        console.error(`[preview-font] load failed: ${record.file} — ${e instanceof Error ? e.message : String(e)}`);
+      });
+    } catch (e) {
+      console.error(`[preview-font] register failed: ${record.file} — ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
 }
 
 let injected: UiRuntime | null = null;
@@ -52,6 +81,7 @@ export function getUiRuntime(): Promise<UiRuntime> {
     // מיד מאותה דחייה כלואה, גם אחרי התאוששות הרשת).
     const pending = (async () => {
       const bundle = await loadBrowserAssetBundle();
+      registerPreviewFonts(bundle);
       const client = createBrowserWorkerClient();
       const controller = new TypesetController({ client });
       const runtime: UiRuntime = { client, bundle, controller };

@@ -66,15 +66,16 @@ const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config
 // שלב 80: e2e הורחב ל־8 (קלט פגום חוסם לפני שליחה; ייבוא בזמן ריצה; מסמך קנוני)
 // + import-insights.test.tsx (13 מפת שגיאות קלט וסקירה)
 // שלב 81: e2e הורחב ל־13 (עורך מקושר: שני הכיוונים, BiDi/reorder, שער הטריות) — סה"כ 72
-(compOut !== null && /Tests\s+104\s+passed/.test(compOut) ? ok : fail)('tests/component — 104/104 (8 preview + 4 stores + 13 e2e-worker + 26 לוח הגדרות + 8 קבצים ותבניות + 13 מפת קלט + 17 ממצאי Audit + 15 וירטואליזציה — שלב 83)');
+// תיקון 2026-11-09: +4 בדיקות preview (בי-די/גופן/ריווח — תיקון שורש האתר החי)
+(compOut !== null && /Tests\s+109\s+passed/.test(compOut) ? ok : fail)('tests/component — 109/109 (13 preview + 4 stores + 13 e2e-worker + 26 לוח הגדרות + 8 קבצים ותבניות + 13 מפת קלט + 17 ממצאי Audit + 15 וירטואליזציה)');
 
 console.log('\n4) typecheck שורש');
 (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
 
 console.log('\n5) רגרסיה: build, lint, deps, test:packages');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1281 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1281\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1281/1281 (1265 שלב 83 + 16 ניקוי stores והגדרות יתומות שלב 84)');
+const testOut = (SKIP_TESTS ? 'Tests  1292 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1292\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1292/1292 (1265 שלב 83 + 16 ניקוי stores והגדרות יתומות שלב 84 + 11 תיקון היטל 2026-11-09: 5 render-html + 1 cli + 5 preview)');
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
 

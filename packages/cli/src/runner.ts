@@ -10,7 +10,7 @@
  */
 import { composeDocumentRelease } from '@tora/layout-engine';
 import * as policy from '@tora/policy-torah';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { copyFile, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { typeset, ENGINE_VERSION } from '@tora/layout-engine';
 import {
@@ -241,7 +241,10 @@ export async function runCli(
       fonts: [{
         fontId: fonts.bodyRecord.fontId,
         family: displayFamilyOf(fonts.bodyRecord),
-        file: `fonts/${fonts.bodyRecord.file}`,
+        // שם הקובץ יחסית לספריית fonts/ של הפלט — buildCss מוסיף את הקידומת
+        // בעצמו; קידומת כפולה (fonts/fonts/…) הובילה ל-404 בכל preview.html
+        // שהופק אי־פעם (תוקן 2026-11-09 בעקבות כישלון ההעמדה באתר החי).
+        file: fonts.bodyRecord.file,
         format: fonts.bodyRecord.binaryFormat,
         contentSha256: fonts.bodyRecord.sha256,
       }],
@@ -250,6 +253,22 @@ export async function runCli(
   }
   for (const [name, content] of files) {
     await writeArtifact(join(args.out, name), content);
+  }
+  // הגופן עצמו חייב להיות לצד preview.html — בלעדיו ה-@font-face נופל ל-404
+  // והדפדפן מציג גופן חלופי במדדים זרים (תוקן 2026-11-09; אותר באתר
+  // החי: כל שורה הוצגה בגופן שאינו גופן המדידה). עותק ביט-ביט של הקובץ
+  // מאותו fontsDir שה־setupFonts קרא ממנו — אותם bytes שאומתו ב-sha256.
+  if (args.html) {
+    const fontsOutDir = join(args.out, 'fonts');
+    try {
+      await mkdir(fontsOutDir, { recursive: true });
+      await copyFile(join(args.fontsDir, fonts.bodyRecord.file), join(fontsOutDir, fonts.bodyRecord.file));
+    } catch (e) {
+      throw new CliError(EXIT_OUTPUT, 'errors.cli.OUTPUT_WRITE_FAILED', {
+        path: join(fontsOutDir, fonts.bodyRecord.file), reason: errText(e),
+      }, `העתקת גופן הגוף לפלט נכשלה: ${fonts.bodyRecord.file}`);
+    }
+    progressLine(`preview font: fonts/${fonts.bodyRecord.file} (copied for @font-face)`);
   }
   progressLine(`artifacts: ${files.length} files → ${args.out} (network attempts: ${guard.attempts()})`);
   const exitCode = audit.ok ? EXIT_SUCCESS : EXIT_AUDIT;

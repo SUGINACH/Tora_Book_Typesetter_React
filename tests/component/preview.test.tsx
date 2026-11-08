@@ -31,7 +31,7 @@ import {
 } from '@tora/layout-api';
 import { LayoutPreview } from '../../src/renderers/LayoutPreview.js';
 import { PageView } from '../../src/renderers/PageView.js';
-import { projectPage, projectLayout } from '../../src/renderers/preview-model.js';
+import { displayTextOfRun, previewFontFamilyOf, projectPage, projectLayout } from '../../src/renderers/preview-model.js';
 import { createEngineHandler, type WorkerPort } from '../../src/worker-host/engine-worker.js';
 import { WorkerClient, type WorkerLike } from '../../src/worker-host/worker-client.js';
 import { useTypesetWorker } from '../../src/worker-host/use-typeset-worker.js';
@@ -121,22 +121,37 @@ describe('שלב 36: PageView/LayoutPreview — היטל של IR בלבד', () =
     expect(container.innerHTML).not.toContain('<script');
   });
 
-  test('נאמנות היטל: כל span של run נושא בדיוק את טקסט ה-run מה-IR (סדר חזותי כמקובל ב-v1; ADR-008 בשלב 88)', () => {
+  test('נאמנות היטל: כל span של run נושא את טקסט ההצגה שלו — text פחות רווחי סוף-קו מאופסים (סדר חזותי כמקובל ב-v1; ADR-008 בשלב 88)', () => {
     const { container } = render(createElement(LayoutPreview, { layout: LAYOUT, status: 'done' }));
     const spans = Array.from(container.querySelectorAll('[data-run-id]')) as HTMLElement[];
     expect(spans.length).toBeGreaterThan(0);
-    const irRunTexts: string[] = [];
+    const expected: string[] = [];
     for (const page of LAYOUT.pages) {
       for (const item of page.items as readonly { kind: string }[]) {
         if (item.kind === 'line') {
-          for (const r of (item as unknown as { runs: readonly { id: string; text: string }[] }).runs) irRunTexts.push(r.text);
+          const line = item as unknown as { runs: readonly { id: string; text: string }[] };
+          line.runs.forEach((r, i) => {
+            // הריצה הראשונה של הקו היא השמאלית — רווחי סוף-הקו המאופסים
+            // (trailingZero במנוע) בראש המחרוזת שלה מסולקים מההצגה
+            expected.push(displayTextOfRun(r.text, i === 0));
+          });
         }
       }
     }
     for (const span of spans) {
-      const irText = irRunTexts.find((t) => t === span.textContent);
-      expect(irText).toBeDefined();
+      expect(expected).toContain(span.textContent);
     }
+  });
+
+  test('displayTextOfRun: רווחי U+0020 בראש הריצה השמאלית נחתכים; NBSP ורווחים פנימיים נשמרים; ריצות פנימיות לא נוגעות', () => {
+    expect(displayTextOfRun('   מילה', true)).toBe('מילה');
+    expect(displayTextOfRun('מילה', true)).toBe('מילה');
+    expect(displayTextOfRun(' מילה אחרת ', true)).toBe('מילה אחרת ');
+    expect(displayTextOfRun('מרווח פנימי בלבד', true)).toBe('מרווח פנימי בלבד');
+    // NBSP אינו נחתך — ADR-004 (isTrimmableSpaceText חלקית ל-U+0020)
+    expect(displayTextOfRun('\u00a0מילה', true)).toBe('\u00a0מילה');
+    // ריצה פנימית בקו — הרווח שלה אמיתי (בין-ריצות) ואסור לחתוך
+    expect(displayTextOfRun('   מילה', false)).toBe('   מילה');
   });
 
   test('PageView על עמוד בודד — אותם מאפיינים (§13.2: PageView מקבל LayoutPage)', () => {
@@ -185,6 +200,76 @@ describe('שלב 36: PageView/LayoutPreview — היטל של IR בלבד', () =
       layout: { ...LAYOUT, pages: [] } as unknown as LayoutDocument,
     }));
     expect(emptyC.querySelector('.tora-preview-empty')).not.toBeNull();
+  });
+});
+
+// ─────────── תיקון שורש 2026-11-09 — היפוך קריאה באתר החי ───────────
+//
+// הוכחות-נפל לחוזה ההצגה שתוקן בעקבות כישלון העמדה באתר החי של Pages:
+// הריצות מגיעות מהמנוע בסדר חזותי מפורש (שמאל→ימין) — dir="rtl" גרם
+// לדפדפן להפוך כל שורה פעם שנייה והספר כולו נקרא הפוך; שם המשפחה מהמניפסט
+// (גוטמן-רש"י) שבר את ה-style המוטבע והגופן נפל לחלופה; קו justify לא
+// מולא עד גבול הטור. החוזה המתוקן נבדק כאן DOM-ית.
+
+describe('תיקון 2026-11-09: בי-די, גופן וריווח בתצוגה', () => {
+  test('כל ריצה מוצגת ב-bidi-override כיווני ltr — סדר חזותי מפורש בלי היפוך בי-די שני', () => {
+    const { container } = render(createElement(LayoutPreview, { layout: LAYOUT, status: 'done' }));
+    const spans = Array.from(container.querySelectorAll('[data-run-id]')) as HTMLElement[];
+    expect(spans.length).toBeGreaterThan(0);
+    for (const span of spans) {
+      expect(span.getAttribute('dir')).toBe('ltr');
+      expect(span.style.unicodeBidi).toBe('bidi-override');
+      expect(span.style.direction).toBe('ltr');
+    }
+  });
+
+  test('משפחת הגופן של הריצה היא ההאשית מה-fontId — לא שם המשפחה הגולמי (גרשיים שברו style)', () => {
+    const { container } = render(createElement(LayoutPreview, { layout: LAYOUT, status: 'done' }));
+    const span = container.querySelector('[data-run-id]') as HTMLElement;
+    // fontId בבדיקה: guttman-rashi-normal ⇒ tora-guttman-rashi-normal;
+    // ה-family הגולמי ('Guttman Rashi' / 'גוטמן-רש"י') אסור בסגנון המוטבע.
+    expect(span.style.fontFamily).toBe('"tora-guttman-rashi-normal"');
+    expect(span.style.fontFamily).not.toContain('Guttman Rashi');
+    const page = LAYOUT.pages[0] as LayoutDocument['pages'][number];
+    const firstRun = (page.items as readonly { kind: string; runs?: { font: { fontId: string } }[] }[])
+      .find((i) => i.kind === 'line')?.runs?.[0];
+    expect(span.style.fontFamily).toBe(`"${previewFontFamilyOf(firstRun?.font.fontId ?? '')}"`);
+  });
+
+  test('קו fit (justify) נמתח לרוחב תיבת הריצה; קו טבעי rtl עוגן בימין', () => {
+    const { container } = render(createElement(LayoutPreview, { layout: LAYOUT, status: 'done' }));
+    const lines = Array.from(container.querySelectorAll('[data-fragment-id]')) as HTMLElement[];
+    expect(lines.length).toBeGreaterThan(0);
+    let sawJustified = false;
+    let sawNatural = false;
+    for (const lineEl of lines) {
+      const span = lineEl.querySelector('[data-run-id]') as HTMLElement | null;
+      if (span === null) continue;
+      const reason = lineEl.getAttribute('data-break-reason');
+      if (reason === 'fit') {
+        expect(span.style.textAlign).toBe('justify');
+        expect(span.style.textAlignLast).toBe('justify');
+        sawJustified = true;
+      } else {
+        // כיוון הריצה בבדיקה זו rtl — קו טבעי עוגן בקצה ההתחלתי (ימין)
+        expect(span.style.textAlign).toBe('right');
+        expect(span.style.textAlignLast).toBe('');
+        sawNatural = true;
+      }
+    }
+    expect(sawJustified).toBe(true);
+    expect(sawNatural).toBe(true);
+  });
+
+  test('סמני הערה עוגנים למשפחת הגופן של ריצות העמוד (v0: גופן הגוף)', () => {
+    const { container } = render(createElement(LayoutPreview, { layout: LAYOUT, status: 'done' }));
+    const markers = Array.from(container.querySelectorAll('[data-marker-id]')) as HTMLElement[];
+    const run = container.querySelector('[data-run-id]') as HTMLElement;
+    if (markers.length > 0) {
+      for (const m of markers) {
+        expect(m.style.fontFamily).toBe(run.style.fontFamily);
+      }
+    }
   });
 });
 

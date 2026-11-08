@@ -19,7 +19,7 @@
  *      "לא עדכנית" למשתמש.
  *   4. אין עימוד מקומי בזמן הקלדה ב־main — ההוכחה הסטטית של שלב 77
  *      (verify-ui-worker) עומדת; כאן נבדק שהניווט לא הכניס מנוע לחוט הראשי.
- *   5. הבדיקות: 20 ליבה + 5 E2E + 2 מנצח = 27 חדשות; הסוויטה 1281.
+ *   5. הבדיקות: 20 ליבה + 5 E2E + 2 מנצח = 27 חדשות; הסוויטה 1292.
  *   6. רגרסיה: typecheck, lint:packages, build:packages, deps:check.
  */
 import { execFileSync } from 'node:child_process';
@@ -163,7 +163,7 @@ console.log('\n4) שער הטריות — תוצאה נעולה למהדורת �
     ? ok : fail)('אף קובץ של השלב אינו מייבא את המנוע (ההוכחה הסטטית של שלב 77 עומדת)');
 }
 
-console.log('\n5) הבדיקות — 27 חדשות (20 ליבה + 5 E2E + 2 מנצח); הסוויטה 1281');
+console.log('\n5) הבדיקות — 27 חדשות (20 ליבה + 5 E2E + 2 מנצח); הסוויטה 1292');
 {
   const navTest = read('tests/stores/linked-navigation.test.ts');
   const navIts = [...navTest.matchAll(/\btest\(/g)].length;
@@ -191,7 +191,7 @@ console.log('\n5) הבדיקות — 27 חדשות (20 ליבה + 5 E2E + 2 מנ
     const navOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/stores/linked-navigation.test.ts']);
     (/Tests\s+20\s+passed/.test(navOut ?? '') ? ok : fail)('tests/stores/linked-navigation — 20/20');
     const testOut = run('npm', ['run', 'test:packages']);
-    (/Tests\s+1281\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1281/1281');
+    (/Tests\s+1292\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1292/1292');
   } else {
     ok('הסוויטה — דולג (הצעד האב הריץ אותה; נעילת המונה ב-ci.yml)');
   }
@@ -201,7 +201,7 @@ console.log('\n6) חיבור ל־CI ולסוללה');
 {
   const ci = read('.github/workflows/ci.yml');
   (/verify-linked-editor\.mjs/.test(ci) ? ok : fail)('ci.yml מריץ את verify-linked-editor');
-  (/Tests\[\[:space:\]\]\+1281\[\[:space:\]\]\+passed/.test(ci) ? ok : fail)('נעילת ספירת הבדיקות ב-CI עודכנה ל־1281');
+  (/Tests\[\[:space:\]\]\+1292\[\[:space:\]\]\+passed/.test(ci) ? ok : fail)('נעילת ספירת הבדיקות ב-CI עודכנה ל־1292');
   const pkg = read('package.json');
   (/"verify:linked-editor"/.test(pkg) ? ok : fail)('package.json: verify:linked-editor');
 }

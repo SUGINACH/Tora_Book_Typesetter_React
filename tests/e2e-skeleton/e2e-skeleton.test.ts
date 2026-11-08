@@ -208,7 +208,10 @@ describe('שלב 39: שלד מהלך קצה־לקצה — CLI ← IR ← audit �
       fonts: [{
         fontId: guttman.fontId,
         family: (guttman as unknown as { nameTable?: { family?: string | null } }).nameTable?.family ?? guttman.family ?? guttman.file,
-        file: `fonts/${guttman.file}`,
+        // שם הקובץ יחסית לספריית fonts/ — buildCss מוסיף את הקידומת בעצמו.
+        // תוקן 2026-11-09: קידומת כפולה (fonts/fonts/…) בנתה 404 לכל
+        // preview.html; ה-runner והבדיקה חייבים את אותו נתיב יחיד.
+        file: guttman.file,
         format: guttman.binaryFormat,
         contentSha256: guttman.sha256,
       }],

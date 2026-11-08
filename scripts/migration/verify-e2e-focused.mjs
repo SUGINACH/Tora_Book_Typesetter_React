@@ -124,7 +124,7 @@ const pkg = JSON.parse(read('package.json'));
 ((typeof pkg.scripts?.['verify:e2e-focused'] === 'string' && pkg.scripts['verify:e2e-focused'].includes('verify-e2e-focused.mjs')) ? ok : fail)('package.json — verify:e2e-focused');
 ((pkg.devDependencies?.['@playwright/test'] !== undefined) ? ok : fail)('package.json — @playwright/test ב-devDependencies (גרסה נעולה ב-lockfile)');
 (!/tests\/e2e\//.test(read('vitest.packages.config.ts')) ? ok : fail)('vitest.packages.config.ts — tests/e2e אינו בהכללה (אין ריצה כפולה; e2e-skeleton נשאר)');
-(ci.includes('Tests[[:space:]]+1281[[:space:]]+passed') ? ok : fail)('ci.yml — נעיכת סוויטת vitest 1281 נותרה ללא שינוי (לא נוספו בדיקות vitest בשלב זה)');
+(ci.includes('Tests[[:space:]]+1292[[:space:]]+passed') ? ok : fail)('ci.yml — נעיכת סוויטת vitest 1292 נותרה ללא שינוי (לא נוספו בדיקות vitest בשלב זה)');
 
 console.log('\n7) תיקוני השורש של כישלון האתר החי (תת-נתיב Pages; מפרט 06)');
 // התקלה החיה: "ניסיתי לעמד באתר החי של פייג'ס, ולא הצלחתי" — הצרור נטען

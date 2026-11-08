@@ -28,6 +28,13 @@ export interface PageViewProps {
 }
 
 function runStyle(r: RunViewModel): CSSProperties {
+  // תיקון שורש 2026-11-09 (כישלון העמדה באתר החי): הריצות נושאות טקסט
+  // בסדר חזותי מפורש שנפתר במנוע (שמאל→ימין) — ההצגה חייבת bidi-override
+  // כיווני ltr, אחרת הדפדפן מפעיל את אלגוריתם הבי-די בשנית וכל שורה נקראת
+  // הפוך (אומת באתר החי לפני התיקון). יישור: קו מוצדק (fit) נמתח לרוחב
+  // תיבת הריצה כפי שהמנוע חילק על הרווחים; קו טבעי עוגן בקצה ההתחלתי
+  // של הכיוון — ימין ל-rtl (פער מדידה דולף לסוף הקו, לא לראשו).
+  const align: CSSProperties['textAlign'] = r.justified ? 'justify' : (r.direction === 'rtl' ? 'right' : 'left');
   return {
     position: 'absolute',
     insetInlineStart: `${r.insetInlineStartPx}px`,
@@ -37,6 +44,10 @@ function runStyle(r: RunViewModel): CSSProperties {
     fontSize: `${r.fontSizePx}px`,
     fontFamily: `"${r.fontFamily}"`,
     whiteSpace: 'pre',
+    direction: 'ltr',
+    unicodeBidi: 'bidi-override',
+    textAlign: align,
+    ...(r.justified ? { textAlignLast: 'justify' as const } : {}),
   };
 }
 
@@ -44,11 +55,11 @@ function renderRun(r: RunViewModel) {
   return (
     <span
       key={r.id}
-      dir={r.direction}
+      dir="ltr"
       data-run-id={r.id}
       style={runStyle(r)}
     >
-      {r.text}
+      {r.displayText}
     </span>
   );
 }
@@ -116,6 +127,7 @@ export function PageView({ page, dir = 'rtl', onItemActivate, highlightItemIds }
             data-source-id={l.blockId}
             data-region-id={l.regionId}
             data-item-kind="line"
+            data-break-reason={l.breakReason}
             {...(highlighted ? { 'data-highlighted': 'true' } : {})}
             onClick={clickable ? () => activateLine(l.id) : undefined}
             style={{
@@ -152,6 +164,7 @@ export function PageView({ page, dir = 'rtl', onItemActivate, highlightItemIds }
               blockSize: `${m.blockSizePx}px`,
               lineHeight: 1,
               whiteSpace: 'pre',
+              fontFamily: m.fontFamily !== undefined ? `"${m.fontFamily}"` : undefined,
               ...(clickable ? { cursor: 'pointer' } : {}),
               ...highlightStyle(highlighted),
             }}

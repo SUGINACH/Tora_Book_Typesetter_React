@@ -145,3 +145,119 @@ describe('שלב 37: ממדים מה-IR', () => {
     expect(out.html).toContain('font-size:16px');
   });
 });
+
+// ───────── תיקון שורש 2026-11-09 — היפוך קריאה באתר החי (בי-די כפול) ─────────
+//
+// הוכחות-נפל לשלושת פצעי ההיטל שנתגלו באתר החי של Pages:
+//   (א) dir="rtl" על מחרוזת בסדר חזותי ⇒ הדפדפן הפך כל שורה פעם שנייה
+//       וכל הספר נקרא הפוך. הריצות חייבות bidi-override כיווני ltr.
+//   (ב) מרכאות כפולות בתוך מאפיין style כפול-מרכאות חתכו את המאפיין —
+//       הגופן נפל לברירת המחדל (Times) בכל preview.html שהופק אי-פעם.
+//   (ג) קו justify נמתח במנוע על הרווחים — ההיטל חייב לשחזר את המתיחה
+//       (text-align/-last: justify) אחרת הקו לא מילא את תיבתו.
+
+describe('תיקון 2026-11-09: בי-די, גופן וריווח בהיטל', () => {
+  function makeLine(id: string, breakReason: 'fit' | 'paragraph-end', dir: 'rtl' | 'ltr', text: string): never {
+    const run: PositionedRun = {
+      ...makeRun(`run:${id}`, 0, 400000, text),
+      direction: dir,
+    };
+    return {
+      kind: 'line', id, blockId: 'node:b1', fragmentIndex: 0, lineIndex: 0, regionId: 'page:1:col:0',
+      rect: rect(200000, 300000, 7000000, 300000), baseline: 450000 as never,
+      runs: [run],
+      sourceSpans: [], breakReason, continuation: 'whole',
+    } as never;
+  }
+
+  function layoutWith(lines: never[]): LayoutDocument {
+    return createLayoutDocument({
+      schemaVersion: 1,
+      policyId: 'torah-v1',
+      pages: [
+        {
+          id: 'page:1', physicalIndex: 1, printedFolio: 'א', parity: 'recto', kind: 'body',
+          size: { width: A4.width, height: A4.height },
+          regions: [{ id: 'page:1:col:0', kind: 'body-column', rect: rect(200000, 300000, 7000000, 9000000), columnIndex: 0 }],
+          items: [
+            ...lines,
+            {
+              kind: 'note-marker', id: 'item:m1', noteId: 'fn-1', label: 'א', regionId: 'page:1:col:0',
+              rect: rect(410000, 420000, 60000, 180000), baseline: 430000 as never,
+              source: { documentId: 'd', stream: 'footnote', startUtf16: 0, endUtf16: 3 }, superscript: true,
+            },
+          ],
+        },
+      ],
+      anchors: [],
+      transformations: [],
+    } as never);
+  }
+
+  test('ריצה מוצגת ב-bidi-override כיווני ltr — אין היפוך בי-די שני (סדר חזותי מהמנוע)', () => {
+    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום עולם')]), undefined, ASSETS);
+    const start = out.html.indexOf('class="tora-run"');
+    const runSpan = out.html.slice(start, out.html.indexOf('</span>', start));
+    expect(runSpan).toContain('dir="ltr"');
+    expect(runSpan).toContain('unicode-bidi:bidi-override');
+    expect(runSpan).toContain('direction:ltr');
+    // dir לפי כיוון הריצה (rtl) אסור מאז התיקון — זה היה שורש ההיפוך
+    expect(runSpan).not.toMatch(/dir="rtl"/);
+  });
+
+  test('גופן הריצה תחום בגרש בודד — מרכאות כפולות חתכו את מאפיין ה-style (404 שקט לגופן)', () => {
+    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, ASSETS);
+    expect(out.html).toContain(`font-family:'tora-guttman-rashi-normal'`);
+    // בתוך מאפיין style (הקשר התקלה) אסור מרכאות כפולות סביב שם משפחה —
+    // הן חתכו את המאפיין. בלוק ה־<style> (buildCss) חוקי ונבדק בנפרד למטה.
+    const attr = out.html.slice(out.html.indexOf('class="tora-run"'));
+    const styleAttr = attr.slice(attr.indexOf('style="'), attr.indexOf('">'));
+    expect(styleAttr).not.toContain('font-family:"');
+  });
+
+  test('קו fit (justify) נמתח לרוחב התיבה; קו טבעי rtl עוגן בימין; קו טבעי ltr בשמאל', () => {
+    const out = renderHtml(layoutWith([
+      makeLine('item:l-fit', 'fit', 'rtl', 'שורה מוצדקת'),
+      makeLine('item:l-end', 'paragraph-end', 'rtl', 'שורת סיום'),
+      makeLine('item:l-ltr', 'paragraph-end', 'ltr', 'latin tail'),
+    ]), undefined, ASSETS);
+    const spanOf = (marker: string): string => {
+      const start = out.html.indexOf(marker);
+      expect(start).toBeGreaterThanOrEqual(0);
+      return out.html.slice(start, out.html.indexOf('</span>', start));
+    };
+    const fitRun = spanOf('data-run-id="run:item:l-fit"');
+    expect(fitRun).toContain('text-align:justify');
+    expect(fitRun).toContain('text-align-last:justify');
+    const endRun = spanOf('data-run-id="run:item:l-end"');
+    expect(endRun).toContain('text-align:right');
+    expect(endRun).not.toContain('text-align-last');
+    const ltrRun = spanOf('data-run-id="run:item:l-ltr"');
+    expect(ltrRun).toContain('text-align:left');
+  });
+
+  test('סמן הערה עוגן למשפחת ה-manifest — לא לגופן ברירת המחדל של הדפדפן', () => {
+    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, ASSETS);
+    const marker = out.html.slice(out.html.indexOf('class="tora-note-marker"'), out.html.indexOf('</span>', out.html.indexOf('class="tora-note-marker"')));
+    expect(marker).toContain(`font-family:'tora-guttman-rashi-normal'`);
+    // בלי manifest אין עיגון — התנהגות קיימת נשמרת
+    const noManifest = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, undefined);
+    const markerNoManifest = noManifest.html.slice(noManifest.html.indexOf('class="tora-note-marker"'), noManifest.html.indexOf('</span>', noManifest.html.indexOf('class="tora-note-marker"')));
+    expect(markerNoManifest).not.toContain('font-family');
+  });
+
+  test('רווחי סוף-הקו המאופסים (trailingZero) לא מוצגים — חיתוך U+0020 מהריצה השמאלית בלבד', () => {
+    // שתי ריצות בקו: הראשונה (השמאלית) נושאת "  " בראש המחרוזת = סוף הקו
+    // החזותי — המנוע איפס את הקידום שלהן; השנייה פנימית והרווח שלה אמיתי.
+    const line = makeLine('item:l-trim', 'fit', 'rtl', 'x');
+    const firstRun: PositionedRun = { ...makeRun('run:left', 0, 100000, '   מלה') };
+    const innerRun: PositionedRun = { ...makeRun('run:inner', 100000, 300000, ' אחרת') };
+    const withRuns = { ...line, runs: [firstRun, innerRun] } as never;
+    const out = renderHtml(layoutWith([withRuns]), undefined, ASSETS);
+    const leftSpan = out.html.slice(out.html.indexOf('data-run-id="run:left"'), out.html.indexOf('</span>', out.html.indexOf('data-run-id="run:left"')));
+    expect(leftSpan).toContain('>מלה');
+    expect(leftSpan).not.toContain('>   מלה');
+    const innerSpan = out.html.slice(out.html.indexOf('data-run-id="run:inner"'), out.html.indexOf('</span>', out.html.indexOf('data-run-id="run:inner"')));
+    expect(innerSpan).toContain('> אחרת');
+  });
+});

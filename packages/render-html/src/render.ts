@@ -6,9 +6,17 @@
  * בלבד; ההמרה LU→px רציונלית (roundDiv(lu,49152) — לא px/mm היסטורי).
  * מצב קנוני: אותו layout+assets ⇐ ביט-ביט אותם bytes (§15.1).
  *
- * ייצוג הקו ב-v1 (זמני, מסומן): ריצות ממוקמות פיזית (left/top) עם dir
- * לפי כיוון הריצה; ההחלטה הסופית על ייצוג הקו — ADR-008 (שלב 88).
+ * ייצוג הקו ב-v1 (מוקדם מ-ADR-008/שלב 88 — תיקון שורש לכישלון העמדה
+ * באתר החי, 2026-11-09): הריצות נושאות טקסט בסדר חזותי מפורש שנפתר
+ * במנוע (שמאל→ימין) — ולכן ההיטל מציג אותן כמות־שהן ב-bidi-override
+ * כיווני ltr: הדפדפן אינו מפעיל את אלגוריתם הבי-די בשנית (הפעלה כפולה
+ * הפכה כל שורה לקריאה הפוכה באתר החי). יישור: קו fit (justify) נמתח
+ * לרוחב התיבה (text-align/-last: justify) כפי שהמנוע חילק על הרווחים;
+ * קו טבעי עוגן בקצה ההתחלתי של הכיוון (ימין ל-rtl). החלטת הייצוג הסופית
+ * (טקסט לוגי + מיפוי selection) — עדיין ADR-008 (שלב 88).
  * גופנים עוגנים לפי manifest (@font-face עם src קבוע); אין גופן רשת.
+ * שמות משפחה בתוך style תחומים בגרש בודד — מרכאות כפולות בתוך
+ * מאפיין style כפול-מרכאות חתכו את המאפיין והגופן נפל לברירת מחדל.
  */
 import type { LayoutDocument, LayoutPage, LineFragment, PositionedNoteMarker, PositionedRun, Rect, LinkTable } from '@tora/layout-api';
 import { luToCssPx } from '@tora/layout-api';
@@ -90,27 +98,51 @@ function styleOfRect(rect: Rect): string {
 
 // ─────────────────────────── היטל ───────────────────────────
 
-function renderRun(run: PositionedRun, manifest: AssetManifest | undefined): string {
+function renderRun(run: PositionedRun, manifest: AssetManifest | undefined, justified: boolean, isLineVisualStart: boolean): string {
   const fam = fontFamilyOf(run.font.fontId, manifest);
   const size = `${luToCssPx(run.fontSizeLu as never)}px`;
-  return `<span class="tora-run" dir="${run.direction}" data-run-id="${escapeAttr(run.id)}" `
-    + `style="left:${px(run.startLu)};top:0;width:${px(run.widthLu)};height:100%;font-family:"${fam}";font-size:${size}">`
-    + `${escapeHtmlText(run.text)}</span>`;
+  // סדר חזותי מפורש מהמנוע ⇒ bidi-override + ltr: הדפדפן מציג את התווים
+  // בסדר המחרוזת כמות שהם, בלי היפוך בי-די שני (תיקון שורש 2026-11-09 —
+  // הצבת dir="rtl" על מחרוזת בסדר חזותי הפכה כל שורה לקריאה הפוכה).
+  // יישור: justify לקו fit (המנוע חילק את מתיחת הרווחים על תיבת הריצה);
+  // קו טבעי עוגן בקצה ההתחלתי — ימין לריצת rtl (פער מדידה דולף לסוף הקו).
+  const align = justified
+    ? 'text-align:justify;text-align-last:justify'
+    : `text-align:${run.direction === 'rtl' ? 'right' : 'left'}`;
+  // גופן בגרש בודד בתוך ה-style — מרכאות כפולות חתכו את המאפיין (HTML)
+  // והגופן נפל לברירת המחדל של הדפדפן (אותר באתר החי: Times במקום גוטמן).
+  // רווחי סוף-הקו המאופסים (trailingZero) מוצגים בדפדפן ברוחב טבעי —
+  // רוחב רפאים; הם בראש המחרוזת של הריצה השמאלית (runs חזותיים שמאל→ימין).
+  let displayText = run.text;
+  if (isLineVisualStart) {
+    let i = 0;
+    while (i < displayText.length && displayText.charCodeAt(i) === 0x20) i += 1;
+    if (i > 0) displayText = displayText.slice(i);
+  }
+  return `<span class="tora-run" dir="ltr" data-run-id="${escapeAttr(run.id)}" `
+    + `style="left:${px(run.startLu)};top:0;width:${px(run.widthLu)};height:100%;unicode-bidi:bidi-override;direction:ltr;${align};font-family:'${fam}';font-size:${size}">`
+    + `${escapeHtmlText(displayText)}</span>`;
 }
 
-function renderMarker(marker: PositionedNoteMarker, linkOf?: (noteId: string) => ProjectedLinkInfo | undefined): string {
+function renderMarker(marker: PositionedNoteMarker, fam: string | undefined, linkOf?: (noteId: string) => ProjectedLinkInfo | undefined): string {
   const topLu = (marker.baseline as number) - (marker.rect.y as number);
   const top = `${luToCssPx(topLu as never)}px`;
   const link = linkOf?.(marker.noteId);
   const linkAttrs = link === undefined ? '' : ` data-link-id="${escapeAttr(link.id)}" data-link-kind="${escapeAttr(link.kind)}"`
     + (link.targetPage !== undefined ? ` data-link-target-page="${link.targetPage}"` : '');
+  // v0: כל השימושים באותו גופן הגוף — הסמן עוגן למשפחת ה-manifest (בלי
+  // עיגון הוא נפל לגופן ברירת המחדל וחרג מהמדידה). גרש בודד — כמו בריצות.
+  const fontAttr = fam === undefined ? '' : `;font-family:'${fam}'`;
   return `<span class="tora-note-marker" dir="ltr" data-note-id="${escapeAttr(marker.noteId)}"${linkAttrs} `
-    + `style="left:${px(marker.rect.x as never)};top:${top};width:${px(marker.rect.width as never)};height:${px(marker.rect.height as never)};line-height:1">`
+    + `style="left:${px(marker.rect.x as never)};top:${top};width:${px(marker.rect.width as never)};height:${px(marker.rect.height as never)};line-height:1${fontAttr}">`
     + `${escapeHtmlText(marker.label)}</span>`;
 }
 
 function renderLine(line: LineFragment, manifest: AssetManifest | undefined): string {
-  const runs = line.runs.map((r) => renderRun(r, manifest)).join('');
+  // breakReason 'fit' ⇔ המנוע הצדיק את הקו לרוחב הטור (dp.ts justificationOf);
+  // ההיטל משחזר את המתיחה בדפדפן כדי שהקו ימלא את תיבתו כפי שחושב.
+  const justified = line.breakReason === 'fit';
+  const runs = line.runs.map((r, i) => renderRun(r, manifest, justified, i === 0)).join('');
   return `<div class="tora-line" dir="auto" data-fragment-id="${escapeAttr(line.id)}" data-source-id="${escapeAttr(line.blockId)}" `
     + `data-region-id="${escapeAttr(line.regionId)}" data-break-reason="${line.breakReason}" data-continuation="${line.continuation}" `
     + `style="${styleOfRect(line.rect)}">${runs}</div>`;
@@ -129,11 +161,14 @@ function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, marke
   const regions = page.regions
     .map((r) => `<div class="tora-region" data-region-id="${escapeAttr(r.id)}" data-region-kind="${r.kind}" style="${styleOfRect(r.rect)}"></div>`)
     .join('');
+  const markerFont = manifest === undefined || manifest.fonts.length === 0
+    ? undefined
+    : fontFamilyOf(manifest.fonts[0]!.fontId, manifest);
   const items = page.items
     .map((item) => {
       switch (item.kind) {
         case 'line': return renderLine(item, manifest);
-        case 'note-marker': return renderMarker(item, markerLinkOf);
+        case 'note-marker': return renderMarker(item, markerFont, markerLinkOf);
         case 'anchor': {
           const link = anchorLinkOf?.(item.anchorId);
           const linkAttrs = link === undefined ? '' : ` data-link-id="${escapeAttr(link.id)}" data-link-kind="${escapeAttr(link.kind)}"`
