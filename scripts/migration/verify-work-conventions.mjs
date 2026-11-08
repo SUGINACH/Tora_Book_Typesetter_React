@@ -149,6 +149,16 @@ const NO_EXTERNAL_FONTS_STAGE_85 = new Set([
   'index.html', // נותר רק ה־stylesheet המקומי ./fonts/fonts.css
 ]);
 for (const f of NO_EXTERNAL_FONTS_STAGE_85) LIVING_FILES.add(f);
+// תיקון פריסה (2026-11-09): שורש כישלון ההעמדה באתר החי של Pages — הצרור
+// נטען מנתיב שורש מוחלט (404 בתת־הנתיב) וההבטחה נטושה בשקט ("כפתור
+// אילם"). רשומה מלאה בראש ה-WORKLOG. שני הקבצים הם מסלול הפעלה בלבד —
+// אין שינוי מנוע (layoutHash ללא שינוי; מפרט 02 האורקל ירוק). רשימה
+// סגורה — כל קובץ נוסף ייתפס.
+const DEPLOY_SUBPATH_FIX_2026_11_09 = new Set([
+  'src/lib/text-importers.ts', // ייבוא Word: בינדול mammoth — bare specifier אינו פתיר בדפדפן (הייבוא היה שבור בכל פריסה)
+  'vite.config.ts', // הסרת external:['mammoth'] — אותו תיקון שורש; ה-chunk העצל נבדק במפרט 06/בבנייה
+]);
+for (const f of DEPLOY_SUBPATH_FIX_2026_11_09) LIVING_FILES.add(f);
 // תיקון תכנית מבוקר (כלל 3 בתכנית): קובץ התכנית נערך בתיאום "לפני שלב 15"
 // המתועד ב־WORKLOG — תחילה ב־commit ed3b856, ואחר כך תוקן ב־a1674fb
 // ("שחזור שלבים שהושלמו ותיקום תיאום התכנית") שהשיב את ניסוחי שלבים 1–14
