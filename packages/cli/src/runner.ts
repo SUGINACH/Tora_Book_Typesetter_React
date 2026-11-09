@@ -25,10 +25,11 @@ import {
   type TypesetSuccess,
 } from '@tora/layout-api';
 import { renderHtml } from '@tora/render-html';
+import { exportPdf } from '@tora/export-pdf';
 import { auditLayout, type LayoutAuditReport } from '@tora/audit-core';
 import { type CliArgs } from './args.js';
 import { CliError } from './errors.js';
-import { EXIT_AUDIT, EXIT_ENGINE, EXIT_INPUT, EXIT_OUTPUT, EXIT_SUCCESS, EXIT_USAGE } from './exit-codes.js';
+import { EXIT_AUDIT, EXIT_ENGINE, EXIT_FONT, EXIT_INPUT, EXIT_OUTPUT, EXIT_SUCCESS, EXIT_USAGE } from './exit-codes.js';
 import { installNetworkDeny } from './offline-guard.js';
 import {
   displayFamilyOf,
@@ -57,6 +58,8 @@ export interface RunReport {
   readonly engine: 'legacy' | 'next';
   /** סיכום הביקורת (שלב 38): ok ⟺ אפס HIGH. */
   readonly audit: { readonly ok: boolean; readonly high: number; readonly medium: number; readonly low: number };
+  /** שלב 89: נוכח רק עם --pdf — אובייקט ייצוא (גליפים/subset/sha256). */
+  readonly pdf?: { readonly pages: number; readonly glyphsDrawn: number; readonly subsetGlyphs: number; readonly sha256: string };
 }
 
 export interface RunOutcome {
@@ -264,6 +267,24 @@ export async function runCli(
   // שלב 87: אין עוד העתקת גופן לפלט — הגופן מוטמע בתוך preview.html
   // כ-data URI מאותם bytes שאומתו ב-sha256 (ההעתקה מ-2026-11-09 לצד
   // הקובץ הייתה לפני ההטמעה; הקובץ עומד לבדו offline — §15.2, §21).
+  // שלב 89 (§15.4; ADR-009): book.pdf מגליפי ה-IR — הגופן המוטמע הוא
+  // ה-sfnt הקנוני שממנו המנוע מדד (פריקת WOFF2 — אותם bytes; sfntSha256
+  // במרשם נועל). אין window.print ואין צילום DOM במסלול ה-PDF.
+  let pdfInfo: { pages: number; glyphsDrawn: number; subsetGlyphs: number; sha256: string } | undefined;
+  if (args.pdf) {
+    const woff = fonts.loaded.get(fonts.bodyRecord.fontId);
+    if (woff === undefined) {
+      throw new CliError(EXIT_FONT, 'errors.cli.FONT_LOAD_FAILED', { file: fonts.bodyRecord.file, reason: 'missing-for-pdf' }, `גופן הגוף חסר לייצוא PDF: ${fonts.bodyRecord.file}`);
+    }
+    const wawoff2Mod = (await import('wawoff2')) as unknown as { default?: unknown; decompress: (b: Uint8Array) => Promise<Uint8Array> };
+    const wawoff2 = (wawoff2Mod.default ?? wawoff2Mod) as { decompress: (b: Uint8Array) => Promise<Uint8Array> };
+    const sfntBytes = await wawoff2.decompress(woff.bytes);
+    const pdf = exportPdf(roundTripLayout, [{ fontId: fonts.bodyRecord.fontId, sfntBytes }]);
+    await writeBinaryArtifact(join(args.out, 'book.pdf'), pdf.bytes);
+    pdfInfo = { pages: pdf.pages, glyphsDrawn: pdf.glyphsDrawn, subsetGlyphs: pdf.subsetGlyphs, sha256: pdf.sha256 };
+    (report as { pdf?: unknown }).pdf = pdfInfo;
+    progressLine(`pdf: ${pdf.pages} pages, ${pdf.glyphsDrawn} glyphs, subset ${pdf.subsetGlyphs} → book.pdf`);
+  }
   progressLine(`artifacts: ${files.length} files → ${args.out} (network attempts: ${guard.attempts()})`);
   const exitCode = audit.ok ? EXIT_SUCCESS : EXIT_AUDIT;
   return { exitCode, report, artifactsDir: args.out, ...(audit.ok ? {} : { error: { code: 'errors.cli.AUDIT_FINDINGS', params: { high: audit.counts.HIGH } } }) };
@@ -323,6 +344,16 @@ export async function runAuditCli(
   await writeArtifact(outPath, canonicalJson(audit as unknown as Record<string, unknown>));
   progressLine(`audit written: ${outPath} (network attempts: ${guard.attempts()})`);
   return { exitCode: audit.ok ? EXIT_SUCCESS : EXIT_AUDIT, audit };
+}
+
+async function writeBinaryArtifact(path: string, content: Uint8Array): Promise<void> {
+  try {
+    await writeFile(path, content);
+  } catch (e) {
+    throw new CliError(EXIT_OUTPUT, 'errors.cli.OUTPUT_WRITE_FAILED', {
+      path, reason: errText(e),
+    }, `כתיבה נכשלה: ${path}`);
+  }
 }
 
 async function writeArtifact(path: string, content: string): Promise<void> {

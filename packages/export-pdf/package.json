@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
-  "description": "ייצוא PDF מבוסס IR/גליפים — שלד שלב 7; המימוש בפרק יא (שלבים 89–91)",
+  "description": "ייצוא PDF מבוסס-גליפים מה-Layout IR (ADR-009; שלב 89)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

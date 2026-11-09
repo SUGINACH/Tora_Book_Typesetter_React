@@ -21,6 +21,8 @@ export interface CliArgs {
   readonly trace: TraceLevel;
   readonly repeat: number;
   readonly html: boolean;
+  /** יצירת book.pdf דרך export-pdf (שלב 89; §15.4) — מגליפי ה-IR. */
+  readonly pdf: boolean;
   /** מצב audit עצמאי (§12: ביקורת בקריאה נפרשת): --layout layout.json. */
   readonly layout?: string;
   readonly request?: string;
@@ -60,6 +62,7 @@ export const USAGE = `@tora/cli — Node 22 reference runner (שלב 34; אפי�
   --repeat <n>          מספר ריצות לאימות דטרמיניזם (ברירת מחדל: 1; חייב להיות זהה)
   --compose             הרכבת release (שלב 74): שערים + עמודי TOC מיוצבים (נקודת שבת)
   --html                יצירת preview.html נוסף דרך render-html
+  --pdf                יצירת book.pdf נוסף דרך export-pdf (גליפי ה-IR)
   --layout <path>       מצב ביקורת: audit של layout.json קיים (עם request.json לצדו)
   --request <path>      בקשת המקור לביקורת (ברירת מחדל: request.json לצד ה-layout)
   --help                הצגת הודעה זו
@@ -81,6 +84,7 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
     const a = argv[i] as string;
     if (a === '--help' || a === '-h') return { ok: true, help: true, args: nullArgs() };
     if (a === '--html') { flags.add('html'); continue; }
+    if (a === '--pdf') { flags.add('pdf'); continue; }
     if (a === '--compose') { flags.add('compose'); continue; }
     if (a.startsWith('--')) {
       const key = a.slice(2);
@@ -152,6 +156,7 @@ export function parseCliArgs(argv: readonly string[]): ArgsResult {
       trace: traceRaw as TraceLevel,
       repeat,
       html: flags.has('html'),
+      pdf: flags.has('pdf'),
       compose: flags.has('compose'),
       engine: engineRaw as 'legacy' | 'next',
       ...(layout !== undefined ? { layout } : {}),
@@ -169,6 +174,6 @@ function nullArgs(): CliArgs {
   return {
     input: '', out: '', fontsManifest: '', fontsDir: '', bodyFont: '',
     shaarManifest: '', ornamentsManifest: '',
-    trace: 'off', repeat: 1, html: false, compose: false, engine: 'next',
+    trace: 'off', repeat: 1, html: false, pdf: false, compose: false, engine: 'next',
   };
 }
