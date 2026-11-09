@@ -1,13 +1,13 @@
 /**
- * ExportButton.tsx — פעולת הייצוא של המעטפת (שלב 86; אפיון §15.1).
+ * ExportButton.tsx — פעולת הייצוא של המעטפת (שלב 86–87; אפיון §15.1–15.2).
  *
- * מחליף את כפתור ההדפסה: אין עוד window.print ואין עוד היטל מה-DOM החי.
- * הייצוא נבנה כולו מה־IR הקפוא ב-resultStore דרך הרנדרר הטהור
- * (buildExportHtml ← @tora/render-html) עם הגופנים מהצרור החי —
- * ביט-ביט אותן תוצאות כמו ה-CLI על אותו קלט (§15.1).
+ * החלף את כפתור ההדפסה (window.print) בהיטל HTML טהור מה־IR הקפוא
+ * שב-resultStore — ביט-ביט כמו ה-CLI על אותו קלט. הגופנים מהצרור
+ * החי (asset-bundle) מוטמעים כ-data URI — הקובץ עומד לבדו offline.
  *
- * הפעלה חוזרת של הייצוא לא מזיזה אף אות בספר ואינה מריצה עימוד:
- * היטל בלבד (אין job, אין שינוי layoutHash) — נעול בבדיקות השלב.
+ * התפר (§5): הקומפוננטה אינה נוגעת בחבילות — כל הלוגיקה ב־worker-host/
+ * export-html.ts; כאן רק חיווט ה-UI. אין היטל מה-DOM החי; אין מדידה;
+ * אין job חדש (layoutHash ללא שינוי).
  */
 import { useCallback } from 'react';
 import { useLayoutIr, useResultSourceText, useDocumentName, useRunPhase } from '../../stores/selectors.js';
@@ -39,7 +39,7 @@ export function ExportButton() {
       disabled={disabled}
       className="w-full px-3 py-2 bg-gray-200 rounded text-xs disabled:opacity-50"
       data-testid="export-html"
-      title="ייצוא HTML עצמאי מה-IR — מסלול הייצוא הסמכותי (§15.1; אין window.print)"
+      title="ייצוא HTML עצמאי — היטל טהור מה-IR (§15.1–15.2; אין window.print)"
     >
       📄 ייצוא HTML
     </button>
