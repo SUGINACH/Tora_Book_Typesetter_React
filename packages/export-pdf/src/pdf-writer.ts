@@ -53,27 +53,33 @@ export class PdfWriter {
     const sorted = [...this.objects].sort((a, b) => a.num - b.num);
     const enc = new TextEncoder();
     const chunks: Uint8Array[] = [];
-    const pushStr = (s: string): void => { chunks.push(enc.encode(s)); };
-    const pushBin = (b: Uint8Array): void => { chunks.push(b); };
-    pushStr('%PDF-1.7\n%\xE2\xE3\xCF\xD3\n');
+    let length = 0;
+    const pushStr = (s: string): number => {
+      const b = enc.encode(s);
+      chunks.push(b);
+      length += b.length;
+      return b.length;
+    };
+    const pushBin = (b: Uint8Array): number => {
+      chunks.push(b);
+      length += b.length;
+      return b.length;
+    };
+    // כותרת + מרקר בינארי (4 בתים >=0x80) — האורך נמדד בבתים אמיתיים
+    pushStr('%PDF-1.7\n%');
+    pushBin(new Uint8Array([0xE2, 0xE3, 0xCF, 0xD3]));
+    pushStr('\n');
     const offsets: number[] = [];
-    let length = 9;
     for (const o of sorted) {
       offsets.push(length);
       pushStr(`${o.num} 0 obj\n`);
-      length += `${o.num} 0 obj\n`.length;
       for (const p of o.parts) {
-        if (typeof p === 'string') {
-          pushStr(p);
-          length += p.length; // ASCII — אורך המחרוזת === אורך הבתים
-        } else {
-          pushBin(p);
-          length += p.length;
-        }
+        if (typeof p === 'string') pushStr(p); // ASCII — הקידוד זהה לבתים
+        else pushBin(p);
       }
     }
     const xrefStart = length;
-    pushStr(`xref\n0 ${this.next}\n`);
+    pushStr(`\nxref\n0 ${this.next}\n`);
     pushStr('0000000000 65535 f \n');
     for (let i = 1; i < this.next; i += 1) {
       const off = offsets[i - 1];
@@ -81,7 +87,7 @@ export class PdfWriter {
       pushStr(`${String(off).padStart(10, '0')} 00000 n \n`);
     }
     pushStr(`trailer\n<< /Size ${this.next} /Root ${root.num} 0 R /Info ${info.num} 0 R >>\nstartxref\n${xrefStart}\n%%EOF\n`);
-    const total = chunks.reduce((a, c) => a + c.length, 0);
+    const total = length;
     const out = new Uint8Array(total);
     let w = 0;
     for (const c of chunks) {
