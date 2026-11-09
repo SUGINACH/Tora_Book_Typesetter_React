@@ -9,7 +9,13 @@ edition = "2021"
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
+# מעטפת בלבד (שלב 95; אפיון §12.3): אין מנוע Rust מקביל — כל העימוד
+# באותו Worker של ה-webview (חבילות @tora). הפלאגינים משמשים דיאלוגים
+# וגישה לקבצים מקומיים בלבד; שגיאותיהם ממופות בצד ה-TS לקטלוג היחיד
+# (src/worker-host/tauri-errors.ts).
 tauri = { version = "2", features = [] }
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 

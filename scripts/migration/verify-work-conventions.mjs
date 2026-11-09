@@ -159,6 +159,12 @@ const DEPLOY_SUBPATH_FIX_2026_11_09 = new Set([
   'vite.config.ts', // הסרת external:['mammoth'] — אותו תיקון שורש; ה-chunk העצל נבדק במפרט 06/בבנייה
 ]);
 for (const f of DEPLOY_SUBPATH_FIX_2026_11_09) LIVING_FILES.add(f);
+// חריג מעטפת מתועד (שלבים 93+94, M11; 2026-11-10): ה-ErrorBoundary הישן תורגם
+// לקטלוג ה-i18n היחיד וכיוון המחסנית שלו תוקן (dir="ltr" + text-start —
+// תוכן אנגלית). מעטפת UI בלבד — אינו נוגע למנוע/למדידה/ל-layoutHash ואינו
+// נטען בבדיקות differential. רשימה סגורה — כל קובץ ישן נוסף ייתפס.
+const I18N_SHELL_FIX_2026_11_10 = ['src/components/common/ErrorBoundary.tsx'];
+for (const f of I18N_SHELL_FIX_2026_11_10) LIVING_FILES.add(f);
 // תיקון תכנית מבוקר (כלל 3 בתכנית): קובץ התכנית נערך בתיאום "לפני שלב 15"
 // המתועד ב־WORKLOG — תחילה ב־commit ed3b856, ואחר כך תוקן ב־a1674fb
 // ("שחזור שלבים שהושלמו ותיקום תיאום התכנית") שהשיב את ניסוחי שלבים 1–14
@@ -177,6 +183,24 @@ const planUnchangedSinceCoordination = (() => {
     return false;
   }
 })();
+// התכנית היא מסמך חי לצורך סימון ההשלמה בלבד (כלל 3 בתכנית: "שלב מסומן
+// רק לאחר ששער המעבר שלו עבר"). מותר רק הבדל של סימוני-תיבה ‎[ ]→[x]‎
+// מול נוסח התיאום — כל שינוי ניסוח אחר עדיין נתפס (תיאום חדש נדרש).
+const planOnlyCompletionsSinceCoordination = (() => {
+  try {
+    const coord = execFileSync('git', ['-c', 'core.quotepath=false', 'show', `${PLAN_COORDINATION_COMMIT}:${PLAN_FILE}`], {
+      cwd: repoRoot, encoding: 'utf8',
+    });
+    const diff = execFileSync('git', ['-c', 'core.quotepath=false', 'diff', `${PLAN_COORDINATION_COMMIT}`, '--', PLAN_FILE], {
+      cwd: repoRoot, encoding: 'utf8',
+    });
+    const lines = diff.split('\n').filter((l) => (l.startsWith('+') || l.startsWith('-')) && !l.startsWith('+++') && !l.startsWith('---'));
+    if (lines.length === 0) return true;
+    return lines.every((l) => /^[-+]\s*- \[.\] הושלם\s*$/.test(l));
+  } catch {
+    return false;
+  }
+})();
 const modifiedOld = [];
 for (const f of changed) {
   let existed = true;
@@ -185,7 +209,7 @@ for (const f of changed) {
   } catch {
     existed = false;
   }
-  const isCoordinatedPlan = f === PLAN_FILE && planUnchangedSinceCoordination;
+  const isCoordinatedPlan = f === PLAN_FILE && (planUnchangedSinceCoordination || planOnlyCompletionsSinceCoordination);
   if (existed && !LIVING_FILES.has(f) && !isCoordinatedPlan) modifiedOld.push(f);
 }
 (modifiedOld.length === 0
@@ -256,6 +280,14 @@ const NEW_ALLOWED = [
   // שורת ייצוא אחת) + העטיפה והצהרת הטיפוסים. רשימה סגורה.
   /^src\/worker-host\/woff2-browser\.ts$/,
   /^src\/worker-host\/vendor\/decompress-binding\.(js|d\.ts)$/,
+  // שלב 86: כפתור הייצוא — רכיב המעטפת החדש (היטל טהור; §15.1).
+  /^src\/components\/layout\/ExportButton\.tsx$/,
+  // שלב 93 (M11): תשתית ה-i18n — המקור היחיד לקטלוגים (root scripts/ —
+  // לא scripts/migration/), שני מודולי התשתית ושמונה קבצי ה-locales
+  // שנגולים ממנו (regen===committed נאכף ב-verify-i18n-parity; §16).
+  /^scripts\/gen-i18n-locales\.mjs$/,
+  /^src\/i18n\/(index|formatters)\.ts$/,
+  /^src\/i18n\/locales\/(he-IL|en-US)\/(common|settings|errors|audit)\.json$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;

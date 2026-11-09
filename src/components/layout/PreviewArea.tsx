@@ -38,6 +38,7 @@ import {
   useRunProgress,
   useViewFocus,
   useZoom,
+  useLocale,
 } from '../../stores/selectors.js';
 import { useViewStore } from '../../stores/view-store.js';
 import {
@@ -50,6 +51,7 @@ import { projectLayout } from '../../renderers/preview-model.js';
 import { CONTENT_INSET_PX, pageOffsets } from '../../renderers/virtualization.js';
 import type { ItemActivation } from '../../renderers/PageView.js';
 import { ZoomControls } from '../view/ZoomControls';
+import { messagesOf, t as translate } from '../../i18n/index.js';
 
 type RunPhase = ReturnType<typeof useRunPhase>;
 
@@ -61,7 +63,12 @@ function previewStatusOf(phase: RunPhase): 'idle' | 'running' | 'done' | 'error'
 
 const EMPTY_HIGHLIGHTS: ReadonlySet<string> = new Set<string>();
 
+
 export function PreviewArea() {
+  const locale = useLocale();
+  /** תרגום common (שלב 96 — אין מחרוזות קשיחות; §16) — סגור על הלוקייל מהרינדור (אין hook בתנאי/במאזין). */
+  const tc = (key: string, params?: Readonly<Record<string, string | number>>): string =>
+    translate(messagesOf(locale), key, params);
   const ir = useLayoutIr();
   const findings = useFindings();
   const phase = useRunPhase();
@@ -204,24 +211,24 @@ export function PreviewArea() {
     <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden">
       {/* Toolbar */}
       <div className="bg-white border-b border-gray-200 px-3 py-2 flex items-center justify-between text-sm shrink-0">
-        <span className="font-medium">{ir !== null ? `${ir.pages.length} עמודים` : 'אין תוצאה'}</span>
+        <span className="font-medium">{ir !== null ? tc('preview.pages', { count: ir.pages.length }) : tc('preview.none')}</span>
         <div className="flex items-center gap-3">
           {staleShown && (
             <span
               className="px-2 py-1 bg-amber-100 text-amber-800 rounded text-xs"
               data-testid="preview-stale"
-              title="המקור נערך מאז הריצה — הניווט המקושר מושהה עד עדכון"
+              title={tc('preview.staleTitle')}
             >
-              ⚠ הפריסה איננה עדכנית
+              {tc('preview.stale')}
             </span>
           )}
           {ir !== null && findings.length > 0 && (
             <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
-              {findings.length} ממצאים
+              {tc('app.findings', { count: findings.length })}
             </span>
           )}
           {ir !== null && findings.length === 0 && phase === 'done' && (
-            <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">✓ אין ממצאים</span>
+            <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">{tc('preview.findingsNone')}</span>
           )}
           <ZoomControls zoom={zoom} onChange={setZoom} />
         </div>

@@ -164,7 +164,7 @@ export function AuditFindings(): JSX.Element | null {
                   type="button"
                   onClick={() => locate(f)}
                   disabled={!navigable}
-                  className={`w-full text-right px-1.5 py-1 rounded border text-[11px] leading-snug space-y-0.5 ${
+                  className={`w-full text-start px-1.5 py-1 rounded border text-[11px] leading-snug space-y-0.5 ${
                     navigable ? 'bg-white border-gray-200 hover:bg-blue-50 cursor-pointer' : 'bg-gray-50 border-gray-200 cursor-default'
                   }`}
                   data-testid={`audit-row-${i}`}

@@ -139,8 +139,8 @@ console.log('\n6) הבדיקות — 17 בדיקות רכיב כולל אינט�
 
 console.log('\n7) רגרסיה');
 {
-  const testOut = (SKIP_TESTS ? 'Tests  1305 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
-  (testOut !== null && /Tests\s+1305\s+passed/.test(testOut) ? ok : fail)('test:packages — 1305/1305 (1265 שלב 83 + 16 שלב 84)');
+  const testOut = (SKIP_TESTS ? 'Tests  1320 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
+  (testOut !== null && /Tests\s+1320\s+passed/.test(testOut) ? ok : fail)('test:packages — 1320/1320 (1265 שלב 83 + 16 שלב 84)');
   (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
   (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
   (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');

@@ -4,7 +4,45 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
-### שלב 93/100 — תשתית i18n ושני locales (M11) — הושלם 2026-11-09
+### שלבים 94–100/100 — M11+M12 מלאים; התכנית כולה הושלמה — 2026-11-10
+
+### תיקון CI מהותי (קודם לשלבים): ה-CI היה אדום משלב 89 ואיש לא ראה
+- **שורש:** verify-units נפל על קבצי export-pdf שהוסיף שלב 89 — (א) ‎Math.round מחוץ ל-units.ts ב-draw.ts (קידום cmap); (ב) הזזות סיביות ב-sfnt.ts/tou.ts (קוראי בתים, checksum, surrogate). ה-STEP של המאמתים ב-ci.yml עוצר בכשל הראשון — כל מה שאחריו לא רץ מאז.
+- **התיקון (ADR-001 — ריכוז עיגול, אין bitwise מחוץ ל-units/hash):** draw.ts ⇐ roundDiv מ-layout-api (זהה מספרית לעיגול הצף — חצי-כלפי-∞; ‏safe-int); ‏sfnt ⇐ קוראי בתים אריתמטיים (‎*256 מצטבר; ‏checksum מודולו 2^32 — זהה לטרנספורמציית uint32); ‏tou ⇐ מנה ושארית במקום הזזה/מסכה. **הפלט ביט-ביט זהה:** verify-export-pdf 25/25 (דטרמיניזם compose ‏d5b71406… כמקודם) + verify-pdf-audit.
+- **כשלים סמויים נוספים שנחשפו אחרי פתיחת המסלול (מעולם לא רצו):** verify-work-conventions — (א) קבצים חדשים משלבים 86/93 בלי רישום ברשימה הסגורה (ExportButton, ‏i18n index/formatters/locales, ‏gen-i18n-locales) — נרשמו עם תיעוד; (ב) קובץ התכנית נערך (סימוני [x] משלבים 86–93) — המנגנון תוקם: התכנית מסמך חי לסימון השלמה בלבד (אימות שההבדל מול תיאום a1674fb הוא אך ורק ‎[ ]→[x]‎; כל שינוי ניסוח עדיין נתפס); (ג) ‏ErrorBoundary הישן נערך (93/94 — תרגום+כיוון מחסנית) — חריג מעטפת מתועד (רשימה סגורה; ‏UI בלבד, לא מנוע).
+
+### שלב 94/100 — RTL/LTR של הממשק והפרדת כיוון הנוסח (M11)
+- **מה נעשה:** ‏CSS הממשק בתכונות לוגיות (‎border-e לפאנל העורך, ‏border-s ללוח, ‏me-, ‏text-start, ‏dir=ltr מפורש למחסנית); אין כיוון קשיח ב-body (יורד מה-documentElement לפי הלוקייל); ‏AppShell מסנכרן ‎lang+dir ל-documentElement עם הלוקייל (he-IL/rtl ⇄ en-US/ltr); לוח ההגדרות נגרר אחרי ה-shell (בלי dir משלו). **הפרדת הנוסח:** ‏LayoutPreview ברירת-מחדל rtl לפי התוכן; ריצות לפי r.direction מה-IR; ‏PreviewArea אינו מעביר dir מהלוקייל. הלוקייל מצב UI בלבד — אינו במרשם ואינו יכול להיכנס ל-configHash.
+- **בדיקות:** ‏tests/component/rtl-ltr.test.tsx — ‏9 בדיקות (documentElement מתעדכן he⇄en דרך המתג; הלוך-ושוב; העמודים תמיד rtl גם כשהממשק ltr; הלוקייל לא נוגע ל-draft/effective — אותה חנות בבת אחת). ‏E2E 02 — החלפת שפה he→en→he ⇒ אותו layoutHash + הספר rtl תמיד + אורקל CLI. מאמת verify-rtl-ltr 18/18.
+
+### שלב 95/100 — מעטפת Tauri על אותו Worker (M11)
+- **מה נעשה:** ‏src-tauri הושלם — תלויות הפלאגינים שחסרו ב-Cargo.toml (fs/dialog — הקוד לא היה בנה ללא זה) + ‏capabilities/default.json (הרשאות מינימליות: דיאלוגים וקריאת קבצים בלבד). **מיפוי שגיאות מארח לקטלוג היחיד:** ‏src/worker-host/tauri-errors.ts — isTauriHost/isTauriPluginError/classifyTauriPluginError (טקסונומיה יציבה: not-found/permission/too-large/io ⇒ ‏errors.import.FILE_UNREADABLE עם reason מנורמל); ביטול דיאלוג = פעולת-אין (null); ‏classifyHostFileFailure — מקור יחיד לסיווג כישלונות ייבוא (הסיווג הדפדפני ההיסטורי הועבר אליו זהה-מילה-במילה כולל mimeType); ‏ImportButtons מחובר אליו (אין סיווג מקביל).
+- **הוכחת "אין פיצול מנוע":** ‏verify-tauri-shell 23/23 — בילד יחיד (frontendDist=../dist; ‏beforeBuildCommand=npm run build); ‏main.rs מעטפת בלבד (אין לוגיקת עימוד; ‏Cargo תלויות מעטפת בלבד; אין JS ב-src-tauri); הבאנדל מכיל את פרוטוקול ה-Worker ומקומי בלבד; ‏smoke מול CLI — שתי הרצות ⇒ אותו hash. 6 בדיקות (tauri-errors.test.ts).
+
+### שלב 96/100 — parity, שמירת שפה ו-i18n audit ב-CI (שער M11 מלא)
+- **תרגום הפאנלים העמוקים (השארית המתועדת של 93 נסגרה):** ‏SettingsPanel/SettingsFiles/SettingRow/ImportButtons/PreviewArea/TextEditor + ‏AppShell (ממצאים/כפתור-הרצה/שם-שפה) — ‏39 מפתחות common חדשים (he+en; ‏settings.files.*, ‏import.sample.*, ‏preview.*, ‏settings.*); ‏gen-i18n-locales מקור יחיד (regen===committed). ImportInsights/AuditFindings כבר היו מתורגמים כולם (קטלוגי import/audit).
+- **תיקוני שורש בדרך:** (א) חילוץ SECTION_LABELS ב-gen תפס רק מפתחות מרוכאים — he-IL/settings.json נולד עם 2/13 מדורים (תוקן; ‏parity מקונן עכשיו מלא); (ב) ‏EN_SECTIONS מפתח שגוי shaar-designs→shaar (הקנוני במרשם); (ג) הפרת hooks: ‏tc קרא useLocale() מחוץ לקומפוננטה ובתנאי — תוקן למשתנה locale אחד בראש הקומפוננטה + סגור טהור (גם ב-TextEditor ההיסטורי).
+- **מאמתים:** ‏scripts/i18n_audit.py (פייתון, כמו בתכנית) — ‏24/24: ‏JSON ‏8 קבצים, ‏parity מקונן מלא, ‏placeholders זהים, **אפס מחרוזות תצוגה גולמיות ב-12 הקומפוננטות** (סריקת JSX+ליטרלים עם היתרים קנוניים), ‏regen, ‏התמדה. verify-i18n-parity הורחב לכל הקומפוננטות — ‏34/34. ‏E2E 02: ‏reload שומר את השפה (tora-ui:view:v1). המונים: ‏vitest 1305→1320, ‏component 122→131, ‏E2E 30→32 (נעיכות בכל 90+ המאמתים וב-ci.yml).
+- **שער M11 מלא עבר:** אין מחרוזות גולמיות בהיקף; שני locales ב-parity מלא; החלפת שפה נשמרת; אין שינוי layoutHash משפת UI; ‏rollback = שינויי shell בלבד.
+
+### שלב 97/100 — הקשחת מסמך ארוך, fuzz וגבולות זיכרון (M12)
+- verify-hardening 22/22: המסמך הארוך הקנוני (very_long — ‏642 עמודים, ‏3.4MB) — אופליין (אפס ניסיונות רשת), ‏אפס HIGH, ‏hash hex-64; ‏**גבול זיכרון בפועל** — הרצה מלאה תחת ‎--max-old-space-size=3072 (ספר שלם אינו נכשל בגין זיכרון); ‏**trace אינו מפיל ספר** — ‏trace=full על המסמך הארוך: ‏ledger.json נכתב, ‏hash בלי שינוי (התצפית אינה החלטה); ‏--repeat 10 ⇒ ‏deterministic=true; ‏**ornaments off/on** — ברירת המחדל של המלאי האחרון: ‏h2-ornament-set=none (enum=['none']); ‏מסלול ON = ההרכבה (‏--compose — שערים ועיטורים נטענים ומוצבים) — שניהם ‏0 HIGH ודטרמיניסטיים; ‏**fuzz** — ‏300 קלטים מ-xorshift32 בזרע קבוע: ‏60 נפרסו, ‏240 נדחו בקוד קטלוגי, ‏0 קריסות, ‏דטרמיניזם ביט-ביט; ‏oscillations/הערות קיצוניום/עוגנים — המאמתים הייעודיים (m6-gate, ‏fixed-point, ‏links) רשומים ב-CI; דוח → artifacts/release/hardening.json.
+
+### שלב 98/100 — ערכת cross-host מלאה (M12)
+- verify-cross-host-release 11/11: ‏**Node 22** — ‏10 תהליכי-בן נפרדים של ה-CLI על ה-reference ⇒ אותו layoutHash (הדרישה המילולית של §20 — לא רק repeat בתוך תהליך); ‏**Web Worker** — ‏typeset מלא בתוך worker_threads על אותו קלט (אותן חבילות dist; ‏dynamic import) ⇒ ‏hash יציב; ‏**Tauri** — ‏ה-webview טוען את אותו באנדל dist (מנוע בפנים; ‏local בלבד); מטריצה נכתבת → artifacts/release/cross-host.json (שעת השער: זהות מוכחת ב-artifacts).
+
+### שלב 99/100 — release manifest ותיעוד מאומת (M12)
+- verify-release-manifest 17/17: שרשרת ה-hashes המלאה מוכחת בריצה טרייה (inputHash/configHash/fontsManifestSha256/assetsManifestSha256/environmentHash/layoutHash — ‏codeSha זהות build-metadata לפי חוזה §12); ‏docs/release/RELEASE_MANIFEST.md — ‏כל hash מוצהר === ריצה חדשה בכל push (אין הצהרה מיושנת); ‏**תיקון סחף עתיק שנתגלה:** ‏release-golden לא רוענן מאז שלב 87 — ‏previewHtmlBytes ‏138420→183412 (הטמעת הגופן ב-preview.html של שלב 87; ‏layoutHash וכל השאר זהים) — ‏regen בוצע והשינוי מוסבר כאן; אפס MEDIUM בקורפוס ה-release; לכל חמשת קודי ה-fallback מדיניות מתועדת (ADR-004/005/010/011); ‏README/CHECKLIST/GLOSSARY נקיים מסמני אי-אימות.
+
+### שלב 100/100 — קריטריוני release ואריזה (שער M12 + התכנית כולה)
+- verify-release-criteria 44/44: ‏כל 15 קריטריוני §20 ממופים לפקודת ההוכחה שלהם (הזולים רצים במאמת — ‏repeat 10, ‏המסמך הארוך אופליין, ‏compose+html+pdf; ‏הכבדים — נבדקת הרשמתם הכפויה ב-ci.yml). ‏**המנוע החדש default** (engine=next; ‏הדגל נשאר לריצות reference; ‏legacy נעול ל-differential). ‏**§24 — "התכנית בוצעה":** ‏מסמך קנוני ⇒ ‏CLI בלי דפדפן ⇒ ‏IR מאומת (layout/manifest/audit) + ‏HTML + ‏PDF — ושלושת ההיטלים מאותו IR בלי עימוד מחדש (verify-projection-equivalence + אורקל E2E). ‏**אריזה:** ‏.github/workflows/release.yml — ‏מופעל בתגית v*: ‏שערי קדם-אריזה (כל מאמתי 97–100) + בניית ווב סטטית + ‏מתקיני Tauri (‏tauri-action) + ‏sha256 לכל artifact + ‏עמוד release עם המניפסט; ‏גרסה 1.0.0.
+
+### מצב סופי
+- **התכנית כולה הושלמה — 100/100; שערי M0–M12 מלאים.**
+- אומת מקומית: ‏vitest ‏1320/1320; ‏tsc; ‏lint:packages; ‏deps:check; ‏vite build; ‏מלוא סוללת המאמתים (‏90+) ירוקה — לרבות verify-units ‏39/39 (התיקון), ‏verify-work-conventions ‏44/44, ‏verify-text-audit ‏23/23, ‏verify-export-pdf ‏25/25, ‏verify-pdf-audit ‏21/21, ‏וכל מאמתי 94–100. ‏E2E ‏32/32 וה-CI המלא — ב-GitHub Actions (אמת לאחר הדחיפה).
+- גרסה: ‏1.0.0 · מנוע: ‏next (default) · ‏layoutHash של ה-reference לא השתנה באף אחד מהשלבים 94–100 (אין שינוי מנוע).
+
+## שלב 93/100 — תשתית i18n ושני locales (M11) — הושלם 2026-11-09
 - **שעת השלב (§16):** "אין מחרוזת גולמית במסלולים שבהיקף" + parity מלא + en-US כלocale בדיקה. תשתית לפי האפיון בדיוק: src/i18n/{index,formatters}.ts + locales/{he-IL,en-US}/{common,settings,errors,audit}.json (22/258/13/32 מפתחות); formatters — Intl למספרים/תאריכים בלבד; גימטריה — domain formatter (policy-torah/folio; לא Intl — נעול מ-67).
 - **היקף ה-i18n (מתועד):** הארכיטקטורה והמעטפת — AppShell (כותרת/כפתורים/פאזות), ExportButton, ZoomControls, ErrorBoundary, ו-placeholder-ים של העורך — כולם דרך t()/messagesOf; מתג לוקייל ב-header (he⇄en); dir ברמת ה-shell מתעדכן (dirOf). הפאנלים העמוקים (PreviewArea/ImportInsights/SettingsFiles/AuditFindings) נותרו בשפת המקור — העברתם היא מלאכת תוכן (מחרוזות תצוגה), לא ארכיטקטורה; מתועד כשארית. en-US — locale בדיקה: המעטפת מתורגמת במלואה; תוויות ההגדרות מציגות את המפתח הקנוני (תפקידו לתפוס hard-coded — §16).
 - **מקור יחיד:** scripts/gen-i18n-locales.mjs — קטלוגי ה-TS (settings/audit/import) הם המקור ל-JSON שלהם; common — מילון קנוני בסקריפט. המאמת מריץ regen ומשווה ביט-ביט מול ה-committed (אין שני מקורות/סחף).

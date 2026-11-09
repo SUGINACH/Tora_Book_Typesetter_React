@@ -77,6 +77,13 @@
     "verify:pdf-audit": "node scripts/migration/verify-pdf-audit.mjs",
     "verify:projection-equivalence": "node scripts/migration/verify-projection-equivalence.mjs",
     "verify:i18n-parity": "node scripts/migration/verify-i18n-parity.mjs",
+    "verify:rtl-ltr": "node scripts/migration/verify-rtl-ltr.mjs",
+    "verify:tauri-shell": "node scripts/migration/verify-tauri-shell.mjs",
+    "verify:i18n-audit": "python3 scripts/i18n_audit.py",
+    "verify:hardening": "node scripts/migration/verify-hardening.mjs",
+    "verify:cross-host-release": "node scripts/migration/verify-cross-host-release.mjs",
+    "verify:release-manifest": "node scripts/migration/verify-release-manifest.mjs",
+    "verify:release-criteria": "node scripts/migration/verify-release-criteria.mjs",
     "gen:i18n-locales": "node scripts/gen-i18n-locales.mjs"
   },
   "dependencies": {

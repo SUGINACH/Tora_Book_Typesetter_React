@@ -9,18 +9,30 @@
  */
 import { importTextFile, importWordFile } from '../../lib/text-importers';
 import { importDocumentText, reportImportFailure } from '../../stores/import-document.js';
+// שלב 95 (§12.3, §16): מקור יחיד לסיווג כישלונות ייבוא — גם בדפדפן וגם
+// ב-webview של Tauri (שגיאות fs/dialog ממופות לקטלוג היחיד; ביטול
+// דיאלוג הוא פעולת-אין, לא כישלון).
+import { classifyHostFileFailure } from '../../worker-host/tauri-errors.js';
+import { messagesOf, t as translate } from '../../i18n/index.js';
+import { useLocale } from '../../stores/selectors.js';
 
+
+/** דוגמאות — מפתח קטלוגי לכל אחת (התצוגה מתורגמת; הנתיב קנוני). */
 const SAMPLE_FILES = [
-  { name: 'טקסט קצר — אלמנה/יתום', path: './widow-orphan.txt' },
-  { name: 'טקסט קצר — ליווי כותרות', path: './heading-escort.txt' },
-  { name: 'טקסט בינוני', path: './no_long_test_text.txt' },
-  { name: 'טקסט בינוני-ארוך', path: './mid_long_test_text.txt' },
-  { name: 'טקסט ארוך', path: './long_test_text.txt' },
-  { name: 'טקסט ארוך (ללא סוגריים)', path: './long_test_text_no_parentheses.txt' },
-  { name: 'טקסט ארוך מאוד', path: './very_long_test_text.txt' },
+  { key: 'import.sample.widow', path: './widow-orphan.txt' },
+  { key: 'import.sample.escort', path: './heading-escort.txt' },
+  { key: 'import.sample.mid', path: './no_long_test_text.txt' },
+  { key: 'import.sample.midlong', path: './mid_long_test_text.txt' },
+  { key: 'import.sample.long', path: './long_test_text.txt' },
+  { key: 'import.sample.longnoparen', path: './long_test_text_no_parentheses.txt' },
+  { key: 'import.sample.verylong', path: './very_long_test_text.txt' },
 ];
 
 export function ImportButtons() {
+  const locale = useLocale();
+  /** תרגום common (שלב 96 — אין מחרוזות קשיחות; §16) — סגור על הלוקייל מהרינדור (אין hook בתנאי/במאזין). */
+  const tc = (key: string, params?: Readonly<Record<string, string | number>>): string =>
+    translate(messagesOf(locale), key, params);
   const handleTextFile = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -31,15 +43,11 @@ export function ImportButtons() {
       try {
         const text = await importTextFile(file);
         importDocumentText(text, file.name, 'text-file');
-      } catch {
-        // סיווג לפי תכונות הקובץ עצמו — לא לפי message גולם (§16):
-        // סיומת/סוג שאינם טקסט ⇐ פורמט; אחרת ⇐ כשל קריאה.
-        const isFormatIssue = !file.name.toLowerCase().endsWith('.txt') && file.type !== 'text/plain';
-        if (isFormatIssue) {
-          reportImportFailure('errors.import.UNSUPPORTED_FORMAT', { extension: file.name.split('.').pop() ?? '' });
-        } else {
-          reportImportFailure('errors.import.FILE_UNREADABLE', { reason: 'read-failed' });
-        }
+      } catch (err) {
+        // §16: סיווג לפי תכונות הקובץ/צורת השגיאה — לא לפי message גולם;
+        // null ⇐ ביטול (פעולת-אין, אין דיווח שווא במפת הקלט).
+        const failure = classifyHostFileFailure(err, { fileName: file.name, mimeType: file.type, kind: 'text' });
+        if (failure !== null) reportImportFailure(failure.code, failure.params);
       }
     };
     input.click();
@@ -55,13 +63,9 @@ export function ImportButtons() {
       try {
         const text = await importWordFile(file);
         importDocumentText(text, file.name, 'word-file');
-      } catch {
-        const isFormatIssue = !file.name.toLowerCase().endsWith('.docx');
-        if (isFormatIssue) {
-          reportImportFailure('errors.import.UNSUPPORTED_FORMAT', { extension: file.name.split('.').pop() ?? '' });
-        } else {
-          reportImportFailure('errors.import.WORD_CONVERT_FAILED', {});
-        }
+      } catch (err) {
+        const failure = classifyHostFileFailure(err, { fileName: file.name, kind: 'word' });
+        if (failure !== null) reportImportFailure(failure.code, failure.params);
       }
     };
     input.click();
@@ -73,8 +77,9 @@ export function ImportButtons() {
       if (!response.ok) throw new Error(String(response.status));
       const text = await response.text();
       importDocumentText(text, path.replace(/^\.\//, ''), 'sample');
-    } catch {
-      reportImportFailure('errors.import.SAMPLE_UNAVAILABLE', { path: path.replace(/^\.\//, '') });
+    } catch (err) {
+      const failure = classifyHostFileFailure(err, { fileName: path, kind: 'sample', path: path.replace(/^\.\//, '') });
+      if (failure !== null) reportImportFailure(failure.code, failure.params);
     }
   };
 
@@ -85,13 +90,13 @@ export function ImportButtons() {
         className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
         data-testid="import-text"
       >
-        📄 ייבוא טקסט
+        {tc('import.text')}
       </button>
       <button
         onClick={handleWordFile}
         className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
       >
-        📝 ייבוא Word
+        {tc('import.word')}
       </button>
       <select
         onChange={(e) => {
@@ -105,11 +110,11 @@ export function ImportButtons() {
         data-testid="import-sample"
       >
         <option value="" disabled>
-          טעינת דוגמה…
+          {tc('import.sample.choose')}
         </option>
         {SAMPLE_FILES.map((f) => (
           <option key={f.path} value={f.path}>
-            {f.name}
+            {tc(f.key)}
           </option>
         ))}
       </select>

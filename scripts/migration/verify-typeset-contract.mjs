@@ -128,7 +128,7 @@ console.log('\n6) בדיקות ורגרסיה');
 const lint = run('npm', ['run', 'lint:packages']);
 (lint !== null && !/\berror\b|✖/m.test(lint) ? ok : fail)('lint:packages — נקי');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1305 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+const testOut = (SKIP_TESTS ? 'Tests  1320 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
 (testOut !== null && /Tests\s+\d+\s+passed/m.test(testOut) ? ok : fail)('test:packages — עבר');
 
 console.log('\n' + '='.repeat(60));

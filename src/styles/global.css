@@ -16,7 +16,9 @@
     font-family: 'Frank Ruhl Libre', 'Guttman Rashi', 'Noto Serif Hebrew', serif;
     background: var(--tora-bg);
     color: var(--tora-fg);
-    direction: rtl;
+    /* שלב 94 (§16, §21): אין כיוון קשיח ברמת ה-body — הכיוון נקבע
+       ברמת ה-documentElement לפי הלוקייל (AppShell) ויורד בירושה;
+       כיוון נוסח הספר קבוע נפרד ב-.tora-page להלן (תמיד rtl — תוכן). */
     margin: 0;
     padding: 0;
   }

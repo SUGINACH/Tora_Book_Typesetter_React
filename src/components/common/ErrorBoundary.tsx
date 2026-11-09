@@ -35,7 +35,8 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-gray-600 mb-4 text-sm">
               {translate(messagesOf(useViewStore.getState().locale), "errorBoundary.body")}
             </p>
-            <pre className="text-left text-xs bg-gray-100 p-2 rounded mb-4 overflow-auto max-h-32">
+            {/* מסלול מחסנית הוא תמיד אנגלית/LTR — יישור פיזי להתחלה של כיוון ltr */}
+            <pre dir="ltr" className="text-start text-xs bg-gray-100 p-2 rounded mb-4 overflow-auto max-h-32">
               {this.state.error?.message}
             </pre>
             <button

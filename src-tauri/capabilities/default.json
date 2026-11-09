@@ -1,0 +1,13 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "הרשאות ברירת המחדל של מעטפת השולחן (שלב 95): דיאלוגים וקריאת קבצים בלבד — העימוד כולו ב-Worker של ה-webview, לא ב-Rust (אפיון §12.3).",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "fs:allow-read-text-file",
+    "fs:allow-exists"
+  ]
+}

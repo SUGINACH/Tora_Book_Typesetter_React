@@ -1,0 +1,92 @@
+# Release — אריזת הפצה מתויגת (שלב 100; אפיון §18-M12, §20)
+# מופעלת בלחיצת תגית v* בלבד (לא בכל push — השער היומי הוא ci.yml).
+# תוצרים: באנדל הווב (סטטי, אופליין) + מתקיני Tauri + קובצי sha256
+# + מסמך ה-release-manifest — הכול חתום ב-hashes בעמוד ה-release.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: תלויות מערכת לבניית Tauri (Linux)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: npm ci
+        run: npm ci
+
+      - name: בניית החבילות (המנוע — לפני הווב)
+        run: npm run build:packages
+
+      # שער קדם-אריזה: כל מאמתי ה-release על העץ המתויג (אותם שערים כמו ci.yml)
+      - name: שערי קדם-אריזה (release criteria)
+        run: |
+          node scripts/migration/verify-release-criteria.mjs
+          node scripts/migration/verify-release-manifest.mjs
+          node scripts/migration/verify-hardening.mjs
+          node scripts/migration/verify-cross-host-release.mjs
+
+      - name: בניית הווב (סטטי, אופליין)
+        run: npm run build
+
+      - name: ארכיון באנדל הווב + חתימה
+        run: |
+          mkdir -p release-out
+          cd dist && zip -r ../release-out/web-standalone.zip . && cd ..
+          sha256sum release-out/web-standalone.zip > release-out/web-standalone.zip.sha256
+
+      - name: בניית מתקיני Tauri (Linux)
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Tora Book Typesetter ${{ github.ref_name }}'
+          releaseBody: 'מהדורה ${{ github.ref_name }} — ראה docs/release/RELEASE_MANIFEST.md לשרשרת ההוכחות וה-hashes הנעולים.'
+          releaseDraft: false
+          prerelease: false
+          args: --target x86_64-unknown-linux-gnu
+
+      - name: חתימת כל artifacts ה-release ב-sha256
+        run: |
+          echo "## SHA256 של artifacts ההפצה (${{ github.ref_name }})" >> release-out/HASHES.md
+          echo '```' >> release-out/HASHES.md
+          for f in release-out/*.zip; do sha256sum "$f" >> release-out/HASHES.md; done
+          echo '```' >> release-out/HASHES.md
+          cat release-out/HASHES.md
+
+      - name: העלאת מסמכי ההפצה (manifest + hashes + דוחות)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-out/web-standalone.zip
+            release-out/web-standalone.zip.sha256
+            docs/release/RELEASE_MANIFEST.md
+            artifacts/release/hardening.json
+            artifacts/release/cross-host.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

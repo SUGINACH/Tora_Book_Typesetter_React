@@ -176,4 +176,53 @@ test.describe('שלב 85 — אורקל CLI ואי־זליגת UI (M9)', () => {
     expect(h2).toBe(h1);
     expect(h3).toBe(h1);
   });
+
+  test('שלב 94 — החלפת שפת הממשק אינה מזיזה אף אות: he→en→he ⇒ אותו layoutHash; הספר תמיד rtl (§16, §21)', async ({ page }) => {
+    await gotoApp(page);
+    await importTextViaChooser(page, REFERENCE_SOURCE);
+    await setDocumentName(page, ORACLE_DOCUMENT_ID);
+    await runAndWaitDone(page);
+    const hashHe = await layoutHashOf(page);
+    // כיוון המסמך בעברית — rtl
+    expect(await page.evaluate(() => document.documentElement.dir)).toBe('rtl');
+    // החלפה לאנגלית — הממשק מתהפך, הנוסח לא
+    await page.getByTestId('toggle-locale').click();
+    await expect(page.locator('[data-locale="en"]')).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.dir)).toBe('ltr');
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe('en-US');
+    // עמודי הספר — תמיד בכיוון התוכן (rtl), גם כשהממשק ltr
+    const pageDir = await page.evaluate(() => {
+      const el = document.querySelector('.tora-preview-page');
+      return el === null ? null : getComputedStyle(el).direction;
+    });
+    expect(pageDir).toBe('rtl');
+    // ה-hash לא זז — הלוקייל מצב UI בלבד ואינו חלק מהמודל
+    expect(await layoutHashOf(page)).toBe(hashHe);
+    // חזרה לעברית — עדיין אותו hash
+    await page.getByTestId('toggle-locale').click();
+    await expect(page.locator('[data-locale="he"]')).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.dir)).toBe('rtl');
+    expect(await layoutHashOf(page)).toBe(hashHe);
+    // והריצה בפועל באנגלית-ממשק הייתה זהה לאורקל ה-CLI (שפה אינה קלט מנוע)
+    const cli = cliLayoutRun({ input: REFERENCE_SOURCE });
+    expect(hashHe).toBe(cli.layoutHash);
+  });
+
+  test('שלב 96 — בחירת השפה נשמרת בין הפעלות: reload אחרי החלפה ⇐ אותו לוקייל (tora-ui:view:v1)', async ({ page }) => {
+    await gotoApp(page);
+    await expect(page.locator('[data-locale="he"]')).toHaveCount(1);
+    // החלפה לאנגלית — ורענון מלא של העמוד
+    await page.getByTestId('toggle-locale').click();
+    await expect(page.locator('[data-locale="en"]')).toHaveCount(1);
+    await page.reload();
+    await expect(page.locator('[data-locale="en"]')).toHaveCount(1); // השפה שרדה
+    expect(await page.evaluate(() => document.documentElement.dir)).toBe('ltr');
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe('en-US');
+    // חזרה לעברית — גם היא נשמרת (הלוך ושוב, אין הידבקות)
+    await page.getByTestId('toggle-locale').click();
+    await expect(page.locator('[data-locale="he"]')).toHaveCount(1);
+    await page.reload();
+    await expect(page.locator('[data-locale="he"]')).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.dir)).toBe('rtl');
+  });
 });

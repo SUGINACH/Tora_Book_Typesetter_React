@@ -240,7 +240,7 @@
    "atomsPlaced": 2253,
    "deterministic": true,
    "html": true,
-   "previewHtmlBytes": 138420,
+   "previewHtmlBytes": 183412,
    "invariantsExpected": [
     "TEXT_COMPLETE",
     "NO_HIGH_SEVERITY",

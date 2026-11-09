@@ -27,6 +27,9 @@ import { useEditorStore } from '../../stores/editor-store.js';
 import { useViewStore } from '../../stores/view-store.js';
 
 export function TextEditor() {
+
+  const locale = useLocale();
+  const m = messagesOf(locale);
   const rawText = useRawText();
   const dirty = useIsDirty();
   const documentName = useDocumentName();
@@ -70,12 +73,12 @@ export function TextEditor() {
         <input
           value={documentName}
           onChange={handleNameChange}
-          placeholder={translate(messagesOf(useLocale()), "editor.placeholder.name")}
+          placeholder={translate(m, "editor.placeholder.name")}
           dir="rtl"
           className="flex-1 px-2 py-1 border border-gray-200 rounded text-xs focus:outline-none focus:border-blue-300"
           data-testid="document-name"
         />
-        {dirty && <span className="text-orange-600 shrink-0" title="שינויים שלא עומדו">●</span>}
+        {dirty && <span className="text-orange-600 shrink-0" title={translate(m, "editor.dirtyTitle")}>●</span>}
       </div>
       <textarea
         ref={areaRef}
@@ -85,7 +88,7 @@ export function TextEditor() {
         }}
         onSelect={handleSelect}
         dir="rtl"
-        placeholder={translate(messagesOf(useLocale()), "editor.placeholder")}
+        placeholder={translate(m, "editor.placeholder")}
         data-testid="source-editor"
         className="flex-1 w-full p-3 font-mono text-sm resize-none focus:outline-none border-0 bg-white"
         style={{ minHeight: '400px' }}

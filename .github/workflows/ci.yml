@@ -54,7 +54,7 @@ jobs:
           # NO_COLOR + הסרת ANSI כפולה (שיעור סבב ה': chalk/vitest מצבעים גם בלי TTY תחת CI=true)
           NO_COLOR=1 npm run test:packages > /tmp/testout.raw 2>&1 || { cat /tmp/testout.raw; exit 1; }
           sed -e 's/\x1b\[[0-9;?]*[a-zA-Z]//g' -e 's/\x1b\][^\x07]*\x07//g' /tmp/testout.raw > /tmp/testout.log
-          grep -qE "Tests[[:space:]]+1305[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 1305 בדיקות"; exit 1; }
+          grep -qE "Tests[[:space:]]+1320[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 1320 בדיקות"; exit 1; }
           node scripts/migration/verify-units.mjs
           node scripts/migration/verify-canonical-hash.mjs
           node scripts/migration/verify-error-catalog.mjs
@@ -133,6 +133,7 @@ jobs:
           node scripts/migration/verify-pdf-audit.mjs
           node scripts/migration/verify-projection-equivalence.mjs
           node scripts/migration/verify-i18n-parity.mjs
+          node scripts/migration/verify-rtl-ltr.mjs
 
       - name: E2E ממוקד — Playwright על האפליקציה הבנויה (שלב 85; §17.1)
         # האפליקציה נבנית (vite build — כמו ב-Deploy) ונפתחת ב-vite preview;
@@ -143,8 +144,20 @@ jobs:
           npm run build
           npx playwright install --with-deps chromium
           NO_COLOR=1 npm run test:e2e > /tmp/e2eout.log 2>&1 || { cat /tmp/e2eout.log; exit 1; }
-          grep -qE "[[:space:]]30[[:space:]]+passed" /tmp/e2eout.log || { tail -5 /tmp/e2eout.log; echo "צפוי בדיוק 30 בדיקות E2E"; exit 1; }
+          grep -qE "[[:space:]]32[[:space:]]+passed" /tmp/e2eout.log || { tail -5 /tmp/e2eout.log; echo "צפוי בדיוק 32 בדיקות E2E"; exit 1; }
           node scripts/migration/verify-e2e-focused.mjs
+
+      - name: מאמתי שלבים 95–100 (M11+M12) — אחרי ה-E2E (dist קיים; שלבים 95/97/98/99/100)
+        env:
+          TORA_SKIP_TEST_REGRESSION: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/migration/verify-tauri-shell.mjs
+          python3 scripts/i18n_audit.py
+          node scripts/migration/verify-hardening.mjs
+          node scripts/migration/verify-cross-host-release.mjs
+          node scripts/migration/verify-release-manifest.mjs
+          node scripts/migration/verify-release-criteria.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity
         env:

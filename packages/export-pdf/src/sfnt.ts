@@ -42,12 +42,16 @@ export class SfntError extends Error {
   }
 }
 
-const u16 = (d: Uint8Array, o: number): number => ((d[o] as number) << 8) | (d[o + 1] as number);
+// קוראי בתים אריתמטיים (ADR-001 §5 — אין bitwise מחוץ ל-units/hash; החיבור
+// המצטבר זהה מספרית להרכבת הסיביות: כל האופרנדים בטוחים ב-float מדויק
+// עד 2^53 ולכן u32 מדויק גם בלי טרנספורמציית uint32 מפורשת).
+const u16 = (d: Uint8Array, o: number): number => (d[o] as number) * 256 + (d[o + 1] as number);
 const i16 = (d: Uint8Array, o: number): number => {
-  const v = ((d[o] as number) << 8) | (d[o + 1] as number);
+  const v = (d[o] as number) * 256 + (d[o + 1] as number);
   return v >= 0x8000 ? v - 0x10000 : v;
 };
-const u32 = (d: Uint8Array, o: number): number => (((d[o] as number) << 24) | ((d[o + 1] as number) << 16) | ((d[o + 2] as number) << 8) | (d[o + 3] as number)) >>> 0;
+const u32 = (d: Uint8Array, o: number): number =>
+  (((d[o] as number) * 256 + (d[o + 1] as number)) * 256 + (d[o + 2] as number)) * 256 + (d[o + 3] as number);
 
 function findTable(bytes: Uint8Array, tag: string): Uint8Array | undefined {
   if (bytes.length < 12) throw new SfntError('SFNT_TRUNCATED', { length: bytes.length });
@@ -168,9 +172,11 @@ function tableChecksum(data: Uint8Array): number {
       i + 2 < data.length ? data[i + 2] : 0,
       i + 3 < data.length ? data[i + 3] : 0,
     ];
-    sum = ((sum + ((((b[0] as number) << 24) | ((b[1] as number) << 16) | ((b[2] as number) << 8) | (b[3] as number)) >>> 0)) >>> 0) as number;
+    // סכום TrueType מודולו 2^32 — אריתמטיקה מדויקת בלי bitwise (ADR-001 §5):
+    // אותו ערך כמו המרה ל-uint32 לכל x ≥ 0 בטוח-float; התוצאה זהה ביט-ביט.
+    sum = (sum + ((((b[0] as number) * 256 + (b[1] as number)) * 256 + (b[2] as number)) * 256 + (b[3] as number))) % 4294967296;
   }
-  return sum >>> 0;
+  return sum;
 }
 
 /** סדר טבלאות קבוע — ממוין לקסיקוגרפי לפי תג (כלל TrueType) לפני הכתיבה. */
@@ -212,7 +218,7 @@ export function buildSubset(parsed: ParsedSfnt, originalBytes: Uint8Array, usedG
     let w = 0;
     for (const d of glyphSlices) { glyf.set(d, w); w += d.length; }
   }
-  const loca = new Uint8Array(parsed.indexToLocFormat === 0 ? ((numGlyphs + 1) << 1) : (numGlyphs + 1) * 4);
+  const loca = new Uint8Array(parsed.indexToLocFormat === 0 ? (numGlyphs + 1) * 2 : (numGlyphs + 1) * 4);
   {
     const dv = new DataView(loca.buffer);
     for (let i = 0; i <= numGlyphs; i += 1) {

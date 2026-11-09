@@ -13,7 +13,7 @@
  * מאומת מול ‎widthLu‎ (חריגה > 64 LU ⇒ שגיאה קולנית — אין גאומטריה
  * שקט-שגויה).
  */
-import type { LayoutDocument, PositionedRun } from '@tora/layout-api';
+import { roundDiv, type LayoutDocument, type PositionedRun } from '@tora/layout-api';
 import type { ParsedSfnt } from './sfnt.js';
 import { pdfNum } from './pdf-writer.js';
 
@@ -53,7 +53,9 @@ function cmapGidOf(ch: string, sfnt: ParsedSfnt, what: string): number {
 }
 
 function cmapAdvanceLu(gid: number, sfnt: ParsedSfnt, fontSizeLu: number): number {
-  return Math.round((sfnt.advanceOf(gid) * fontSizeLu) / sfnt.unitsPerEm);
+  // ADR-001: העיגול מרוכז ב-units (roundDiv — חצי-כלפי-∞); זהה מספרית
+  // לעיגול הצף שקדם לו (שלמה-בשלמה), ועובר safe-int ומאמת ריכוז-העיגול.
+  return roundDiv(sfnt.advanceOf(gid) * fontSizeLu, sfnt.unitsPerEm);
 }
 
 /**

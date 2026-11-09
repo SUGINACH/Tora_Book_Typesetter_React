@@ -17,6 +17,9 @@
  */
 import { useRef, useState } from 'react';
 import { useStoreWithEqualityFn } from 'zustand/traditional';
+import { messagesOf, t as translate } from '../../i18n/index.js';
+import { useLocale } from '../../stores/selectors.js';
+
 import { useSettingsStore } from '../../stores/settings-store.js';
 
 /** קוד קטלוגי + פרמטרים — אין הצגת message גולמי (פטרון שלב 12). */
@@ -33,6 +36,10 @@ interface ImportOutcome {
 }
 
 export function SettingsFiles() {
+  const locale = useLocale();
+  /** תרגום common (שלב 96 — אין מחרוזות קשיחות; §16) — סגור על הלוקייל מהרינדור (אין hook בתנאי/במאזין). */
+  const tc = (key: string, params?: Readonly<Record<string, string | number>>): string =>
+    translate(messagesOf(locale), key, params);
   const presets = useStoreWithEqualityFn(useSettingsStore, (s) => s.presets);
   const unmappedLegacy = useStoreWithEqualityFn(useSettingsStore, (s) => s.unmappedLegacy);
   const hasEffective = useStoreWithEqualityFn(useSettingsStore, (s) => s.effective !== null);
@@ -48,7 +55,7 @@ export function SettingsFiles() {
 
   const onFilePicked = (file: File): void => {
     const reader = new FileReader();
-    reader.onerror = () => setFileError('הקריאה נכשלה — הקובץ אינו קריא');
+    reader.onerror = () => setFileError(tc('settings.files.readError'));
     reader.onload = () => {
       setFileError('');
       let parsed: unknown;
@@ -58,7 +65,7 @@ export function SettingsFiles() {
         // שגיאת קריאה ברמת הקובץ (לא שגיאת הגדרות) — הודעה מפורשת, שום
         // דבר לא נטען בשקט.
         setOutcome(null);
-        setFileError(`קובץ אינו JSON תקין: ${error instanceof Error ? error.message : String(error)}`);
+        setFileError(tc('settings.files.notJson'));
         return;
       }
       const summary = useSettingsStore.getState().importSettingsFile(parsed);
@@ -98,7 +105,7 @@ export function SettingsFiles() {
       setPresetName('');
       setPresetHint('');
     } else {
-      setPresetHint('שם ריק או קיים — השמירה נדחתה');
+      setPresetHint(tc('settings.files.presetRejected'));
     }
   };
 
@@ -137,7 +144,7 @@ export function SettingsFiles() {
           className="flex-1 px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50"
           data-testid="import-settings-button"
         >
-          📥 ייבוא קובץ הגדרות
+          {tc('settings.files.importButton')}
         </button>
         <button
           type="button"
@@ -145,9 +152,9 @@ export function SettingsFiles() {
           disabled={!hasEffective}
           className="px-2 py-1 bg-white border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50"
           data-testid="export-settings"
-          title="ייצוא המצב האפקטיבי לקובץ JSON (מעטפת tora-settings)"
+          title={tc('settings.files.exportTitle')}
         >
-          📤 ייצוא
+          {tc('settings.files.exportButton')}
         </button>
       </div>
 
@@ -158,7 +165,7 @@ export function SettingsFiles() {
       {outcome !== null && (
         <div className="text-[10px] text-gray-600 space-y-0.5" data-testid="import-summary">
           <p>
-            נטענו {outcome.loaded} מפתחות · {outcome.warnings} המרות מתועדות · {outcome.rejections} נדחו
+            {tc('settings.files.summary', { loaded: outcome.loaded, warnings: outcome.warnings, rejections: outcome.rejections })}
           </p>
           {outcome.rejectedIssues.map((i, idx) => (
             <p key={`${i.code}-${idx}`} className="text-red-600" data-issue-code={i.code} data-issue-path={i.path}>
@@ -169,8 +176,8 @@ export function SettingsFiles() {
       )}
 
       {unmappedKeys.length > 0 && (
-        <p className="text-[10px] text-orange-700" data-testid="unmapped-legacy" title="מפתחות מהקובץ שאינם במרשם — נשמרו, לא הומלוו ולא נמחקו">
-          לא מופו (נשמרו): {unmappedKeys.join(', ')}
+        <p className="text-[10px] text-orange-700" data-testid="unmapped-legacy" title={tc('settings.files.unmappedTitle')}>
+          {tc('settings.files.unmapped', { keys: unmappedKeys.join(', ') })}
         </p>
       )}
 
@@ -179,7 +186,7 @@ export function SettingsFiles() {
           type="text"
           value={presetName}
           onChange={(e) => setPresetName(e.target.value)}
-          placeholder="שם תבנית…"
+          placeholder={tc('settings.files.presetNamePlaceholder')}
           className="flex-1 border border-gray-300 rounded px-1.5 py-1 text-xs"
           data-testid="preset-name"
         />
@@ -189,7 +196,7 @@ export function SettingsFiles() {
           className="px-2 py-1 bg-blue-50 border border-blue-200 text-blue-700 rounded text-xs hover:bg-blue-100"
           data-testid="preset-save"
         >
-          שמור
+          {tc('settings.files.presetSave')}
         </button>
       </div>
       {presetHint !== '' && (
@@ -204,7 +211,7 @@ export function SettingsFiles() {
             className="flex-1 border border-gray-300 rounded px-1.5 py-1 text-xs bg-white"
             data-testid="preset-select"
           >
-            <option value="">— בחר תבנית —</option>
+            <option value="">{tc('settings.files.presetChoose')}</option>
             {presetNames.map((name) => (
               <option key={name} value={name}>{name}</option>
             ))}
@@ -216,7 +223,7 @@ export function SettingsFiles() {
             className="px-2 py-1 bg-white border border-gray-300 rounded text-xs disabled:opacity-50"
             data-testid="preset-load"
           >
-            טען
+            {tc('settings.files.presetLoad')}
           </button>
           <button
             type="button"
@@ -225,7 +232,7 @@ export function SettingsFiles() {
             className="px-2 py-1 bg-red-50 border border-red-200 text-red-700 rounded text-xs disabled:opacity-50"
             data-testid="preset-delete"
           >
-            מחק
+            {tc('settings.files.presetDelete')}
           </button>
         </div>
       )}

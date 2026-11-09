@@ -10,7 +10,7 @@
  * Registry — מוצג כסרגל צד מתקפל; מצב פתיחה/סגירה הוא מצב חולף של
  * הרכיב (אינו נשמר ואינו נכנס ל־stores/configHash).
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDocumentName, useFindings, useIsDirty, useLayoutHash, useLayoutIr, useRawText, useRunPhase, useRunProgress } from '../../stores/selectors.js';
 import { useTypesetRun } from '../../worker-host/use-typeset-run.js';
 import { useLocale } from '../../stores/selectors.js';
@@ -41,6 +41,15 @@ export function AppShell() {
   const locale = useLocale();
   const m = messagesOf(locale);
 
+  // שלב 94 (§16, §21): הכיוון ברמת ה-shell וברמת המסמך כולו מתעדכן עם
+  // הלוקייל; כיוון **נוסח הספר** נשאר לפי התוכן (LayoutPreview — תמיד rtl
+  // לספר תורני) ואינו מתהפך עם שפת הממשק. lang/dir ב-documentElement
+  // משרתים גם קוראי-מסך וגם את ברירת המחדל של רכיבים מחוץ לשלד.
+  useEffect(() => {
+    document.documentElement.lang = locale === 'he' ? 'he-IL' : 'en-US';
+    document.documentElement.dir = dirOf(locale);
+  }, [locale]);
+
   const isRunning = ACTIVE_PHASES.has(phase);
   const hasSource = rawText !== '';
 
@@ -62,7 +71,7 @@ export function AppShell() {
           )}
           {findings.length > 0 && (
             <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
-              {findings.length} ממצאים
+              {translate(m, 'app.findings', { count: findings.length })}
             </span>
           )}
           <button
@@ -71,7 +80,7 @@ export function AppShell() {
             data-testid="toggle-locale"
             title="he-IL / en-US (§16)"
           >
-            {locale === 'he' ? 'עברית' : 'English'}
+            {translate(m, locale === 'he' ? 'app.locale.en' : 'app.locale.he')}
           </button>
           <button
             onClick={() => setSettingsOpen((v) => !v)}
@@ -86,8 +95,9 @@ export function AppShell() {
 
       {/* Main */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Editor Panel */}
-        <div className="w-64 bg-white border-l border-gray-200 flex flex-col shrink-0">
+        {/* Editor Panel — border-inline-end: פאה לוגית (שלב 94): משני הכיוונים
+            הגבול פונה אל אזור התצוגה */}
+        <div className="w-64 bg-white border-e border-gray-200 flex flex-col shrink-0">
           <div className="p-2 border-b border-gray-200">
             <ImportButtons />
           </div>
@@ -112,7 +122,7 @@ export function AppShell() {
             >
               {isRunning
                 ? `${translate(m, 'app.phases.' + phase)}${progress !== null ? ` — ${formatProgress(progress)}` : ''}`
-                : '⚡ עדכן ועמד מחדש'}
+                : translate(m, 'app.button.run')}
             </button>
             {isRunning && (
               <button

@@ -12,10 +12,9 @@
  *   4. המעטפת נקייה ממחרוזות קשיחות: AppShell/ExportButton/ZoomControls/
  *      ErrorBoundary/TextEditor-placeholder מתורגמים דרך t(); הלוקייל
  *      נשמר ב-viewStore (tora-ui:view:v1); dir ברמת ה-shell מתעדכן
- *      (dirOf). ה-panels העמוקים נותרו בשפת המקור — מתועד כשארית
- *      (תוכן, לא ארכיטקטורה); en-US הוא locale בדיקה — המעטפת מתורגמת,
- *      תוויות ההגדרות מציגות את המפתח הקנוני (תפקידו לתפוס
- *      hard-coded; תיעוד ב-§16).
+ *      (dirOf). הפאנלים העמוקים (שלב 96) — כל הקומפוננטות מתורגמות
+ *      (SettingsPanel/SettingsFiles/SettingRow/ImportButtons/PreviewArea/
+ *      ImportInsights/AuditFindings — היקף §16 מלא; אין שארית מתועדת);
  *   5. גימטריה — domain formatter (policy-torah/folio) ולא Intl — נעול
  *      משלב 67; כאן — קיום formatters.ts (Intl למספרים/תאריכים בלבד).
  */
@@ -76,17 +75,25 @@ console.log('\n3) מקור יחיד — regen === committed');
   (drifted ? fail : ok)('ה-committed === regen (אין סחף בין ה-TS ל-JSON)');
 }
 
-console.log('\n4) המעטפת — אין מחרוזות קשיחות');
+console.log('\n4) המעטפת והפאנלים — אין מחרוזות קשיחות (היקף §16 מלא; שלב 96)');
 const shellFiles = [
   'src/components/layout/AppShell.tsx',
   'src/components/layout/ExportButton.tsx',
+  'src/components/layout/PreviewArea.tsx',
   'src/components/view/ZoomControls.tsx',
   'src/components/common/ErrorBoundary.tsx',
+  'src/components/editor/ImportButtons.tsx',
+  'src/components/editor/ImportInsights.tsx',
+  'src/components/editor/TextEditor.tsx',
+  'src/components/settings/SettingsPanel.tsx',
+  'src/components/settings/SettingsFiles.tsx',
+  'src/components/settings/SettingRow.tsx',
+  'src/components/audit/AuditFindings.tsx',
 ];
 for (const f of shellFiles) {
   const src = read(f);
-  const uses = /messagesOf|translate\(/.test(src);
-  (uses ? ok : fail)(`${f} — מתורגם דרך i18n`);
+  const uses = /messagesOf|translate\(|formatIssueLabel|formatAuditLabel|OVERVIEW_LABELS|AUDIT_LABELS|AUDIT_SEVERITY_LABELS|SETTINGS_LABELS|SECTION_LABELS|SETTINGS_ERROR_LABELS/.test(src);
+  (uses ? ok : fail)(`${f} — מתורגם דרך הקטלוגים`);
 }
 const shell = read('src/components/layout/AppShell.tsx');
 (/data-testid="toggle-locale"/.test(shell) ? ok : fail)('מתג לוקייל ב-header');

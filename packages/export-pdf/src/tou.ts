@@ -21,9 +21,12 @@ function utf16beHex(text: string): string {
       // תו מחוץ ל-BMP — זוג עגלים; ה-IR מקודד UTF-16 ממילא (§4.2), ולכן
       // זה מגיע כשני surrogates נפרדים והענף הזה אינו נדרש — אך נשמר
       // להחלטות עתידיות (דטרמיניסטי גם כאן).
+      // חלוקה אריתמטית (ADR-001 — אין הזזות סיביות): h בטווח [0, 0xFFFFF]
+      // ⇒ מנה שלמה שקולה להזזה בעשר סיביות; השארית — למסכת עשר הסיביות הנמוכות.
       const h = cp - 0x10000;
-      const hi = 0xd800 + (h >> 10);
-      const lo = 0xdc00 + (h & 0x3ff);
+      const q = Math.floor(h / 1024);
+      const hi = 0xd800 + q;
+      const lo = 0xdc00 + (h - q * 1024);
       out += hi.toString(16).padStart(4, '0') + lo.toString(16).padStart(4, '0');
     } else {
       out += cp.toString(16).padStart(4, '0');

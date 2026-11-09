@@ -1028,7 +1028,18 @@
     "description": "גודל בנקודות לשורה השביעית בתוכן הכללי"
   },
   "settings.sections": {
+    "backgrounds": "רקעים",
+    "body": "גוף הטקסט",
     "book-meta": "נתוני הספר",
-    "running-headers": "כותרות עליונות"
+    "folio": "מספור עמודים",
+    "fonts": "גופנים וגדלים",
+    "grid": "גריד וטורים",
+    "headings": "כותרות",
+    "misc": "כללי",
+    "notes": "הערות",
+    "ornaments": "עיטורים ומידות",
+    "running-headers": "כותרות עליונות",
+    "shaar": "שערים",
+    "toc": "תוכן עניינים"
   }
 }

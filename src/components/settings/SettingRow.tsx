@@ -13,6 +13,8 @@ import { memo } from 'react';
 import { useStoreWithEqualityFn } from 'zustand/traditional';
 import { useSettingsStore, type SettingDefinition } from '../../stores/settings-store.js';
 import { SETTINGS_LABELS, SETTINGS_ERROR_LABELS } from '../../i18n/settings-labels.js';
+import { messagesOf, t as translate } from '../../i18n/index.js';
+import { useLocale } from '../../stores/selectors.js';
 
 /** תנאי תלות לא מתקיים? (השוואת מחרוזות קנונית — בוליאן כ-'true'/'false'.) */
 const depMet = (dep: { readonly key: string; readonly values: readonly string[] }, current: unknown): boolean =>
@@ -31,7 +33,12 @@ interface SettingRowProps {
   readonly def: SettingDefinition;
 }
 
+
 export const SettingRow = memo(function SettingRow({ def }: SettingRowProps) {
+  const locale = useLocale();
+  /** תרגום common (שלב 96 — אין מחרוזות קשיחות; §16) — סגור על הלוקייל מהרינדור (אין hook בתנאי/במאזין). */
+  const tc = (key: string, params?: Readonly<Record<string, string | number>>): string =>
+    translate(messagesOf(locale), key, params);
   const label = SETTINGS_LABELS[def.ui.labelKey];
   const value = useStoreWithEqualityFn(useSettingsStore, (s) => s.effective?.values[def.key]);
   const modified = useStoreWithEqualityFn(useSettingsStore, (s) => def.key in s.draft);
@@ -68,15 +75,15 @@ export const SettingRow = memo(function SettingRow({ def }: SettingRowProps) {
           title={`${descText} (${def.key})`}
         >
           {labelText}
-          {modified && <span className="text-blue-600 mr-1" title="שונה מברירת המחדל">•</span>}
+          {modified && <span className="text-blue-600 me-1" title={tc('settings.modifiedTitle')}>•</span>}
         </label>
         {def.affectsLayout ? (
-          <span className="text-[10px] px-1 py-px bg-indigo-100 text-indigo-700 rounded shrink-0" title="משפיע על הפריסה — נכנס ל-configHash">
-            פריסה
+          <span className="text-[10px] px-1 py-px bg-indigo-100 text-indigo-700 rounded shrink-0" title={tc('settings.affectsLayoutTitle')}>
+            {tc('settings.affectsLayoutBadge')}
           </span>
         ) : (
-          <span className="text-[10px] px-1 py-px bg-gray-100 text-gray-500 rounded shrink-0" title="מצב ממשק בלבד — אינו נכנס ל-configHash">
-            UI
+          <span className="text-[10px] px-1 py-px bg-gray-100 text-gray-500 rounded shrink-0" title={tc('settings.uiOnlyTitle')}>
+            {tc('settings.uiOnlyBadge')}
           </span>
         )}
       </div>
@@ -132,7 +139,7 @@ export const SettingRow = memo(function SettingRow({ def }: SettingRowProps) {
       </div>
       {disabledByDep && def.ui.dependsOn !== null && (
         <p className="text-[10px] text-gray-400 mt-0.5" data-setting-dep-hint={def.ui.dependsOn.key}>
-          רלוונטי רק כאשר {def.ui.dependsOn.key} = {def.ui.dependsOn.values.join('|')}
+          {tc('settings.dependsOn', { key: def.ui.dependsOn.key, values: def.ui.dependsOn.values.join('|') })}
         </p>
       )}
       {rowIssues.length > 0 && (

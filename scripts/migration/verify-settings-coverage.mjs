@@ -18,7 +18,7 @@
  *      controller.cancel; אין effective מהעולם הישן (כל שינוי draft
  *      מאפס עד applyDraft).
  *   6. הבדיקות: 16 בדיקות ניקוי חדשות; tests/stores 104→120; הסוויטה
- *      1265→1305 נעולה ב־ci.yml ובכל המאמתים (הלכת סבב כ"ג).
+ *      1265→1320 נעולה ב־ci.yml ובכל המאמתים (הלכת סבב כ"ג).
  *   7. רגרסיה: typecheck, lint:packages, build:packages, deps:check.
  */
 import { execFileSync } from 'node:child_process';
@@ -155,7 +155,7 @@ console.log('\n5) ניקוי בין מסמכים — ביטול ריצה לפנ�
   (!/removeItem/.test(migrateCode) ? ok : fail)('מיגרציית המורשת עדיין קריאה בלבד — אין removeItem (שיעור שלב 76)');
 }
 
-console.log('\n6) הבדיקות — 16 ניקוי חדשות; tests/stores 120; הסוויטה 1305');
+console.log('\n6) הבדיקות — 16 ניקוי חדשות; tests/stores 120; הסוויטה 1320');
 {
   const cleanupTests = read('tests/stores/store-cleanup.test.ts');
   const cleanupCount = countMatches(cleanupTests, /\btest\(/g);
@@ -174,14 +174,14 @@ console.log('\n6) הבדיקות — 16 ניקוי חדשות; tests/stores 120;
     ? ok : fail)('המחולל רשום ב-package.json');
   (runCode('node', [join('scripts', 'migration', 'gen-settings-coverage.mjs')]) === 0
     ? ok : fail)('המחולל רץ נקי — הדוח שוחזר');
-  const ciLock = /Tests\[\[:space:\]\]\+1305\[\[:space:\]\]\+passed/.test(ci);
-  (ciLock ? ok : fail)('נעיקת הספירה ב־ci.yml עודכנה ל־1305 (הלכת סבב כ"ג)');
+  const ciLock = /Tests\[\[:space:\]\]\+1320\[\[:space:\]\]\+passed/.test(ci);
+  (ciLock ? ok : fail)('נעיקת הספירה ב־ci.yml עודכנה ל־1320 (הלכת סבב כ"ג)');
 }
 
 console.log('\n7) רגרסיה');
 {
-  const testOut = (SKIP_TESTS ? 'Tests  1305 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
-  (testOut !== null && /Tests\s+1305\s+passed/.test(testOut) ? ok : fail)('test:packages — 1305/1305 (1265 שלב 83 + 16 שלב 84)');
+  const testOut = (SKIP_TESTS ? 'Tests  1320 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages', '--silent']));
+  (testOut !== null && /Tests\s+1320\s+passed/.test(testOut) ? ok : fail)('test:packages — 1320/1320 (1265 שלב 83 + 16 שלב 84)');
   (runCode('npx', ['tsc', '--noEmit']) === 0 ? ok : fail)('tsc --noEmit (שורש) — PASS');
   (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('lint:packages — PASS');
   (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
