@@ -203,17 +203,18 @@ describe('שלב 39: שלד מהלך קצה־לקצה — CLI ← IR ← audit �
   });
 
   test('HTML: render-html קנוני מה-IR — ביט-ביט; אותם bytes כמו preview.html של ה-CLI', async () => {
+    // שלב 87 — self-contained: הגופן מוטמע כ-data URI מלא מתוך ה-bytes
+    // שנטענו למדידה (אותו מסלול יחיד כמו ה-runner; §15.2).
+    const dataUri = `data:font/${guttman.binaryFormat};base64,${Buffer.from(guttmanBytes).toString('base64')}`;
     const assetManifest = {
       schemaVersion: 1 as const,
       fonts: [{
         fontId: guttman.fontId,
         family: (guttman as unknown as { nameTable?: { family?: string | null } }).nameTable?.family ?? guttman.family ?? guttman.file,
-        // שם הקובץ יחסית לספריית fonts/ — buildCss מוסיף את הקידומת בעצמו.
-        // תוקן 2026-11-09: קידומת כפולה (fonts/fonts/…) בנתה 404 לכל
-        // preview.html; ה-runner והבדיקה חייבים את אותו נתיב יחיד.
         file: guttman.file,
         format: guttman.binaryFormat,
         contentSha256: guttman.sha256,
+        dataUri,
       }],
     };
     const layout = la.parseLayoutDocument(await readFile(join(out1, 'layout.json'), 'utf8'));

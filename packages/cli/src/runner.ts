@@ -10,7 +10,7 @@
  */
 import { composeDocumentRelease } from '@tora/layout-engine';
 import * as policy from '@tora/policy-torah';
-import { copyFile, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { typeset, ENGINE_VERSION } from '@tora/layout-engine';
 import {
@@ -238,17 +238,22 @@ export async function runCli(
   if (args.html) {
     // המקור נחוץ לשחזור הטקסט הלוגי של הריצות (תיקון שורש 2026-11-09/ב'):
     // מזהי האטומים מקודדים טווחי מקור — בלעדיו כל מילה מוצגת מראה.
+    // שלב 87 — פלט self-contained: הגופן נטמע כ-data URI מלא מתוך
+    // אותם bytes שאומתו (fonts.loaded — אותם bytes שהוזרקו למדידה);
+    // הקובץ עומד לבדו offline בלי ספריית fonts/ לצדו ובלי רשת (§15.2, §21).
+    const woff = fonts.loaded.get(fonts.bodyRecord.fontId);
+    const dataUri = woff === undefined
+      ? undefined
+      : `data:font/${fonts.bodyRecord.binaryFormat};base64,${Buffer.from(woff.bytes).toString('base64')}`;
     const html = renderHtml(roundTripLayout, { schemaVersion: 1 }, {
       schemaVersion: 1,
       fonts: [{
         fontId: fonts.bodyRecord.fontId,
         family: displayFamilyOf(fonts.bodyRecord),
-        // שם הקובץ יחסית לספריית fonts/ של הפלט — buildCss מוסיף את הקידומת
-        // בעצמו; קידומת כפולה (fonts/fonts/…) הובילה ל-404 בכל preview.html
-        // שהופק אי־פעם (תוקן 2026-11-09 בעקבות כישלון ההעמדה באתר החי).
         file: fonts.bodyRecord.file,
         format: fonts.bodyRecord.binaryFormat,
         contentSha256: fonts.bodyRecord.sha256,
+        dataUri,
       }],
     }, undefined, { source: sourceText });
     files.push(['preview.html', html.html]);
@@ -256,22 +261,9 @@ export async function runCli(
   for (const [name, content] of files) {
     await writeArtifact(join(args.out, name), content);
   }
-  // הגופן עצמו חייב להיות לצד preview.html — בלעדיו ה-@font-face נופל ל-404
-  // והדפדפן מציג גופן חלופי במדדים זרים (תוקן 2026-11-09; אותר באתר
-  // החי: כל שורה הוצגה בגופן שאינו גופן המדידה). עותק ביט-ביט של הקובץ
-  // מאותו fontsDir שה־setupFonts קרא ממנו — אותם bytes שאומתו ב-sha256.
-  if (args.html) {
-    const fontsOutDir = join(args.out, 'fonts');
-    try {
-      await mkdir(fontsOutDir, { recursive: true });
-      await copyFile(join(args.fontsDir, fonts.bodyRecord.file), join(fontsOutDir, fonts.bodyRecord.file));
-    } catch (e) {
-      throw new CliError(EXIT_OUTPUT, 'errors.cli.OUTPUT_WRITE_FAILED', {
-        path: join(fontsOutDir, fonts.bodyRecord.file), reason: errText(e),
-      }, `העתקת גופן הגוף לפלט נכשלה: ${fonts.bodyRecord.file}`);
-    }
-    progressLine(`preview font: fonts/${fonts.bodyRecord.file} (copied for @font-face)`);
-  }
+  // שלב 87: אין עוד העתקת גופן לפלט — הגופן מוטמע בתוך preview.html
+  // כ-data URI מאותם bytes שאומתו ב-sha256 (ההעתקה מ-2026-11-09 לצד
+  // הקובץ הייתה לפני ההטמעה; הקובץ עומד לבדו offline — §15.2, §21).
   progressLine(`artifacts: ${files.length} files → ${args.out} (network attempts: ${guard.attempts()})`);
   const exitCode = audit.ok ? EXIT_SUCCESS : EXIT_AUDIT;
   return { exitCode, report, artifactsDir: args.out, ...(audit.ok ? {} : { error: { code: 'errors.cli.AUDIT_FINDINGS', params: { high: audit.counts.HIGH } } }) };

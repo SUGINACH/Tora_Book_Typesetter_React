@@ -70,7 +70,8 @@
     "verify:preview-virtualization": "node scripts/migration/verify-preview-virtualization.mjs",
     "verify:settings-coverage": "node scripts/migration/verify-settings-coverage.mjs",
     "verify:e2e-focused": "node scripts/migration/verify-e2e-focused.mjs",
-    "verify:export-pure": "node scripts/migration/verify-export-pure.mjs"
+    "verify:export-pure": "node scripts/migration/verify-export-pure.mjs",
+    "verify:export-standalone": "node scripts/migration/verify-export-standalone.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

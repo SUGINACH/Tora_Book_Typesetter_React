@@ -6,7 +6,7 @@
  *
  * החלק הפונקציונלי (buildExportHtml על IR אמיתי, דטרמיניזם ביט-ביט,
  * טקסט לוגי, בלי רשת) נבדק ב-vitest (tests/component/export-button,
- * שרץ בסוויטה 1303); כאן — מבנה, טוהר וחיווט.
+ * שרץ בסוויטה 1305); כאן — מבנה, טוהר וחיווט.
  */
 import { readFileSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
@@ -59,7 +59,7 @@ const cliRunner = read('packages/cli/src/runner.ts');
 
 console.log('\n4) חיווט CI וספירות');
 const ci = read('.github/workflows/ci.yml');
-/Tests\[\[:space:\]\]\+1303\[\[:space:\]\]\+passed/.test(ci) ? ok('ci.yml — נעיכת הסוויטה 1303 (כולל 3 ייצוא)') : fail('ci.yml — 1303');
+/Tests\[\[:space:\]\]\+1305\[\[:space:\]\]\+passed/.test(ci) ? ok('ci.yml — נעיכת הסוויטה 1305 (כולל 3 ייצוא)') : fail('ci.yml — 1305');
 /verify-export-pure/.test(ci) ? ok('ci.yml — verify-export-pure מחובר') : fail('ci.yml — המאמת אינו מחובר');
 const pkg = read('package.json');
 /"verify:export-pure"/.test(pkg) ? ok('package.json — סקריפט verify:export-pure') : fail('package.json — חסר סקריפט');

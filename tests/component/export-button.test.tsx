@@ -140,3 +140,25 @@ describe('ExportButton — מסלול הייצוא הטהור (שלב 86)', () =
     expect(a.html).not.toMatch(/https?:\/\//);
   });
 });
+
+describe('ExportButton — שלב 87: פלט self-contained וקנוני', () => {
+  test('הגופן מוטמע כ-data URI מלא; אין פניית קובץ חיצונית; CSS הדפסה', () => {
+    const built = buildExportHtml({ ir: makeIr(), source: SOURCE, bundle: { fonts: [FONT] } });
+    // הטמעה מלאה מתוך ה-bytes של הצרור (FONT.bytes = 4 בתים ⇒ AAAA)
+    expect(built.html).toContain('src:url(data:font/woff2;base64,');
+    expect(built.html).toContain('data:font/woff2;base64,AAAA');
+    expect(built.html).not.toContain('url("fonts/');
+    // תמיכת הדפסה של הקובץ העומד לבדו — בלי חישוב מנוע חוזר
+    expect(built.html).toContain('@page{margin:0}');
+    expect(built.html).toContain('page-break-after:always');
+    expect(built.html).toContain('@media print{.tora-page{page-break-after:always');
+  });
+
+  test('שתי בניות עם אותו bytes ⇒ אותו data URI ביט-ביט (קנוני)', () => {
+    const a = buildExportHtml({ ir: makeIr(), source: SOURCE, bundle: { fonts: [FONT] } });
+    const b = buildExportHtml({ ir: makeIr(), source: SOURCE, bundle: { fonts: [FONT] } });
+    const uriOf = (s: string) => (s.match(/data:font\/woff2;base64,[A-Za-z0-9+/=]+/g) ?? ['none']).join(',');
+    expect(uriOf(a.html)).toBe(uriOf(b.html));
+    expect(uriOf(a.html)).not.toBe('none');
+  });
+});

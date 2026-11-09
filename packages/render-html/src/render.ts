@@ -31,6 +31,10 @@ export interface FontAssetEntry {
   readonly file: string;
   readonly format: 'woff2' | 'woff' | 'sfnt';
   readonly contentSha256: string;
+  /** שלב 87 — הטמעה self-contained: כשניתן, הגופן נטמע כ-data URI מלא
+   * (‎data:font/woff2;base64,…‎) ואין כלל תלות בקובץ חיצוני; בלעדיו —
+   * התייחסות יחסית קבועה ‎url("fonts/<file>")‎ כמקודם (§15.1). */
+  readonly dataUri?: string;
 }
 
 export interface AssetManifest {
@@ -78,7 +82,12 @@ export function buildCss(manifest: AssetManifest | undefined): string {
   for (const f of manifest?.fonts ?? []) {
     const fam = `tora-${sanitizeIdent(f.fontId)}`;
     const formatSrc = f.format === 'woff2' ? 'format("woff2")' : f.format === 'woff' ? 'format("woff")' : 'format("opentype")';
-    fontFaces.push(`@font-face{font-family:"${fam}";src:url("fonts/${escapeAttr(f.file)}") ${formatSrc};font-weight:normal;font-style:normal}`);
+    // שלב 87: self-contained — data URI מלא כשניתן (אין קובץ לצד הפלט);
+    // אחרת יחסי קבוע. קנוני: אותן רשומות ⇒ אותם bytes ביט-ביט.
+    const src = f.dataUri !== undefined && f.dataUri !== ''
+      ? `url(${f.dataUri})`
+      : `url("fonts/${escapeAttr(f.file)}")`;
+    fontFaces.push(`@font-face{font-family:"${fam}";src:${src} ${formatSrc};font-weight:normal;font-style:normal}`);
   }
   return [
     ...fontFaces,
@@ -89,6 +98,13 @@ export function buildCss(manifest: AssetManifest | undefined): string {
     '.tora-run{position:absolute;white-space:pre;box-sizing:border-box}',
     '.tora-note-marker{position:absolute;white-space:pre;box-sizing:border-box}',
     '.tora-anchor{position:absolute}',
+    // שלב 87 (§15.2/§21): תמיכת הדפסה של הקובץ העומד לבדו — בלי חישוב
+    // מנוע חוזר ובלי רשת: שולי דף אפסיים, שבירת עמוד אחרי כל עמוד,
+    // העמודים מוצגים בגודלם המדויק מה־IR (אין reflow של גוף הטקסט).
+    'body{margin:0}',
+    '@page{margin:0}',
+    '.tora-page{page-break-after:always;break-after:page}',
+    '@media print{.tora-page{page-break-after:always;break-after:page;box-shadow:none}}',
   ].join('\n');
 }
 

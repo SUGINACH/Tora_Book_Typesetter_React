@@ -11,7 +11,7 @@
  *   6. גופן לא קיים ⇒ exit 4 עם spec; repeat>1 עובר (אותו hash).
  */
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
-import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -111,19 +111,21 @@ describe('שלב 34: CLI reference runner — artifacts', () => {
   // בפועל לצד preview.html — קידומת fonts/ כפולה (fonts/fonts/…) + אי-העתקה
   // הותירו את ה-@font-face על 404 בכל preview.html שהופק אי-פעם, והדפדפן
   // הציג גופן חלופי במדדים זרים.
-  test('--html מעתיק את גופן הגוף לפלט ומעגן אותו בנתיב אחד (fonts/<file>); ביט-ביט זהה למקור', async () => {
+  test('--html מטמיע את גופן הגוף כ-data URI (self-contained; ביט-ביט זהה למקור) — שלב 87', async () => {
     const outcome = await runCli(args({ html: true }));
     expect(outcome.exitCode).toBe(EXIT_SUCCESS);
     const c = current as Case;
     const html = await readFile(join(c.out, 'preview.html'), 'utf8');
-    // נתיב יחיד — לא fonts/fonts/
-    expect(html).toContain('src:url("fonts/Guttman-Rashi-Normal.woff2")');
+    // שלב 87 — self-contained: data URI מלא; אין url("fonts/…") ואין העתקה
+    expect(html).toContain('src:url(data:font/woff2;base64,');
+    expect(html).not.toContain('url("fonts/');
     expect(html).not.toContain('fonts/fonts/');
-    // הקובץ עצמו קיים לצד ה-preview וזהה ביט-ביט למקור שה-@font-face צריך
-    const copied = await readFile(join(c.out, 'fonts', 'Guttman-Rashi-Normal.woff2'));
+    // ה-base64 בפלט זהה ביט-ביט לקובץ המקור שה-@font-face מעגן
     const source = await readFile(join(repoRoot, 'assets', 'fonts', 'Guttman-Rashi-Normal.woff2'));
-    expect(copied.byteLength).toBe(source.byteLength);
-    expect(copied.equals(source)).toBe(true);
+    const expected = `data:font/woff2;base64,${Buffer.from(source).toString('base64')}`;
+    expect(html).toContain(expected);
+    // ואין עוד ספריית fonts/ בפלט — הקובץ עומד לבדו offline
+    await expect(access(join(c.out, 'fonts')).then(() => true, () => false)).resolves.toBe(false);
     // הריצות ב-preview עוגנות למשפחה ההאשית בגרש בודד בתוך מאפיין ה-style
     // (מרכאות כפולות ב-style="" חתכו את המאפיין; בלוק ה-<style> של
     // ה-@font-face חוקי וממשיך להשתמש במרכאות כפולות — שם זה CSS גלוי)

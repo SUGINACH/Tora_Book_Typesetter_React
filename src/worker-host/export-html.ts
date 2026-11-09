@@ -24,7 +24,10 @@ export interface ExportHtmlInput {
   readonly bundle: { readonly fonts: readonly FontBytesEntry[] };
 }
 
-/** רשומת גופן להיטל — נגזרת מהרשומה במרשם הגופנים של הצרור. */
+/** רשומת גופן להיטל — נגזרת מהרשומה במרשם הגופנים של הצרור.
+ * שלב 87 — self-contained: הגופן נטמע כ-data URI מלא מתוך ה-bytes
+ * שכבר נטענו (אותם bytes שאומתו ב-sha256); הקובץ שיצא עומד לבדו
+ * offline — אין ספריית fonts/ ואין רשת (§15.2, §21). */
 function fontEntryOf(f: FontBytesEntry): FontAssetEntry {
   const rec = f.record;
   return {
@@ -33,7 +36,18 @@ function fontEntryOf(f: FontBytesEntry): FontAssetEntry {
     file: rec.file,
     format: rec.binaryFormat,
     contentSha256: rec.sha256,
+    dataUri: `data:font/${rec.binaryFormat};base64,${toBase64(f.bytes)}`,
   };
+}
+
+/** base64 של bytes — ללא תלות ב-btoa (עובד בדפדפן וב-Node כאחד). */
+function toBase64(bytes: Uint8Array): string {
+  let bin = '';
+  const CH = 0x8000;
+  for (let i = 0; i < bytes.length; i += CH) {
+    bin += String.fromCharCode(...bytes.subarray(i, i + CH));
+  }
+  return btoa(bin);
 }
 
 /**
