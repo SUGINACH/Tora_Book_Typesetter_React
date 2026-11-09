@@ -76,7 +76,7 @@ const finding = (over: Partial<ResultFinding> & Pick<ResultFinding, 'code' | 'se
 /** הזרקת תוצאה טריה: העורך נכתב ראשון (revision R) והתוצאה נועלת אותו. */
 const setResult = (findings: readonly ResultFinding[], stale = false): void => {
   const revision = useEditorStore.getState().revision;
-  useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), findings, sourceRevision: revision }, 'f'.repeat(64));
+  useResultStore.getState().setResult({ ir: makeIr(), manifest: makeManifest(), findings, sourceRevision: revision, sourceAtRun: 'מקור בדיקה' }, 'f'.repeat(64));
   if (stale) useEditorStore.getState().setText(useEditorStore.getState().rawText + 'עריכה מאוחרת');
 };
 

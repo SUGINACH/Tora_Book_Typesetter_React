@@ -32,6 +32,7 @@ import {
   useFindings,
   useLayoutIr,
   useResultIsCurrent,
+  useResultSourceText,
   useRunErrorCode,
   useRunPhase,
   useRunProgress,
@@ -119,10 +120,14 @@ export function PreviewArea() {
     readViewport();
   }, [zoom, readViewport]);
 
+  // תמונת המקור מזמן הריצה — לשחזור הטקסט הלוגי של הריצות בהיטל
+  // (תיקון שורש 2026-11-09/ב'): ההיטל חייב את המקור שממנו הופק ה־IR.
+  const sourceAtRun = useResultSourceText();
+
   // גאומטריית העמודים מה־IR (היטל טהור; לא מדידה) — לניווט הגלילה שלהלן.
   const pageHeights = useMemo(
-    () => (ir === null ? [] : projectLayout(ir).map((p) => p.blockSizePx)),
-    [ir],
+    () => (ir === null ? [] : projectLayout(ir, sourceAtRun ?? '').map((p) => p.blockSizePx)),
+    [ir, sourceAtRun],
   );
 
   // ── שלב 81 + 83: ניווט למוקד — קודם מביאים את העמוד לטווח הגלוי ──
@@ -226,6 +231,7 @@ export function PreviewArea() {
       <div className="flex-1 overflow-auto p-4 print:p-0" ref={scrollRef} data-testid="preview-scroll">
         <LayoutPreview
           layout={ir ?? undefined}
+          sourceText={sourceAtRun ?? undefined}
           status={previewStatusOf(phase)}
           error={
             phase === 'error' && errorCode !== null

@@ -54,11 +54,13 @@ const settings = { schemaVersion: 1, enginePolicyId: 'torah-v1', values: { 'size
 const req = { document: doc, settings, assets: { schemaVersion: 1, fonts: [{ usage: 'body', font: FONT }], fontsManifestSha256: 'f'.repeat(64), assetsManifestSha256: '0'.repeat(64) }, trace: 'off', budget: { maxCandidatesPerState: 64, maxBeamWidth: 8, maxExpandedStates: 200000, maxOuterIterations: 8 }, sourceSha256: '5'.repeat(64), parserVersion: 'v1' };
 const out = engine.typeset(req, provider, { policyId: 'torah-v1' });
 const ASSETS = { schemaVersion: 1, fonts: [{ fontId: 'guttman-rashi-normal', family: 'Guttman Rashi', file: 'Guttman-Rashi-Normal.woff2', format: 'woff2', contentSha256: 'a'.repeat(64) }] };
-const r1 = rh.renderHtml(out.layout, undefined, ASSETS);
-const r2 = rh.renderHtml(out.layout, undefined, ASSETS);
+// המקור נחוץ לשחזור הטקסט הלוגי של הריצות (תיקון 2026-11-09/ב') — מזהי
+// האטומים מקודדים טווחי מקור; בלעדיו כל מילה מוצגת מראה
+const r1 = rh.renderHtml(out.layout, undefined, ASSETS, undefined, { source: SOURCE });
+const r2 = rh.renderHtml(out.layout, undefined, ASSETS, undefined, { source: SOURCE });
 (r1.html === r2.html && r1.css === r2.css ? ok : fail)('שתי קריאות ⇐ ביט-ביט');
 const reparsed = la.parseLayoutDocument(la.serializeLayoutDocument(out.layout));
-const r3 = rh.renderHtml(reparsed, undefined, ASSETS);
+const r3 = rh.renderHtml(reparsed, undefined, ASSETS, undefined, { source: SOURCE });
 (r3.html === r1.html ? ok : fail)('round-trip של ה-IR ⇐ אותם bytes');
 (r1.html.includes('data-page-id="page:1"') && r1.html.includes('data-fragment-id=') ? ok : fail)('ממדים ומזהים מה-IR (data-page-id/fragment-id)');
 (r1.html.includes('font-size:16px') ? ok : fail)('12pt ⇒ 16px (רציונלי)');
@@ -84,7 +86,7 @@ console.log('\n4) רגרסיה');
 const lint = run('npm', ['run', 'lint:packages']);
 (lint !== null && !/\berror\b|✖/m.test(lint) ? ok : fail)('lint:packages — נקי');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('deps:check — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1292 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+const testOut = (SKIP_TESTS ? 'Tests  1300 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
 (testOut !== null && /Tests\s+\d+\s+passed/m.test(testOut) ? ok : fail)('test:packages — עבר');
 
 console.log('\n' + '='.repeat(60));

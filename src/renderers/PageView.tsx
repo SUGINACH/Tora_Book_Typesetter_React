@@ -19,6 +19,11 @@ export interface ItemActivation {
 
 export interface PageViewProps {
   readonly page: LayoutPage;
+  /**
+   * תמונת מקור המסמך מזמן הריצה (resultStore.sourceAtRun) — נחוצה לשחזור
+   * הטקסט הלוגי של הריצות (logicalTextOfRun; תיקון שורש 2026-11-09/ב').
+   */
+  readonly sourceText: string;
   /** כיוון העמוד — קובע את פרשנות המאפיינים הלוגיים (rtl לתורה). */
   readonly dir?: 'rtl' | 'ltr';
   /** שלב 81 — קליק על קו/סמן מדגיש את ה־SourceSpan בעורך (§13.2). */
@@ -28,12 +33,13 @@ export interface PageViewProps {
 }
 
 function runStyle(r: RunViewModel): CSSProperties {
-  // תיקון שורש 2026-11-09 (כישלון העמדה באתר החי): הריצות נושאות טקסט
-  // בסדר חזותי מפורש שנפתר במנוע (שמאל→ימין) — ההצגה חייבת bidi-override
-  // כיווני ltr, אחרת הדפדפן מפעיל את אלגוריתם הבי-די בשנית וכל שורה נקראת
-  // הפוך (אומת באתר החי לפני התיקון). יישור: קו מוצדק (fit) נמתח לרוחב
-  // תיבת הריצה כפי שהמנוע חילק על הרווחים; קו טבעי עוגן בקצה ההתחלתי
-  // של הכיוון — ימין ל-rtl (פער מדידה דולף לסוף הקו, לא לראשו).
+  // תיקון שורש 2026-11-09/ב' (מראות תווים באתר החי): הריצה מציגה את
+  // הטקסט הלוגי (displayText מ-logicalTextOfRun) בכיוון הטבעי שלה —
+  // הדפדפן מפעיל את UAX#9 בעצמו (סדר מילים, מראוי סוגריים, ספרות).
+  // bidi-override+ltr על המחרוזת החזותית מראה כל מילה ("יורה דעה" נקרא
+  // "הרוי העד" — אומת באתר החי במדידת מיקומי תווים). יישור: קו מוצדק
+  // (fit) נמתח לרוחב תיבת הריצה כפי שהמנוע חילק על הרווחים; קו טבעי
+  // עוגן בקצה ההתחלתי של הכיוון — ימין ל-rtl.
   const align: CSSProperties['textAlign'] = r.justified ? 'justify' : (r.direction === 'rtl' ? 'right' : 'left');
   return {
     position: 'absolute',
@@ -44,8 +50,7 @@ function runStyle(r: RunViewModel): CSSProperties {
     fontSize: `${r.fontSizePx}px`,
     fontFamily: `"${r.fontFamily}"`,
     whiteSpace: 'pre',
-    direction: 'ltr',
-    unicodeBidi: 'bidi-override',
+    direction: r.direction,
     textAlign: align,
     ...(r.justified ? { textAlignLast: 'justify' as const } : {}),
   };
@@ -55,8 +60,9 @@ function renderRun(r: RunViewModel) {
   return (
     <span
       key={r.id}
-      dir="ltr"
+      dir={r.direction}
       data-run-id={r.id}
+      data-run-direction={r.direction}
       style={runStyle(r)}
     >
       {r.displayText}
@@ -74,8 +80,8 @@ function highlightStyle(highlighted: boolean): CSSProperties {
   };
 }
 
-export function PageView({ page, dir = 'rtl', onItemActivate, highlightItemIds }: PageViewProps) {
-  const model: PageViewModel = projectPage(page);
+export function PageView({ page, sourceText, dir = 'rtl', onItemActivate, highlightItemIds }: PageViewProps) {
+  const model: PageViewModel = projectPage(page, sourceText);
   const clickable = onItemActivate !== undefined;
   const activateLine = (lineId: string): void => {
     onItemActivate?.({ kind: 'line', itemId: lineId, pageId: model.id });

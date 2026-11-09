@@ -34,12 +34,20 @@ function rect(x: number, y: number, w: number, h: number): Rect {
   return { x: x as never, y: y as never, width: w as never, height: h as never };
 }
 
+/**
+ * מקור הבדיקה — מכיל את כל טקסטי הריצות להלן;‏ makeRun מקודד טווח מקור
+ * אמיתי (atom:v1|…|<start>+<end>|src|0) כך ש-logicalTextOfRun משחזר
+ * בדיוק את text מ-TEST_SOURCE — כמו האטומים האמיתיים מהמנוע.
+ */
+const TEST_SOURCE = 'שלום <עולם> "וציטוט" שורה מוצדקת שורת סיום latin tail מלה    אחרת שלום עולם תוכן הערה לדוגמה כותרת לעמוד הערות פרט גם   tail';
+
 function makeRun(id: string, startLu: number, widthLu: number, text: string): PositionedRun {
+  if (TEST_SOURCE.indexOf(text) < 0) throw new Error(`טקסט הבדיקה חסר ב-TEST_SOURCE: ${text}`);
   return {
     kind: 'run', id, font: FONT, fontSizeLu: ptToLu(12), direction: 'rtl',
     startLu: startLu as never, widthLu: widthLu as never, text,
     glyphs: [{ glyphId: 1, atomId: 'a:0' as never, clusterAtomIndex: 0, advanceLu: widthLu as never, xOffsetLu: 0 as never, yOffsetLu: 0 as never }],
-    atomIds: ['a:0' as never], requestHash: 'b'.repeat(64),
+    atomIds: [`atom:v1|test|body|${TEST_SOURCE.indexOf(text)}+${TEST_SOURCE.indexOf(text) + text.length}|src|0` as never], requestHash: 'b'.repeat(64),
   };
 }
 
@@ -74,33 +82,33 @@ function makeLayout(folio: string = 'א'): LayoutDocument {
 
 describe('שלב 37: render-html v1 — קנוניות', () => {
   test('אותו IR (round-trip) ⇐ ביט-ביט אותם bytes', () => {
-    const a = renderHtml(makeLayout(), undefined, ASSETS);
+    const a = renderHtml(makeLayout(), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     const reparsed = parseLayoutDocument(serializeLayoutDocument(makeLayout()));
-    const b = renderHtml(reparsed, undefined, ASSETS);
+    const b = renderHtml(reparsed, undefined, ASSETS, undefined, { source: TEST_SOURCE });
     expect(b.html).toBe(a.html);
     expect(b.css).toBe(a.css);
   });
 
   test('סדר מפתחות שונה ב-IR ⇐ אותם bytes (קנוניזציה של ההיטל)', () => {
-    const a = renderHtml(makeLayout(), undefined, ASSETS);
+    const a = renderHtml(makeLayout(), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     const raw = JSON.parse(JSON.stringify(makeLayout()));
     const rev = JSON.parse(JSON.stringify(raw), (_k, v) => (typeof v === 'object' && v !== null && !Array.isArray(v)
       ? Object.fromEntries(Object.entries(v as Record<string, unknown>).reverse())
       : v));
-    const b = renderHtml(createLayoutDocument(rev), undefined, ASSETS);
+    const b = renderHtml(createLayoutDocument(rev), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     expect(b.html).toBe(a.html);
   });
 
   test('שינוי IR ⇒ bytes שונים (ההיטל נאמן ל-IR)', () => {
-    const a = renderHtml(makeLayout('א'), undefined, ASSETS);
-    const b = renderHtml(makeLayout('ב'), undefined, ASSETS);
+    const a = renderHtml(makeLayout('א'), undefined, ASSETS, undefined, { source: TEST_SOURCE });
+    const b = renderHtml(makeLayout('ב'), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     expect(b.html).not.toBe(a.html);
   });
 });
 
 describe('שלב 37: טוהר וביטחון', () => {
   test('escaping: תוכן משתמש אינו נכנס כ-HTML', () => {
-    const out = renderHtml(makeLayout(), undefined, ASSETS);
+    const out = renderHtml(makeLayout(), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     expect(out.html).toContain('שלום &lt;עולם&gt; &quot;וציטוט&quot;');
     expect(out.html).not.toContain('<עולם>');
   });
@@ -136,7 +144,7 @@ describe('שלב 37: טוהר וביטחון', () => {
 
 describe('שלב 37: ממדים מה-IR', () => {
   test('כל עמוד וקו מקבלים ממדים מה-IR; ההמרה רציונלית', () => {
-    const out = renderHtml(makeLayout(), undefined, ASSETS);
+    const out = renderHtml(makeLayout(), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     expect(out.html).toContain('data-page-id="page:1"');
     expect(out.html).toContain('data-fragment-id="item:l1"');
     expect(out.html).toContain('data-source-id="node:b1"');
@@ -146,11 +154,12 @@ describe('שלב 37: ממדים מה-IR', () => {
   });
 });
 
-// ───────── תיקון שורש 2026-11-09 — היפוך קריאה באתר החי (בי-די כפול) ─────────
+// ───────── תיקון שורש 2026-11-09/ב' — מראות תווים באתר החי ─────────
 //
-// הוכחות-נפל לשלושת פצעי ההיטל שנתגלו באתר החי של Pages:
-//   (א) dir="rtl" על מחרוזת בסדר חזותי ⇒ הדפדפן הפך כל שורה פעם שנייה
-//       וכל הספר נקרא הפוך. הריצות חייבות bidi-override כיווני ltr.
+// הוכחות-נפל לפצעי ההיטל שנתגלו באתר החי של Pages:
+//   (א) bidi-override+ltr על המחרוזת החזותית (אטומים שמאל→ימין, תווים
+//       לוגיים) ⇒ הדפדפן הציג כל מילה מראה ("יורה דעה" נקרא "הרוי העד").
+//       הריצות חייבות טקסט לוגי + כיוון טבעי.
 //   (ב) מרכאות כפולות בתוך מאפיין style כפול-מרכאות חתכו את המאפיין —
 //       הגופן נפל לברירת המחדל (Times) בכל preview.html שהופק אי-פעם.
 //   (ג) קו justify נמתח במנוע על הרווחים — ההיטל חייב לשחזר את המתיחה
@@ -194,19 +203,26 @@ describe('תיקון 2026-11-09: בי-די, גופן וריווח בהיטל', (
     } as never);
   }
 
-  test('ריצה מוצגת ב-bidi-override כיווני ltr — אין היפוך בי-די שני (סדר חזותי מהמנוע)', () => {
-    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום עולם')]), undefined, ASSETS);
+  test('ריצה מוצגת בכיוון הטבעי שלה, בלי bidi-override — הדפדפן מפעיל UAX#9 (מראות תווים)', () => {
+    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום עולם')]), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     const start = out.html.indexOf('class="tora-run"');
     const runSpan = out.html.slice(start, out.html.indexOf('</span>', start));
-    expect(runSpan).toContain('dir="ltr"');
-    expect(runSpan).toContain('unicode-bidi:bidi-override');
-    expect(runSpan).toContain('direction:ltr');
-    // dir לפי כיוון הריצה (rtl) אסור מאז התיקון — זה היה שורש ההיפוך
-    expect(runSpan).not.toMatch(/dir="rtl"/);
+    expect(runSpan).toContain('dir="rtl"');
+    expect(runSpan).toContain('direction:rtl');
+    expect(runSpan).toContain('data-run-direction="rtl"');
+    // אין override — bidi-override+ltr על המחרוזת החזותית מראה כל מילה
+    // ("יורה דעה" נקרא "הרוי העד"; אומת באתר החי במדידת מיקומי תווים)
+    expect(runSpan).not.toContain('unicode-bidi');
+    // ריצת ltr — כיוון טבעי משלה
+    const out2 = renderHtml(layoutWith([makeLine('item:l2', 'paragraph-end', 'ltr', 'latin tail')]), undefined, ASSETS, undefined, { source: TEST_SOURCE });
+    const start2 = out2.html.indexOf('class="tora-run"');
+    const ltrSpan = out2.html.slice(start2, out2.html.indexOf('</span>', start2));
+    expect(ltrSpan).toContain('dir="ltr"');
+    expect(ltrSpan).toContain('direction:ltr');
   });
 
   test('גופן הריצה תחום בגרש בודד — מרכאות כפולות חתכו את מאפיין ה-style (404 שקט לגופן)', () => {
-    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, ASSETS);
+    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     expect(out.html).toContain(`font-family:'tora-guttman-rashi-normal'`);
     // בתוך מאפיין style (הקשר התקלה) אסור מרכאות כפולות סביב שם משפחה —
     // הן חתכו את המאפיין. בלוק ה־<style> (buildCss) חוקי ונבדק בנפרד למטה.
@@ -220,7 +236,7 @@ describe('תיקון 2026-11-09: בי-די, גופן וריווח בהיטל', (
       makeLine('item:l-fit', 'fit', 'rtl', 'שורה מוצדקת'),
       makeLine('item:l-end', 'paragraph-end', 'rtl', 'שורת סיום'),
       makeLine('item:l-ltr', 'paragraph-end', 'ltr', 'latin tail'),
-    ]), undefined, ASSETS);
+    ]), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     const spanOf = (marker: string): string => {
       const start = out.html.indexOf(marker);
       expect(start).toBeGreaterThanOrEqual(0);
@@ -237,11 +253,11 @@ describe('תיקון 2026-11-09: בי-די, גופן וריווח בהיטל', (
   });
 
   test('סמן הערה עוגן למשפחת ה-manifest — לא לגופן ברירת המחדל של הדפדפן', () => {
-    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, ASSETS);
+    const out = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     const marker = out.html.slice(out.html.indexOf('class="tora-note-marker"'), out.html.indexOf('</span>', out.html.indexOf('class="tora-note-marker"')));
     expect(marker).toContain(`font-family:'tora-guttman-rashi-normal'`);
     // בלי manifest אין עיגון — התנהגות קיימת נשמרת
-    const noManifest = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, undefined);
+    const noManifest = renderHtml(layoutWith([makeLine('item:l1', 'fit', 'rtl', 'שלום')]), undefined, undefined, undefined, { source: TEST_SOURCE });
     const markerNoManifest = noManifest.html.slice(noManifest.html.indexOf('class="tora-note-marker"'), noManifest.html.indexOf('</span>', noManifest.html.indexOf('class="tora-note-marker"')));
     expect(markerNoManifest).not.toContain('font-family');
   });
@@ -249,15 +265,22 @@ describe('תיקון 2026-11-09: בי-די, גופן וריווח בהיטל', (
   test('רווחי סוף-הקו המאופסים (trailingZero) לא מוצגים — חיתוך U+0020 מהריצה השמאלית בלבד', () => {
     // שתי ריצות בקו: הראשונה (השמאלית) נושאת "  " בראש המחרוזת = סוף הקו
     // החזותי — המנוע איפס את הקידום שלהן; השנייה פנימית והרווח שלה אמיתי.
-    const line = makeLine('item:l-trim', 'fit', 'rtl', 'x');
-    const firstRun: PositionedRun = { ...makeRun('run:left', 0, 100000, '   מלה') };
-    const innerRun: PositionedRun = { ...makeRun('run:inner', 100000, 300000, ' אחרת') };
+    const line = makeLine('item:l-trim', 'fit', 'rtl', 'שלום');
+    const firstRun: PositionedRun = { ...makeRun('run:left', 0, 100000, 'מלה   ') };
+    const innerRun: PositionedRun = { ...makeRun('run:inner', 100000, 300000, ' אחרת ') };
     const withRuns = { ...line, runs: [firstRun, innerRun] } as never;
-    const out = renderHtml(layoutWith([withRuns]), undefined, ASSETS);
+    const out = renderHtml(layoutWith([withRuns]), undefined, ASSETS, undefined, { source: TEST_SOURCE });
     const leftSpan = out.html.slice(out.html.indexOf('data-run-id="run:left"'), out.html.indexOf('</span>', out.html.indexOf('data-run-id="run:left"')));
     expect(leftSpan).toContain('>מלה');
-    expect(leftSpan).not.toContain('>   מלה');
+    expect(leftSpan).not.toContain('מלה   ');
     const innerSpan = out.html.slice(out.html.indexOf('data-run-id="run:inner"'), out.html.indexOf('</span>', out.html.indexOf('data-run-id="run:inner"')));
-    expect(innerSpan).toContain('> אחרת');
+    expect(innerSpan).toContain('> אחרת ');
+    // ריצת ltr שמאלית — רווחי סוף-קו בראש הלוגי (ראש חזותי === ראש לוגי)
+    const ltrLine = makeLine('item:l-trim-ltr', 'paragraph-end', 'ltr', 'שלום');
+    const ltrRun: PositionedRun = { ...makeRun('run:left-ltr', 0, 100000, '   tail'), direction: 'ltr' };
+    const out2 = renderHtml(layoutWith([{ ...ltrLine, runs: [ltrRun] }]), undefined, ASSETS, undefined, { source: TEST_SOURCE });
+    const ltrSpan = out2.html.slice(out2.html.indexOf('data-run-id="run:left-ltr"'), out2.html.indexOf('</span>', out2.html.indexOf('data-run-id="run:left-ltr"')));
+    expect(ltrSpan).toContain('>tail');
+    expect(ltrSpan).not.toContain('>   tail');
   });
 });

@@ -36,6 +36,7 @@ import {
   type WorkerResponse,
 } from '../../src/worker-host/protocol.js';
 import { createEngineHandler, type WorkerPort } from '../../src/worker-host/engine-worker.js';
+import { toLeanLayout } from '../../src/worker-host/lean-layout.js';
 import {
   WorkerClient,
   WorkerJobCancelled,
@@ -178,9 +179,10 @@ describe('שלב 35: אימות הודעות הפרוטוקול', () => {
   });
 
   test('prepare עם גרסת פרוטוקול שגויה נדחה עם מיקום', () => {
-    const bad = { type: 'prepare', jobId: 'job-1', protocolVersion: 2, payload: makePayload() };
+    // v2 היא הנוכחית (IR רזה; תיקון 2026-11-09/ג'); גרסה ישנה/עתידית נדחית
+    const bad = { type: 'prepare', jobId: 'job-1', protocolVersion: 1, payload: makePayload() };
     expect(isWorkerRequest(bad)).toBe(false);
-    expect(workerRequestIssues(bad)).toContain('protocolVersion:2');
+    expect(workerRequestIssues(bad)).toContain('protocolVersion:1');
   });
 
   test('סוג לא מוכר/jobId ריק/payload חסר נדחים', () => {
@@ -194,7 +196,10 @@ describe('שלב 35: אימות הודעות הפרוטוקול', () => {
     expect(isWorkerResponse({ type: 'progress', jobId: 'j', stage: 'breaking', completedUnits: 1 })).toBe(true);
     expect(isWorkerResponse({ type: 'error', jobId: 'j', errorCode: 'errors.engine.SETTING_INVALID', params: {} })).toBe(true);
     expect(isWorkerResponse({ type: 'error', jobId: 'j', errorCode: 'raw message!', params: {} })).toBe(false);
+    // v2: התוצאה נושאת IR רזה (אובייקט עם pages) — מחרוזת layoutJson ישנה נדחית
     expect(isWorkerResponse({ type: 'done', jobId: 'j', result: { layoutJson: 'x', manifest: { layoutHash: 'h' }, layoutHash: 'h' } })).toBe(false);
+    expect(isWorkerResponse({ type: 'done', jobId: 'j', result: { layout: { schemaVersion: 1, policyId: 'p', pages: [] }, manifest: { layoutHash: 'a'.repeat(64) }, layoutHash: 'a'.repeat(64) } })).toBe(true);
+    expect(isWorkerResponse({ type: 'done', jobId: 'j', result: { layout: 'not-an-object', manifest: { layoutHash: 'h' }, layoutHash: 'h' } })).toBe(false);
     expect(workerResponseIssues({ type: 'progress', jobId: 'j', stage: 's', completedUnits: -1 })).toContain('completedUnits');
   });
 });
@@ -216,12 +221,19 @@ describe('שלב 35: handler המנוע בעובד — progress/done/error/בי�
     expect(done).toBeDefined();
     for (const p of posts) expect(isWorkerResponse(p)).toBe(true);
     const result = (done as { result: SerializedTypesetResult }).result;
-    expect(result.layoutJson.length).toBeGreaterThan(0);
+    // v2: IR רזה — אובייקט ב-structured clone, בלי מחרוזת קנונית (תיקון
+    // 2026-11-09/ג': שילוש הזיכרון בספרים גדולים הפיל לשוניות באתר החי)
+    expect(result.layout.schemaVersion).toBe(1);
+    expect(Array.isArray(result.layout.pages)).toBe(true);
+    expect(result.layout.pages.length).toBeGreaterThan(0);
+    // הגליפים הושמטו מההעברה — הביקורת וההיטל אינם קוראים אותם
+    for (const page of result.layout.pages) {
+      for (const item of page.items) {
+        if (item.kind === 'line') for (const run of item.runs) expect(run.glyphs.length).toBe(0);
+      }
+    }
     expect(result.manifest.layoutHash).toBe(result.layoutHash);
     expect(result.ledgerJson).toBeDefined();
-    const layout = JSON.parse(result.layoutJson);
-    expect(layout.schemaVersion).toBe(1);
-    expect(Array.isArray(layout.pages)).toBe(true);
   });
 
   test('שגיאת מנוע ⇒ error עם מפתח קטלוגי + params — לא message גולמי', async () => {
@@ -293,7 +305,8 @@ describe('שלב 35: WorkerClient — ערוץ מלא עם המנוע האמית
     // קריאה ישירה ב-Node — אותה בקשה, אותו מנוע, אותו ספק
     const direct = engineTypeset(makeRequest(), createTestMeasurementProvider(), { policyId: 'torah-v1' });
     expect(result.layoutHash).toBe(direct.manifest.layoutHash);
-    expect(JSON.parse(result.layoutJson)).toEqual(JSON.parse(result.layoutJson)); // קנוני ויציב
+    // v2: אותו IR רזה כמו היטל ישיר של אותה ריצה — דטרמיניזם מלא
+    expect(result.layout).toEqual(toLeanLayout(direct.layout));
     expect(channel.workerSaw[0]?.type).toBe('prepare');
   });
 

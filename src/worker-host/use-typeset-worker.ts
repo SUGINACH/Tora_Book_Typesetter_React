@@ -10,7 +10,8 @@
  * כחדש (§13.3#5). ביטול job אינו משנה את הריצה הבאה (§17.2#10).
  */
 import { useCallback, useRef, useState } from 'react';
-import { parseLayoutDocument, type LayoutDocument } from '@tora/layout-api';
+import type { LayoutDocument } from '@tora/layout-api';
+import { isLeanLayout } from './lean-layout.js';
 import { WorkerJobCancelled, type JobHandle, type WorkerClient } from './worker-client.js';
 import type { PreparePayload } from './protocol.js';
 
@@ -52,9 +53,13 @@ export function useTypesetWorker(client: WorkerClient): UseTypesetWorker {
       (result) => {
         if (currentJob.current === handle) {
           currentJob.current = undefined;
+          if (!isLeanLayout(result.layout)) {
+            setState({ status: 'error', errorCode: 'errors.worker.RESULT_INVALID', errorParams: {} });
+            return;
+          }
           setState({
             status: 'done',
-            layout: parseLayoutDocument(result.layoutJson),
+            layout: result.layout,
             layoutHash: result.layoutHash,
           });
         }

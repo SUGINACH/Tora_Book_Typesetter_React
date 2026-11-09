@@ -71,6 +71,9 @@ export const useAnchors = (): Readonly<AnchorTable> | null =>
   useStoreWithEqualityFn(useResultStore, (s) => s.anchors);
 export const useLayoutHash = (): string | null =>
   useStoreWithEqualityFn(useResultStore, (s) => s.layoutHash);
+/** תמונת המקור מזמן הריצה (תיקון 2026-11-09/ב') — לשחזור הטקסט הלוגי בהיטל. */
+export const useResultSourceText = (): string | null =>
+  useStoreWithEqualityFn(useResultStore, (s) => s.sourceAtRun);
 /** שלב 81 — מהדורת המקור שממנה הופקה התוצאה (עוגן טריות). */
 export const useResultSourceRevision = (): number | null =>
   useStoreWithEqualityFn(useResultStore, (s) => s.sourceRevision);

@@ -197,7 +197,7 @@ describe('שלב 83: virtualization.ts — טהור ודטרמיניסטי', () 
 
 describe('שלב 83: LayoutPreview — הצגה וירטואלית של עמודי ה-preview בלבד', () => {
   test('מסמך ארוך (120 עמודים) בלי viewport ⇐ הצגה מלאה; אין פסי ריווח', () => {
-    const { container } = render(createElement(LayoutPreview, { layout: LONG, status: 'done' }));
+    const { container } = render(createElement(LayoutPreview, { layout: LONG, sourceText: SOURCE, status: 'done' }));
     expect(container.querySelectorAll('.tora-preview-page').length).toBe(120);
     expect(container.querySelector('.tora-preview-root')!.getAttribute('data-virtual-range')).toBe('full');
     expect(container.querySelector('[data-testid="preview-spacer-top"]')).toBeNull();
@@ -205,9 +205,10 @@ describe('שלב 83: LayoutPreview — הצגה וירטואלית של עמוד
   });
 
   test('viewport 600 בראש המסמך ⇐ רק הטווח הגלוי + overscan; פסי ריווח מדויקים', () => {
-    const heights = projectLayout(LONG).map((p) => p.blockSizePx);
+    const heights = projectLayout(LONG, SOURCE).map((p) => p.blockSizePx);
     const { container } = render(createElement(LayoutPreview, {
       layout: LONG,
+      sourceText: SOURCE,
       status: 'done',
       viewport: { scrollTopPx: 0, viewportHeightPx: 600 },
     }));
@@ -227,10 +228,11 @@ describe('שלב 83: LayoutPreview — הצגה וירטואלית של עמוד
   });
 
   test('גלילה לאמצע ⇐ הטווח זז; ה-DOM מכיל רק עמודים בטווח; הראש אינו מוצג', () => {
-    const heights = projectLayout(LONG).map((p) => p.blockSizePx);
+    const heights = projectLayout(LONG, SOURCE).map((p) => p.blockSizePx);
     const scrollTop = Math.floor(totalHeightPx(heights) / 2);
     const { container } = render(createElement(LayoutPreview, {
       layout: LONG,
+      sourceText: SOURCE,
       status: 'done',
       viewport: { scrollTopPx: scrollTop, viewportHeightPx: 600 },
     }));
@@ -248,13 +250,17 @@ describe('שלב 83: LayoutPreview — הצגה וירטואלית של עמוד
   });
 
   test('zoom מכפיל את החלון הגלוי במרחב הלא־מוגדל — ואינו מודד מחדש (§17.2#5)', () => {
-    const heights = projectLayout(LONG).map((p) => p.blockSizePx);
+    const heights = projectLayout(LONG, SOURCE).map((p) => p.blockSizePx);
     const scrollTop = 3000;
     const a = render(createElement(LayoutPreview, {
-      layout: LONG, status: 'done', viewport: { scrollTopPx: scrollTop, viewportHeightPx: 600 }, zoom: 1,
+      layout: LONG,
+      sourceText: SOURCE,
+      status: 'done', viewport: { scrollTopPx: scrollTop, viewportHeightPx: 600 }, zoom: 1,
     }));
     const b = render(createElement(LayoutPreview, {
-      layout: LONG, status: 'done', viewport: { scrollTopPx: scrollTop, viewportHeightPx: 600 }, zoom: 2,
+      layout: LONG,
+      sourceText: SOURCE,
+      status: 'done', viewport: { scrollTopPx: scrollTop, viewportHeightPx: 600 }, zoom: 2,
     }));
     const rangeA = visiblePageRange(heights, { scrollTopPx: scrollTop, viewportHeightPx: 600 });
     const rangeB = visiblePageRange(heights, { scrollTopPx: scrollTop, viewportHeightPx: 600 }, { zoom: 2 });
@@ -273,7 +279,9 @@ describe('שלב 83: LayoutPreview — הצגה וירטואלית של עמוד
     const spy = vi.spyOn(Element.prototype, 'getBoundingClientRect');
     spy.mockImplementation(() => ({}) as DOMRect);
     const { container } = render(createElement(LayoutPreview, {
-      layout: LONG, status: 'done', viewport: { scrollTopPx: 5000, viewportHeightPx: 600 },
+      layout: LONG,
+      sourceText: SOURCE,
+      status: 'done', viewport: { scrollTopPx: 5000, viewportHeightPx: 600 },
     }));
     expect(spy).toHaveBeenCalledTimes(0);
     spy.mockRestore();
@@ -284,7 +292,7 @@ describe('שלב 83: LayoutPreview — הצגה וירטואלית של עמוד
 
 describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom', () => {
   test('מסמך ארוך + resultStore אמיתי: הצגה מלאה כשאין גהה (clientHeight=0 ב-jsdom)', () => {
-    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0 }, LONG_HASH);
+    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0, sourceAtRun: SOURCE }, LONG_HASH);
     const { container } = render(createElement(PreviewArea));
     expect(container.querySelector('[data-testid="preview-scroll"]')).not.toBeNull();
     expect(container.querySelectorAll('.tora-preview-page').length).toBe(120);
@@ -292,7 +300,7 @@ describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom'
   });
 
   test('ניווט שלב 81 על מסמך ארוך: הגלילה אל עמוד המוקד מחושבת מהגאומטריה — והעמוד מוצג', () => {
-    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0 }, LONG_HASH);
+    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0, sourceAtRun: SOURCE }, LONG_HASH);
     const { container } = render(createElement(PreviewArea));
     const el = container.querySelector('[data-testid="preview-scroll"]') as HTMLElement;
     setViewport(el, 0, 600);
@@ -300,7 +308,7 @@ describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom'
       useViewStore.getState().setFocus({ pane: 'layout', pageId: 'vp-80' });
     });
     // הגלילה המבוקשת: מרכז עמוד 80 במרחב הגלילה, פחות חצי גהה
-    const heights = projectLayout(LONG).map((p) => p.blockSizePx);
+    const heights = projectLayout(LONG, SOURCE).map((p) => p.blockSizePx);
     const offsets = pageOffsets(heights);
     const desired = Math.max(0, (offsets[80] + heights[80] / 2) * 1 + CONTENT_INSET_PX - 300);
     expect(el.scrollTop).toBe(desired);
@@ -310,7 +318,7 @@ describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom'
   });
 
   test('beforeprint ⇐ הצגה מלאה; afterprint ⇐ חזרה לטווח הגלוי', () => {
-    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0 }, LONG_HASH);
+    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0, sourceAtRun: SOURCE }, LONG_HASH);
     const { container } = render(createElement(PreviewArea));
     const el = container.querySelector('[data-testid="preview-scroll"]') as HTMLElement;
     setViewport(el, 5000, 600);
@@ -327,7 +335,7 @@ describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom'
   });
 
   test('zoom/DPR אינם משנים תוצאה — אותו IR קפוא, אותו hash, אף job חדש לא נפתח', () => {
-    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0 }, LONG_HASH);
+    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0, sourceAtRun: SOURCE }, LONG_HASH);
     const { container } = render(createElement(PreviewArea));
     const el = container.querySelector('[data-testid="preview-scroll"]') as HTMLElement;
     setViewport(el, 0, 600);
@@ -354,7 +362,7 @@ describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom'
   });
 
   test('גלילה במחזור מלא לא משנה את התוצאה — אין שינוי עקב viewport (§17.3)', () => {
-    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0 }, LONG_HASH);
+    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0, sourceAtRun: SOURCE }, LONG_HASH);
     const { container } = render(createElement(PreviewArea));
     const el = container.querySelector('[data-testid="preview-scroll"]') as HTMLElement;
     setViewport(el, 0, 600);
@@ -370,7 +378,7 @@ describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom'
   });
 
   test('progress בתצוגה: ‎3/7 — 42%‎; בלי סך ⇐ אין אחוז; אותו דיווח ⇐ אותה שורה', () => {
-    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0 }, LONG_HASH);
+    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0, sourceAtRun: SOURCE }, LONG_HASH);
     const { container } = render(createElement(PreviewArea));
     const run = useRunStore.getState();
     act(() => {
@@ -392,7 +400,7 @@ describe('שלב 83: PreviewArea — מחוברת, עם הגהה בגהה jsdom'
   });
 
   test('ניקוי המאזינים בהסרה — אין זליגה; scroll על אלמנט מנותק אינו מקפיץ', () => {
-    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0 }, LONG_HASH);
+    useResultStore.getState().setResult({ ir: LONG, manifest: makeManifest(), sourceRevision: 0, sourceAtRun: SOURCE }, LONG_HASH);
     const { container, unmount } = render(createElement(PreviewArea));
     const el = container.querySelector('[data-testid="preview-scroll"]') as HTMLElement;
     const spy = vi.spyOn(el, 'removeEventListener');

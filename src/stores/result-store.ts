@@ -37,10 +37,14 @@ export interface TypesetResultInput {
   /** מהדורת המקור שממנה הופקה התוצאה — עוגן הטריות מול editorStore.revision (שלב 81).
    *  תוצאה שנערך המקור מאז שליחתה אינה מתקבלת כלל (שער במנצח); העוגן
    *  נועד להגנה בעומק בצד הצרכן — הניווט המקושר בטל כשאין התאמה. */
-  readonly sourceRevision: number;
-}
-
-/**
+    readonly sourceRevision: number;
+  /**
+   * תמונת מקור המסמך כפי שהיה בעת השליחה (תיקון שורש 2026-11-09/ב') —
+   * ההיטל משחזר בה את הטקסט הלוגי של הריצות (logicalTextOfRun). העורך
+   * החי אינו נאמן לתוצאה ישנה שנערך המקור מאז — התוצאה נושאת את שלה.
+   */
+  readonly sourceAtRun: string;
+}/**
  * deepFreeze איטרטיבי — מחסנית מפורשת (לא רקורסיה), WeakSet לזיהוי
  * מחזורים; פרימיטיבים ומבנים קפואים־מראש עוברים ללא מגע. טיפוסים
  * אטומים (Uint8Array וכו') אינם נאטמים — freeze על TypedArray זורק
@@ -73,6 +77,8 @@ interface ResultStoreState {
   readonly layoutHash: string | null;
   /** מהדורת המקור שממנה הופקה התוצאה; null ⇐ אין תוצאה (שלב 81). */
   readonly sourceRevision: number | null;
+  /** תמונת המקור מזמן השליחה (תיקון 2026-11-09/ב'); null ⇐ אין תוצאה. */
+  readonly sourceAtRun: string | null;
   setResult(input: TypesetResultInput, layoutHash: string): void;
   /** ניקוי מלא (מסמך חדש/ביטול) — אין "תוצאה ריקה חלקית". */
   reset(): void;
@@ -85,6 +91,7 @@ export const useResultStore = create<ResultStoreState>()((set) => ({
   anchors: null,
   layoutHash: null,
   sourceRevision: null,
+  sourceAtRun: null,
 
   setResult: (input, layoutHash) =>
     set({
@@ -95,6 +102,7 @@ export const useResultStore = create<ResultStoreState>()((set) => ({
       anchors: input.anchors === null || input.anchors === undefined ? null : (deepFreeze(input.anchors) as Readonly<AnchorTable>),
       layoutHash,
       sourceRevision: input.sourceRevision,
+      sourceAtRun: input.sourceAtRun,
     }),
 
   reset: () =>
@@ -105,5 +113,6 @@ export const useResultStore = create<ResultStoreState>()((set) => ({
       anchors: null,
       layoutHash: null,
       sourceRevision: null,
+      sourceAtRun: null,
     }),
 }));

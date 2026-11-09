@@ -12,7 +12,13 @@
  */
 import type { AnyProvider, FontManifestRecord, RunManifest, TypesetRequest } from '@tora/layout-api';
 
-export const WORKER_PROTOCOL_VERSION = 1 as const;
+/**
+ * v2 (תיקון שורש 2026-11-09/ג'): התוצאה עוברת כ־IR רזה (structured clone,
+ * glyphs:[] — lean-layout.ts) במקום מחרוזת layoutJson קנונית — שילוש
+ * הזיכרון בספרים בגודל אמיתי הפיל לשוניות באתר החי. ההרחבה נעולה
+ * בגרסה: עובד ממטמון ישן (v1) נדחה בקול רם בערוץ prepare.
+ */
+export const WORKER_PROTOCOL_VERSION = 2 as const;
 
 /** גופן שעובר בערוץ — רשומת מניפסט (plain JSON) + ה-bytes שנמדדו (§6.4). */
 export interface FontBytesEntry {
@@ -31,9 +37,9 @@ export interface PreparePayload {
   readonly woff2DecoderBytes: Uint8Array;
 }
 
-/** התוצאה בחוט הגוף: ה-IR בסריאליזציה הקנונית (זהה ביט-ביט ל-CLI). */
+/** התוצאה בחוט הגוף: ה־IR הרזה (ללא גליפים; lean-layout) + המניפסט עם ה־hash הקנוני. */
 export interface SerializedTypesetResult {
-  readonly layoutJson: string;
+  readonly layout: import('@tora/layout-api').LayoutDocument;
   readonly manifest: RunManifest;
   readonly ledgerJson?: string;
   readonly layoutHash: string;
@@ -98,7 +104,7 @@ export function workerResponseIssues(v: unknown): string[] {
       const r = v.result;
       if (!isRecord(r)) issues.push('result');
       else {
-        if (typeof r.layoutJson !== 'string' || r.layoutJson.length === 0) issues.push('result.layoutJson');
+        if (!isRecord(r.layout) || !Array.isArray((r.layout as Record<string, unknown>).pages)) issues.push('result.layout');
         if (!isRecord(r.manifest) || typeof (r.manifest as Record<string, unknown>).layoutHash !== 'string') issues.push('result.manifest');
         if (r.ledgerJson !== undefined && typeof r.ledgerJson !== 'string') issues.push('result.ledgerJson');
         if (typeof r.layoutHash !== 'string' || r.layoutHash.length !== 64) issues.push('result.layoutHash');

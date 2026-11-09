@@ -5,6 +5,9 @@
     <!-- הפניית ה-favicon הוסרה: הקובץ לא קיים ב-public/ והנתיב היה
          מוחלט (/favicon.svg) — 404 כפול בפריסת תת־הנתיב של Pages. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- favicon יחסי — בלעדיו הדפדפן מבקש /favicon.ico משורש הדומיין
+         (404 בקונסולה בכל אינטראקציה ראשונה; נתפס באתר החי). -->
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>מערכת עימוד ספרים תורניים</title>
     <link rel="stylesheet" href="./fonts/fonts.css" />
     <!-- שלב 85: הסרת טעינת גופנים מ־Google Fonts (preconnect ×2 + stylesheet) —

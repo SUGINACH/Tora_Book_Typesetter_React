@@ -32,8 +32,9 @@ const read = (p) => readFileSync(join(repoRoot, p), 'utf8');
 const has = (p, needle) => read(p).includes(needle);
 const ansi = (s) => (s == null ? s : String(s).replace(/\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b[@-Z\\-_]/g, '').replace(/\x1b/g, ''));
 
-/** נעיכת הסוויטה — E2E_COUNT בדיוק; אין דילוגים ואין flaky. */
-const E2E_COUNT = 29;
+/** נעיכת הסוויטה — E2E_COUNT בדיוק; אין דילוגים ואין flaky.
+ * 2026-11-09/ב': 29→30 — בדיקת סדר קריאה במדידת מיקומי תווים (02). */
+const E2E_COUNT = 30;
 const run = (cmd, args) => {
   try {
     return ansi(execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NO_COLOR: '1' } }));
@@ -124,7 +125,7 @@ const pkg = JSON.parse(read('package.json'));
 ((typeof pkg.scripts?.['verify:e2e-focused'] === 'string' && pkg.scripts['verify:e2e-focused'].includes('verify-e2e-focused.mjs')) ? ok : fail)('package.json — verify:e2e-focused');
 ((pkg.devDependencies?.['@playwright/test'] !== undefined) ? ok : fail)('package.json — @playwright/test ב-devDependencies (גרסה נעולה ב-lockfile)');
 (!/tests\/e2e\//.test(read('vitest.packages.config.ts')) ? ok : fail)('vitest.packages.config.ts — tests/e2e אינו בהכללה (אין ריצה כפולה; e2e-skeleton נשאר)');
-(ci.includes('Tests[[:space:]]+1292[[:space:]]+passed') ? ok : fail)('ci.yml — נעיכת סוויטת vitest 1292 נותרה ללא שינוי (לא נוספו בדיקות vitest בשלב זה)');
+(ci.includes('Tests[[:space:]]+1300[[:space:]]+passed') ? ok : fail)('ci.yml — נעיכת סוויטת vitest 1300 נותרה ללא שינוי (לא נוספו בדיקות vitest בשלב זה)');
 
 console.log('\n7) תיקוני השורש של כישלון האתר החי (תת-נתיב Pages; מפרט 06)');
 // התקלה החיה: "ניסיתי לעמד באתר החי של פייג'ס, ולא הצלחתי" — הצרור נטען
@@ -133,7 +134,9 @@ console.log('\n7) תיקוני השורש של כישלון האתר החי (ת�
 (has('src/worker-host/asset-bundle.ts', "options.baseUrl ?? '.'") ? ok : fail)("asset-bundle — בסיס נכסים יחסי למסמך ('.'), לא נתיב שורש מוחלט");
 (has('src/worker-host/asset-bundle.ts', '${base}/fonts/manifest.json') && has('src/worker-host/asset-bundle.ts', '${base}/fonts/${record.file}') ? ok : fail)("asset-bundle — תבנית ה-URL על הבסיס המוזרק (זהה לבדיקות היחידה)");
 (!/url\('\/fonts\//.test(read('public/fonts/fonts.css')) ? ok : fail)("fonts.css — אפס נתיבי גופנים אבסולוטיים (יחסיים לקובץ ה-CSS; תת-נתיב)");
-(!/rel="icon"/.test(read('index.html')) ? ok : fail)("index.html — אין הפניית favicon מתה (הקובץ לא קיים ב-public; הנתיב היה מוחלט)");
+// 2026-11-09/ד': favicon אמיתי ויחסי (הבקשה האוטומטית של הדפדפן ל-/favicon.ico
+// משורש הדומיין החזירה 404 בקונסולה בכל אינטראקציה ראשונה — נתפס באתר החי)
+(existsSync(join(repoRoot, 'public', 'favicon.svg')) && /rel="icon" type="image\/svg\+xml" href="\.\/favicon\.svg"/.test(read('index.html')) ? ok : fail)('index.html — favicon קיים בפועל וההפניה יחסית (בלי 404 משורש הדומיין)');
 (!/external:\s*\[/.test(read('vite.config.ts')) ? ok : fail)("vite.config — אין external ל-mammoth (bare specifier אינו פתיר בדפדפן)");
 (!/@vite-ignore/.test(read('src/lib/text-importers.ts')) ? ok : fail)("text-importers — ייבוא Word מבונדל (בלי @vite-ignore שהשאיר את הייבוא שבור בייצור)");
 (has('src/worker-host/use-typeset-run.ts', 'PREPARE_FAILURE_JOB_ID') && /store\.fail\(PREPARE_FAILURE_JOB_ID/.test(read('src/worker-host/use-typeset-run.ts')) ? ok : fail)("use-typeset-run — כישלון הכנה מוצג בפאזת error עם קוד קטלוגי (לא כפתור אילם)");

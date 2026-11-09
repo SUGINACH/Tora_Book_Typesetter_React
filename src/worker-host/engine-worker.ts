@@ -23,11 +23,11 @@
  */
 import {
   canonicalJson,
-  serializeLayoutDocument,
   type AnyProvider,
   type TypesetRequest,
   type TypesetSuccess,
 } from '@tora/layout-api';
+import { toLeanLayout } from './lean-layout.js';
 import {
   isWorkerRequest,
   type PreparePayload,
@@ -114,11 +114,10 @@ export function createEngineHandler(deps: EngineWorkerDeps): (msg: unknown, port
   };
 }
 
-/** סריאליזציה של התוצאה — ה-IR והפנקס ב-JSON קנוני (זהה ל-CLI). */
+/** סריאליזציה של התוצאה — ה־IR הרזה (v2; בלי גליפים — lean-layout.ts). */
 export function serializeTypesetSuccess(result: TypesetSuccess): import('./protocol.js').SerializedTypesetResult {
-  const layoutJson = serializeLayoutDocument(result.layout);
   return {
-    layoutJson,
+    layout: toLeanLayout(result.layout),
     manifest: result.manifest,
     ...(result.ledger !== undefined
       ? { ledgerJson: canonicalJson(result.ledger as unknown as Record<string, unknown>) }

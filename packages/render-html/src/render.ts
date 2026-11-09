@@ -6,14 +6,14 @@
  * בלבד; ההמרה LU→px רציונלית (roundDiv(lu,49152) — לא px/mm היסטורי).
  * מצב קנוני: אותו layout+assets ⇐ ביט-ביט אותם bytes (§15.1).
  *
- * ייצוג הקו ב-v1 (מוקדם מ-ADR-008/שלב 88 — תיקון שורש לכישלון העמדה
- * באתר החי, 2026-11-09): הריצות נושאות טקסט בסדר חזותי מפורש שנפתר
- * במנוע (שמאל→ימין) — ולכן ההיטל מציג אותן כמות־שהן ב-bidi-override
- * כיווני ltr: הדפדפן אינו מפעיל את אלגוריתם הבי-די בשנית (הפעלה כפולה
- * הפכה כל שורה לקריאה הפוכה באתר החי). יישור: קו fit (justify) נמתח
- * לרוחב התיבה (text-align/-last: justify) כפי שהמנוע חילק על הרווחים;
- * קו טבעי עוגן בקצה ההתחלתי של הכיוון (ימין ל-rtl). החלטת הייצוג הסופית
- * (טקסט לוגי + מיפוי selection) — עדיין ADR-008 (שלב 88).
+ * ייצוג הקו (תיקון שורש 2026-11-09/ב' — מראות תווים באתר החי): המנוע פולט
+ * את run.text בסדר אטומים חזותי עם תווים לוגיים — ההיטל משחזר את הטקסט
+ * הלוגי (logicalTextOfRun; טווחי המקור מקודדים במזהי האטומים) ומציגו
+ * בכיוון הטבעי של הריצה — הדפדפן מפעיל את UAX#9 בעצמו. bidi-override
+ * על המחרוזת החזותית מראה כל מילה (אומת באתר החי במדידת מיקומי תווים).
+ * יישור: קו fit (justify) נמתח לרוחב התיבה כפי שהמנוע חילק על הרווחים;
+ * קו טבעי עוגן בקצה ההתחלתי של הכיוון (ימין ל-rtl). מיפוי selection —
+ * עדיין ADR-008 (שלב 88).
  * גופנים עוגנים לפי manifest (@font-face עם src קבוע); אין גופן רשת.
  * שמות משפחה בתוך style תחומים בגרש בודד — מרכאות כפולות בתוך
  * מאפיין style כפול-מרכאות חתכו את המאפיין והגופן נפל לברירת מחדל.
@@ -96,31 +96,95 @@ function styleOfRect(rect: Rect): string {
   return `left:${px(rect.x)};top:${px(rect.y)};width:${px(rect.width)};height:${px(rect.height)}`;
 }
 
+// ─────────────────────── טקסט לוגי של ריצה (תיקון 2026-11-09/ב') ───────────────────────
+
+/**
+ * שחזור טקסט אטום מזההו — מזהי האטומים מקודדים את טווח המקור
+ * (‎atom:v1|<docId>|<stream>|<start>+<end>|<origin|src>|<ordinal>‎ — 6 שדות;
+ * deriveAtomId ב-content-model; הקידוד אוכף היעדר '|' בשדות). אטום מקור
+ * נחתך מהמקור בטווחו; אטום החדרה של איחוי פסקאות הוא רווח בודד
+ * (parse.ts — makeTextAtom(' ', …, origin='parser:paragraph-join')).
+ * מקור לא מוכר/טווח חורג ⇐ שגיאה קולנית — אין תצוגה שגויה בשקט.
+ * זהה ביט־ביט ל-atomTextOf הפרטי של preview-model (אפליקציה) — נעול בבדיקות.
+ */
+function atomTextOf(atomId: string, source: string): string {
+  const parts = atomId.split('|');
+  if (parts.length !== 6 || parts[0] !== 'atom:v1') {
+    throw new Error(`errors.render.ATOM_ID_UNPARSEABLE: ${atomId.slice(0, 80)}`);
+  }
+  const origin = parts[4] as string;
+  if (origin === 'parser:paragraph-join') return ' ';
+  if (origin !== 'src') {
+    throw new Error(`errors.render.UNKNOWN_ATOM_ORIGIN: ${origin.slice(0, 40)}`);
+  }
+  const range = (parts[3] as string).split('+');
+  const start = Number(range[0]);
+  const end = range.length === 2 ? Number(range[1]) : Number.NaN;
+  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end)
+    || start < 0 || end < start || end > source.length) {
+    throw new Error(`errors.render.ATOM_SPAN_OUT_OF_SOURCE: ${atomId.slice(0, 80)}`);
+  }
+  return source.slice(start, end);
+}
+
+/**
+ * הטקסט הלוגי של ריצה — זהה ביט־ביט ל-logicalTextOfRun של preview-model.
+ *
+ * ריצת rtl: האטומים ב-run.text ערוכים בסדר חזותי (שמאל→ימין; placeLineVisually)
+ * — היפוך סדר האטומים משחזר את הסדר הלוגי, וכל אטום נחתך מהמקור בטווחו
+ * (תווי האטום עצמם לוגיים תמיד). ריצת ltr: חזותי === לוגי (אומת מול כל
+ * קורפוס הבדיקה — 196,416 ריצות, 0 חריגות). ריצה נגזרת (ללא אטומים —
+ * כותרות תוכן/עמודות): הטקסט לוגי מטבעו (compose-v0 בונה אותו ישירות).
+ * מקור חסר לריצה עם אטומים ⇐ שגיאה קולנית — אין תצוגה שגויה בשקט.
+ */
+export function logicalTextOfRun(run: PositionedRun, source: string | undefined): string {
+  if (run.atomIds.length === 0) return run.text;
+  if (source === undefined) {
+    throw new Error(`errors.render.SOURCE_REQUIRED: ${run.id.slice(0, 80)}`);
+  }
+  if (run.direction === 'ltr') return run.text;
+  const parts: string[] = [];
+  for (let i = run.atomIds.length - 1; i >= 0; i -= 1) {
+    parts.push(atomTextOf(run.atomIds[i] as string, source));
+  }
+  return parts.join('');
+}
+
 // ─────────────────────────── היטל ───────────────────────────
 
-function renderRun(run: PositionedRun, manifest: AssetManifest | undefined, justified: boolean, isLineVisualStart: boolean): string {
+function renderRun(run: PositionedRun, manifest: AssetManifest | undefined, justified: boolean, isLineVisualStart: boolean, source: string | undefined): string {
   const fam = fontFamilyOf(run.font.fontId, manifest);
   const size = `${luToCssPx(run.fontSizeLu as never)}px`;
-  // סדר חזותי מפורש מהמנוע ⇒ bidi-override + ltr: הדפדפן מציג את התווים
-  // בסדר המחרוזת כמות שהם, בלי היפוך בי-די שני (תיקון שורש 2026-11-09 —
-  // הצבת dir="rtl" על מחרוזת בסדר חזותי הפכה כל שורה לקריאה הפוכה).
-  // יישור: justify לקו fit (המנוע חילק את מתיחת הרווחים על תיבת הריצה);
-  // קו טבעי עוגן בקצה ההתחלתי — ימין לריצת rtl (פער מדידה דולף לסוף הקו).
+  // תיקון שורש 2026-11-09/ב' (מראות תווים באתר החי): המנוע פולט את run.text
+  // בסדר אטומים חזותי (שמאל→ימין) ותווי כל אטום לוגיים — הצגת המחרוזת
+  // כמות־שהיא (bidi-override) מראה כל מילה ("יורה דעה" נקרא "הרוי העד";
+  // אומת במדידת מיקומי תווים באתר החי). ההיטל משחזר את הטקסט הלוגי
+  // (logicalTextOfRun מפענח את טווחי המקור המקודדים במזהי האטומים) ומציגו
+  // בכיוון הטבעי של הריצה — הדפדפן מפעיל את UAX#9 בעצמו (מראוי סוגריים,
+  // ספרות ומיזוגים). יישור: justify לקו fit (המנוע חילק את מתיחת הרווחים
+  // על תיבת הריצה); קו טבעי עוגן בקצה ההתחלתי — ימין לריצת rtl.
   const align = justified
     ? 'text-align:justify;text-align-last:justify'
     : `text-align:${run.direction === 'rtl' ? 'right' : 'left'}`;
   // גופן בגרש בודד בתוך ה-style — מרכאות כפולות חתכו את המאפיין (HTML)
   // והגופן נפל לברירת המחדל של הדפדפן (אותר באתר החי: Times במקום גוטמן).
-  // רווחי סוף-הקו המאופסים (trailingZero) מוצגים בדפדפן ברוחב טבעי —
-  // רוחב רפאים; הם בראש המחרוזת של הריצה השמאלית (runs חזותיים שמאל→ימין).
-  let displayText = run.text;
+  // רווחי סוף-הקו המאופסים (trailingZero) מוצגים בדפדפן ברוחב טבעי — רוחב
+  // רפאים; הם בקצה הלוגי של הריצה השמאלית — בזנב הטקסט הלוגי של ריצת rtl
+  // או בראש הטקסט של ריצת ltr (חיתוך U+0020 בלבד — NBSP נשמר, ADR-004).
+  let displayText = logicalTextOfRun(run, source);
   if (isLineVisualStart) {
-    let i = 0;
-    while (i < displayText.length && displayText.charCodeAt(i) === 0x20) i += 1;
-    if (i > 0) displayText = displayText.slice(i);
+    if (run.direction === 'rtl') {
+      let i = displayText.length;
+      while (i > 0 && displayText.charCodeAt(i - 1) === 0x20) i -= 1;
+      if (i < displayText.length) displayText = displayText.slice(0, i);
+    } else {
+      let j = 0;
+      while (j < displayText.length && displayText.charCodeAt(j) === 0x20) j += 1;
+      if (j > 0) displayText = displayText.slice(j);
+    }
   }
-  return `<span class="tora-run" dir="ltr" data-run-id="${escapeAttr(run.id)}" `
-    + `style="left:${px(run.startLu)};top:0;width:${px(run.widthLu)};height:100%;unicode-bidi:bidi-override;direction:ltr;${align};font-family:'${fam}';font-size:${size}">`
+  return `<span class="tora-run" dir="${run.direction}" data-run-id="${escapeAttr(run.id)}" data-run-direction="${run.direction}" `
+    + `style="left:${px(run.startLu)};top:0;width:${px(run.widthLu)};height:100%;direction:${run.direction};${align};font-family:'${fam}';font-size:${size}">`
     + `${escapeHtmlText(displayText)}</span>`;
 }
 
@@ -138,11 +202,11 @@ function renderMarker(marker: PositionedNoteMarker, fam: string | undefined, lin
     + `${escapeHtmlText(marker.label)}</span>`;
 }
 
-function renderLine(line: LineFragment, manifest: AssetManifest | undefined): string {
+function renderLine(line: LineFragment, manifest: AssetManifest | undefined, source: string | undefined): string {
   // breakReason 'fit' ⇔ המנוע הצדיק את הקו לרוחב הטור (dp.ts justificationOf);
   // ההיטל משחזר את המתיחה בדפדפן כדי שהקו ימלא את תיבתו כפי שחושב.
   const justified = line.breakReason === 'fit';
-  const runs = line.runs.map((r, i) => renderRun(r, manifest, justified, i === 0)).join('');
+  const runs = line.runs.map((r, i) => renderRun(r, manifest, justified, i === 0, source)).join('');
   return `<div class="tora-line" dir="auto" data-fragment-id="${escapeAttr(line.id)}" data-source-id="${escapeAttr(line.blockId)}" `
     + `data-region-id="${escapeAttr(line.regionId)}" data-break-reason="${line.breakReason}" data-continuation="${line.continuation}" `
     + `style="${styleOfRect(line.rect)}">${runs}</div>`;
@@ -157,7 +221,7 @@ export interface ProjectedLinkInfo {
   readonly target?: string;
 }
 
-function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, markerLinkOf?: (noteId: string) => ProjectedLinkInfo | undefined, anchorLinkOf?: (anchorId: string) => ProjectedLinkInfo | undefined): string {
+function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, source: string | undefined, markerLinkOf?: (noteId: string) => ProjectedLinkInfo | undefined, anchorLinkOf?: (anchorId: string) => ProjectedLinkInfo | undefined): string {
   const regions = page.regions
     .map((r) => `<div class="tora-region" data-region-id="${escapeAttr(r.id)}" data-region-kind="${r.kind}" style="${styleOfRect(r.rect)}"></div>`)
     .join('');
@@ -167,7 +231,7 @@ function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, marke
   const items = page.items
     .map((item) => {
       switch (item.kind) {
-        case 'line': return renderLine(item, manifest);
+        case 'line': return renderLine(item, manifest, source);
         case 'note-marker': return renderMarker(item, markerFont, markerLinkOf);
         case 'anchor': {
           const link = anchorLinkOf?.(item.anchorId);
@@ -188,7 +252,16 @@ function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, marke
  * renderHtml — היטל HTML מה־IR בלבד (§15.1). טהור: אותם קלטים ⇐ אותם bytes;
  * אין תאריך יצירה בתוכן (מטה-דטה נפרדת אם תידרש).
  */
-export function renderHtml(layout: LayoutDocument, styleManifest?: StyleManifest, assetManifest?: AssetManifest, links?: LinkTable): RenderHtmlResult {
+export interface RenderHtmlOptions {
+  /**
+   * מקור המסמך — נחוץ לשחזור הטקסט הלוגי של הריצות (תיקון שורש
+   * 2026-11-09/ב'): מזהי האטומים מקודדים טווחי מקור וההיטל משחזר מהם
+   * את סדר הקריאה. ריצה עם אטומים בלי מקור ⇐ שגיאה קולנית.
+   */
+  readonly source?: string;
+}
+
+export function renderHtml(layout: LayoutDocument, styleManifest?: StyleManifest, assetManifest?: AssetManifest, links?: LinkTable, opts?: RenderHtmlOptions): RenderHtmlResult {
   void styleManifest;
   const css = buildCss(assetManifest);
   // שלב 72: אינדקס הקישורים להיטל — סמן הערה ⇒ ההפניה הקדימה אליה; עוגן כותרת ⇒ חזרה ל-TOC.
@@ -207,7 +280,7 @@ export function renderHtml(layout: LayoutDocument, styleManifest?: StyleManifest
   }
   const markerLinkOf = links === undefined ? undefined : (noteId: string) => noteForward.get(noteId);
   const anchorLinkOf = links === undefined ? undefined : (anchorId: string) => anchorBack.get(anchorId);
-  const pages = layout.pages.map((p) => renderPage(p, assetManifest, markerLinkOf, anchorLinkOf)).join('');
+  const pages = layout.pages.map((p) => renderPage(p, assetManifest, opts?.source, markerLinkOf, anchorLinkOf)).join('');
   const html = `<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="utf-8">`
     + `<title>${escapeHtmlText(layout.policyId)}</title>`
     + `<style>${css}</style></head><body><div class="tora-root" data-policy-id="${escapeAttr(layout.policyId)}" data-schema-version="${layout.schemaVersion}">${pages}</div></body></html>`;

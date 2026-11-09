@@ -45,6 +45,11 @@ export type PreviewError = {
 export interface LayoutPreviewProps {
   /** ה-IR להצגה — undefined כל עוד אין תוצאה. */
   readonly layout?: LayoutDocument;
+  /**
+   * תמונת מקור המסמך מזמן הריצה (resultStore.sourceAtRun) — לשחזור
+   * הטקסט הלוגי של הריצות בהיטל (תיקון שורש 2026-11-09/ב').
+   */
+  readonly sourceText?: string;
   /** מצב הריצה — מגיע מההורה (runStore; §13.1). */
   readonly status: 'idle' | 'running' | 'done' | 'error' | 'cancelled';
   readonly error?: PreviewError;
@@ -77,6 +82,7 @@ const asProgressLike = (
 
 export function LayoutPreview({
   layout,
+  sourceText,
   status,
   error,
   progressStage,
@@ -167,7 +173,7 @@ export function LayoutPreview({
           data-virtual-page-index={shownFrom + i}
           style={{ marginBlockEnd: i < shown.length - 1 ? `${PAGE_GAP_PX}px` : 0 }}
         >
-          <PageView page={p} dir={dir} onItemActivate={onItemActivate} highlightItemIds={highlightItemIds} />
+          <PageView page={p} sourceText={sourceText ?? ''} dir={dir} onItemActivate={onItemActivate} highlightItemIds={highlightItemIds} />
         </div>
       ))}
       {spacers !== null && spacers.bottomPx > 0 && (

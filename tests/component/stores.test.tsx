@@ -90,11 +90,11 @@ describe('בוררים — ספירת רינדורים', () => {
     render(createElement(Probe));
     const ir = { schemaVersion: 1, policyId: 'torah-v1', pages: [], anchors: [], transformations: [] } as never;
     act(() => {
-      useResultStore.getState().setResult({ ir, manifest: { engine: 'next' } as never, sourceRevision: 1 }, 'h'.repeat(64));
+      useResultStore.getState().setResult({ ir, manifest: { engine: 'next' } as never, sourceRevision: 1, sourceAtRun: 'מקור בדיקה' }, 'h'.repeat(64));
     });
     const baseline = renders;
     act(() => {
-      useResultStore.getState().setResult({ ir, manifest: { engine: 'next' } as never, sourceRevision: 1 }, 'h'.repeat(64));
+      useResultStore.getState().setResult({ ir, manifest: { engine: 'next' } as never, sourceRevision: 1, sourceAtRun: 'מקור בדיקה' }, 'h'.repeat(64));
     });
     expect(renders).toBe(baseline); // אותה הפנייה ⇐ Object.is ⇐ אין רינדור
   });

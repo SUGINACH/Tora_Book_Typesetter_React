@@ -16,7 +16,7 @@
  *      נטען עם 10 metadata, ‎>1000 הערות צד ו־1989 אזהרות מתועדות.
  *   5. ההדגשה במקור — לחיצה על בעיה בוחרת את הטווח בעורך
  *      (viewStore.focus.sourceSpan → setSelectionRange).
- *   6. הבדיקות: 19 ניתוח + 13 רכיב + 3 E2E + 1 הזרקה; הסוויטה 1292.
+ *   6. הבדיקות: 19 ניתוח + 13 רכיב + 3 E2E + 1 הזרקה; הסוויטה 1300.
  *   7. רגרסיה: typecheck, lint:packages, build:packages, deps:check.
  */
 import { execFileSync } from 'node:child_process';
@@ -237,7 +237,7 @@ console.log('\n5) הקורפוס — כל קובץ תקף נטען (ריצה ח�
   }
 }
 
-console.log('\n6) הבדיקות — 19 ניתוח + 13 רכיב + 3 E2E + 1 הזרקת parsed; הסוויטה 1292');
+console.log('\n6) הבדיקות — 19 ניתוח + 13 רכיב + 3 E2E + 1 הזרקת parsed; הסוויטה 1300');
 {
   const analysisTest = read('tests/stores/source-analysis.test.ts');
   const analysisIts = [...analysisTest.matchAll(/\btest\(/g)].length;
@@ -267,7 +267,7 @@ console.log('\n6) הבדיקות — 19 ניתוח + 13 רכיב + 3 E2E + 1 ה�
     const compOut = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/import-insights.test.tsx']);
     (/Tests\s+13\s+passed/.test(compOut ?? '') ? ok : fail)('tests/component/import-insights — 13/13');
     const testOut = run('npm', ['run', 'test:packages']);
-    (/Tests\s+1292\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1292/1292');
+    (/Tests\s+1300\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1300/1300');
   } else {
     ok('בדיקות הניתוח/הרכיב והסוויטה — דולג (הצעד האב הריץ את הסוויטה)');
   }

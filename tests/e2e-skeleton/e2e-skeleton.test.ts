@@ -217,13 +217,16 @@ describe('שלב 39: שלד מהלך קצה־לקצה — CLI ← IR ← audit �
       }],
     };
     const layout = la.parseLayoutDocument(await readFile(join(out1, 'layout.json'), 'utf8'));
-    const a = rh.renderHtml(layout, { schemaVersion: 1 }, assetManifest);
-    const b = rh.renderHtml(layout, { schemaVersion: 1 }, assetManifest);
+    // המקור — נחוץ לשחזור הטקסט הלוגי (תיקון 2026-11-09/ב'); אותם bytes
+    // כמו preview.html שהפיק ה-runner עצמו (השוואה מדויקת להלן).
+    const sourceText = await readFile(FIXTURE, 'utf8');
+    const a = rh.renderHtml(layout, { schemaVersion: 1 }, assetManifest, undefined, { source: sourceText });
+    const b = rh.renderHtml(layout, { schemaVersion: 1 }, assetManifest, undefined, { source: sourceText });
     expect(a.html).toBe(b.html);
     expect(a.html).toContain('data-page');
     // ה-HTML מה-IR של ריצת ה-CLI השנייה — אותם bytes (אותה פריסה)
     const layout2 = la.parseLayoutDocument(await readFile(join(out2, 'layout.json'), 'utf8'));
-    const c = rh.renderHtml(layout2, { schemaVersion: 1 }, assetManifest);
+    const c = rh.renderHtml(layout2, { schemaVersion: 1 }, assetManifest, undefined, { source: sourceText });
     expect(c.html).toBe(a.html);
     // preview.html שהפיק ה-CLI עצמו — גם הוא אותם bytes
     const cliHtml = await readFile(join(out1, 'preview.html'), 'utf8');
@@ -240,8 +243,9 @@ describe('שלב 39: שלד מהלך קצה־לקצה — CLI ← IR ← audit �
 
   test('Preview: מודל ההיטל דטרמיניסטי ומכסה את כל העמודים (§13.2)', async () => {
     const layout = la.parseLayoutDocument(await readFile(join(out1, 'layout.json'), 'utf8'));
-    const a = projectLayout(layout);
-    const b = projectLayout(layout);
+    const previewSource = await readFile(FIXTURE, 'utf8');
+    const a = projectLayout(layout, previewSource);
+    const b = projectLayout(layout, previewSource);
     expect(a).toEqual(b);
     expect(a.length).toBe(layout.pages.length);
     expect(a[0]?.lines.length).toBeGreaterThan(0);

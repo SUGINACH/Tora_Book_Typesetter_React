@@ -36,6 +36,46 @@ test.describe('שלב 85 — אורקל CLI ואי־זליגת UI (M9)', () => {
     expect(pagesAttr).toBe(cli.pages);
   });
 
+  test('סדר קריאה נכון בפועל: מיקומי התווים על המסך ⇒ הקורא העברי קורא את המקור (תיקון 2026-11-09/ב\')', async ({ page }) => {
+    await gotoApp(page);
+    await importTextViaChooser(page, REFERENCE_SOURCE);
+    await setDocumentName(page, ORACLE_DOCUMENT_ID);
+    await runAndWaitDone(page);
+    // מדידה דטרמיניסטית של מיקומי התווים בפועל (Range API — לא צילום מסך):
+    // bidi-override על המחרוזת החזותית מראה כל מילה ("יורה דעה" נקרא
+    // "הרוי העד" — כך אובחן באתר החי). הקורא העברי קורא ימין←שמאל; ההוכחה
+    // החזקה: הקריאה בפועל שווה בדיוק לטקסט הלוגי שב-DOM.
+    const readings = await page.evaluate(() => {
+      const spans = [...document.querySelectorAll('.tora-preview-root [data-run-id]')] as HTMLElement[];
+      const out: { domText: string; rtlReading: string; dir: string; bidi: string }[] = [];
+      for (const span of spans.slice(0, 40)) {
+        const tn = span.firstChild;
+        if (tn === null || tn.textContent === null || tn.textContent.length < 6) continue;
+        if (!/[\u0590-\u05FF]/.test(tn.textContent)) continue;
+        const chars: { ch: string; x: number }[] = [];
+        for (let i = 0; i < tn.textContent.length; i += 1) {
+          const r = document.createRange();
+          r.setStart(tn, i); r.setEnd(tn, i + 1);
+          chars.push({ ch: tn.textContent![i]!, x: r.getBoundingClientRect().x });
+        }
+        const ltr = [...chars].sort((a, b) => a.x - b.x).map((c) => c.ch).join('');
+        const cs = getComputedStyle(span);
+        out.push({ domText: span.textContent ?? '', rtlReading: [...ltr].reverse().join(''), dir: cs.direction, bidi: cs.unicodeBidi });
+        if (out.length >= 5) break;
+      }
+      return out;
+    });
+    expect(readings.length).toBeGreaterThanOrEqual(3);
+    for (const r of readings) {
+      // ההיטל: כיוון טבעי, בלי bidi-override (isolate — ברירת המחדל של
+      // ה-UA לאלמנט עם dir; תקין: זה בידוד טבעי, לא כפיית סדר תווים)
+      expect(r.dir).toBe('rtl');
+      expect(r.bidi).not.toMatch(/override/);
+      // הקריאה בפועל === הטקסט הלוגי — שום מראה תווים ושום היפוך מילים
+      expect(r.rtlReading).toBe(r.domText);
+    }
+  });
+
   test('אורקל לאחר שינוי הגדרה: body-last-line-align=right ⇒ hash השתנה ושווה ל־CLI עם אותה דלתא', async ({ page }) => {
     await gotoApp(page);
     await importTextViaChooser(page, REFERENCE_SOURCE);

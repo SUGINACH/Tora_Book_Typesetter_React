@@ -236,6 +236,8 @@ export async function runCli(
     files.push(['ledger.json', canonicalJson(ledger as unknown as Record<string, unknown>)]);
   }
   if (args.html) {
+    // המקור נחוץ לשחזור הטקסט הלוגי של הריצות (תיקון שורש 2026-11-09/ב'):
+    // מזהי האטומים מקודדים טווחי מקור — בלעדיו כל מילה מוצגת מראה.
     const html = renderHtml(roundTripLayout, { schemaVersion: 1 }, {
       schemaVersion: 1,
       fonts: [{
@@ -248,7 +250,7 @@ export async function runCli(
         format: fonts.bodyRecord.binaryFormat,
         contentSha256: fonts.bodyRecord.sha256,
       }],
-    });
+    }, undefined, { source: sourceText });
     files.push(['preview.html', html.html]);
   }
   for (const [name, content] of files) {

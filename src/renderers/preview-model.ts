@@ -7,6 +7,15 @@
  * המיכל (בעמוד RTL — מימין), כך שהכיוון נגזר מה-DOM ולא מחישוב שמאל/ימין
  * כפול. ההמרה LU→px רציונלית (luToCssPx — projection.ts של layout-api).
  *
+ * תיקון שורש 2026-11-09/ב' (מראות תווים באתר החי): המנוע פולט את run.text
+ * בסדר אטומים חזותי (שמאל→ימין; placeLineVisually) כאשר תווי כל אטום
+ * נשארים לוגיים — הצגת המחרוזת כמות־שהיא (bidi-override) מראה כל מילה
+ * (אומת באתר החי במדידת מיקומי תווים: "יורה דעה" נקרא "הרוי העד").
+ * ההיטל משחזר את הטקסט הלוגי של הריצה (logicalTextOfRun — פענוח הטווחים
+ * המקודדים במזהי האטומים אל מול מקור המסמך) ומציגו בכיוון טבעי — הדפדפן
+ * מפעיל את UAX#9 בעצמו (מראוי סוגריים, ספרות ומיזוגים). זהה ביט־ביט
+ * ל-logicalTextOfRun של render-html (CLI) — נעול בבדיקות.
+ *
  * אין כאן: מדידה, DOM, גישה ל-window, או כל כתיבה חזרה אל ה־IR.
  */
 import {
@@ -107,8 +116,59 @@ export function previewFontFamilyOf(fontId: string): string {
   return `tora-${ident}`;
 }
 
-/** היטל עמוד בודד — PageView מקבל LayoutPage (§13.2) ומיצג אותו בלבד. */
-export function projectPage(page: LayoutPage): PageViewModel {
+/**
+ * שחזור טקסט אטום מזההו — מזהי האטומים מקודדים את טווח המקור
+ * (‎atom:v1|<docId>|<stream>|<start>+<end>|<origin|src>|<ordinal>‎ — 6 שדות;
+ * deriveAtomId ב-content-model; הקידוד אוכף היעדר '|' בשדות). אטום מקור
+ * נחתך מהמקור בטווחו; אטום החדרה של איחוי פסקאות הוא רווח בודד
+ * (parse.ts — makeTextAtom(' ', …, origin='parser:paragraph-join')).
+ * מקור לא מוכר/טווח חורג ⇐ שגיאה קולנית — אין תצוגה שגויה בשקט.
+ */
+function atomTextOf(atomId: string, source: string): string {
+  const parts = atomId.split('|');
+  if (parts.length !== 6 || parts[0] !== 'atom:v1') {
+    throw new Error(`errors.render.ATOM_ID_UNPARSEABLE: ${atomId.slice(0, 80)}`);
+  }
+  const origin = parts[4] as string;
+  if (origin === 'parser:paragraph-join') return ' ';
+  if (origin !== 'src') {
+    throw new Error(`errors.render.UNKNOWN_ATOM_ORIGIN: ${origin.slice(0, 40)}`);
+  }
+  const range = (parts[3] as string).split('+');
+  const start = Number(range[0]);
+  const end = range.length === 2 ? Number(range[1]) : Number.NaN;
+  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end)
+    || start < 0 || end < start || end > source.length) {
+    throw new Error(`errors.render.ATOM_SPAN_OUT_OF_SOURCE: ${atomId.slice(0, 80)}`);
+  }
+  return source.slice(start, end);
+}
+
+/**
+ * הטקסט הלוגי של ריצה — זהה ביט־ביט ל-logicalTextOfRun של render-html.
+ *
+ * ריצת rtl: האטומים ב-run.text ערוכים בסדר חזותי (שמאל→ימין) — היפוך
+ * סדר האטומים משחזר את הסדר הלוגי, וכל אטום נחתך מהמקור בטווחו (תווי
+ * האטום עצמם לוגיים תמיד). ריצת ltr: חזותי === לוגי (אומת מול כל קורפוס
+ * הבדיקה — 196,416 ריצות, 0 חריגות). ריצה נגזרת (ללא אטומים — כותרות
+ * תוכן/עמודות): הטקסט לוגי מטבעו (compose-v0 בונה אותו ישירות).
+ */
+export function logicalTextOfRun(run: PositionedRun, source: string): string {
+  if (run.atomIds.length === 0) return run.text;
+  if (run.direction === 'ltr') return run.text;
+  const parts: string[] = [];
+  for (let i = run.atomIds.length - 1; i >= 0; i -= 1) {
+    parts.push(atomTextOf(run.atomIds[i] as string, source));
+  }
+  return parts.join('');
+}
+
+/**
+ * היטל עמוד בודד — PageView מקבל LayoutPage (§13.2) ומיצג אותו בלבד.
+ * המקור נחוץ לשחזור הטקסט הלוגי של הריצות (ראו ראש הקובץ) — תמונת
+ * המקור מזמן הריצה עצמה (resultStore.sourceAtRun), לא העורך החי.
+ */
+export function projectPage(page: LayoutPage, source: string): PageViewModel {
   const pageW = page.size.width as number;
   const regions: RegionViewModel[] = page.regions.map((r) => ({
     id: r.id,
@@ -124,7 +184,7 @@ export function projectPage(page: LayoutPage): PageViewModel {
   let markerFontFamily: string | undefined;
   for (const item of page.items as readonly PlacedItem[]) {
     if (item.kind === 'line') {
-      lines.push(projectLine(item, pageW));
+      lines.push(projectLine(item, pageW, source));
       // v0: כל השימושים באותו גופן הגוף — סמני העמוד עוגנים לגופן הריצות
       // שעל אותו עמוד (עמוד סמנים בלי ריצות כלל — נשאר בברירת המחדל).
       if (markerFontFamily === undefined && item.runs.length > 0) {
@@ -148,12 +208,12 @@ export function projectPage(page: LayoutPage): PageViewModel {
   };
 }
 
-function projectLine(line: LineFragment, pageWidthLu: number): LineViewModel {
+function projectLine(line: LineFragment, pageWidthLu: number, source: string): LineViewModel {
   // breakReason 'fit' ⇔ המנוע הצדיק את הקו (dp.ts justificationOf) — ההיטל
   // משחזר את המתיחה שחולקה על הרווחים (תיקון שורש 2026-11-09).
   const justified = line.breakReason === 'fit';
   // הריצות מסודרות חזותית שמאל→ימין; הראשונה נושאת את רווחי סוף-הקו המאופסים
-  const runs: RunViewModel[] = line.runs.map((r, i) => projectRun(r, line.rect.width as number, justified, i === 0));
+  const runs: RunViewModel[] = line.runs.map((r, i) => projectRun(r, line.rect.width as number, justified, i === 0, source));
   return {
     kind: 'line',
     id: line.id,
@@ -176,19 +236,25 @@ function projectLine(line: LineFragment, pageWidthLu: number): LineViewModel {
  * — בכל כיוון: טקסט rtl מגיע בסדר חזותי, ו-ltr זהה לוגית=חזותית.
  * חיתוך U+0020 בלבד (NBSP אינו נחתך — ADR-004, כמו isTrimmableSpaceText).
  */
-export function displayTextOfRun(text: string, isLineVisualStart: boolean): string {
-  if (!isLineVisualStart) return text;
-  let i = 0;
-  while (i < text.length && text.charCodeAt(i) === 0x20) i += 1;
-  return i === 0 ? text : text.slice(i);
+export function displayTextOfRun(logicalText: string, isLineVisualStart: boolean, direction: 'rtl' | 'ltr'): string {
+  if (!isLineVisualStart) return logicalText;
+  if (direction === 'rtl') {
+    let i = logicalText.length;
+    while (i > 0 && logicalText.charCodeAt(i - 1) === 0x20) i -= 1;
+    return i === logicalText.length ? logicalText : logicalText.slice(0, i);
+  }
+  let j = 0;
+  while (j < logicalText.length && logicalText.charCodeAt(j) === 0x20) j += 1;
+  return j === 0 ? logicalText : logicalText.slice(j);
 }
 
-function projectRun(run: PositionedRun, lineWidthLu: number, justified: boolean, isLineVisualStart: boolean): RunViewModel {
+function projectRun(run: PositionedRun, lineWidthLu: number, justified: boolean, isLineVisualStart: boolean, source: string): RunViewModel {
+  const logical = logicalTextOfRun(run, source);
   return {
     kind: 'run',
     id: run.id,
-    text: run.text,
-    displayText: displayTextOfRun(run.text, isLineVisualStart),
+    text: logical,
+    displayText: displayTextOfRun(logical, isLineVisualStart, run.direction),
     direction: run.direction,
     insetInlineStartPx: px(lineWidthLu - (run.startLu as number) - (run.widthLu as number)),
     inlineSizePx: px(run.widthLu),
@@ -219,6 +285,6 @@ export function spanKey(span: { stream: string; start: number; end: number }): s
 }
 
 /** היטל מסמך שלם — סדר עמודים קבוע; טהור לחלוטין. */
-export function projectLayout(layout: LayoutDocument): readonly PageViewModel[] {
-  return layout.pages.map(projectPage);
+export function projectLayout(layout: LayoutDocument, source: string): readonly PageViewModel[] {
+  return layout.pages.map((p) => projectPage(p, source));
 }

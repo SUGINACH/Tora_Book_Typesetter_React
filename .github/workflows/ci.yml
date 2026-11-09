@@ -54,7 +54,7 @@ jobs:
           # NO_COLOR + הסרת ANSI כפולה (שיעור סבב ה': chalk/vitest מצבעים גם בלי TTY תחת CI=true)
           NO_COLOR=1 npm run test:packages > /tmp/testout.raw 2>&1 || { cat /tmp/testout.raw; exit 1; }
           sed -e 's/\x1b\[[0-9;?]*[a-zA-Z]//g' -e 's/\x1b\][^\x07]*\x07//g' /tmp/testout.raw > /tmp/testout.log
-          grep -qE "Tests[[:space:]]+1292[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 1292 בדיקות"; exit 1; }
+          grep -qE "Tests[[:space:]]+1300[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 1300 בדיקות"; exit 1; }
           node scripts/migration/verify-units.mjs
           node scripts/migration/verify-canonical-hash.mjs
           node scripts/migration/verify-error-catalog.mjs
@@ -136,7 +136,7 @@ jobs:
           npm run build
           npx playwright install --with-deps chromium
           NO_COLOR=1 npm run test:e2e > /tmp/e2eout.log 2>&1 || { cat /tmp/e2eout.log; exit 1; }
-          grep -qE "[[:space:]]29[[:space:]]+passed" /tmp/e2eout.log || { tail -5 /tmp/e2eout.log; echo "צפוי בדיוק 29 בדיקות E2E"; exit 1; }
+          grep -qE "[[:space:]]30[[:space:]]+passed" /tmp/e2eout.log || { tail -5 /tmp/e2eout.log; echo "צפוי בדיוק 30 בדיקות E2E"; exit 1; }
           node scripts/migration/verify-e2e-focused.mjs
 
       - name: מאמתי הגירה — מקורות, מלאי, בייסליין, fixtures, parity

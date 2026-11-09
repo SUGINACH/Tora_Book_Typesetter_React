@@ -15,6 +15,7 @@ import { ENGINE_VERSION as ENGINE_VERSION_OF } from '@tora/layout-engine';
 import { inputHashOf, type TypesetRequest } from '@tora/layout-api';
 import {
   isWorkerResponse,
+  WORKER_PROTOCOL_VERSION,
   type PreparePayload,
   type SerializedTypesetResult,
   type WorkerRequest,
@@ -120,7 +121,9 @@ export class WorkerClient {
       onProgress: (cb) => { state.progressCbs.push(cb); },
       cancel: () => this.cancel(jobId),
     };
-    this.worker.postMessage({ type: 'prepare', jobId, protocolVersion: 1, payload });
+    // v2 — הקבוע המשותף (protocol.ts); ערך קבוע כאן היה נדחה בשקט אחרי העלאת
+    // הגרסה (אותר בבדיקות typeset-run: הפאזה נתקעה ב-preparing)
+    this.worker.postMessage({ type: 'prepare', jobId, protocolVersion: WORKER_PROTOCOL_VERSION, payload });
     return handle;
   }
 

@@ -21,15 +21,14 @@
  */
 import { auditLayout } from '@tora/audit-core';
 import {
-  parseLayoutDocument,
   type EffectiveSettings,
   type ResolvedAssetManifest,
-  type RunManifest,
   type TypesetRequest,
 } from '@tora/layout-api';
 import type { ParseResult } from '@tora/content-model';
 import { expectedInputHashOf, WorkerJobCancelled, WorkerTypesetError, type JobHandle, type WorkerClient } from './worker-client.js';
 import type { FontBytesEntry } from './protocol.js';
+import { isLeanLayout } from './lean-layout.js';
 import { buildUiTypesetRequest } from './ui-request.js';
 import { useResultStore, type ResultFinding } from '../stores/result-store.js';
 import { useRunStore } from '../stores/run-store.js';
@@ -94,6 +93,10 @@ export class TypesetController {
     const handle = this.client.submit(payload);
     this.handle = handle;
     const jobId = handle.jobId;
+    // תמונת המקור בעת השליחה — נשמרת עם התוצאה (sourceAtRun; תיקון
+    // 2026-11-09/ב'): ההיטל משחזר בה את הטקסט הלוגי של הריצות גם לאחר
+    // שהעורך החי נערך מאז.
+    const sourceAtRun = input.source;
     // שלב 81: מהדורת המקור בעת השליחה — עוגן הקבלה ב־onDone. עריכה אחרי
     // השליחה הופכת את התוצאה לזרה: ההיסטים שלה מתפרשים על מקור שכבר
     // איננו, והניווט המקושר היה ממפה טווחים שגויים. הריצה הבאה אחרי
@@ -110,7 +113,7 @@ export class TypesetController {
       run.setProgress(jobId, stage, completedUnits, totalUnits);
     });
     void handle.done.then(
-      (result) => this.onDone(jobId, request, result.layoutJson, result.layoutHash, result.manifest, sourceRevision),
+      (result) => this.onDone(jobId, request, sourceAtRun, result, sourceRevision),
       (e: unknown) => this.onRejected(jobId, e),
     );
   }
@@ -129,9 +132,8 @@ export class TypesetController {
   private onDone(
     jobId: string,
     request: TypesetRequest,
-    layoutJson: string,
-    layoutHash: string,
-    manifest: RunManifest,
+    sourceAtRun: string,
+    result: import('./protocol.js').SerializedTypesetResult,
     sourceRevision: number,
   ): void {
     const run = useRunStore.getState();
@@ -147,18 +149,26 @@ export class TypesetController {
       return;
     }
     try {
-      const ir = parseLayoutDocument(layoutJson);
+      // v2: ה־IR מגיע רזה (בלי גליפים) ב־structured clone — אין פרסור של
+      // מחרוזת ענקית בחוט הראשי (תיקון 2026-11-09/ג'). ולידציה מבנית
+      // של הערוץ — כמו שהמחרוזת נפרסה בעבר, רק בלי לדרוש גליפים.
+      if (!isLeanLayout(result.layout)) {
+        useRunStore.getState().fail(jobId, 'errors.worker.RESULT_INVALID');
+        return;
+      }
+      const ir = result.layout;
       const report = auditLayout({ content: request.document, settings: request.settings, layout: ir });
       useResultStore.getState().setResult(
         {
           ir,
-          manifest,
+          manifest: result.manifest,
           findings: report.findings as readonly ResultFinding[],
           // AnchorTable אינה בפרוטוקול v1 — null מתועד, לא המצאה.
           anchors: null,
           sourceRevision,
+          sourceAtRun,
         },
-        layoutHash,
+        result.layoutHash,
       );
       useRunStore.getState().complete(jobId);
     } catch (e) {

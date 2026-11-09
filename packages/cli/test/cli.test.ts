@@ -129,8 +129,11 @@ describe('שלב 34: CLI reference runner — artifacts', () => {
     // ה-@font-face חוקי וממשיך להשתמש במרכאות כפולות — שם זה CSS גלוי)
     expect(html).toContain(`;font-family:'tora-font-v1-`);
     expect(html).not.toContain(';font-family:"tora-');
-    expect(html).toContain('unicode-bidi:bidi-override');
-    expect(html).toContain('dir="ltr"');
+    // תיקון 2026-11-09/ב': כיוון טבעי לפי הריצה (בלי bidi-override — הוא
+    // מראה כל מילה במחרוזת החזותית) + data-run-direction לנעילה
+    expect(html).not.toContain('unicode-bidi');
+    expect(html).toContain('dir="rtl"');
+    expect(html).toContain('data-run-direction="rtl"');
   }, 120_000);
 });
 
