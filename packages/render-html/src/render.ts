@@ -238,8 +238,10 @@ export interface ProjectedLinkInfo {
 }
 
 function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, source: string | undefined, markerLinkOf?: (noteId: string) => ProjectedLinkInfo | undefined, anchorLinkOf?: (anchorId: string) => ProjectedLinkInfo | undefined): string {
+  // ADR-008 (שלב 88; §15.3, §16): פיגומי מיקום ריקים — aria-hidden (אינם
+  // נקראים); העמוד נקרא כאזור עם תווית הפוליו/האינדקס המדויק מה־IR.
   const regions = page.regions
-    .map((r) => `<div class="tora-region" data-region-id="${escapeAttr(r.id)}" data-region-kind="${r.kind}" style="${styleOfRect(r.rect)}"></div>`)
+    .map((r) => `<div class="tora-region" data-region-id="${escapeAttr(r.id)}" data-region-kind="${r.kind}" aria-hidden="true" style="${styleOfRect(r.rect)}"></div>`)
     .join('');
   const markerFont = manifest === undefined || manifest.fonts.length === 0
     ? undefined
@@ -253,14 +255,18 @@ function renderPage(page: LayoutPage, manifest: AssetManifest | undefined, sourc
           const link = anchorLinkOf?.(item.anchorId);
           const linkAttrs = link === undefined ? '' : ` data-link-id="${escapeAttr(link.id)}" data-link-kind="${escapeAttr(link.kind)}"`
             + (link.target !== undefined ? ` data-link-target="${escapeAttr(link.target)}"` : '');
-          return `<span class="tora-anchor" data-anchor-id="${escapeAttr(item.anchorId)}"${linkAttrs} style="${styleOfRect(item.rect)}"></span>`;
+          return `<span class="tora-anchor" data-anchor-id="${escapeAttr(item.anchorId)}"${linkAttrs} aria-hidden="true" style="${styleOfRect(item.rect)}"></span>`;
         }
         default: return '';
       }
     })
     .join('');
   const folio = page.printedFolio !== undefined ? ` data-folio="${escapeAttr(page.printedFolio)}"` : '';
-  return `<section class="tora-page" dir="rtl" data-page-id="${escapeAttr(page.id)}" data-page-kind="${escapeAttr(page.kind)}" `
+  // ADR-008: role=region + תווית קריאה — הפוליו המודפס (גימטריה) או האינדקס
+  // הפיזי; מה־IR בלבד. סדר הקריאה — ה-DOM: קווים בתוך העמוד, ריצות בתוך
+  // הקו, טקסט לוגי בתוך הריצה (§15.3).
+  const ariaLabel = `עמוד ${escapeAttr(page.printedFolio ?? String(page.physicalIndex))}`;
+  return `<section class="tora-page" dir="rtl" role="region" aria-label="${ariaLabel}" data-page-id="${escapeAttr(page.id)}" data-page-kind="${escapeAttr(page.kind)}" `
     + `data-parity="${page.parity}"${folio} style="width:${px(page.size.width)};height:${px(page.size.height)}">${regions}${items}</section>`;
 }
 
