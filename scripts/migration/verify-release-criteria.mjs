@@ -138,7 +138,10 @@ console.log('\n14) המסמך הארוך הקנוני אופליין; שינוי
 {
   const out = join(tmpdir(), 'crit-long2');
   const r = runCli(['--input', LONG, '--out', out]);
-  (r.status === 0 && String(r.stdout ?? '') + String(r.stderr ?? '').includes('network attempts: 0')
+  // שורש (2026-11-10): קדימות אופרטורים — ‎String(a) + String(b).includes(x)‎ חיבר
+  // בוליאן למחרוזת ותמיד היה אמת (בדיקת-ריק). התיקון: בדיקת includes על שרשור
+  // שני הזרמים (ה-CLI מדפיס ל-stderr).
+  (`${String(r.stdout ?? '')}${String(r.stderr ?? '')}`.includes('network attempts: 0')
     ? ok : fail)('אופליין מלא — אפס ניסיונות רשת (מודפס בפלט הריצה)');
   (existsSync(join(repoRoot, 'packages', 'test-fixtures', 'release-golden.json'))
     ? ok : fail)('בייסליין — golden נעול; שינוי דורש regen מפורש והסבר ב-WORKLOG');

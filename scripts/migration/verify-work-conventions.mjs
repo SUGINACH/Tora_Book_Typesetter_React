@@ -149,6 +149,18 @@ const NO_EXTERNAL_FONTS_STAGE_85 = new Set([
   'index.html', // נותר רק ה־stylesheet המקומי ./fonts/fonts.css
 ]);
 for (const f of NO_EXTERNAL_FONTS_STAGE_85) LIVING_FILES.add(f);
+// חריג מעטפת מתועד (שלבים 94+95, M11/M12; 2026-11-10): (א) global.css —
+// הוסר כיוון קשיח ברמת ה-body; הכיוון נקבע ב-documentElement לפי הלוקייל
+// (AppShell; §16/§21) ויורד בירושה; כיוון נוסח הספר קבוע נפרד ב-.tora-page
+// (תמיד rtl — תוכן). (ב) Cargo.toml — השלמת שני פלאגינים למעטפת Tauri
+// (fs + dialog; "תלויות Cargo שחסרו הושלמו" — רשומת שלב 95 ב-WORKLOG);
+// מעטפת בלבד — אין מנוע Rust מקביל, כל העימוד באותו Worker. שני השינויים
+// אינם נוגעים למנוע/למדידה/ל-layoutHash. רשימה סגורה — כל קובץ נוסף ייתפס.
+const SHELL_STAGE_94_95_2026_11_10 = new Set([
+  'src/styles/global.css', // שלב 94 — הכיוון לפי לוקייל ב-documentElement (AppShell) במקום קשיח ב-body
+  'src-tauri/Cargo.toml', // שלב 95 — tauri-plugin-fs + tauri-plugin-dialog (דיאלוגים וגישה לקבצים בלבד)
+]);
+for (const f of SHELL_STAGE_94_95_2026_11_10) LIVING_FILES.add(f);
 // תיקון פריסה (2026-11-09): שורש כישלון ההעמדה באתר החי של Pages — הצרור
 // נטען מנתיב שורש מוחלט (404 בתת־הנתיב) וההבטחה נטושה בשקט ("כפתור
 // אילם"). רשומה מלאה בראש ה-WORKLOG. שני הקבצים הם מסלול הפעלה בלבד —
@@ -288,6 +300,16 @@ const NEW_ALLOWED = [
   /^scripts\/gen-i18n-locales\.mjs$/,
   /^src\/i18n\/(index|formatters)\.ts$/,
   /^src\/i18n\/locales\/(he-IL|en-US)\/(common|settings|errors|audit)\.json$/,
+  // שלב 95 (M12): מעטפת Tauri על אותו Worker — הצהרת היכולות של שני
+  // הפלאגינים (fs + dialog; קובץ תצורה סטנדרטי של Tauri v2 שחסר למעטפת
+  // הקיימת מקדם-התכנית). רשימה סגורה.
+  /^src-tauri\/capabilities\/default\.json$/,
+  // שלב 96 (M11): ביקורת ה-i18n ב-CI (python; 24/24) — כלי תחזוקה ברמת
+  // השורש לצד gen-i18n-locales.mjs. קיומו נאכף גם ב-verify-release-criteria.
+  /^scripts\/i18n_audit\.py$/,
+  // שלב 100 (M12): זרימת ההפצה המתויגת (וב + מתקיני Tauri + sha256).
+  // קיומו נאכף גם ב-verify-release-criteria §"אריזת הפצה". רשימה סגורה.
+  /^\.github\/workflows\/release\.yml$/,
 ];
 const badNew = changed.filter((f) => {
   let existed = true;

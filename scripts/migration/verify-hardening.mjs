@@ -68,7 +68,10 @@ console.log('1) המסמך הארוך הקנוני — מלא, אופליין, �
     (rep.pages > 500 ? ok : fail)(`עמודים: ${rep.pages} (מסמך שלם)`);
     (aud.findings?.every?.((f) => f.severity !== 'HIGH') && (aud.findings?.length ?? 0) >= 0
       ? ok : fail)('אפס ממצאי HIGH במסמך הארוך');
-    (String(r.stdout ?? '').includes('network attempts: 0') ? ok : fail)('אופליין — אפס ניסיונות רשת (§19)');
+    // שורש ה-CI האדום (2026-11-10): ה-CLI כותב את שורות ההתקדמות (כולל "network
+    // attempts") ל-stderr — packages/cli/src/main.ts:31. הבדיקה הקודמת בדקה stdout
+    // בלבד ונכשלה תמיד ב-CI (שם הזרמים נפרדים). התיקון: בדיקה על שני הזרמים.
+    (`${String(r.stdout ?? '')}${String(r.stderr ?? '')}`.includes('network attempts: 0') ? ok : fail)('אופליין — אפס ניסיונות רשת (§19)');
     (rep.deterministic === true ? ok : fail)('deterministic=true בדוח');
   }
 }
