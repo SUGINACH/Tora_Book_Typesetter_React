@@ -56,17 +56,21 @@ function cmapAdvanceLu(gid: number, sfnt: ParsedSfnt, fontSizeLu: number): numbe
   return Math.round((sfnt.advanceOf(gid) * fontSizeLu) / sfnt.unitsPerEm);
 }
 
-/** פריסת ריצה אחת (baseline ב-pt של PDF). */
-export function layoutRun(run: PositionedRun, sfnt: ParsedSfnt, pageH: number, baselineLu: number): RunDraw {
+/**
+ * פריסת ריצה אחת (baseline ב-pt של PDF).
+ * ‎startLu‎ של הריצה הוא **יחסית לתיבת הקו** (כמו בהיטל ה-HTML —
+ * renderRun תוך ‎.tora-line‎ ב-rect.x; אפיון §6.5) — המיקום האבסולוטי
+ * הוא ‎lineX + startLu‎.
+ * ריצות נגזרות (glyphs:[] — TOC/שער): הרוחב ב-IR הוא הערכת תווים
+ * (‎DERIVED_CHAR_LU = 32000/תו‎, clamped לעמודה) ולא מדידה — אין
+ * אימות drift עליהן; הציור מגליפי cmap בקידום טבעי (hmtx) מקצה
+ * ההתחלתי של הריצה בתוך הקו.
+ */
+export function layoutRunAt(run: PositionedRun, sfnt: ParsedSfnt, pageH: number, lineXLu: number, baselineLu: number): RunDraw {
   const yPt = pageH - ptOf(baselineLu);
   const viaCmap = run.glyphs.length === 0;
-  const rtl = run.direction === 'rtl';
-  const startLu = run.startLu as number;
+  const startLu = (run.startLu as number) + lineXLu;
   const widthLu = run.widthLu as number;
-  // סדר הגליפים ב-IR הוא חזותי (שמאל→ימין; פלט HarfBuzz) — הציור
-  // מצטבר מהקצה השמאלי של התיבה לשני הכיוונים כאחד; ‎xOffset‎ (GPOS)
-  // נוסף לפי גליף. סכום הקידום חייב להתכנס לרוחב הריצה (חריגה > 64 LU ⇒
-  // שגיאה קולנית — אין גאומטריה שקט-שגויה).
   const glyphs: GlyphDraw[] = [];
   let pen = startLu;
   if (viaCmap) {
@@ -81,13 +85,17 @@ export function layoutRun(run: PositionedRun, sfnt: ParsedSfnt, pageH: number, b
       glyphs.push({ gid: g.glyphId, xPt: ptOf(pen + (g.xOffsetLu as number)), yPt });
       pen += (g.advanceLu as number);
     }
+    const drift = Math.abs(pen - (startLu + widthLu));
+    if (drift > 64) {
+      throw new DrawError('RUN_WIDTH_DRIFT', { run: run.id.slice(0, 60), driftLu: drift, widthLu });
+    }
   }
-  const drift = Math.abs(pen - (startLu + widthLu));
-  if (drift > 64) {
-    throw new DrawError('RUN_WIDTH_DRIFT', { run: run.id.slice(0, 60), driftLu: drift, widthLu });
-  }
-  void rtl;
   return { fontId: run.font.fontId, fontSizePt: ptOf(run.fontSizeLu as number), glyphs };
+}
+
+/** תאימות לאחור — פריסה ללא היסב קו (סמנים; בדיקות ישירות). */
+export function layoutRun(run: PositionedRun, sfnt: ParsedSfnt, pageH: number, baselineLu: number): RunDraw {
+  return layoutRunAt(run, sfnt, pageH, 0, baselineLu);
 }
 
 export type PageItem = { kind: 'line'; runs: readonly RunDraw[] } | { kind: 'marker'; draw: RunDraw };
@@ -105,7 +113,7 @@ export function drawPage(page: LayoutDocument['pages'][number], sfnt: ParsedSfnt
       const runs: RunDraw[] = [];
       for (const r of item.runs) {
         if (r.glyphs.length === 0 && r.text.length === 0) continue;
-        runs.push(layoutRun(r, sfnt, pageH, item.baseline as number));
+        runs.push(layoutRunAt(r, sfnt, pageH, item.rect.x as number, item.baseline as number));
       }
       if (runs.length > 0) out.push({ kind: 'line', runs });
     } else if (item.kind === 'note-marker') {

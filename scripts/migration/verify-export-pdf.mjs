@@ -96,7 +96,7 @@ if (r1.status !== 0) {
     for (const it of p.items) {
       if (it.kind === 'line') {
         for (const r of it.runs) {
-          if (r.glyphs.length > 0 && r.text.length > 0) list.push({ kind: 'ir-run', run: r });
+          if (r.glyphs.length > 0 && r.text.length > 0) list.push({ kind: 'ir-run', run: r, line: it });
           else if (r.glyphs.length === 0 && r.text.length > 0) list.push({ kind: 'cmap-run', text: r.text });
         }
       } else if (it.kind === 'note-marker' && it.label.length > 0) {
@@ -142,7 +142,8 @@ if (r1.status !== 0) {
       let wantX = 0;
       let wantY = pageH;
       if (exp.kind === 'ir-run') {
-        wantX = exp.run.startLu / 65536;
+        // startLu יחסית לתיבת הקו (§6.5) — המיקום האבסולוטי: rect.x+startLu
+        wantX = ((exp.line.rect.x) + (exp.run.startLu)) / 65536;
         wantY = pageH - (lineBaselineOf(p, exp.run) / 65536);
       } else if (exp.kind === 'marker') {
         wantX = exp.rect.x / 65536;
@@ -172,7 +173,53 @@ if (r1.status !== 0) {
     fail('ריצה שנייה נכשלה');
   }
 
-  console.log('\n6) אין window.print במסלול');
+  console.log('\n6) שלב 90 — סימניות, קישורים הדדיים ו-page boxes (compose)');
+  const out3 = join(tmp, 'c');
+  const r3 = spawnSync(process.execPath, [BIN, '--input', join(repoRoot, 'test-triggers', 'test-all-triggers.txt'), '--out', out3, '--pdf', '--compose'], { cwd: repoRoot, encoding: 'utf8' });
+  if (r3.status !== 0) {
+    fail(`CLI --pdf --compose נכשל: ${String(r3.stderr).slice(0, 300)}`);
+  } else {
+    const pdf3 = readFileSync(join(out3, 'book.pdf'));
+    const t3 = pdf3.toString('latin1');
+    const la2 = await import(join(repoRoot, 'packages', 'layout-api', 'dist', 'index.js'));
+    const layout3 = la2.parseLayoutDocument(readFileSync(join(out3, 'layout.json'), 'utf8'));
+    const tocCount = layout3.pages.reduce((a, p) => a + p.items.filter((i) => i.kind === 'line' && String(i.blockId).startsWith('toc:entry:')).length, 0);
+    const markerCount = layout3.pages.reduce((a, p) => a + p.items.filter((i) => i.kind === 'note-marker').length, 0);
+    const noteBodyCount = layout3.pages.reduce((a, p) => a + p.items.filter((i) => i.kind === 'line' && String(i.blockId).startsWith('note:')).length, 0);
+    const outlineItems = (t3.match(/\/Title </g) ?? []).length;
+    (outlineItems === tocCount && tocCount > 0 ? ok : fail)(`סימניות ${outlineItems} === שורות TOC ${tocCount}`);
+    const firstTitle = t3.match(/\/Title <([0-9a-f]+)>/);
+    if (firstTitle !== null) {
+      let title = '';
+      for (let i = 0; i + 4 <= (firstTitle[1] ?? '').length; i += 4) title += String.fromCharCode(parseInt((firstTitle[1] ?? '').slice(i, i + 4), 16));
+      (/[\u0590-\u05FF]/.test(title) ? ok : fail)(`כותרת סימנייה בעברית: ${JSON.stringify(title.slice(0, 30))}`);
+    } else {
+      fail('אין כותרת סימנייה');
+    }
+    const linkCount = (t3.match(/\/Subtype \/Link/g) ?? []).length;
+    const minLinks = 2 * (markerCount > noteBodyCount ? noteBodyCount : markerCount) + 2 * tocCount;
+    (linkCount >= minLinks && linkCount % 2 === 0 ? ok : fail)(`קישורים ${linkCount} (מינימום הדדי ${minLinks}: סמנים ${markerCount}/גופים ${noteBodyCount} + TOC ${tocCount}×2)`);
+    // כל יעד קיים: /Dest [N 0 R — N חייב להיות מספר אובייקט עמוד קיים
+    const pageObjs = [...t3.matchAll(/(\d+) 0 obj\n<< \/Type \/Page[^s]/g)].map((m) => parseInt(m[1], 10));
+    const dests = [...t3.matchAll(/\/Dest \[(\d+) 0 R/g)].map((m) => parseInt(m[1], 10));
+    const broken = dests.filter((d) => !pageObjs.includes(d));
+    (broken.length === 0 && dests.length === linkCount + outlineItems ? ok : fail)(`כל ${dests.length} היעדים קיימים (אפס קישורים שבורים; ${linkCount} קישורים + ${outlineItems} סימניות)`);
+    const crop = (t3.match(/\/CropBox \[/g) ?? []).length;
+    (crop === layout3.pages.length ? ok : fail)(`CropBox ${crop} === עמודים ${layout3.pages.length}`);
+    const pairs = [...t3.matchAll(/\/MediaBox \[([^\]]+)\] \/CropBox \[([^\]]+)\]/g)];
+    const boxesPaired = pairs.length === layout3.pages.length && pairs.every((m) => (m[1] ?? '') === (m[2] ?? ''));
+    (boxesPaired ? ok : fail)(`CropBox === MediaBox בכל עמוד (${pairs.length}/${layout3.pages.length})`);
+    const h3 = createHash('sha256').update(pdf3).digest('hex');
+    const r4 = spawnSync(process.execPath, [BIN, '--input', join(repoRoot, 'test-triggers', 'test-all-triggers.txt'), '--out', join(tmp, 'd'), '--pdf', '--compose'], { cwd: repoRoot, encoding: 'utf8' });
+    if (r4.status === 0) {
+      const h4 = createHash('sha256').update(readFileSync(join(tmp, 'd', 'book.pdf'))).digest('hex');
+      (h3 === h4 ? ok : fail)(`compose PDF דטרמיניסטי (${h3.slice(0, 16)}…)`);
+    } else {
+      fail('ריצת compose שנייה נכשלה');
+    }
+  }
+
+  console.log('\n7) אין window.print במסלול');
   const appShell = readFileSync(join(repoRoot, 'src', 'components', 'layout', 'AppShell.tsx'), 'utf8');
   (!/window\.print\(/.test(appShell) ? ok : fail)('AppShell נקי מ-window.print');
   (/\/Producer \(export-pdf/.test(txt) ? ok : fail)('Producer — export-pdf (לא הדפסת דפדפן)');

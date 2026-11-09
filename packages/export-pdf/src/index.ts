@@ -15,7 +15,7 @@ import { sha256Bytes } from '@tora/layout-api';
 import { parseSfnt, buildSubset, type ParsedSfnt } from './sfnt.js';
 import { buildToUnicode } from './tou.js';
 import { drawPage, contentStreamOf, ptOf, remapGids, type PageItem } from './draw.js';
-import { PdfWriter, pdfNum } from './pdf-writer.js';
+import { PdfWriter, pdfNum, type PdfRef } from './pdf-writer.js';
 
 export const PACKAGE_NAME = '@tora/export-pdf' as const;
 export const EXPORT_PDF_VERSION = 'export-pdf@0.1.0' as const;
@@ -159,15 +159,126 @@ export function exportPdf(layout: LayoutDocument, fonts: readonly ExportPdfFont[
     w.write(touRefs[i] as { num: number }, '', { data: plan.touBytes as Uint8Array });
   });
 
+  // ── שלב 90: סימניות, קישורים הדדיים ו-page boxes מה-IR ──
+  // (א) מיפויי עזר מה-IR: שורת-TOC ⇒ שורת-כותרת (אטום היעד); סמן ⇒
+  //     שורת גוף ההערה (blockId note:<noteId>). יעד חסר ⇒ הקישור אינו
+  //     נוצר (אין קישור שבור — כל קישור שנוצר תקין; §15.4#4).
+  interface LinePos { pageIndex: number; rect: { x: number; y: number; w: number; h: number }; baseline: number }
+  const linePos = new Map<unknown, LinePos>();
+  const lineByAtom = new Map<string, unknown>();
+  const lineByBlockId = new Map<string, unknown>();
+  const noteBodyByNoteId = new Map<string, unknown>();
+  const tocLines: Array<{ pos: LinePos; targetAtomId: string; title: string }> = [];
+  const markerPos: Array<{ noteId: string; pos: LinePos }> = [];
+  layout.pages.forEach((page, pi) => {
+    for (const it of page.items) {
+      if (it.kind === 'line') {
+        const pos: LinePos = { pageIndex: pi, rect: { x: it.rect.x as number, y: it.rect.y as number, w: it.rect.width as number, h: it.rect.height as number }, baseline: it.baseline as number };
+        linePos.set(it, pos);
+        const b = String(it.blockId);
+        if (b.startsWith('note:')) noteBodyByNoteId.set(b.slice(5), it);
+        if (b.startsWith('toc:entry:')) {
+          tocLines.push({ pos, targetAtomId: b.slice('toc:entry:'.length), title: it.runs.map((r) => r.text).join(' ').trim() });
+        }
+        if (!lineByBlockId.has(b)) lineByBlockId.set(b, it);
+        for (const r of it.runs) for (const a of r.atomIds) if (!lineByAtom.has(a)) lineByAtom.set(a, it);
+      } else if (it.kind === 'note-marker') {
+        markerPos.push({ noteId: it.noteId, pos: { pageIndex: pi, rect: { x: it.rect.x as number, y: it.rect.y as number, w: it.rect.width as number, h: it.rect.height as number }, baseline: it.baseline as number } });
+      }
+    }
+  });
+  const pagePt = (idx: number): { w: number; h: number } => ({ w: ptOf(layout.pages[idx]?.size.width as number ?? 0), h: ptOf(layout.pages[idx]?.size.height as number ?? 0) });
+  const rectPt = (idx: number, r: { x: number; y: number; w: number; h: number }): [number, number, number, number] => {
+    const { h } = pagePt(idx);
+    return [ptOf(r.x), h - ptOf(r.y + r.h), ptOf(r.x + r.w), h - ptOf(r.y)];
+  };
+  const destPt = (idx: number, lp: LinePos): [number, number] => {
+    const { h } = pagePt(idx);
+    return [ptOf(lp.rect.x), h - ptOf(lp.baseline)];
+  };
+
+  // (ב) קישורים הדדיים: TOC⇄כותרת; סמן⇒גוף; גוף⇒סמן.
+  interface LinkPlan { pageIndex: number; rect: [number, number, number, number]; destPage: number; dest: [number, number] }
+  const links: LinkPlan[] = [];
+  for (const t of tocLines) {
+    // יעד ה-TOC הוא מזהה הבלוק של שורת הכותרת (ה-atom המלא של
+    // הסימן); הפרוץ ב-blockId ואז באטום.
+    const to = lineByBlockId.get(t.targetAtomId) ?? lineByAtom.get(t.targetAtomId);
+    const toPos = to === undefined ? undefined : linePos.get(to);
+    if (toPos !== undefined) {
+      links.push({ pageIndex: t.pos.pageIndex, rect: rectPt(t.pos.pageIndex, t.pos.rect), destPage: toPos.pageIndex, dest: destPt(toPos.pageIndex, toPos) });
+      links.push({ pageIndex: toPos.pageIndex, rect: rectPt(toPos.pageIndex, toPos.rect), destPage: t.pos.pageIndex, dest: destPt(t.pos.pageIndex, t.pos) });
+    }
+  }
+  for (const m of markerPos) {
+    const body = noteBodyByNoteId.get(m.noteId);
+    const bodyPos = body === undefined ? undefined : linePos.get(body);
+    if (bodyPos !== undefined) {
+      links.push({ pageIndex: m.pos.pageIndex, rect: rectPt(m.pos.pageIndex, m.pos.rect), destPage: bodyPos.pageIndex, dest: destPt(bodyPos.pageIndex, bodyPos) });
+      links.push({ pageIndex: bodyPos.pageIndex, rect: rectPt(bodyPos.pageIndex, bodyPos.rect), destPage: m.pos.pageIndex, dest: destPt(m.pos.pageIndex, m.pos) });
+    }
+  }
+  const linksByPage = new Map<number, LinkPlan[]>();
+  for (const l of links) {
+    const arr = linksByPage.get(l.pageIndex) ?? [];
+    arr.push(l);
+    linksByPage.set(l.pageIndex, arr);
+  }
+  // סימניות משורות ה-TOC (כותרת + עמוד היעד בפועל).
+  const bookmarks: Array<{ title: string; destPage: number; dest: [number, number] }> = [];
+  for (const t of tocLines) {
+    const to = lineByBlockId.get(t.targetAtomId) ?? lineByAtom.get(t.targetAtomId);
+    const toPos = to === undefined ? undefined : linePos.get(to);
+    if (toPos !== undefined && t.title.length > 0) bookmarks.push({ title: t.title, destPage: toPos.pageIndex, dest: destPt(toPos.pageIndex, toPos) });
+  }
+
+  // (ג) הקצאת refs בסדר קבוע: pages, contents, annots (לפי עמוד), outlines.
   const pageRefs = layout.pages.map(() => w.reserve());
   const contentRefs = layout.pages.map(() => w.reserve());
+  const annotRefsByPage: Array<Array<PdfRef>> = layout.pages.map(() => []);
+  for (let pi = 0; pi < layout.pages.length; pi += 1) {
+    for (const _l of linksByPage.get(pi) ?? []) {
+      void _l;
+      annotRefsByPage[pi]?.push(w.reserve());
+    }
+  }
+  const outlinesRef = w.reserve();
+  const outlineItemRefs = bookmarks.map(() => w.reserve());
   const fontDict = plans.map((_, i) => `${fontResourceNames[i]} ${(fontRefs[i] as { num: number }).num} 0 R`).join(' ');
+  // תיבות עמוד (§15.2#5): גודל העמוד מה-IR; אין מפתחות bleed במרשם ההגדרות
+  // (מלאי החובה, נספח ג) ⇒ CropBox === MediaBox (מפורש; תיעוד ב-ADR-009).
   layout.pages.forEach((page, pi) => {
     const mediaBox = `0 0 ${pdfNum(ptOf(page.size.width as number))} ${pdfNum(ptOf(page.size.height as number))}`;
-    w.write(pageRefs[pi] as { num: number }, `/Type /Page /Parent ${pagesObj.num} 0 R /MediaBox [${mediaBox}] /Resources << /Font << ${fontDict} >> >> /Contents ${(contentRefs[pi] as { num: number }).num} 0 R`);
+    const annotsStr = (annotRefsByPage[pi]?.length ?? 0) > 0
+      ? ` /Annots [${(annotRefsByPage[pi] ?? []).map((r) => `${r.num} 0 R`).join(' ')}]`
+      : '';
+    w.write(pageRefs[pi] as { num: number }, `/Type /Page /Parent ${pagesObj.num} 0 R /MediaBox [${mediaBox}] /CropBox [${mediaBox}]${annotsStr} /Resources << /Font << ${fontDict} >> >> /Contents ${(contentRefs[pi] as { num: number }).num} 0 R`);
   });
+  // כתיבת אובייקטי הקישורים בסדר ההקצאה.
+  layout.pages.forEach((page, pi) => {
+    void page;
+    (linksByPage.get(pi) ?? []).forEach((l, li) => {
+      const ref = (annotRefsByPage[pi] ?? [])[li] as PdfRef;
+      w.write(ref, `/Type /Annot /Subtype /Link /Rect [${l.rect.map(pdfNum).join(' ')}] /Border [0 0 0] /Dest [${(pageRefs[l.destPage] as { num: number }).num} 0 R /XYZ ${pdfNum(l.dest[0])} ${pdfNum(l.dest[1])} null]`);
+    });
+  });
+  // סימניות: שרשרת Prev/Next + דף היעד; כותרת ב-UTF-16BE hex.
+  const hexUtf16 = (t: string): string => {
+    let out = '';
+    for (const ch of t) out += (ch.codePointAt(0) as number).toString(16).padStart(4, '0');
+    return out;
+  };
+  outlineItemRefs.forEach((ref, bi) => {
+    const b = bookmarks[bi] as { title: string; destPage: number; dest: [number, number] };
+    const prev = bi > 0 ? (outlineItemRefs[bi - 1] as PdfRef).num : null;
+    const next = bi + 1 < outlineItemRefs.length ? (outlineItemRefs[bi + 1] as PdfRef).num : null;
+    w.write(ref, `/Title <${hexUtf16(b.title)}> /Parent ${outlinesRef.num} 0 R${prev !== null ? ` /Prev ${prev} 0 R` : ''}${next !== null ? ` /Next ${next} 0 R` : ''} /Dest [${(pageRefs[b.destPage] as { num: number }).num} 0 R /XYZ ${pdfNum(b.dest[0])} ${pdfNum(b.dest[1])} null]`);
+  });
+  w.write(outlinesRef, outlineItemRefs.length > 0
+    ? `/Type /Outlines /First ${(outlineItemRefs[0] as PdfRef).num} 0 R /Last ${(outlineItemRefs[outlineItemRefs.length - 1] as PdfRef).num} 0 R /Count ${outlineItemRefs.length}`
+    : '/Type /Outlines /Count 0');
   w.write(pagesObj, `/Type /Pages /Count ${layout.pages.length} /Kids [${pageRefs.map((r) => `${r.num} 0 R`).join(' ')}]`);
-  w.write(catalog, `/Type /Catalog /Pages ${pagesObj.num} 0 R`);
+  w.write(catalog, `/Type /Catalog /Pages ${pagesObj.num} 0 R /Outlines ${outlinesRef.num} 0 R${outlineItemRefs.length > 0 ? ' /PageMode /UseOutlines' : ''}`);
   perPage.forEach((items, pi) => {
     // v0: כל הציור ב-F1 (גופן יחיד) — זהה להיטל ה-HTML/מנוע (§6.4).
     const text = contentStreamOf(items, 'F1');

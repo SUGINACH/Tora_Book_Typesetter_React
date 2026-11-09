@@ -381,12 +381,19 @@ export function layoutDocumentIssues(doc: unknown): string[] {
           if (typeof sv.requestHash !== 'string' || !HEX64_RE.test(sv.requestHash)) issues.push(`${sl}.requestHash`);
           if (sv.direction !== 'rtl' && sv.direction !== 'ltr') issues.push(`${sl}.direction`);
           if (!isSafePositiveInt(sv.fontSizeLu)) issues.push(`${sl}.fontSizeLu`);
-          if (!Array.isArray(sv.atomIds) || sv.atomIds.length === 0) issues.push(`${sl}.atomIds:empty`);
-          if (!Array.isArray(sv.glyphs) || sv.glyphs.length === 0) issues.push(`${sl}.glyphs:empty`);
-          if (isSafeNonNegativeInt(sv.widthLu)) {
+          // ריצה נגזרת (שלב 74; compose): אטומים וגליפים ריקים כאחד — לגיטימית
+          // (כותרות תוכן/פוליו; DERIVED_CHAR_LU). ריצה עם אטומים חייבת גליפים
+          // (מדידה) ולהפך — ערבוב הוא פסול מבני.
+          const hasAtoms = Array.isArray(sv.atomIds) && sv.atomIds.length > 0;
+          const hasGlyphs = Array.isArray(sv.glyphs) && sv.glyphs.length > 0;
+          if (!Array.isArray(sv.atomIds) || (sv.atomIds.length === 0 && hasGlyphs)) issues.push(`${sl}.atomIds:empty`);
+          if (!Array.isArray(sv.glyphs) || (sv.glyphs.length === 0 && hasAtoms)) issues.push(`${sl}.glyphs:empty`);
+          if (hasGlyphs && isSafeNonNegativeInt(sv.widthLu)) {
             // חפיפה בין ריצות — פסול מבני; גלישה מרוחב הקו (overflow) אינה נבדקת
             // כאן: המנוע חייב להוציא IR גם כשיש גלישה — הביקורת הגיאומטרית (שלב 38)
-            // היא שמדווחת אותה כ-HIGH (§8.2: אין לחתוך מילה; החירום נרשם בפנקס).
+            // היא שמדווחת אותה כ-HIGH (§8.2: אין לחתוף מילה; החירום נרשם בפנקס).
+            // ריצות נגזרות אינן נבדקות: הרוחב הערכת תווים והסדר לוגי/חזותי
+            // (פוליו מוצב בקצה השמאלי אחרי הכותרת — compose-v0).
             if ((sv.startLu as number) < prevEnd) issues.push(`${sl}.startLu:overlap`);
             prevEnd = (sv.startLu as number) + (sv.widthLu as number);
           }
