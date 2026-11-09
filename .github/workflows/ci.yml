@@ -54,7 +54,7 @@ jobs:
           # NO_COLOR + הסרת ANSI כפולה (שיעור סבב ה': chalk/vitest מצבעים גם בלי TTY תחת CI=true)
           NO_COLOR=1 npm run test:packages > /tmp/testout.raw 2>&1 || { cat /tmp/testout.raw; exit 1; }
           sed -e 's/\x1b\[[0-9;?]*[a-zA-Z]//g' -e 's/\x1b\][^\x07]*\x07//g' /tmp/testout.raw > /tmp/testout.log
-          grep -qE "Tests[[:space:]]+1300[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 1300 בדיקות"; exit 1; }
+          grep -qE "Tests[[:space:]]+1303[[:space:]]+passed" /tmp/testout.log || { tail -5 /tmp/testout.log; echo "צפוי בדיוק 1303 בדיקות"; exit 1; }
           node scripts/migration/verify-units.mjs
           node scripts/migration/verify-canonical-hash.mjs
           node scripts/migration/verify-error-catalog.mjs
@@ -126,6 +126,7 @@ jobs:
           node scripts/migration/verify-audit-findings.mjs
           node scripts/migration/verify-preview-virtualization.mjs
           node scripts/migration/verify-settings-coverage.mjs
+          node scripts/migration/verify-export-pure.mjs
 
       - name: E2E ממוקד — Playwright על האפליקציה הבנויה (שלב 85; §17.1)
         # האפליקציה נבנית (vite build — כמו ב-Deploy) ונפתחת ב-vite preview;

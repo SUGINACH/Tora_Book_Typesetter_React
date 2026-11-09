@@ -20,6 +20,7 @@ import { AuditFindings } from '../audit/AuditFindings';
 import { TextEditor } from '../editor/TextEditor';
 import { SettingsPanel } from '../settings/SettingsPanel';
 import { PreviewArea } from './PreviewArea';
+import { ExportButton } from './ExportButton';
 
 const ACTIVE_PHASES = new Set(['preparing', 'running', 'auditing']);
 
@@ -109,15 +110,9 @@ export function AppShell() {
                 ✕ בטל ריצה
               </button>
             )}
-            <button
-              onClick={() => window.print()}
-              disabled={isRunning || ir === null}
-              className="w-full px-3 py-2 bg-gray-200 rounded text-xs disabled:opacity-50"
-              data-testid="print-export"
-              title="הדפסת ההיטל — מסלול הייצוא הסמכותי (§15.1; עד שלב 86)"
-            >
-              📄 הדפסה / PDF
-            </button>
+            {/* שלב 86: הייצוא הסמכותי — היטל HTML טהור מה־IR (render-html);
+                window.print הוסר — אין היטל מה-DOM החי (§15.1). */}
+            <ExportButton />
           </div>
         </div>
 

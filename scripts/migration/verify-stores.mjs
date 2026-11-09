@@ -18,7 +18,7 @@
  *   19–25. בדיקות ירוקות (65+4), typecheck, lint:packages, אין any,
  *      אין גישת localStorage ישירה מחוץ ל־storage.ts.
  *   26–30. אינטגרציה: החבית; resetForNewDocument שומר zoom/locale;
- *      vitest כולל את tests/stores; המרשם מהחבילה; סוויטה מלאה 1300.
+ *      vitest כולל את tests/stores; המרשם מהחבילה; סוויטה מלאה 1303.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
@@ -128,8 +128,8 @@ const indexCode = stripComments(read('index.ts'));
   ? ok : fail)('zoom/locale נשמרים בין מסמכים (העדפות משתמש)');
 (/tests\/stores\//.test(readFileSync(join(repoRoot, 'vitest.packages.config.ts'), 'utf8')) ? ok : fail)('vitest.packages.config כולל את tests/stores');
 (runCode('npm', ['run', 'build:packages']) === 0 ? ok : fail)('build:packages — PASS');
-const testOut = (SKIP_TESTS ? 'Tests  1300 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
-(testOut !== null && /Tests\s+1300\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1300/1300 (1098 עד שלב 76 + 20 שלב 77 + 26 שלב 78 + 19 קבצים ותבניות שלב 79 + 36 ייבוא ומפת קלט שלב 80 + 27 עורך מקושר שלב 81 + 17 ממצאי Audit שלב 82 + 22 שלב 83 + 16 ניקוי stores שלב 84 + 11 תיקון היטל 2026-11-09)');
+const testOut = (SKIP_TESTS ? 'Tests  1303 passed [skipped-in-CI: parent step already ran the suite]' : run('npm', ['run', 'test:packages']));
+(testOut !== null && /Tests\s+1303\s+passed/m.test(testOut) ? ok : fail)('test:packages — 1303/1303 (1098 עד שלב 76 + 20 שלב 77 + 26 שלב 78 + 19 קבצים ותבניות שלב 79 + 36 ייבוא ומפת קלט שלב 80 + 27 עורך מקושר שלב 81 + 17 ממצאי Audit שלב 82 + 22 שלב 83 + 16 ניקוי stores שלב 84 + 11 תיקון היטל 2026-11-09)');
 
 console.log('\n' + '='.repeat(60));
 if (failures > 0) {

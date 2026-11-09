@@ -15,7 +15,7 @@
  *   4. השער: ארבעת קובצי הבייסליין (ברירת מחדל + שלוש הערכות) נטענים
  *      בבדיקות ה-store; מפתח לא מוכר/NaN/מידה שלילית נכשלים לפני תחילת
  *      עימוד עם קוד ו-path — E2E מוכיח ששום job לא נשלח.
- *   5. הבדיקות: 21 ב-store, 8 ברכיב, 5 ב-E2E; הסוויטה המלאה 1300.
+ *   5. הבדיקות: 21 ב-store, 8 ברכיב, 5 ב-E2E; הסוויטה המלאה 1303.
  *   6. רגרסיה: typecheck, lint:packages, build:packages, deps:check.
  */
 import { execFileSync } from 'node:child_process';
@@ -144,7 +144,7 @@ console.log('\n5) חסימת ריצה לפני תחילת עימוד — effecti
   }
 }
 
-console.log('\n6) הבדיקות — 21 store + 8 רכיב + 5 E2E; הסוויטה המלאה 1300');
+console.log('\n6) הבדיקות — 21 store + 8 רכיב + 5 E2E; הסוויטה המלאה 1303');
 {
   const storeTest = read('tests/stores/settings-store.test.ts');
   const storeIts = [...storeTest.matchAll(/\btest\(/g)].length;
@@ -156,7 +156,7 @@ console.log('\n6) הבדיקות — 21 store + 8 רכיב + 5 E2E; הסוויט
     const out = run('npx', ['vitest', 'run', '--config', 'vitest.packages.config.ts', 'tests/component/settings-files.test.tsx']);
     (/Tests\s+8\s+passed/.test(out ?? '') ? ok : fail)('tests/component/settings-files — 8/8');
     const testOut = run('npm', ['run', 'test:packages']);
-    (/Tests\s+1300\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1300/1300');
+    (/Tests\s+1303\s+passed/m.test(testOut ?? '') ? ok : fail)('test:packages — 1303/1303');
   } else {
     ok('בדיקות הרכיב והסוויטה — דולג (הצעד האב הריץ את הסוויטה)');
   }

@@ -159,12 +159,12 @@ console.log('\n7) רגרסיה — build, typecheck, lint, deps, test:packages')
 (runCode('npm', ['run', 'lint:packages']) === 0 ? ok : fail)('npm run lint:packages');
 (runCode('npm', ['run', 'deps:check']) === 0 ? ok : fail)('npm run deps:check');
 {
-  const out = SKIP_TESTS ? 'Tests  1300 passed' : (() => {
+  const out = SKIP_TESTS ? 'Tests  1303 passed' : (() => {
     try {
       return execFileSync('npm', ['run', 'test:packages'], { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NO_COLOR: '1' } });
     } catch (e) { return (e.stdout ?? ''); }
   })();
-  (/Tests\s+1300\s+passed/.test(out) ? ok : fail)('test:packages — 1300/1300');
+  (/Tests\s+1303\s+passed/.test(out) ? ok : fail)('test:packages — 1303/1303');
 }
 
 // ---------- סיכום ----------
