@@ -1,0 +1,100 @@
+{
+  "audit.text.MISSING_ATOM": {
+    "label": "טווח במקור שאינו מכוסה על ידי אטום — {excerpt} ({length} תווים)"
+  },
+  "audit.text.DUPLICATE_ATOM": {
+    "label": "טווח במקור מכוסה {times} פעמים — {length} תווים"
+  },
+  "audit.text.OVERLAP_ATOM_SYNTAX": {
+    "label": "טווחי syntax חופפים במקור"
+  },
+  "audit.text.DUPLICATE_ATOM_ID": {
+    "label": "מזהה אטום כפול — {atomId}"
+  },
+  "audit.text.UNRESOLVED_NOTE_REFERENCE": {
+    "label": "הפניית הערה שלא נפתרה — {noteId}"
+  },
+  "audit.text.ORPHAN_NOTE": {
+    "label": "הערת {kind} יתומה — אין הפניה בגוף ({noteId})"
+  },
+  "audit.text.LEDGER_ISSUE": {
+    "label": "בעיית פנקס החלטות — {code} (רשומה {recordIndex})"
+  },
+  "audit.text.RAW_CONTROL_PLACEHOLDER": {
+    "label": "תו בקרה גולמי בפריסה — {atomId}"
+  },
+  "audit.text.HTML_IN_ATOMS": {
+    "label": "HTML מילולי בטקסט — {excerpt}"
+  },
+  "audit.text.COVERAGE_DISAGREEMENT": {
+    "label": "חוסר הסכמה בכיסוי בין הביקורת לפרסר"
+  },
+  "audit.text.ATOM_TEXT_MISMATCH": {
+    "label": "טקסט האטום בפריסה אינו זהה למקור — {reason} ({atomId})"
+  },
+  "audit.layout.ATOM_MISSING": {
+    "label": "אטום מהמסמך לא הוצב בפריסה — {atomId}"
+  },
+  "audit.layout.ATOM_DUPLICATED": {
+    "label": "אטום הוצב יותר מפעם אחת — {atomId}"
+  },
+  "audit.layout.NOTE_MARKER_WITHOUT_BODY": {
+    "label": "סמן הערה בגוף ללא תוכן באזור ההערות — {noteId}"
+  },
+  "audit.layout.NOTE_BODY_WITHOUT_MARKER": {
+    "label": "תוכן הערה באזור ההערות ללא סמן בגוף — {noteId}"
+  },
+  "audit.layout.REGION_OUT_OF_PAGE": {
+    "label": "אזור חורג מגבולות העמוד — {regionId}"
+  },
+  "audit.layout.REGION_REF_UNKNOWN": {
+    "label": "הפניה לאזור שאינו קיים — {regionId}"
+  },
+  "audit.layout.ITEM_OUT_OF_REGION": {
+    "label": "פריט חורג מגבולות האזור שלו — {itemId}"
+  },
+  "audit.layout.BASELINE_OUT_OF_LINE": {
+    "label": "קו בסיס מחוץ לגבולות השורה — {itemId}"
+  },
+  "audit.layout.LINE_RUN_OVERFLOW": {
+    "label": "רצף טקסט חורג מרוחב השורה"
+  },
+  "audit.layout.LINE_OVERLAP": {
+    "label": "שתי שורות חופפות — {itemIdA} ו־{itemIdB}"
+  },
+  "audit.layout.LINE_HEIGHT_NONUNIFORM": {
+    "label": "מרווח שורות אינו אחיד בתוך הטור"
+  },
+  "audit.layout.COLUMN_ORDER_RTL": {
+    "label": "סדר טורים הפוך בעמוד RTL"
+  },
+  "audit.layout.ORNAMENT_OVERLAP": {
+    "label": "עיטור חופף תוכן — {lineId} מול {overlapsRegion}"
+  },
+  "audit.links.LINK_ID_FOREIGN": {
+    "label": "מזהה קישור שאינו הנגזרת הקנונית שלו — {linkId}"
+  },
+  "audit.links.LINK_TARGET_MISSING": {
+    "label": "יעד קישור אינו קיים — {target} ({targetKind})"
+  },
+  "audit.links.LINK_DUPLICATE": {
+    "label": "קישור כפול — {linkId}"
+  },
+  "audit.links.LINK_NOTE_ONE_WAY": {
+    "label": "קישור הערה חד־צדדי — חסר {direction} ({noteId})"
+  },
+  "audit.links.LINK_TOC_ONE_WAY": {
+    "label": "קישור תוכן עניינים חד־צדדי — חסר {direction} ({headingId})"
+  },
+  "audit.links.LINK_PAGE_MISMATCH": {
+    "label": "קישור מצביע לעמוד לא תואם"
+  },
+  "audit.links.LINK_EXTERNAL_POLICY": {
+    "label": "קישור לכתובת חיצונית ({scheme}) בניגוד למדיניות — {linkId}"
+  },
+  "audit.severity": {
+    "HIGH": "High",
+    "MEDIUM": "Medium",
+    "LOW": "Low"
+  }
+}

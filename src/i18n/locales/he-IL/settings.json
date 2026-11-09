@@ -1,0 +1,1034 @@
+{
+  "settings.cbg-h0Open-color": {
+    "label": "רקע פתיחת הספר — צבע",
+    "description": "צבע הרקע בעמוד פתיחת הספר (H0)"
+  },
+  "settings.cbg-h0Open-mode": {
+    "label": "רקע פתיחת הספר — מצב",
+    "description": "אופן הפעלת הרקע בעמוד פתיחת הספר (H0)"
+  },
+  "settings.cbg-h0Open-opacity": {
+    "label": "רקע פתיחת הספר — שקיפות",
+    "description": "שקיפות הרקע בעמוד פתיחת הספר (H0), באחוזים"
+  },
+  "settings.cbg-h2Open-color": {
+    "label": "רקע פתיחת הפרק — צבע",
+    "description": "צבע הרקע בעמוד פתיחת פרק (H2)"
+  },
+  "settings.cbg-h2Open-mode": {
+    "label": "רקע פתיחת הפרק — מצב",
+    "description": "אופן הפעלת הרקע בעמוד פתיחת פרק (H2)"
+  },
+  "settings.cbg-h2Open-opacity": {
+    "label": "רקע פתיחת הפרק — שקיפות",
+    "description": "שקיפות הרקע בעמוד פתיחת פרק (H2), באחוזים"
+  },
+  "settings.cbg-regular-color": {
+    "label": "רקע עמוד רגיל — צבע",
+    "description": "צבע הרקע בעמוד רגיל"
+  },
+  "settings.cbg-regular-mode": {
+    "label": "רקע עמוד רגיל — מצב",
+    "description": "אופן הפעלת הרקע בעמוד רגיל"
+  },
+  "settings.cbg-regular-opacity": {
+    "label": "רקע עמוד רגיל — שקיפות",
+    "description": "שקיפות הרקע בעמוד רגיל, באחוזים"
+  },
+  "settings.data-cbg-h0Open-img": {
+    "label": "תמונת רקע פתיחת הספר — נתונים",
+    "description": "תוכן תמונת הרקע של עמוד פתיחת הספר (מקודד; הקובץ נבחר דרך שדה הקובץ)"
+  },
+  "settings.data-cbg-h2Open-img": {
+    "label": "תמונת רקע פתיחת הפרק — נתונים",
+    "description": "תוכן תמונת הרקע של עמוד פתיחת פרק (מקודד)"
+  },
+  "settings.data-cbg-regular-img": {
+    "label": "תמונת רקע עמוד רגיל — נתונים",
+    "description": "תוכן תמונת הרקע של עמוד רגיל (מקודד)"
+  },
+  "settings.auto-dh": {
+    "label": "זיהוי דיבור המתחיל אוטומטית",
+    "description": "זיהוי ועיצוב אוטומטי של ד״ה בגוף הטקסט"
+  },
+  "settings.avoid-orphans": {
+    "label": "מניעת יתומות",
+    "description": "מניעת שורה בודדת בפתיחת עמוד/טור"
+  },
+  "settings.avoid-runt-word": {
+    "label": "מניעת מילה דלילה בסוף פסקה",
+    "description": "מניעת מילה אחת בודדת בשורה האחרונה של פסקה"
+  },
+  "settings.avoid-widows": {
+    "label": "מניעת אלמנות",
+    "description": "מניעת שורה בודדת בסוף עמוד/טור"
+  },
+  "settings.body-last-line-align": {
+    "label": "יישור השורה האחרונה בפסקה",
+    "description": "יישון השורה האחרונה של פסקה (מרכז/ימין)"
+  },
+  "settings.drop-word-count": {
+    "label": "מילה ראשונה — מספר מילים",
+    "description": "מספר המילים בחלון המילה הראשונה"
+  },
+  "settings.drop-word-min-lines": {
+    "label": "מילה ראשונה — מינימום שורות",
+    "description": "מספר שורות המינימום שהפסקה חייבת לכלול עם מילה ראשונה מעוצבת"
+  },
+  "settings.drop-word-mode": {
+    "label": "מילה ראשונה — אופן עיצוב",
+    "description": "אופן הצגת המילה הראשונה של הפסקה (חלון/ללא)"
+  },
+  "settings.line-height-body": {
+    "label": "ריווח שורות הגוף",
+    "description": "מכפיל גובה שורה לגוף הטקסט"
+  },
+  "settings.inp-book-author": {
+    "label": "שם המחבר",
+    "description": "שם המחבר כפי שיופיע בשער"
+  },
+  "settings.inp-book-back-contact": {
+    "label": "פרטי קשר בשער האחורי",
+    "description": "טקסט פרטי הקשר בשער האחורי"
+  },
+  "settings.inp-book-back-copyright": {
+    "label": "זכויות יוצרים",
+    "description": "טקסט הזכויות בשער האחורי"
+  },
+  "settings.inp-book-back-extra": {
+    "label": "הערה נוספת בשער האחורי",
+    "description": "טקסט חופשי נוסף בשער האחורי"
+  },
+  "settings.inp-book-back-publishing": {
+    "label": "שם ההוצאה",
+    "description": "שם ההוצאה לאור בשער האחורי"
+  },
+  "settings.inp-book-desc": {
+    "label": "תיאור הספר",
+    "description": "תיאור קצר שיופיע בשער"
+  },
+  "settings.inp-book-sections": {
+    "label": "מהדורה/סדרות",
+    "description": "טקסט המהדורה או הסדרה בשער"
+  },
+  "settings.inp-book-subtitle": {
+    "label": "כותרת משנה",
+    "description": "כותרת המשנה של הספר"
+  },
+  "settings.inp-book-title": {
+    "label": "שם הספר",
+    "description": "שם הספר כפי שיופיע בשער ובכותרות"
+  },
+  "settings.inp-book-year": {
+    "label": "מקום ושנת דפוס",
+    "description": "טקסט המקום והשנה בשער"
+  },
+  "settings.style-set-select": {
+    "label": "ערכת עיצוב פעילה",
+    "description": "בחירת ערכת עיצוב שמורה (מצב ממשק בלבד)"
+  },
+  "settings.page-num-format": {
+    "label": "פורמט מספור העמודים",
+    "description": "שיטת המספור — גימטריה או ספרות"
+  },
+  "settings.page-num-frame": {
+    "label": "מסגרת מספר העמוד",
+    "description": "עיטור סביב מספר העמוד"
+  },
+  "settings.page-num-initial-value": {
+    "label": "ערך התחלה למספור",
+    "description": "הערך שממנו מתחיל המספור"
+  },
+  "settings.page-num-position": {
+    "label": "מיקום מספר העמוד",
+    "description": "תחתית מרכז או תחתית חיצוני"
+  },
+  "settings.page-num-start-idx": {
+    "label": "אינדקס עמוד ההתחלה",
+    "description": "אינדקס העמוד שבו מתחיל המספור"
+  },
+  "settings.f-dh": {
+    "label": "גופן דיבור המתחיל",
+    "description": "משפחת הגופן לד״ה"
+  },
+  "settings.f-dtoc-1": {
+    "label": "גופן שורה 1 — תוכן מפורט",
+    "description": "משפחת הגופן לשורה ראשונה בתוכן העניינים המפורט"
+  },
+  "settings.f-dtoc-2": {
+    "label": "גופן שורה 2 — תוכן מפורט",
+    "description": "משפחת הגופן לשורה השנייה בתוכן המפורט"
+  },
+  "settings.f-dtoc-3": {
+    "label": "גופן שורה 3 — תוכן מפורט",
+    "description": "משפחת הגופן לשורה השלישית בתוכן המפורט"
+  },
+  "settings.f-dtoc-4": {
+    "label": "גופן שורה 4 — תוכן מפורט",
+    "description": "משפחת הגופן לשורה הרביעית בתוכן המפורט"
+  },
+  "settings.f-dtoc-5": {
+    "label": "גופן שורה 5 — תוכן מפורט",
+    "description": "משפחת הגופן לשורה החמישית בתוכן המפורט"
+  },
+  "settings.f-dtoc-6": {
+    "label": "גופן שורה 6 — תוכן מפורט",
+    "description": "משפחת הגופן לשורה השישית בתוכן המפורט"
+  },
+  "settings.f-dtoc-7": {
+    "label": "גופן שורה 7 — תוכן מפורט",
+    "description": "משפחת הגופן לשורה השביעית בתוכן המפורט"
+  },
+  "settings.f-gtoc-1": {
+    "label": "גופן שורה 1 — תוכן כללי",
+    "description": "משפחת הגופן לשורה ראשונה בתוכן העניינים הכללי"
+  },
+  "settings.f-gtoc-2": {
+    "label": "גופן שורה 2 — תוכן כללי",
+    "description": "משפחת הגופן לשורה השנייה בתוכן הכללי"
+  },
+  "settings.f-gtoc-3": {
+    "label": "גופן שורה 3 — תוכן כללי",
+    "description": "משפחת הגופן לשורה השלישית בתוכן הכללי"
+  },
+  "settings.f-gtoc-4": {
+    "label": "גופן שורה 4 — תוכן כללי",
+    "description": "משפחת הגופן לשורה הרביעית בתוכן הכללי"
+  },
+  "settings.f-gtoc-5": {
+    "label": "גופן שורה 5 — תוכן כללי",
+    "description": "משפחת הגופן לשורה החמישית בתוכן הכללי"
+  },
+  "settings.f-gtoc-6": {
+    "label": "גופן שורה 6 — תוכן כללי",
+    "description": "משפחת הגופן לשורה השישית בתוכן הכללי"
+  },
+  "settings.f-gtoc-7": {
+    "label": "גופן שורה 7 — תוכן כללי",
+    "description": "משפחת הגופן לשורה השביעית בתוכן הכללי"
+  },
+  "settings.f-h0": {
+    "label": "גופן כותרת פתיחת הספר (H0)",
+    "description": "משפחת הגופן לכותרת פתיחת הספר"
+  },
+  "settings.f-h0-body": {
+    "label": "גופן גוף עמוד הפתיחה",
+    "description": "משפחת הגופן לגוף עמוד פתיחת הספר (H0)"
+  },
+  "settings.f-h1": {
+    "label": "גופן שער חלק/משנה (H1)",
+    "description": "משפחת הגופן לכותרת H1"
+  },
+  "settings.f-h2": {
+    "label": "גופן כותרת פרק (H2)",
+    "description": "משפחת הגופן לכותרת H2"
+  },
+  "settings.f-h3": {
+    "label": "גופן כותרת רוחבית (H3)",
+    "description": "משפחת הגופן לכותרת H3"
+  },
+  "settings.f-h4": {
+    "label": "גופן כותרת מלווה (H4)",
+    "description": "משפחת הגופן לכותרת H4"
+  },
+  "settings.f-h5": {
+    "label": "גופן כותרת מלווה (H5)",
+    "description": "משפחת הגופן לכותרת H5"
+  },
+  "settings.f-h6": {
+    "label": "גופן כותרת מלווה (H6)",
+    "description": "משפחת הגופן לכותרת H6"
+  },
+  "settings.f-h7": {
+    "label": "גופן הערת צד (H7)",
+    "description": "משפחת הגופן להערת צד H7"
+  },
+  "settings.f-hdr-c": {
+    "label": "גופן כותרת עליונה — מרכז (אי-זוגי)",
+    "description": "משפחת הגופן לעמודת המרכז בכותרת העליונה בעמוד אי-זוגי"
+  },
+  "settings.f-hdr-l": {
+    "label": "גופן כותרת עליונה — שמאל (אי-זוגי)",
+    "description": "משפחת הגופן לעמודה השמאלית בכותרת העליונה בעמוד אי-זוגי"
+  },
+  "settings.f-hdr-r": {
+    "label": "גופן כותרת עליונה — ימין (אי-זוגי)",
+    "description": "משפחת הגופן לעמודה הימנית בכותרת העליונה בעמוד אי-זוגי"
+  },
+  "settings.f-hdr-verso-c": {
+    "label": "גופן כותרת עליונה — מרכז (זוגי)",
+    "description": "משפחת הגופן לעמודת המרכז בכותרת העליונה בעמוד זוגי"
+  },
+  "settings.f-hdr-verso-l": {
+    "label": "גופן כותרת עליונה — שמאל (זוגי)",
+    "description": "משפחת הגופן לעמודה השמאלית בכותרת העליונה בעמוד זוגי"
+  },
+  "settings.f-hdr-verso-r": {
+    "label": "גופן כותרת עליונה — ימין (זוגי)",
+    "description": "משפחת הגופן לעמודה הימנית בכותרת העליונה בעמוד זוגי"
+  },
+  "settings.f-paren": {
+    "label": "גופן סוגריים",
+    "description": "משפחת הגופן לסוגריים בגוף (ריק = כגוף)"
+  },
+  "settings.f-sh-author": {
+    "label": "גופן שם המחבר בשער",
+    "description": "משפחת הגופן לשם המחבר בשער"
+  },
+  "settings.f-sh-desc": {
+    "label": "גופן תיאור הספר בשער",
+    "description": "משפחת הגופן לתיאור בשער"
+  },
+  "settings.f-sh-sec": {
+    "label": "גופן מהדורה בשער",
+    "description": "משפחת הגופן לטקסט המהדורה בשער"
+  },
+  "settings.f-sh-sub": {
+    "label": "גופן כותרת משנה בשער",
+    "description": "משפחת הגופן לכותרת המשנה בשער"
+  },
+  "settings.f-sh-title": {
+    "label": "גופן שם הספר בשער",
+    "description": "משפחת הגופן לשם הספר בשער"
+  },
+  "settings.f-sh-year": {
+    "label": "גופן מקום ושנה בשער",
+    "description": "משפחת הגופן למקום ושנה בשער"
+  },
+  "settings.f-siman": {
+    "label": "גופן מספר הסימן",
+    "description": "משפחת הגופן לתג מספר הסימן בכותרת H2"
+  },
+  "settings.font-body": {
+    "label": "גופן גוף הטקסט",
+    "description": "משפחת הגופן הראשית של גוף הטקסט"
+  },
+  "settings.font-first-word": {
+    "label": "גופן המילה הראשונה",
+    "description": "משפחת הגופן למילה הראשונה של הפסקה"
+  },
+  "settings.s-h0": {
+    "label": "גודל כותרת פתיחת הספר (H0)",
+    "description": "גודל הגופן בנקודות לכותרת H0"
+  },
+  "settings.s-h0-body": {
+    "label": "גודל גוף עמוד הפתיחה",
+    "description": "גודל הגופן בנקודות לגוף עמוד הפתיחה (H0)"
+  },
+  "settings.s-h1": {
+    "label": "גודל שער חלק/משנה (H1)",
+    "description": "גודל הגופן בנקודות לכותרת H1"
+  },
+  "settings.s-h2": {
+    "label": "גודל כותרת פרק (H2)",
+    "description": "גודל הגופן בנקודות לכותרת H2"
+  },
+  "settings.s-h3": {
+    "label": "גודל כותרת רוחבית (H3)",
+    "description": "גודל הגופן בנקודות לכותרת H3"
+  },
+  "settings.s-h4": {
+    "label": "גודל כותרת מלווה (H4)",
+    "description": "גודל הגופן בנקודות לכותרת H4"
+  },
+  "settings.s-h5": {
+    "label": "גודל כותרת מלווה (H5)",
+    "description": "גודל הגופן בנקודות לכותרת H5"
+  },
+  "settings.s-h6": {
+    "label": "גודל כותרת מלווה (H6)",
+    "description": "גודל הגופן בנקודות לכותרת H6"
+  },
+  "settings.s-h7": {
+    "label": "גודל הערת צד (H7)",
+    "description": "גודל הגופן בנקודות להערת צד H7"
+  },
+  "settings.s-hdr-c": {
+    "label": "גודל כותרת עליונה — מרכז (אי-זוגי)",
+    "description": "גודל בנקודות לעמודת המרכז בכותרת העליונה באי-זוגי"
+  },
+  "settings.s-hdr-l": {
+    "label": "גודל כותרת עליונה — שמאל (אי-זוגי)",
+    "description": "גודל בנקודות לעמודה השמאלית בכותרת העליונה באי-זוגי"
+  },
+  "settings.s-hdr-r": {
+    "label": "גודל כותרת עליונה — ימין (אי-זוגי)",
+    "description": "גודל בנקודות לעמודה הימנית בכותרת העליונה באי-זוגי"
+  },
+  "settings.s-hdr-verso-c": {
+    "label": "גודל כותרת עליונה — מרכז (זוגי)",
+    "description": "גודל בנקודות לעמודת המרכז בכותרת העליונה בזוגי"
+  },
+  "settings.s-hdr-verso-l": {
+    "label": "גודל כותרת עליונה — שמאל (זוגי)",
+    "description": "גודל בנקודות לעמודה השמאלית בכותרת העליונה בזוגי"
+  },
+  "settings.s-hdr-verso-r": {
+    "label": "גודל כותרת עליונה — ימין (זוגי)",
+    "description": "גודל בנקודות לעמודה הימנית בכותרת העליונה בזוגי"
+  },
+  "settings.s-paren": {
+    "label": "גודל סוגריים",
+    "description": "גודל הסוגריים — שלילי חוקי רק במצב יחסי"
+  },
+  "settings.s-paren-mode": {
+    "label": "אופן גודל הסוגריים",
+    "description": "יחסי לגוף או מוחלט"
+  },
+  "settings.s-sh-author": {
+    "label": "גודל שם המחבר בשער",
+    "description": "גודל בנקודות לשם המחבר בשער"
+  },
+  "settings.s-sh-desc": {
+    "label": "גודל תיאור הספר בשער",
+    "description": "גודל בנקודות לתיאור בשער"
+  },
+  "settings.s-sh-sec": {
+    "label": "גודל מהדורה בשער",
+    "description": "גודל בנקודות לטקסט המהדורה בשער"
+  },
+  "settings.s-sh-sub": {
+    "label": "גודל כותרת משנה בשער",
+    "description": "גודל בנקודות לכותרת המשנה בשער"
+  },
+  "settings.s-sh-title": {
+    "label": "גודל שם הספר בשער",
+    "description": "גודל בנקודות לשם הספר בשער"
+  },
+  "settings.s-sh-year": {
+    "label": "גודל מקום ושנה בשער",
+    "description": "גודל בנקודות למקום ושנה בשער"
+  },
+  "settings.s-siman": {
+    "label": "גודל מספר הסימן",
+    "description": "גודל בנקודות לתג מספר הסימן ב-H2"
+  },
+  "settings.size-body": {
+    "label": "גודל גוף הטקסט",
+    "description": "גודל הגופן בנקודות לגוף הטקסט"
+  },
+  "settings.size-first-word": {
+    "label": "גודל המילה הראשונה",
+    "description": "גודל/מכפיל המילה הראשונה של הפסקה"
+  },
+  "settings.prop-col": {
+    "label": "רוחב הטור",
+    "description": "אחוז רוחב הטור מאזור הטקסט (מורשת הגריד)"
+  },
+  "settings.prop-gap": {
+    "label": "ריווח בין הטורים",
+    "description": "אחוז הריווח בין הטורים (מורשת הגריד)"
+  },
+  "settings.prop-gutter": {
+    "label": "רווח מרכזי בין הטורים",
+    "description": "אחוז הרווח המרכזי (מורשת הגריד)"
+  },
+  "settings.prop-margin": {
+    "label": "שוליים פנימיים של אזור הטקסט",
+    "description": "אחוז שוליים פנימיים מאזור הטקסט לפני חישוב הטורים"
+  },
+  "settings.prop-mb": {
+    "label": "ריווח תחתון של בלוק",
+    "description": "אחוז ריווח תחתון אחרי בלוק (מורשת הגריד)"
+  },
+  "settings.prop-mt": {
+    "label": "ריווח עליון של בלוק",
+    "description": "אחוז ריווח עליון לפני בלוק (מורשת הגריד)"
+  },
+  "settings.prop-mt-h2": {
+    "label": "ריווח עליון לפני כותרת H2",
+    "description": "אחוז ריווח עליון ייעודי לפני כותרת H2"
+  },
+  "settings.h2-auto-siman": {
+    "label": "מספר סימן אוטומטי ב-H2",
+    "description": "הוספת מספור סימן אוטומטי לכותרות H2"
+  },
+  "settings.h2-orn-fit-text": {
+    "label": "התאמת עיטור H2 לאורך הטקסט",
+    "description": "התאמת רוחב עיטור הכותרת לאורך הטקסט בפועל"
+  },
+  "settings.h2-orn-scope": {
+    "label": "היקף עיטורי H2",
+    "description": "באילו עמודי פרק יופיע עיטור H2"
+  },
+  "settings.h2-ornament-bottom-style": {
+    "label": "עיטור תחתון של H2",
+    "description": "סגנון העיטור מתחת לכותרת H2"
+  },
+  "settings.h2-ornament-set": {
+    "label": "ערכת עיטורי H2",
+    "description": "ערכת העיטורים העליונים/תחתונים של H2"
+  },
+  "settings.h2-ornament-top-style": {
+    "label": "עיטור עליון של H2",
+    "description": "סגנון העיטור מעל כותרת H2"
+  },
+  "settings.h2-reset-siman": {
+    "label": "איפוס מונה הסימנים ב-H2",
+    "description": "איפוס מונה מספור הסימנים בכל H2"
+  },
+  "settings.h2-title-orn-mode": {
+    "label": "אופן עיטור כותרת H2",
+    "description": "עיטור צדדי או עליון/תחתון לכותרת H2"
+  },
+  "settings.h2-title-ornament-bottom-style": {
+    "label": "סגנון עיטור תחתון עצמאי של H2",
+    "description": "סגנון עיטור תחתון העומד בפני עצמו לכותרת H2"
+  },
+  "settings.h2-title-ornament-l": {
+    "label": "עיטור שמאלי של כותרת H2",
+    "description": "העיטור משמאל לכותרת H2 במצב צדדי"
+  },
+  "settings.h2-title-ornament-r": {
+    "label": "עיטור ימני של כותרת H2",
+    "description": "העיטור מימין לכותרת H2 במצב צדדי"
+  },
+  "settings.h2-title-ornament-top-style": {
+    "label": "סגנון עיטור עליון עצמאי של H2",
+    "description": "סגנון עיטור עליון העומד בפני עצמו לכותרת H2"
+  },
+  "settings.h2-top-distance": {
+    "label": "מרחק עליון של כותרת H2",
+    "description": "המרחק מראש האזור לכותרת H2 בעמוד פתיחת פרק"
+  },
+  "settings.h3-ornament-l": {
+    "label": "עיטור שמאלי של H3",
+    "description": "העיטור משמאל לכותרת H3"
+  },
+  "settings.h3-ornament-r": {
+    "label": "עיטור ימני של H3",
+    "description": "העיטור מימין לכותרת H3"
+  },
+  "settings.h3-ornament-set": {
+    "label": "ערכת עיטורי H3",
+    "description": "ערכת העיטורים הצדדיים של H3"
+  },
+  "settings.mode-h0": {
+    "label": "אופן פתיחת H0",
+    "description": "אופן פתיחת כותרת פתיחת הספר"
+  },
+  "settings.mode-h1": {
+    "label": "אופן פתיחת H1",
+    "description": "אופן פתיחת שער חלק/משנה"
+  },
+  "settings.mode-h2": {
+    "label": "אופן פתיחת H2",
+    "description": "אופן פתיחת כותרת פרק"
+  },
+  "settings.mode-h3": {
+    "label": "אופן הצגת H3",
+    "description": "אופן הצגת הכותרת הרוחבית (רוחב מלא)"
+  },
+  "settings.mode-h4": {
+    "label": "אופן הצגת H4",
+    "description": "אופן הצגת כותרת H4 בתוך הטור"
+  },
+  "settings.mode-h5": {
+    "label": "אופן הצגת H5",
+    "description": "אופן הצגת כותרת H5 בתוך הטור"
+  },
+  "settings.mode-h6": {
+    "label": "אופן הצגת H6",
+    "description": "אופן הצגת כותרת H6 בתוך הטור"
+  },
+  "settings.mode-h7": {
+    "label": "אופן הצגת H7",
+    "description": "אופן הצגת הערת הצד (H7)"
+  },
+  "settings.odd-h0": {
+    "label": "פתיחת H0 בעמוד אי-זוגי בלבד",
+    "description": "כן/לא — פתיחת הספר בעמוד אי-זוגי"
+  },
+  "settings.odd-h1": {
+    "label": "פתיחת H1 בעמוד אי-זוגי בלבד",
+    "description": "כן/לא — שער החלק בעמוד אי-זוגי"
+  },
+  "settings.odd-h2": {
+    "label": "פתיחת H2 בעמוד אי-זוגי בלבד",
+    "description": "כן/לא — פתיחת הפרק בעמוד אי-זוגי"
+  },
+  "settings.active-theme-select": {
+    "label": "ערכת נושא פעילה",
+    "description": "ערכת הנושא הכללית של המסמך (מצב ממשק)"
+  },
+  "settings.assets-folder-input": {
+    "label": "נתיב תיקיית הנכסים",
+    "description": "נתיב מקומי לטעינת נכסים חיצוניים"
+  },
+  "settings.col-divider-style": {
+    "label": "סגנון קו מפריד בין הטורים",
+    "description": "הקו המפריד בין שני הטורים"
+  },
+  "settings.data-hdr-c-img": {
+    "label": "תמונת מרכז הכותרת העליונה — נתונים",
+    "description": "תוכן התמונה במרכז הכותרת העליונה (מקודד)"
+  },
+  "settings.data-sec-div-img": {
+    "label": "תמונת מחיצת המוסף — נתונים",
+    "description": "תוכן תמונת מחיצת המוסף (מקודד)"
+  },
+  "settings.file-builder-back-svg": {
+    "label": "קובץ SVG של בונה השער האחורי",
+    "description": "בחירת קובץ ה-SVG של בונה השער האחורי (מצב ממשק)"
+  },
+  "settings.file-builder-main-svg": {
+    "label": "קובץ SVG של בונה השער הראשי",
+    "description": "בחירת קובץ ה-SVG של בונה השער הראשי (מצב ממשק)"
+  },
+  "settings.file-builder-sub-svg": {
+    "label": "קובץ SVG של בונה שער המשנה",
+    "description": "בחירת קובץ ה-SVG של בונה שער המשנה (מצב ממשק)"
+  },
+  "settings.file-cbg-h0Open-img": {
+    "label": "קובץ תמונת רקע פתיחת הספר",
+    "description": "בחירת קובץ תמונת הרקע לעמוד פתיחת הספר (מצב ממשק)"
+  },
+  "settings.file-cbg-h2Open-img": {
+    "label": "קובץ תמונת רקע פתיחת הפרק",
+    "description": "בחירת קובץ תמונת הרקע לעמוד פתיחת פרק (מצב ממשק)"
+  },
+  "settings.file-cbg-regular-img": {
+    "label": "קובץ תמונת רקע עמוד רגיל",
+    "description": "בחירת קובץ תמונת הרקע לעמוד רגיל (מצב ממשק)"
+  },
+  "settings.file-hdr-c-img": {
+    "label": "קובץ תמונת מרכז הכותרת",
+    "description": "בחירת קובץ התמונה למרכז הכותרת העליונה (מצב ממשק)"
+  },
+  "settings.file-sec-div-img": {
+    "label": "קובץ תמונת מחיצת המוסף",
+    "description": "בחירת קובץ תמונת מחיצת המוסף (מצב ממשק)"
+  },
+  "settings.section-divider-style": {
+    "label": "סגנון מחיצת המוסף",
+    "description": "סגנון מחיצת הסעיפים/המוסף בין פרקים"
+  },
+  "settings.en-line-prefix": {
+    "label": "קידומת שורת הערת סיום",
+    "description": "הקידומת שלפני הערת הסיום ברשימה"
+  },
+  "settings.f-note-body": {
+    "label": "גופן גוף ההערות",
+    "description": "משפחת הגופן לגוף ההערות"
+  },
+  "settings.f-note-title": {
+    "label": "גופן כותרת ההערות",
+    "description": "משפחת הגופן לכותרת אזור ההערות"
+  },
+  "settings.fn-columns": {
+    "label": "מספר טורי ההערות",
+    "description": "בכמה טורים תוצגנה ההערות בתחתית העמוד"
+  },
+  "settings.fn-delim-close": {
+    "label": "תוחם סוגר של סמן הערה",
+    "description": "התו הסוגר את סמן ההערה בגוף"
+  },
+  "settings.fn-delim-open": {
+    "label": "תוחם פותח של סמן הערה",
+    "description": "התו הפותח את סמן ההערה בגוף"
+  },
+  "settings.fn-layout-mode": {
+    "label": "אופן פריסת ההערות",
+    "description": "אופן פריסת אזור ההערות"
+  },
+  "settings.fn-reset-mode": {
+    "label": "איפוס מונה ההערות",
+    "description": "באיזה היקף מתאפס מונה ההערות (עמוד/סימן/חלק/רציף)"
+  },
+  "settings.fn-title-text": {
+    "label": "כותרת אזור ההערות",
+    "description": "הטקסט שבראש אזור ההערות (ריק = בלי)"
+  },
+  "settings.note-header-orn-l": {
+    "label": "עיטור שמאלי לכותרת ההערות",
+    "description": "העיטור משמאל לכותרת אזור ההערות"
+  },
+  "settings.note-header-orn-r": {
+    "label": "עיטור ימני לכותרת ההערות",
+    "description": "העיטור מימין לכותרת אזור ההערות"
+  },
+  "settings.note-listing-num-size": {
+    "label": "גודל מספר ההערה ברשימה",
+    "description": "גודל בנקודות למספר ההערה ברשימת ההערות"
+  },
+  "settings.note-marker-size": {
+    "label": "גודל סמן ההערה בגוף",
+    "description": "גודל בנקודות לסמן ההערה בגוף הטקסט"
+  },
+  "settings.note-marker-type": {
+    "label": "אופן סמן ההערה",
+    "description": "צורת סמן ההערה בגוף (עילי וכו׳)"
+  },
+  "settings.note-num-separator": {
+    "label": "מפריד מספר ההערה",
+    "description": "התו שאחרי מספר ההערה"
+  },
+  "settings.note-numbering-style": {
+    "label": "סגנון מספור ההערות",
+    "description": "שיטת המספור — גימטריה וכו׳"
+  },
+  "settings.note-rule-style": {
+    "label": "סגנון קו ההערות",
+    "description": "הקו המפריד בין הגוף להערות"
+  },
+  "settings.s-note-body": {
+    "label": "גודל גוף ההערות",
+    "description": "גודל בנקודות לגוף ההערות"
+  },
+  "settings.s-note-title": {
+    "label": "גודל כותרת ההערות",
+    "description": "גודל בנקודות לכותרת אזור ההערות"
+  },
+  "settings.dim-h2-btm-h": {
+    "label": "גובה עיטור תחתון H2",
+    "description": "גובה העיטור התחתון של כותרת H2"
+  },
+  "settings.dim-h2-btm-w": {
+    "label": "רוחב עיטור תחתון H2",
+    "description": "רוחב העיטור התחתון של כותרת H2"
+  },
+  "settings.dim-h2-title-side-h": {
+    "label": "גובה עיטור צד כותרת H2",
+    "description": "גובה העיטור הצדדי של כותרת H2"
+  },
+  "settings.dim-h2-title-side-w": {
+    "label": "רוחב עיטור צד כותרת H2",
+    "description": "רוחב העיטור הצדדי של כותרת H2"
+  },
+  "settings.dim-h2-top-h": {
+    "label": "גובה עיטור עליון H2",
+    "description": "גובה העיטור העליון של כותרת H2"
+  },
+  "settings.dim-h2-top-w": {
+    "label": "רוחב עיטור עליון H2",
+    "description": "רוחב העיטור העליון של כותרת H2"
+  },
+  "settings.dim-h3-side-h": {
+    "label": "גובה עיטור צד H3",
+    "description": "גובה העיטור הצדדי של כותרת H3"
+  },
+  "settings.dim-h3-side-w": {
+    "label": "רוחב עיטור צד H3",
+    "description": "רוחב העיטור הצדדי של כותרת H3"
+  },
+  "settings.dim-note-side-h": {
+    "label": "גובה עיטור כותרת ההערות",
+    "description": "גובה העיטור לצד כותרת אזור ההערות"
+  },
+  "settings.dim-note-side-w": {
+    "label": "רוחב עיטור כותרת ההערות",
+    "description": "רוחב העיטור לצד כותרת אזור ההערות"
+  },
+  "settings.dim-secdiv-h": {
+    "label": "גובה מחיצת המוסף",
+    "description": "גובה מחיצת הסעיפים"
+  },
+  "settings.dim-secdiv-w": {
+    "label": "רוחב מחיצת המוסף",
+    "description": "רוחב מחיצת הסעיפים"
+  },
+  "settings.hdr-alternating": {
+    "label": "כותרות עליונות מתחלפות",
+    "description": "החלפת תוכן הכותרת העליונה בין עמודים אי-זוגי וזוגי"
+  },
+  "settings.hdr-c-align": {
+    "label": "יישור מרכז הכותרת (אי-זוגי)",
+    "description": "יישון עמודת המרכז בכותרת העליונה באי-זוגי"
+  },
+  "settings.hdr-c-custom": {
+    "label": "טקסט מרכז מותאם (אי-זוגי)",
+    "description": "טקסט חופשי לעמודת המרכז באי-זוגי"
+  },
+  "settings.hdr-c-type": {
+    "label": "תוכן מרכז הכותרת (אי-זוגי)",
+    "description": "מקור תוכן עמודת המרכז באי-זוגי"
+  },
+  "settings.hdr-distinct-even-odd": {
+    "label": "כותרות שונות לזוגי/אי-זוגי",
+    "description": "הפרדת תוכן הכותרת בין עמודים זוגיים ואי-זוגיים"
+  },
+  "settings.hdr-divider-style": {
+    "label": "סגנון קו הכותרת העליונה",
+    "description": "הקו מתחת לכותרת העליונה"
+  },
+  "settings.hdr-h1-title-mode": {
+    "label": "אופן שם החלק בכותרת",
+    "description": "אופן הצגת שם ה-H1 בכותרת העליונה"
+  },
+  "settings.hdr-l-align": {
+    "label": "יישור שמאל הכותרת (אי-זוגי)",
+    "description": "יישון העמודה השמאלית בכותרת באי-זוגי"
+  },
+  "settings.hdr-l-custom": {
+    "label": "טקסט שמאל מותאם (אי-זוגי)",
+    "description": "טקסט חופשי לעמודה השמאלית באי-זוגי"
+  },
+  "settings.hdr-l-type": {
+    "label": "תוכן שמאל הכותרת (אי-זוגי)",
+    "description": "מקור תוכן העמודה השמאלית באי-זוגי"
+  },
+  "settings.hdr-r-align": {
+    "label": "יישור ימין הכותרת (אי-זוגי)",
+    "description": "יישון העמודה הימנית בכותרת באי-זוגי"
+  },
+  "settings.hdr-r-custom": {
+    "label": "טקסט ימין מותאם (אי-זוגי)",
+    "description": "טקסט חופשי לעמודה הימנית באי-זוגי"
+  },
+  "settings.hdr-r-type": {
+    "label": "תוכן ימין הכותרת (אי-זוגי)",
+    "description": "מקור תוכן העמודה הימנית באי-זוגי"
+  },
+  "settings.hdr-title-split": {
+    "label": "פיצול שם הספר בכותרת",
+    "description": "חצי-חצי של שם הספר בין ימין לשמאל"
+  },
+  "settings.hdr-verso-c-align": {
+    "label": "יישור מרכז הכותרת (זוגי)",
+    "description": "יישון עמודת המרכז בכותרת בעמוד זוגי"
+  },
+  "settings.hdr-verso-c-custom": {
+    "label": "טקסט מרכז מותאם (זוגי)",
+    "description": "טקסט חופשי לעמודת המרכז בזוגי"
+  },
+  "settings.hdr-verso-c-type": {
+    "label": "תוכן מרכז הכותרת (זוגי)",
+    "description": "מקור תוכן עמודת המרכז בזוגי"
+  },
+  "settings.hdr-verso-l-align": {
+    "label": "יישור שמאל הכותרת (זוגי)",
+    "description": "יישון העמודה השמאלית בכותרת בזוגי"
+  },
+  "settings.hdr-verso-l-custom": {
+    "label": "טקסט שמאל מותאם (זוגי)",
+    "description": "טקסט חופשי לעמודה השמאלית בזוגי"
+  },
+  "settings.hdr-verso-l-type": {
+    "label": "תוכן שמאל הכותרת (זוגי)",
+    "description": "מקור תוכן העמודה השמאלית בזוגי"
+  },
+  "settings.hdr-verso-r-align": {
+    "label": "יישור ימין הכותרת (זוגי)",
+    "description": "יישון העמודה הימנית בכותרת בזוגי"
+  },
+  "settings.hdr-verso-r-custom": {
+    "label": "טקסט ימין מותאם (זוגי)",
+    "description": "טקסט חופשי לעמודה הימנית בזוגי"
+  },
+  "settings.hdr-verso-r-type": {
+    "label": "תוכן ימין הכותרת (זוגי)",
+    "description": "מקור תוכן העמודה הימנית בזוגי"
+  },
+  "settings.hdr-w-c": {
+    "label": "רוחב עמודת מרכז בכותרת",
+    "description": "רוחב עמודת המרכז בכותרת העליונה"
+  },
+  "settings.hdr-w-l": {
+    "label": "רוחב עמודת שמאל בכותרת",
+    "description": "רוחב העמודה השמאלית בכותרת העליונה"
+  },
+  "settings.hdr-w-r": {
+    "label": "רוחב עמודת ימין בכותרת",
+    "description": "רוחב העמודה הימנית בכותרת העליונה"
+  },
+  "settings.back-shaar-count-numbering": {
+    "label": "השער האחורי נספר במספור",
+    "description": "האם עמוד השער האחורי נכלל במספור העמודים"
+  },
+  "settings.back-shaar-show-number": {
+    "label": "הצגת מספר בשער האחורי",
+    "description": "הצגת מספר עמוד בעמוד השער האחורי"
+  },
+  "settings.builder-back-bottom": {
+    "label": "בונה שער אחורי — שוליים תחתונים",
+    "description": "שוליים תחתונים של תיבת בונה השער האחורי"
+  },
+  "settings.builder-back-left": {
+    "label": "בונה שער אחורי — שוליים שמאליים",
+    "description": "שוליים שמאליים של תיבת בונה השער האחורי"
+  },
+  "settings.builder-back-right": {
+    "label": "בונה שער אחורי — שוליים ימניים",
+    "description": "שוליים ימניים של תיבת בונה השער האחורי"
+  },
+  "settings.builder-back-top": {
+    "label": "בונה שער אחורי — שוליים עליונים",
+    "description": "שוליים עליונים של תיבת בונה השער האחורי"
+  },
+  "settings.builder-main-bottom": {
+    "label": "בונה שער ראשי — שוליים תחתונים",
+    "description": "שוליים תחתונים של תיבת בונה השער הראשי"
+  },
+  "settings.builder-main-left": {
+    "label": "בונה שער ראשי — שוליים שמאליים",
+    "description": "שוליים שמאליים של תיבת בונה השער הראשי"
+  },
+  "settings.builder-main-right": {
+    "label": "בונה שער ראשי — שוליים ימניים",
+    "description": "שוליים ימניים של תיבת בונה השער הראשי"
+  },
+  "settings.builder-main-top": {
+    "label": "בונה שער ראשי — שוליים עליונים",
+    "description": "שוליים עליונים של תיבת בונה השער הראשי"
+  },
+  "settings.builder-sub-bottom": {
+    "label": "בונה שער משנה — שוליים תחתונים",
+    "description": "שוליים תחתונים של תיבת בונה שער המשנה"
+  },
+  "settings.builder-sub-left": {
+    "label": "בונה שער משנה — שוליים שמאליים",
+    "description": "שוליים שמאליים של תיבת בונה שער המשנה"
+  },
+  "settings.builder-sub-right": {
+    "label": "בונה שער משנה — שוליים ימניים",
+    "description": "שוליים ימניים של תיבת בונה שער המשנה"
+  },
+  "settings.builder-sub-top": {
+    "label": "בונה שער משנה — שוליים עליונים",
+    "description": "שוליים עליונים של תיבת בונה שער המשנה"
+  },
+  "settings.builder-theme-name": {
+    "label": "שם ערכת בונה השער",
+    "description": "שם ערכת העיצוב של בונה השערים"
+  },
+  "settings.data-builder-back-svg": {
+    "label": "נתוני SVG של בונה השער האחורי",
+    "description": "תוכן ה-SVG של בונה השער האחורי (מקודד)"
+  },
+  "settings.data-builder-main-svg": {
+    "label": "נתוני SVG של בונה השער הראשי",
+    "description": "תוכן ה-SVG של בונה השער הראשי (מקודד)"
+  },
+  "settings.data-builder-sub-svg": {
+    "label": "נתוני SVG של בונה שער המשנה",
+    "description": "תוכן ה-SVG של בונה שער המשנה (מקודד)"
+  },
+  "settings.enable-shaar-box-editor": {
+    "label": "הפעלת עורך תיבות השער",
+    "description": "מצב עריכת תיבות הטקסט בשערים (מצב ממשק)"
+  },
+  "settings.main-shaar-count-numbering": {
+    "label": "השער הראשי נספר במספור",
+    "description": "האם עמוד השער הראשי נכלל במספור העמודים"
+  },
+  "settings.main-shaar-show-number": {
+    "label": "הצגת מספר בשער הראשי",
+    "description": "הצגת מספר עמוד בעמוד השער הראשי"
+  },
+  "settings.select-shaar-back": {
+    "label": "עיצוב השער האחורי",
+    "description": "בחירת עיצוב השער האחורי — רלוונטי רק כאשר השער מוצג"
+  },
+  "settings.select-shaar-main": {
+    "label": "עיצוב השער הראשי",
+    "description": "בחירת עיצוב השער הראשי — רלוונטי רק כאשר השער מוצג"
+  },
+  "settings.select-shaar-sub": {
+    "label": "עיצוב שער המשנה",
+    "description": "בחירת עיצוב שער המשנה — רלוונטי רק כאשר השער מוצג"
+  },
+  "settings.show-back-shaar": {
+    "label": "הצגת שער אחורי",
+    "description": "האם להציג עמוד שער אחורי בספר"
+  },
+  "settings.show-main-shaar": {
+    "label": "הצגת שער ראשי",
+    "description": "האם להציג עמוד שער ראשי בספר"
+  },
+  "settings.show-sub-shaar": {
+    "label": "הצגת שער משנה",
+    "description": "האם להציג עמודי שער משנה לחלקים"
+  },
+  "settings.sub-shaar-count-numbering": {
+    "label": "שער המשנה נספר במספור",
+    "description": "האם עמודי שער המשנה נכללים במספור העמודים"
+  },
+  "settings.sub-shaar-show-number": {
+    "label": "הצגת מספר בשער המשנה",
+    "description": "הצגת מספר עמוד בעמודי שער המשנה"
+  },
+  "settings.detailed-toc-count-numbering": {
+    "label": "תוכן מפורט — נספר במספור",
+    "description": "האם עמודי התוכן המפורט נכללים במספור"
+  },
+  "settings.detailed-toc-show-numbering": {
+    "label": "תוכן מפורט — הצגת מספור",
+    "description": "הצגת מספרי עמודים בתוכן המפורט"
+  },
+  "settings.enable-detailed-toc": {
+    "label": "תוכן עניינים מפורט",
+    "description": "הפעלת תוכן העניינים המפורט"
+  },
+  "settings.enable-general-toc": {
+    "label": "תוכן עניינים כללי",
+    "description": "הפעלת תוכן העניינים הכללי"
+  },
+  "settings.general-toc-count-numbering": {
+    "label": "תוכן כללי — נספר במספור",
+    "description": "האם עמודי התוכן הכללי נכללים במספור"
+  },
+  "settings.general-toc-show-numbering": {
+    "label": "תוכן כללי — הצגת מספור",
+    "description": "הצגת מספרי עמודים בתוכן הכללי"
+  },
+  "settings.s-dtoc-1": {
+    "label": "גודל שורה 1 — תוכן מפורט",
+    "description": "גודל בנקודות לשורה הראשונה בתוכן המפורט"
+  },
+  "settings.s-dtoc-2": {
+    "label": "גודל שורה 2 — תוכן מפורט",
+    "description": "גודל בנקודות לשורה השנייה בתוכן המפורט"
+  },
+  "settings.s-dtoc-3": {
+    "label": "גודל שורה 3 — תוכן מפורט",
+    "description": "גודל בנקודות לשורה השלישית בתוכן המפורט"
+  },
+  "settings.s-dtoc-4": {
+    "label": "גודל שורה 4 — תוכן מפורט",
+    "description": "גודל בנקודות לשורה הרביעית בתוכן המפורט"
+  },
+  "settings.s-dtoc-5": {
+    "label": "גודל שורה 5 — תוכן מפורט",
+    "description": "גודל בנקודות לשורה החמישית בתוכן המפורט"
+  },
+  "settings.s-dtoc-6": {
+    "label": "גודל שורה 6 — תוכן מפורט",
+    "description": "גודל בנקודות לשורה השישית בתוכן המפורט"
+  },
+  "settings.s-dtoc-7": {
+    "label": "גודל שורה 7 — תוכן מפורט",
+    "description": "גודל בנקודות לשורה השביעית בתוכן המפורט"
+  },
+  "settings.s-gtoc-1": {
+    "label": "גודל שורה 1 — תוכן כללי",
+    "description": "גודל בנקודות לשורה הראשונה בתוכן הכללי"
+  },
+  "settings.s-gtoc-2": {
+    "label": "גודל שורה 2 — תוכן כללי",
+    "description": "גודל בנקודות לשורה השנייה בתוכן הכללי"
+  },
+  "settings.s-gtoc-3": {
+    "label": "גודל שורה 3 — תוכן כללי",
+    "description": "גודל בנקודות לשורה השלישית בתוכן הכללי"
+  },
+  "settings.s-gtoc-4": {
+    "label": "גודל שורה 4 — תוכן כללי",
+    "description": "גודל בנקודות לשורה הרביעית בתוכן הכללי"
+  },
+  "settings.s-gtoc-5": {
+    "label": "גודל שורה 5 — תוכן כללי",
+    "description": "גודל בנקודות לשורה החמישית בתוכן הכללי"
+  },
+  "settings.s-gtoc-6": {
+    "label": "גודל שורה 6 — תוכן כללי",
+    "description": "גודל בנקודות לשורה השישית בתוכן הכללי"
+  },
+  "settings.s-gtoc-7": {
+    "label": "גודל שורה 7 — תוכן כללי",
+    "description": "גודל בנקודות לשורה השביעית בתוכן הכללי"
+  },
+  "settings.sections": {
+    "book-meta": "נתוני הספר",
+    "running-headers": "כותרות עליונות"
+  }
+}

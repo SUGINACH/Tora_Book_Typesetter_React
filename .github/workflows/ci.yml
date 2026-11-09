@@ -132,6 +132,7 @@ jobs:
           node scripts/migration/verify-export-pdf.mjs
           node scripts/migration/verify-pdf-audit.mjs
           node scripts/migration/verify-projection-equivalence.mjs
+          node scripts/migration/verify-i18n-parity.mjs
 
       - name: E2E ממוקד — Playwright על האפליקציה הבנויה (שלב 85; §17.1)
         # האפליקציה נבנית (vite build — כמו ב-Deploy) ונפתחת ב-vite preview;

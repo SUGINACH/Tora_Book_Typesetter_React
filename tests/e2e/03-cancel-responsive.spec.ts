@@ -39,8 +39,9 @@ test.describe('שלב 85 — ביטול, תגובתיות והחוט הראשי 
     // בזמן ריצה: כפתור הריצה מושבת וכפתור ביטול גלוי — single-flight
     await expect(page.getByTestId('run-typeset')).toBeDisabled();
     await expect(page.getByTestId('cancel-typeset')).toBeVisible();
-    const btnText = String(await page.getByTestId('run-typeset').textContent());
-    expect(btnText).toMatch(/preparing|running|auditing/);
+    // הפאזה נבדקת במאפיין (locale-independent; שלב 93 — הטקסט מתורגם)
+    const phase = String(await page.getByTestId('run-typeset').getAttribute('data-run-phase'));
+    expect(phase).toMatch(/preparing|running|auditing/);
     await runAndWaitDone(page);
     await expect(page.getByTestId('cancel-typeset')).toHaveCount(0);
   });

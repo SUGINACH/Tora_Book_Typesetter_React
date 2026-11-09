@@ -10,7 +10,8 @@
  * אין job חדש (layoutHash ללא שינוי).
  */
 import { useCallback } from 'react';
-import { useLayoutIr, useResultSourceText, useDocumentName, useRunPhase } from '../../stores/selectors.js';
+import { useLayoutIr, useResultSourceText, useDocumentName, useRunPhase, useLocale } from '../../stores/selectors.js';
+import { messagesOf, t as translate, dirOf } from '../../i18n/index.js';
 import { peekUiRuntime } from '../../worker-host/ui-runtime.js';
 import { buildExportHtml, browserDownloadTransport, exportFileNameOf } from '../../worker-host/export-html.js';
 
@@ -21,6 +22,8 @@ export function ExportButton() {
   const ir = useLayoutIr();
   const sourceAtRun = useResultSourceText();
   const documentName = useDocumentName();
+  const locale = useLocale();
+  const m = messagesOf(locale);
 
   const onExport = useCallback(() => {
     if (ir === null || sourceAtRun === null) return;
@@ -39,9 +42,9 @@ export function ExportButton() {
       disabled={disabled}
       className="w-full px-3 py-2 bg-gray-200 rounded text-xs disabled:opacity-50"
       data-testid="export-html"
-      title="ייצוא HTML עצמאי — היטל טהור מה-IR (§15.1–15.2; אין window.print)"
+      title={translate(m, "app.export.title")}
     >
-      📄 ייצוא HTML
+      {translate(m, 'app.export.label')}
     </button>
   );
 }

@@ -75,7 +75,9 @@
     "verify:adr008-lines": "node scripts/migration/verify-adr008-lines.mjs",
     "verify:export-pdf": "node scripts/migration/verify-export-pdf.mjs",
     "verify:pdf-audit": "node scripts/migration/verify-pdf-audit.mjs",
-    "verify:projection-equivalence": "node scripts/migration/verify-projection-equivalence.mjs"
+    "verify:projection-equivalence": "node scripts/migration/verify-projection-equivalence.mjs",
+    "verify:i18n-parity": "node scripts/migration/verify-i18n-parity.mjs",
+    "gen:i18n-locales": "node scripts/gen-i18n-locales.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

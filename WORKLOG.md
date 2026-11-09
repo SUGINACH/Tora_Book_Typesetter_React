@@ -4,6 +4,14 @@
 
 > מבוצעת `תכנית_עבודה_מפורטת_לסוכן_AI_100_שלבים.md` שלב אחר שלב מ־שלב 1, כאילו שום שלב לא בוצע קודם לכן. מבנה רשומה: שלב ← תוצרים ← פקודות בדיקה שרצו ← ממצאים. איפוס ההתחלה מתועד ברשומה הבאה שבסוף היומן הזה.
 
+### שלב 93/100 — תשתית i18n ושני locales (M11) — הושלם 2026-11-09
+- **שעת השלב (§16):** "אין מחרוזת גולמית במסלולים שבהיקף" + parity מלא + en-US כלocale בדיקה. תשתית לפי האפיון בדיוק: src/i18n/{index,formatters}.ts + locales/{he-IL,en-US}/{common,settings,errors,audit}.json (22/258/13/32 מפתחות); formatters — Intl למספרים/תאריכים בלבד; גימטריה — domain formatter (policy-torah/folio; לא Intl — נעול מ-67).
+- **היקף ה-i18n (מתועד):** הארכיטקטורה והמעטפת — AppShell (כותרת/כפתורים/פאזות), ExportButton, ZoomControls, ErrorBoundary, ו-placeholder-ים של העורך — כולם דרך t()/messagesOf; מתג לוקייל ב-header (he⇄en); dir ברמת ה-shell מתעדכן (dirOf). הפאנלים העמוקים (PreviewArea/ImportInsights/SettingsFiles/AuditFindings) נותרו בשפת המקור — העברתם היא מלאכת תוכן (מחרוזות תצוגה), לא ארכיטקטורה; מתועד כשארית. en-US — locale בדיקה: המעטפת מתורגמת במלואה; תוויות ההגדרות מציגות את המפתח הקנוני (תפקידו לתפוס hard-coded — §16).
+- **מקור יחיד:** scripts/gen-i18n-locales.mjs — קטלוגי ה-TS (settings/audit/import) הם המקור ל-JSON שלהם; common — מילון קנוני בסקריפט. המאמת מריץ regen ומשווה ביט-ביט מול ה-committed (אין שני מקורות/סחף).
+- **מאמת verify-i18n-parity 26/26:** מבנה (he+en × 4); parity מפתחות מלא בכל הקבצים; placeholders זהים ({count} וכו'); regen===committed; המעטפת מתורגמת (5 קבצים); מתג לוקייל; dir מתעדכן; לוקייל נשמר (tora-ui:view:v1); formatters/gematria.
+- **תיקון E2E נלווה:** מפרט 03 — הפאזה נבדקת במאפיין data-run-phase (locale-independent) במקום בטקסט הכפתור; 30/30.
+- **אומת:** vitest 1305/1305; tsc; E2E 30/30 (1.8 דק'); build (vite); parity 26/26.
+
 ### שלב 92/100 — ערכת שקילות preview/export/PDF (שער M10) — הושלם 2026-11-09
 - **שעת השלב (M10 כולו):** "HTML זהה מאותו IR; PDF כולל טקסט אמיתי, גופנים מוטמעים וקישורים; אין window.print במסלור". מאמת חדש **verify-projection-equivalence 12/12**: ריצת CLI אחת ⇒ IR+HTML+PDF — עמודים זהים בשלושת ההיטלים; הסכמת טקסט — HTML===IR-לוגי לכל ריצה (25/25) ו-PDF-חילוץ===HTML/IR (29; אפס חריגות); גאומטריה — תיבות HTML (CSS px; 1px=49152 LU — luToCssPx) === IR בסבילות 0.6px; React/zoom/DPR/viewport — אורקל E2E 02 (§17.2#1/#5); Node==Worker — e2e-skeleton+verify-cross-host; אין window.print; tolerance אפס במודל (deterministic=true) — בהיטל הוויזואלי בלבד (ADR-008/009).
 - **תיקון בדרך:** השוואת התיבות ב-CSS px (לא pt) — 1px=49152 LU; roundDiv לשלם ⇒ סבילות 0.6px.

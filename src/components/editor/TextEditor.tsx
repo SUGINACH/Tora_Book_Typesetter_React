@@ -20,6 +20,8 @@
  * select מלאכותי (setSelectionRange אינו יורה select) — אין לולאה.
  */
 import { useEffect, useRef } from 'react';
+import { useLocale } from '../../stores/selectors.js';
+import { messagesOf, t as translate } from '../../i18n/index.js';
 import { useDocumentName, useIsDirty, useRawText, useViewFocus } from '../../stores/selectors.js';
 import { useEditorStore } from '../../stores/editor-store.js';
 import { useViewStore } from '../../stores/view-store.js';
@@ -68,7 +70,7 @@ export function TextEditor() {
         <input
           value={documentName}
           onChange={handleNameChange}
-          placeholder="שם מסמך…"
+          placeholder={translate(messagesOf(useLocale()), "editor.placeholder.name")}
           dir="rtl"
           className="flex-1 px-2 py-1 border border-gray-200 rounded text-xs focus:outline-none focus:border-blue-300"
           data-testid="document-name"
@@ -83,7 +85,7 @@ export function TextEditor() {
         }}
         onSelect={handleSelect}
         dir="rtl"
-        placeholder="הדביקו טקסט כאן…"
+        placeholder={translate(messagesOf(useLocale()), "editor.placeholder")}
         data-testid="source-editor"
         className="flex-1 w-full p-3 font-mono text-sm resize-none focus:outline-none border-0 bg-white"
         style={{ minHeight: '400px' }}

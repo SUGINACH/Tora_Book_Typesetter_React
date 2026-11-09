@@ -1,0 +1,41 @@
+{
+  "errors.settings.UNKNOWN_KEY": {
+    "label": "מפתח לא מוכר במרשם: {key}"
+  },
+  "errors.settings.INVALID_VALUE": {
+    "label": "ערך לא חוקי עבור {key}: {value} (צפוי: {expected})"
+  },
+  "errors.settings.INVALID_TYPE": {
+    "label": "טיפוס שגוי עבור {key}: {value} (נדרש: {type})"
+  },
+  "errors.settings.UNKNOWN_ENUM_VALUE": {
+    "label": "ערך לא מוכר עבור {key}: {value} (מותר: {allowed})"
+  },
+  "errors.settings.UNSUPPORTED_TYPE": {
+    "label": "טיפוס לא נתמך: {type}"
+  },
+  "errors.settings.NON_FINITE_NUMBER": {
+    "label": "ערך אינו מספר סופי עבור {key}: {value}"
+  },
+  "errors.settings.NEGATIVE_DIMENSION": {
+    "label": "ממד שלילי אסור עבור {key}: {value}"
+  },
+  "errors.settings.MISSING_VALUE": {
+    "label": "חסר ערך עבור {key}"
+  },
+  "errors.settings.REGISTRY_INVALID": {
+    "label": "המרשם פגום: {reason}"
+  },
+  "errors.settings.MIGRATION_FAILED": {
+    "label": "מיגרציה נכשלה ({fromVersion}→{toVersion}): {reason}"
+  },
+  "errors.settings.UNDEFINED_VALUE": {
+    "label": "ערך לא מוגדר: {path}"
+  },
+  "errors.settings.INVALID_HASH_LENGTH": {
+    "label": "אורך hash שגוי: {len}"
+  },
+  "errors.settings.COERCED_LEGACY_STRING": {
+    "label": "מחרוזת מורשת הומרה בכפייה עבור {key}: {raw} ⇒ {value}"
+  }
+}

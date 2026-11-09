@@ -13,6 +13,9 @@
 import { useState } from 'react';
 import { useDocumentName, useFindings, useIsDirty, useLayoutHash, useLayoutIr, useRawText, useRunPhase, useRunProgress } from '../../stores/selectors.js';
 import { useTypesetRun } from '../../worker-host/use-typeset-run.js';
+import { useLocale } from '../../stores/selectors.js';
+import { useViewStore } from '../../stores/view-store.js';
+import { messagesOf, t as translate, dirOf } from '../../i18n/index.js';
 import { formatProgress } from '../../renderers/progress-display.js';
 import { ImportButtons } from '../editor/ImportButtons';
 import { ImportInsights } from '../editor/ImportInsights';
@@ -35,15 +38,17 @@ export function AppShell() {
   const findings = useFindings();
   const ir = useLayoutIr();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const locale = useLocale();
+  const m = messagesOf(locale);
 
   const isRunning = ACTIVE_PHASES.has(phase);
   const hasSource = rawText !== '';
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100" dir="rtl">
+    <div className="h-screen flex flex-col bg-gray-100" dir={dirOf(locale)} data-locale={locale}>
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between shrink-0">
-        <h1 className="text-xl font-bold">📖 מערכת עימוד ספרים תורניים</h1>
+        <h1 className="text-xl font-bold">{translate(m, "app.title")}</h1>
         <div className="flex items-center gap-3 text-sm">
           {documentName !== '' && <span className="text-gray-500 text-xs">{documentName}</span>}
           {layoutHash !== null && (
@@ -61,12 +66,20 @@ export function AppShell() {
             </span>
           )}
           <button
+            onClick={() => useViewStore.getState().setLocale(locale === 'he' ? 'en' : 'he')}
+            className="px-2 py-1 rounded text-xs border bg-white border-gray-300 text-gray-600 hover:bg-gray-50"
+            data-testid="toggle-locale"
+            title="he-IL / en-US (§16)"
+          >
+            {locale === 'he' ? 'עברית' : 'English'}
+          </button>
+          <button
             onClick={() => setSettingsOpen((v) => !v)}
             className={`px-2 py-1 rounded text-xs border ${settingsOpen ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'}`}
             data-testid="toggle-settings"
             aria-pressed={settingsOpen}
           >
-            ⚙ הגדרות
+            {translate(m, 'app.button.settings')}
           </button>
         </div>
       </header>
@@ -98,7 +111,7 @@ export function AppShell() {
               data-run-phase={phase}
             >
               {isRunning
-                ? `⚡ ${phase}${progress !== null ? ` — ${formatProgress(progress)}` : ''}`
+                ? `${translate(m, 'app.phases.' + phase)}${progress !== null ? ` — ${formatProgress(progress)}` : ''}`
                 : '⚡ עדכן ועמד מחדש'}
             </button>
             {isRunning && (
@@ -107,7 +120,7 @@ export function AppShell() {
                 className="w-full px-4 py-2 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200"
                 data-testid="cancel-typeset"
               >
-                ✕ בטל ריצה
+                {translate(m, 'app.button.cancel')}
               </button>
             )}
             {/* שלב 86: הייצוא הסמכותי — היטל HTML טהור מה־IR (render-html);
