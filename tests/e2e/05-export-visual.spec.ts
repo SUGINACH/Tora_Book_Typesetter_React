@@ -7,9 +7,10 @@
  * מוכיחים **דטרמיניזם תצוגתי** (שתי ריצות מלאות ⇒ פיקסלים זהים) ורגישות
  * לזום; הנכונות עצמה מגיעה מהמודל (hash/IR — מפרט 02).
  *
- * ייצוא (§17.1: "export"): עד שלב 86 המסלול הסמכותי הוא הדפסת ההיטל
- * (window.print) — הבדיקה נועלת את השער שלו: מושבת בלי תוצאה, נקרא
- * פעם אחת בדיוק מהכפתור, ותו לא — אין מסלול ייצוא מקביל.
+ * ייצוא (§17.1: "export"): משלב 86 המסלול הסמכותי הוא היטל HTML טהור
+ * מה-IR (render-html) — Blob מבלי לגעת בהיטל החי; window.print הוסר
+ * מהמעטפת. הבדיקה נועלת את השער: מושבת בלי תוצאה, Blob text/html
+ * נוצר פעם אחת מהכפתור, ו-window.print אינו נקרא לעולם.
  */
 import { test, expect } from '@playwright/test';
 import { join } from 'node:path';
@@ -22,28 +23,41 @@ import {
 const MULTI_PAGE = join(REPO_ROOT, 'test-triggers', 'test-all-triggers.txt');
 
 test.describe('שלב 85 — ייצוא, ויזואלי נעול ורשת (M9)', () => {
-  test('פעולת הייצוא נעולה על תוצאה קיימת: מושבת בלי תוצאה, מופעלת אחרי ריצה', async ({ page }) => {
+  test('פעולת הייצוג נעולה על תוצאה קיימת: מושבת בלי תוצאה, מופעלת אחרי ריצה', async ({ page }) => {
     await gotoApp(page);
     await importTextViaChooser(page, REFERENCE_SOURCE);
-    await expect(page.getByTestId('print-export')).toBeDisabled();
+    await expect(page.getByTestId('export-html')).toBeDisabled();
     await runAndWaitDone(page);
-    await expect(page.getByTestId('print-export')).toBeEnabled();
+    await expect(page.getByTestId('export-html')).toBeEnabled();
   });
 
-  test('window.print נקרא פעם אחת בדיוק מכפתור הייצוא; אין מסלול מקביל', async ({ page }) => {
-    // סטאב לפני טעינת האפליקציה — הדפסת ההיטל היא המסלול הסמכותי (§15.1)
+  test('הייצוא הוא היטל טהור: Blob‏ text/html נוצר פעם אחת; window.print אינו נקרא (שלב 86)', async ({ page }) => {
+    // סטאב לפני טעינת האפליקציה: סופרים את ה-Blobs שנוצרים ואוכפים
+    // ש-window.print לא ייקרא לעולם — המסלול הסמכותי הוא render-html מה-IR.
     await page.addInitScript(() => {
-      const w = window as unknown as { __printCalls: number };
+      const w = window as unknown as { __printCalls: number; __exportBlobs: { size: number; type: string }[] };
       w.__printCalls = 0;
+      w.__exportBlobs = [];
       window.print = () => { w.__printCalls += 1; };
+      const orig = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = (b: Blob) => {
+        w.__exportBlobs.push({ size: b.size, type: b.type });
+        return orig(b);
+      };
     });
     await gotoApp(page);
     await importTextViaChooser(page, REFERENCE_SOURCE);
     await runAndWaitDone(page);
-    await page.getByTestId('print-export').click();
+    await page.getByTestId('export-html').click();
     await page.evaluate(() => new Promise<void>((res) => requestAnimationFrame(() => res())));
-    const calls = await page.evaluate(() => (window as unknown as { __printCalls: number }).__printCalls);
-    expect(calls).toBe(1);
+    const state = await page.evaluate(() => {
+      const w = window as unknown as { __printCalls: number; __exportBlobs: { size: number; type: string }[] };
+      return { printCalls: w.__printCalls, blobs: w.__exportBlobs };
+    });
+    expect(state.printCalls).toBe(0);
+    expect(state.blobs.length).toBe(1);
+    expect(state.blobs[0]?.type.startsWith('text/html')).toBe(true);
+    expect((state.blobs[0]?.size ?? 0)).toBeGreaterThan(1000);
   });
 
   test('ויזואלי (סביבה נעולה): שתי ריצות מלאות ⇒ פיקסלים זהים ביט־ביט', async ({ page }) => {

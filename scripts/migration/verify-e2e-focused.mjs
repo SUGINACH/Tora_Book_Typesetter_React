@@ -85,11 +85,11 @@ for (const s of specs.filter((x) => !x.startsWith('05-'))) {
 (has('tests/e2e/02-cli-oracle.spec.ts', 'cliLayoutRun') && has('tests/e2e/03-cancel-responsive.spec.ts', 'cliLayoutRun') && has('tests/e2e/04-audit-navigation.spec.ts', 'cliLayoutRun') ? ok : fail)('השוואת hash מול CLI במפרטים 02/03/04');
 (has('tests/e2e/helpers.ts', "waitForEvent('filechooser')") && has('tests/e2e/helpers.ts', 'setFiles') ? ok : fail)('ייבוא דרך ה־filechooser של האפליקציה (לא הזרקה)');
 (has('tests/e2e/03-cancel-responsive.spec.ts', 'longtask') ? ok : fail)('תגובתיות — Longtask Observer בחלון העימוד (שעת M9)');
-(has('tests/e2e/05-export-visual.spec.ts', 'window.print') ? ok : fail)('ייצוא — window.print נעול (המסלול הסמכותי עד שלב 86)');
+(has('tests/e2e/05-export-visual.spec.ts', 'export-html') && has('tests/e2e/05-export-visual.spec.ts', 'createObjectURL') ? ok : fail)('ייצוא — כפתור export-html + Blob (היטל טהור; window.print הוסר בשלב 86)');
 
 console.log('\n4) ערוצי ה־UI — הממשק האמיתי, לא חיווט בדיקה');
 const shell = read('src/components/layout/AppShell.tsx');
-([['data-layout-hash (ה־hash המלא)', /data-layout-hash=\{layoutHash\}/], ['data-run-phase (הפאזה)', /data-run-phase=\{phase\}/], ['print-export testid', /data-testid="print-export"/]]).forEach(([label, re]) => ((re.test(shell)) ? ok : fail)(`AppShell.tsx — ${label}`));
+([['data-layout-hash (ה־hash המלא)', /data-layout-hash=\{layoutHash\}/], ['data-run-phase (הפאזה)', /data-run-phase=\{phase\}/], ['export-html testid (ב-ExportButton)', /data-testid="export-html"/]]).forEach(([label, re]) => ((re.test(shell) || re.test(read('src/components/layout/ExportButton.tsx'))) ? ok : fail)(`AppShell/ExportButton — ${label}`));
 const zoom = read('src/components/view/ZoomControls.tsx');
 (['zoom-in', 'zoom-out', 'zoom-reset']).forEach((t) => ((zoom.includes(`data-testid="${t}"`)) ? ok : fail)(`ZoomControls.tsx — ${t}`));
 
