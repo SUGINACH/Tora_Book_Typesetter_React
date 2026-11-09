@@ -74,7 +74,8 @@
     "verify:export-standalone": "node scripts/migration/verify-export-standalone.mjs",
     "verify:adr008-lines": "node scripts/migration/verify-adr008-lines.mjs",
     "verify:export-pdf": "node scripts/migration/verify-export-pdf.mjs",
-    "verify:pdf-audit": "node scripts/migration/verify-pdf-audit.mjs"
+    "verify:pdf-audit": "node scripts/migration/verify-pdf-audit.mjs",
+    "verify:projection-equivalence": "node scripts/migration/verify-projection-equivalence.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
